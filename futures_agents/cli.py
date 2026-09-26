@@ -180,6 +180,25 @@ def build_parser() -> argparse.ArgumentParser:
     dash.add_argument("--out", default=None, help="output path")
     dash.set_defaults(func=cmd_dashboard)
 
+    fe = subs.add_parser("fetch", parents=[common],
+                         help="download bars from Yahoo into the append-only archive")
+    fe.add_argument("--symbols", default=None,
+                    help="comma-separated, e.g. MCL,MGC (default: the configured set)")
+    fe.add_argument("--timeframe", type=int, default=60,
+                    help="bar size in minutes (default 60). 240m is resampled "
+                         "from hourly - Yahoo has no 4h bar")
+    fe.add_argument("--days", type=float, default=60.0,
+                    help="lookback in days; clamped to the interval's cap and "
+                         "the clamp is reported")
+    fe.add_argument("--archive", default="data/archive",
+                    help="append-only archive directory (default data/archive)")
+    fe.add_argument("--prepost", action="store_true",
+                    help="include pre- and post-market bars")
+    fe.add_argument("--plan-only", action="store_true",
+                    help="print the request that would be made and exit, "
+                         "without touching the network")
+    fe.set_defaults(func=cmd_fetch)
+
     return parser
 
 
@@ -524,6 +543,57 @@ def cmd_scout(args: argparse.Namespace) -> int:
             fh.write("\n\n".join(chunks))
         print(f"written to {args.out}")
     return 0
+
+
+def cmd_fetch(args: argparse.Namespace) -> int:
+    """Download bars from Yahoo and reconcile them into the archive.
+
+    Every fetch is reconciled rather than written over the top: this vendor
+    retracts completed bars, so a plain overwrite deletes history that was
+    already held. The retraction count is printed on every run, because a
+    shrinking dataset is otherwise silent.
+    """
+    from .data.archive import BarArchive
+    from .data.yahoo import YahooError, YahooFeed, plan_request
+
+    cfg = _build_config(args)
+    _configure_alerts(args, cfg)
+    symbols = _symbols(getattr(args, "symbols", None), cfg.symbols)
+
+    if args.plan_only:
+        lines = ["FETCH PLAN  (no network)"]
+        for sym in symbols:
+            try:
+                plan = plan_request(sym, args.timeframe, args.days)
+            except YahooError as exc:
+                lines.append(f"  {sym:<6} ERROR  {exc}")
+                continue
+            lines.append(f"  {sym:<6} {plan.ticker:<8} interval {plan.interval:<4} "
+                         f"{plan.granted_days:.0f}d "
+                         f"({plan.start:%Y-%m-%d} to {plan.end:%Y-%m-%d})")
+            for note in plan.notes:
+                lines.append(f"         note: {note}")
+        _block(lines)
+        return 0
+
+    feed = YahooFeed(prepost=args.prepost)
+    archive = BarArchive(args.archive)
+    lines = [f"FETCH  [{et_stamp()}]  -> {args.archive}"]
+    failures = 0
+    for sym in symbols:
+        try:
+            result = feed.fetch(sym, minutes=args.timeframe, days=args.days)
+        except YahooError as exc:
+            lines.append(f"  {sym:<6} FAILED  {exc}")
+            failures += 1
+            continue
+        report = archive.reconcile_result(result)
+        lines.append(f"  {sym:<6} {result.summary()}")
+        lines.append(f"         {report.summary()}")
+        for warning in result.warnings:
+            lines.append(f"         note: {warning}")
+    _block(lines)
+    return 1 if failures else 0
 
 
 def cmd_dashboard(args: argparse.Namespace) -> int:

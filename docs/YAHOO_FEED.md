@@ -127,3 +127,40 @@ rather than the file.
 A corrupt line raises and names the file and line number. The archive is never
 rewritten automatically — silently skipping a bad line loses a bar, and
 rewriting loses the history.
+
+## Coverage actually obtained (fetched 2026-09-26)
+
+`data/archive/` after a full pull of MNQ, MES, MCL, MGC:
+
+| timeframe | coverage | notes |
+|---|---|---|
+| 1m | 2026-09-20 → 2026-09-25 | the 7-day window; ~6,850 bars each |
+| 5m | 2026-07-29 → 2026-09-25 | ~11,200 bars each |
+| 15m / 30m | 2026-07-29 → 2026-09-25 | |
+| 60m | 2024-10-06 → 2026-09-25 | ~11,300 bars each |
+| 240m | 2024-10-06 → 2026-09-25 | resampled from 60m |
+| 1d | contract inception → 2026-09-25 | MGC 2010-10-04, MNQ/MES 2019-05-03 |
+
+The daily series start at each contract's real inception, not at a vendor limit:
+MGC listed in 2010, MNQ and MES in 2019.
+
+### MCL has no daily history on Yahoo
+
+`MCL=F` accepts only `1d` and `5d` periods for daily bars and returns a single
+row for anything longer. The full-size `CL=F` has 6,192 daily bars back to
+2002-02-05, so that is archived instead — **under `CL`, not `MCL`**.
+
+They are not the same series and must not be substituted for one another
+silently. Measured over 109 overlapping hourly bars, `MCL=F` and `CL=F` closes
+differ by **0.95 cents on average and 4 cents at worst**. That is ~1 tick
+typical, 4 ticks maximum, against MCL's typical ATR of 1.85 points — fine for
+long-run daily context, not fine for an entry or stop level. Use `CL_1440m` as
+context and say so; never relabel it as MCL.
+
+### What the 7-day window already cost
+
+The `csv/raw` snapshot taken on 2026-09-22 holds 1-minute bars from
+2026-09-17. By 2026-09-26 Yahoo's window had rolled to 2026-09-20, so
+**2026-09-17 through 2026-09-20 is no longer obtainable from this vendor at any
+price**. That is the concrete case for the append-only archive: 1-minute history
+is perishable, and the only copy that survives is the one already written down.

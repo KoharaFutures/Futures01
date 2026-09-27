@@ -168,3 +168,72 @@ Worth the manager's attention as a D-candidate: **the exit dimension was searche
 the shipped `AccountConfig` never permits.** I have not measured whether the ~3M population's
 expectancies depend on the scale-outs, so I am not claiming the results are wrong — only that their
 exits are not executable here.
+
+## N5a — the stub bar's price was wrong by MORE THAN A FULL POSITION'S RISK BUDGET. Measured, same bar, two fetches.
+
+**basis: c1538d7, 2026-09-27. This is N5 confirmed in production, not against synthetic bars.**
+
+The 5-minute loop's first live check caught the same bar before and after the vendor filled it in.
+`2026-09-27T18:00:00-04:00`, 15m frame, fetched at 18:15Z and again at 22:52Z:
+
+| symbol | 18:15Z — the stub | 22:52Z — the real bar | error in the stub's price |
+|---|---|---|---|
+| **MGC** | `o=h=l=c=4321.20`, **v=0** | `o 4309.00  h 4310.30  l 4301.20  c 4301.50`, **v 679** | **−12.20 pts = $122.00/contract** |
+| **MNQ** | `o=h=l=c=30889.25`, **v=0** | `o 30844.50  h 30853.00  l 30815.25  c 30820.75`, **v 4328** | **−44.75 pts = $89.50/contract** |
+
+**Read the MGC row against this account's own sizing.** The permitted risk at zero drawdown is
+**$240** and `CALL-0001` was sized at **$120**. The stub's price was wrong by **$122 per contract**
+— *more than the entire risk budget of the position it would have been used to open*, and more than
+half of everything the account is permitted to risk on one trade at full health. A stop placed
+relative to that level would have been not merely mis-set but **inverted in meaning**: the "entry"
+was 12.20 points above where the session actually opened, so a long taken there began already
+beyond a full stop's distance from its own premise.
+
+MNQ's $89.50 is 75% of that position's risk budget.
+
+**Three things this settles.**
+
+1. **The stub is not a rounding artefact or a quiet bar — it is a fabricated price.** Both stubs
+   carried the previous close exactly, and in both cases the session's real open was *lower*, on
+   the same side, by a material amount. The vendor was not approximating; it was filling a hole
+   with the only number it had.
+2. **`volume == 0 AND high == low` is a sufficient guard, and nothing weaker is.** The stub had a
+   plausible price, a plausible timestamp, and sat in correct chronological order in a series with
+   no duplicate and no gap — `SERIES_AUDIT.md`'s clock and contiguity checks pass it, and 77 of 77
+   series were clean on all four of those tests. Only the conjunction catches it.
+3. **The snapshot-per-fetch design earned its keep on its first day.** Because `resolve.py` merges
+   every snapshot and lets the newest fetch win per timestamp, the stub was *replaced* rather than
+   frozen into the record, and the before/after comparison above is only possible because the
+   earlier fetch was kept rather than overwritten. Had this desk written one rolling file, the
+   evidence would have been destroyed by the very fetch that corrected it.
+
+**The quote endpoint was wrong in the same direction and by the same mechanism** — it returned
+`lastPrice == previousClose` on both symbols at a live 18:05 ET stamp, i.e. it too was serving
+4321.20 and 30889.25 while the real session was trading 4309 and 30844.50.
+
+## N7 — measured feed lag: ~13 minutes at the 5m frame, ~23 at 15m. The check interval is now faster than the data.
+
+**basis: c1538d7, first live check, 2026-09-27 18:52 ET.** Recorded per-check to
+`workspace/paper/CALL/feed_lag.jsonl`.
+
+```
+MGC/MNQ  5m   newest real bar 2026-09-27T18:40-04:00   lag 12.9 min
+MGC/MNQ 15m   newest real bar 2026-09-27T18:30-04:00   lag 22.9 min
+```
+
+`CALLOUT.md` says only that the data "is not real-time". This is the number: **at the 5-minute
+frame this vendor is ~13 minutes behind**, which is roughly one bar of delay plus the bar's own
+width. The 15m figure is the same delay expressed at a coarser grain.
+
+**Consequence for the 5-minute cadence the owner asked for.** A check every 5 minutes against a
+feed that advances every ~13 means roughly **three of every five checks will see no new bar**. That
+is not an argument against the cadence — a 5m bar does complete every 5 minutes, so nothing is
+*missed*, and the loop cost is small and bounded. It is an argument about what the cadence can
+deliver: **it cannot reduce reaction time below ~13 minutes**, because that floor is set by the
+vendor and not by how often this desk looks. A stop-entry trigger will be detected 13–18 minutes
+after it actually printed, whatever the interval.
+
+So the honest recommendation, once — the owner has asked for 5 minutes and it is their call:
+**the interval that matches this feed is 10–15 minutes**, and the accumulating `feed_lag.jsonl`
+will say whether 12.9 minutes holds during RTH liquidity or is worse on a Sunday reopen. I will
+report the distribution rather than re-raise the point.

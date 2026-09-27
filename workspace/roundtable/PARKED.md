@@ -45,3 +45,43 @@ Both matter to whoever resumes them, and both are in `edge/EDGE_BRIEF.md`:
 No profitability number has been reported by any agent, and that is correct rather than incomplete:
 board rule `R-13` applies `R-5` to a harness exactly as to an algorithm, and `EF1-H1` has not
 validated. Five agents hold populations and censuses. The gate is `MGR-T19`.
+
+---
+
+## A live disagreement that arrived after EF1 and EF3 parked — read this before resuming either
+
+**EF3 proposed a fix. EF7 argues it is the wrong instrument, and EF7 is probably right.**
+
+The defect: EF1's `session_end_indices` groups by ET calendar date and misses 9 bars per symbol, all
+23:00 ET on a holiday eve, carrying **198 positions** across a 16:00 deadline (63 MES, 135 MNQ).
+Invisible on a 400-strategy probe, which is why EF3's remark stands on its own: *a probe is not a
+population.*
+
+**EF3's fix:** use `timeutil.MARKET_HOLIDAYS_2025_2027`.
+
+**EF7's objection, from its own test docstring:**
+
+> *A holiday table answers "is the next calendar day a holiday", and that is not the question.
+> Several CME holidays are **shortened** sessions, not closures: the cycle exists, the market trades
+> into it, and the specification permits holding there.*
+
+That is a market-structure argument and the evidence already in this tree supports it. R6 measured
+**8 off-grid `:30` bars** in all four `csv/raw` 1h files, on Thanksgiving Friday 2025-11-28 and
+Christmas Eve 2025-12-24. Those bars exist *because those sessions traded* — shortened, not closed.
+A holiday table would force a flat the previous evening on days the market is open, replacing a
+missed flat with a spurious one.
+
+**Status: EF7's own three tests for this case are RED** — `test_h2_no_trade_spans_a_holiday_eve_boundary`
+fails on MGC, MES and MNQ, with 63 of 66 passing otherwise. That is red-first on a genuinely open
+question, not a bug: it wrote the test from the specification and its implementation does not yet
+satisfy it. It is attempting to derive the flat from the data rather than from a calendar.
+
+**So whoever resumes EF1 or EF3 must not simply apply the holiday table.** The open question is how
+to distinguish a *shortened* session from a *closed* one using only information available at the
+bar, and EF7's `h2` tests are the specification for the answer. EF7 also warns that its own engine
+reads the successor bar's **timestamp only, never its prices**, so a naive fix in that direction
+trades one defect for a look-ahead.
+
+This is the fourth time independent duplication changed an answer here rather than merely confirming
+one — after R6 breaking the R1/R3 tie, R4 correcting three of R1's attributions, and EF2/EF3/EF4
+scoping the flat defect to coarse timeframes.

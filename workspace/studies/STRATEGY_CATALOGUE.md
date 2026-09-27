@@ -52,6 +52,81 @@ all thirteen.**
 | **MNQ** | 7 — MOMENTUM, TREND, BREAKOUT, OPENING_RANGE, MULTI_TIMEFRAME, LIQUIDITY, PULLBACK | VWAP, REVERSAL, MEAN_REVERSION, VOLUME_PROFILE, SUPPLY_DEMAND, FIBONACCI |
 | **MCL** | **all 13** — `groups_for("MCL", …)` returns empty, so nothing is narrowed | none |
 
+### What those two columns actually are — asked by the account owner, 2026-09-27
+
+**"Families tested" is a generation filter, not a result.** `combinator.py:497-499` calls
+`groups_for(symbol, [t.group for t in TEMPLATES])` and builds strategies **only** from the groups it
+returns. So for a symbol, an excluded family means **zero strategies of that family were ever
+generated, therefore zero were ever backtested, therefore it appears in no result, no ranking and no
+top 10.** It does not mean the family was tried and lost. Nothing was measured about it at all.
+
+**Where the lists come from.** `SYMBOL_PROFILES` in `profiles.py` — three hand-written priors (MNQ,
+MES, MGC), each with a rationale. MCL has **no entry**, `groups_for` returns empty, and the
+combinator's fallback gives it all thirteen, so *the only symbol tested broadly is the one nobody
+wrote a prior for.* The file is explicit that this is "a prior about what to test, not a claim about
+what works", and that `groups` can be overridden to check one — which is how a prior gets falsified
+rather than trusted. **No study in this repository has overridden one.**
+
+**The recorded reasons, verbatim from the code.** Each profile carries an `excluded` dict so an
+omission is auditable:
+
+| symbol | family | reason given |
+|---|---|---|
+| MGC | OPENING_RANGE | "gold's session opens at 08:20 and the template's 150-minute window is calibrated to the equity open" |
+| MGC | MOMENTUM | "the 1m/5m ignition rules need the intraday range MNQ has and gold does not" |
+| MGC | BREAKOUT | "compression-to-expansion at intraday scale; on a 23-hour product this mostly fires on session handoffs" |
+| MES | MOMENTUM | "ignition is MNQ's trade; on MES the same rules fire into rotation" |
+| MES | OPENING_RANGE | "the opening drive is tested on MNQ, which has the range to make the break mean something" |
+| MNQ | MEAN_REVERSION | "fading the most persistent of the three index micros is the trade with the worst prior here; MES is where rotation is tested" |
+| MNQ | FIBONACCI | "retracement depth needs a stable leg, and MNQ's legs are the shortest-lived — tested on MGC instead" |
+
+**But `excluded` is a strict subset of what is absent, and the gap is exactly four per symbol.**
+Verified:
+
+```
+MNQ: tested 7  absent 6  documented 2  NO RECORDED REASON 4 -> VWAP, REVERSAL, VOLUME_PROFILE, SUPPLY_DEMAND
+MES: tested 7  absent 6  documented 2  NO RECORDED REASON 4 -> TREND, BREAKOUT, SUPPLY_DEMAND, FIBONACCI
+MGC: tested 6  absent 7  documented 3  NO RECORDED REASON 4 -> PULLBACK, VWAP, REVERSAL, LIQUIDITY
+```
+
+**Twelve family-symbol cells were dropped with no recorded reason at all** — the profile simply does
+not list them, and `excluded` exists precisely so that could not happen silently. The docstring's
+`unknown_groups()` guard catches a *typo* in a listed name; nothing catches a family that is neither
+listed nor excused.
+
+### Four of the five substantive profile fields are read only by the test suite
+
+`SymbolProfile` declares `groups`, `timeframes`, `timeframe_groups`, `rth_only`, `rationale` and
+`excluded`. **The production path imports exactly one name from this module** — `groups_for`
+(`combinator.py:497`). Grepping every consumer: the only other readers of `profile_for`,
+`timeframes_for`, `SYMBOL_PROFILES.rth_only` or `.excluded` anywhere in the repository are
+`tests/test_symbol_profiles.py` and two agents' population builders (EF5, EF3 — both importing
+`groups_for` only, and EF5's header states the narrowing is deliberately not applied).
+
+**So the tests assert these fields and the generator ignores them.** `test_symbol_profiles.py:98`
+asserts `profile_for("MGC").rth_only is False`; `:91` asserts `min(timeframes_for("MGC")) >= 15`.
+Both pass. Neither reaches a generated strategy.
+
+**This is the mechanism behind a number the edge programme spent three agents measuring.** EF2 found
+`rth_only` is `True` on **184/184 MGC and 167/167 MCL** generated strategies, and R1 on 314/314 — and
+**MGC's own profile asks for `rth_only=False`**, with the longest rationale in the file behind it:
+
+> *"Not an equity product and it should stop being tested like one. … because the real drivers — the
+> dollar, real yields, the London fix — move it around the clock, confining it to any RTH throws away
+> most of its information."*
+
+That instruction was written, tested, and never executed. It is the same class as `D53`/`R3-A-5` —
+the scope vocabulary is inert in the generation path — and it means **the `rth_only=False` paired arm
+this programme identified as its one endorsed route is what MGC's profile asked for from the
+beginning.** `timeframes` is inert the same way: MGC's profile says 15/60/240 and the scalp programme
+generated MGC at 5m regardless, which was the right call and was not the profile's.
+
+**Consequence for any per-symbol claim.** A symbol's "best strategy" can only ever be the best of
+what its profile let through: MGC's could never be a BREAKOUT, MES's could never be a MOMENTUM,
+MNQ's could never be a VWAP. And MCL — the one symbol tested across all thirteen families, the
+widest search of the four — returned the **worst** result anywhere (largest *t* +1.12, failing even
+`free_t = 1.177`). A wider search returning a worse best is what an absent edge looks like.
+
 **Only MULTI_TIMEFRAME is tested on all four symbols.** MGC and MES share 3 families, MGC and MNQ
 share 3, MES and MNQ share 3. So a large part of "per-symbol uniqueness" in this repo is the profile
 table deciding what was *asked*, not the data deciding what *worked* — worth knowing before reading

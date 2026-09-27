@@ -264,6 +264,47 @@ re-projection — this engine is clean.** The problems on my track are not corre
 problems. They are *coverage* problems: the vocabulary exists, is largely correct, and has
 never been exercised.
 
+## A-12 (NEW) The conviction score is a constant, so the only non-self-cancelling sizing channel has no input.
+
+`ConditionResult` carries `strength: float = 1.0` described as "0-1, how emphatically the
+condition fired" `[repo-verified: futures_agents/strategies/base.py:74]`, and
+`ConditionResult.yes` defaults it to `1.0`
+`[repo-verified: base.py:80-83]`. `Strategy.evaluate` averages it into
+`StrategySignal.strength` `[repo-verified: base.py:686, 766]` and attaches it to every
+`Evidence` as `weight` `[repo-verified: base.py:691]`.
+
+**Four of the seventy-nine conditions ever set it. All four are in the `candlestick` group.
+Three of those four are SIGNALs, so 50 of the 53 SIGNAL conditions return the default.**
+
+`[measured: python3 -c "import inspect,re; from futures_agents.strategies.library import
+CONDITIONS; graded=[n for n,c in sorted(CONDITIONS.items()) if
+re.search('strength', inspect.getsource(c.fn).split('def ',1)[-1])]; print(len(graded),
+graded)" → 4 ['candle_decisive_close', 'candle_engulfing', 'candle_reversal',
+'inside_bar_compression']]`
+`[measured: grep -c "strength" futures_agents/strategies/library.py → 7, every occurrence
+between library.py:1400 and :1460, i.e. inside the candlestick block]`
+
+Consequences, in order of weight:
+
+1. **`StrategySignal.strength` is exactly 1.0 for any strategy whose signals avoid the three
+   graded candlesticks** — and `x_confluence` already found candlesticks unevaluable, "4 of 5
+   appear in under 20 floor-clearing strategies" `[repo-verified: DEFECTS.md:213]`. So in
+   practice the conviction score is a constant across the whole ~2.98M-evaluation programme.
+2. **Every `Evidence.weight` in this repo is 1.0**, which means the decision layer's
+   evidence-weighting is weighting nothing.
+3. **Conviction-weighted sizing — the one Channel-4b sizing scheme whose input looked like it
+   already existed — has `Cov(strength, R) = 0` by construction.** See Part B-3(b)(1); I
+   wrote that section claiming `Trade.strength` was the cheapest high-value build on my track,
+   then measured this and corrected it in place rather than leaving the claim standing.
+4. The missing primitive is therefore **not a field but a rewrite**: 50 of 53 SIGNAL
+   conditions would have to report how emphatically they fired — how far past the band, how
+   steep the slope, how far above average volume. The field to carry it already exists and the
+   feature columns already hold the inputs `[repo-verified: features.py:221-286]`. Nobody
+   filled it in.
+
+This is the fifth item in this audit of the same shape — a capability that exists, is named,
+and is never populated or never read. The pattern is the finding.
+
 ---
 
 # Part B — Sizing as strategy, and the non-cancelling question
@@ -474,10 +515,41 @@ sub-cases are real and each has a different verdict here:
    set-difference of StrategySignal-minus-Trade fields, along with `evidence`, `invalidation`,
    `bar_index`, `entry`, `stop`, `timeframes`, `ts`]`. So the repo computes a conviction
    score on every one of ~2.98M evaluations, and discards it at `engine.py:498-517`.
-   **Named missing primitive: `Trade.strength` — one field, one assignment.** With it, "does
-   conviction predict R?" becomes a regression on stored trades with zero new backtests, and
-   conviction-weighted sizing becomes measurable. This is the cheapest high-value build on my
-   track.
+   **Named missing primitive: `Trade.strength` — one field, one assignment.**
+
+   **SELF-CORRECTION, and it is the more interesting result.** I wrote the above, then checked
+   whether the score actually varies — and it barely does. **Only 4 of the 79 conditions ever
+   grade their own strength, all four in the `candlestick` group, and only 3 of those are
+   SIGNALs. 50 of the 53 SIGNAL conditions return `ConditionResult.yes(...)` with the default
+   `strength=1.0`** `[repo-verified: base.py:80-83 — the default; base.py:74 — the field
+   default]`
+   `[measured: python3 -c "import inspect,re; from futures_agents.strategies.library import
+   CONDITIONS; graded=[n for n,c in sorted(CONDITIONS.items()) if re.search('strength',
+   inspect.getsource(c.fn).split('def ',1)[-1])]; print(len(graded), graded)"
+   → 4 ['candle_decisive_close', 'candle_engulfing', 'candle_reversal',
+   'inside_bar_compression']; 50 of 53 SIGNAL conditions ungraded]`
+   `[measured: grep -c "strength" futures_agents/strategies/library.py → 7 lines, all at
+   library.py:1400-1460, all in the candlestick block]`
+
+   Since `strength = strength_sum / n_signals` `[repo-verified: base.py:766]` and
+   `strength_sum` adds `max(0.0, min(1.0, res.strength))` per signal
+   `[repo-verified: base.py:686]`, **`StrategySignal.strength` is exactly 1.0 for any strategy
+   whose signals are all drawn from the other 50** — which is nearly all of them, and the
+   three that would vary are the candlesticks `x_confluence` already found unevaluable
+   ("4 of 5 appear in under 20 floor-clearing strategies")
+   `[repo-verified: workspace/studies/DEFECTS.md:213]`. The same applies to
+   `Evidence(..., weight=res.strength)` `[repo-verified: base.py:691]`: every evidence weight
+   in this repo is 1.0.
+
+   **So `Trade.strength` is still worth 2 lines, but for diagnosis rather than for sizing:
+   it would record a constant, and recording a constant is how you *prove* the conviction
+   channel is empty rather than assuming it.** The real missing primitive for conviction
+   sizing is one layer deeper and much more expensive: **50 of 53 SIGNAL conditions would have
+   to be rewritten to grade their own firing** (how far past the band, how steep the slope, how
+   far above the average volume) — the information exists in the feature columns, the
+   `ConditionResult.strength` field exists to carry it, and nobody filled it in. Channel 4b's
+   conviction sub-case is therefore **not one field away. It is fifty conditions away.**
+   I am reporting this as an absence rather than leaving my first paragraph standing.
 2. **Equity-curve / streak sizing** (III-14) — `w` a function of recent realised outcomes.
    `Cov(w,R) ≠ 0` **iff the R series is serially dependent**. This is therefore not a matter
    of opinion but a measurable property of a series the repo already has. And the repo's own
@@ -1161,8 +1233,20 @@ scalar `strength = strength_sum / n_signals` `[repo-verified: base.py:766]`. Bot
 'invalidation','stop','strength','timeframes','ts'}]`. The engine never reads `strength` at
 all `[measured: grep -n "strength" futures_agents/backtest/engine.py → no match]`.
 **Named missing primitive: `Trade.strength` (and, for the richer version,
-`Trade.evidence`).** With `Trade.strength` alone, "does conviction predict R?" is answerable
-by regression on stored trades with **zero new backtests**.
+`Trade.evidence`)** — but see the correction below, which is the real finding.
+
+**The secondary model has no features to learn from.** I checked whether the discarded
+conviction score actually varies. It does not: **only 4 of the 79 conditions ever grade their
+own strength — all four in the `candlestick` group, 3 of them SIGNALs — so 50 of 53 SIGNAL
+conditions return the default `strength=1.0`**
+`[measured: python3 -c "<inspect.getsource census over CONDITIONS>" → 4 graded:
+candle_decisive_close, candle_engulfing, candle_reversal, inside_bar_compression]`
+`[repo-verified: base.py:80-83 — `ConditionResult.yes(..., strength: float = 1.0)`]`. So
+`strength` is a constant, and every `Evidence.weight` is 1.0
+`[repo-verified: base.py:691]`. **The binding primitive for III-17 is not `Trade.strength`;
+it is that 50 of 53 SIGNAL conditions do not report *how emphatically* they fired, even though
+`ConditionResult.strength` exists to carry it and the feature columns contain the
+information.** That is a ~50-condition rewrite. Meta-labelling here is not one field away.
 Note also that a `ConditionKind.FILTER` is *not* a meta-label: filters are evaluated **before**
 the signal and short-circuit it `[repo-verified: base.py:670-675]`, so they cannot condition
 on the primary's output.
@@ -1368,7 +1452,7 @@ B-3. **Nothing already settled is re-argued** — settled items get a citation a
 | Kelly / fractional Kelly | "maximise growth" | **4a — variance only**, and against `E[R] ≤ 0` the optimum is `f* ≤ 0` | **No.** Nothing in the repo computes it. |
 | Volatility targeting | "constant risk per trade" | **4a — variance only**, and **already mandatory** (Part B-2) | Universal, therefore never controlled. |
 | Risk parity | "equal risk contribution" | **4a** | **No.** |
-| **Conviction-weighted sizing** | "bigger on the A+ setup" | **4b — CAN change expectancy** iff `Cov(strength, R) ≠ 0` | **No.** Input computed at `base.py:766`, discarded before `Trade`. |
+| **Conviction-weighted sizing** | "bigger on the A+ setup" | **4b — CAN change expectancy** iff `Cov(strength, R) ≠ 0` | **No, and it currently has no input.** The score is computed at `base.py:766`, discarded before `Trade`, **and is a constant 1.0** because 50 of 53 SIGNAL conditions never grade their firing `[measured]`. So `Cov(strength, R) = 0` by construction today. |
 | **Equity-curve / streak sizing** | "cut size in a losing streak" | **4b — CAN change expectancy** iff the R series is autocorrelated | **No**, and the repo's ruin machinery *assumes* it cannot (i.i.d. bootstrap, `mode="block"` unreachable from `risk_of_ruin`). |
 | Regime-conditional sizing | "size up where it works" | **4b**, formally — but it is a selection rule | Indirectly settled **negative**: selecting last period's best underperforms trading everything (`BRIEF.md`). |
 | **Integer-contract floor** | usually treated as rounding | **2 — changes the trade population**, selected on stop distance ⇒ on volatility | **No.** The engine never calls `contracts_for`. |
@@ -1448,7 +1532,7 @@ Ranked by (value / lines):
 | # | change | lines | unlocks |
 |---|---|---|---|
 | 9 | `signals_skipped_in_position += 1` at `engine.py:308` | **1** | the only measurement of what the one-position-at-a-time rule costs. Prerequisite for costing III-8 and III-13 |
-| 10 | `Trade.strength` field + `strength=sig.strength` at `engine.py:498` | **2** | III-17 (meta-labelling) and Channel-4b conviction sizing become answerable by regression on stored trades, with no new backtest |
+| 10 | `Trade.strength` field + `strength=sig.strength` at `engine.py:498` | **2** | **Downgraded after checking — see the self-correction in Part B-3(b)(1).** The score is a constant 1.0 for ~all strategies, because only 4 of 79 conditions grade strength and 50 of 53 SIGNALs return the default `[measured]`. Worth 2 lines to *prove* the conviction channel is empty; worth nothing for sizing until the conditions are graded, which is a ~50-condition rewrite, not a field |
 | 11 | slippage on the three `bar.close` exits (`engine.py:467, 473, 476`) | **3** | corrects A-7; makes time-stop and session-close results honest. Affects the largest measured exit effect in the repo (D12) |
 | 12 | `news=` passed to `slippage_price` at `engine.py:353, 416` | **2** | A-6; the `econ_calendar` flag already exists |
 | 13 | `ExitReason.TRAIL` emitted when the exit stop differs from `initial_stop` and breakeven | **4** | makes A-1/item-1 interpretable |
@@ -1612,6 +1696,12 @@ absent is the ability to manage the position once it is open:
 > them is a condition; and `_manage` receives a `Bar`, never a `FeatureSnapshot`
 > `[repo-verified: engine.py:377-378]`. So every exit in ~2,975,629 evaluations was
 > geometric, and none was informational.
+
+One further item belongs in this answer because it is neither data nor architecture but
+**unwritten code**: `ConditionResult.strength` exists, is averaged into every signal, and is
+populated by only 4 of the 79 conditions (A-12). So the repo's information set is also smaller
+than its own schema advertises — not because the data is missing, but because 50 of 53 SIGNAL
+conditions return a hard-coded `1.0` where a graded reading was intended.
 
 And on the specific question of whether the null is *about* the operating layer: **it cannot
 be, because the operating layer was never in the experiment.** Nineteen `AccountConfig`

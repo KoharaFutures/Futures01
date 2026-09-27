@@ -108,3 +108,40 @@ behaviour; you do not write it yourself.
 tolerance, never `==`). Label every number with its substrate. Mark claims
 `[repo-verified: path:line]` or `[measured: cmd → result]`. Append as you go. Post questions as
 `msgs/EF<n>-NN_<to>_<topic>.md` with the `RE:/ALSO:/FROM:/TO:/TASK:` header. Do not commit or push.
+
+---
+
+# The 240m and 1440m cells are inexpressible under this rule (EF6, verified 2026-09-27)
+
+The session window is 22 hours = **1320 minutes**, and `1320 = 2³ · 3 · 5 · 11`. A timeframe can
+carry the rule only if it divides the window evenly:
+
+| timeframe | 1320 / tf | |
+|---|---|---|
+| 5m, 15m, 30m, 60m, 120m | 264, 88, 44, 22, 11 | **expressible** |
+| **240m** | **5.5** | **NOT expressible** |
+| **1440m** | **0.917** | **NOT expressible** |
+
+**A 4-hour bar cannot align with a 22-hour window.** This is arithmetic, not an implementation
+limit, and no harness fix reaches it. Consequences:
+
+- **The swing programme is 60m only.** The 240m arm of EF2's and EF3's cells is withdrawn — half of
+  each original assignment. Neither agent did anything wrong; the cell cannot exist.
+- It explains EF3's observation that EF1's `SPANS_WINDOW` violations were **all at 240m**. Those
+  were not a bug in the flat so much as the flat being asked to land on a grid that cannot hold it.
+- Any future request for a daily or 4-hour arm under this rule needs the *rule* changed, not the
+  code. A 24-hour window (1440) would divide by 240 and 1440 both; a 22-hour one cannot.
+
+## And the scalp threshold is far worse than this brief first said
+
+`EF6-H3` computes the threshold from the actual search size rather than from a single hypothesis:
+
+| cell | span | sqrt(years) | free_t | required annual Sharpe |
+|---|---|---|---|---|
+| swing 60m | 718.83 d | 1.403 | 3.505 | **2.498** |
+| scalp | 57.90 d | 0.398 | — | **9.59** |
+
+This brief's earlier figure of 2.96 was the floor for a *single pre-registered* hypothesis. At the
+search width these cells actually use, the scalp requirement is **9.59**. That number does not
+occur in futures. **Use `EF6/code/deflation.py`; do not derive a threshold by hand and do not quote
+5.46.**

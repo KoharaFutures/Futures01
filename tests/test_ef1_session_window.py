@@ -510,14 +510,62 @@ def test_position_is_flat_at_the_early_close_not_carried_to_the_reopen():
     assert violations(res.trades) == []
 
 
-def test_session_end_map_marks_exactly_the_early_close_date():
+def test_session_end_map_keys_on_the_trading_day_not_the_calendar_date():
+    """The ET-calendar-date version of this map was a defect EF3 caught.
+
+    A position entered 2024-11-27 18:00 has no bar on Thanksgiving to be
+    flattened on - the archive has none - so an ET-date map, which had no entry
+    for a date that does not exist, let it run to Black Friday 12:30. Keying on
+    ``trading_day`` (18:00 roll) puts Thanksgiving-eve's evening bars inside
+    Thanksgiving's trading day, where they belong, and the flat lands on the
+    last of them. 10 dates per symbol became 19, a strict superset.
+    """
     idx = session_end_indices(bars(EARLY_CLOSE))
-    assert idx == {3: DAY.date().isoformat()}, \
-        "only the early-close date has no bar at the deadline"
-    # The normal day keeps its ON_BOUNDARY bar and is not marked.
-    assert not any(v == (DAY + timedelta(days=1)).date().isoformat()
-                   for v in idx.values())
-    assert session_end_indices(bars(FLAT_DAY)) == {}
+    # Index 0 is 18:00 the previous evening, so trading_day puts it in DAY's
+    # session alongside 1-3. DAY has no deadline bar; index 3 is its last.
+    assert idx == {3: DAY.date().isoformat()}
+
+    # The evening bars of a normal day belong to the NEXT trading day.
+    assert session_end_indices(bars(FLAT_DAY)) == {}, \
+        "FLAT_DAY's 18:00/19:00 bars are the series' truncated last trading day"
+
+
+def test_holiday_with_no_bars_at_all_still_flattens_the_evening_before():
+    """The second defect the validation found in EF1's own code.
+
+    Real shape, MES/MNQ 60m: bars run to 2024-11-27 23:00 (Thanksgiving eve),
+    **2024-11-28 has no bars whatsoever**, and the next bar is 2024-11-29 09:30.
+    A position entered 2024-11-27 18:00 ran to Black Friday 12:30 - a 66-hour
+    hold across two 16:00 deadlines - because an ET-calendar-date map has no
+    entry for a date with no bars. ``trading_day`` puts the eve's evening bars
+    inside Thanksgiving's session, so the flat lands on the last of them.
+    """
+    wed = datetime(2024, 11, 27, tzinfo=ET)
+    rows = [
+        (at(wed, 14), 6_000.0, 6_005.0, 5_995.0, 6_000.0),          # 0
+        (at(wed, 15), 6_000.0, 6_005.0, 5_995.0, 6_002.0),          # 1 boundary
+        (at(wed, 18), 6_002.0, 6_008.0, 6_000.0, 6_006.0),          # 2 signal
+        (at(wed, 19), 6_010.0, 6_015.0, 6_008.0, 6_012.0),          # 3 entry
+        (at(wed, 23), 6_012.0, 6_018.0, 6_009.0, 6_016.0),          # 4 LAST
+        # 2024-11-28 has no bars at all.
+        (at(wed, 9, days=2), 6_100.0, 6_105.0, 6_098.0, 6_102.0),   # 5 Fri
+        (at(wed, 12, days=2), 6_102.0, 6_108.0, 6_100.0, 6_106.0),  # 6 Fri last
+        (at(wed, 18, days=4), 6_200.0, 6_205.0, 6_198.0, 6_202.0),  # 7 Sun eve
+        (at(wed, 15, days=5), 6_210.0, 6_215.0, 6_208.0, 6_212.0),  # 8 Mon bdry
+    ]
+    idx = session_end_indices(bars(rows))
+    assert idx == {4: "2024-11-28", 6: "2024-11-29"}, \
+        "Thanksgiving's session ends at the eve's last bar; Friday's at 12:00"
+
+    res, eng = run(rows, Stub(signal_at=(2,), entry=6_010.0, stop=5_900.0,
+                              targets=[7_000.0]), symbol="MES",
+                   costs=no_slip("MES"))
+    t = res.trades[0]
+    assert t.exit_index == 4, "must not carry across Thanksgiving's 16:00"
+    assert t.exit_ts == at(wed, 23)
+    assert t.minutes_held == pytest.approx(4 * 60)
+    assert violations(res.trades) == []
+    assert eng.counters.flats_forced_session_end == 1
 
 
 def test_session_end_map_is_a_function_of_timestamps_only():
@@ -667,7 +715,7 @@ def test_the_clock_rule_is_prefix_invariant_for_every_k():
     assert rep["classification_mismatches"] == 0
     # The session-end map needs a date's full timestamp list, so a prefix cut
     # inside a date may differ *on that date*. Off the cut date it must not.
-    assert rep["session_end_mismatches_off_cut_date"] == 0
+    assert rep["session_end_mismatches_off_cut_trading_day"] == 0
     assert rep["prefixes_checked"] == len(series) + 1
 
 

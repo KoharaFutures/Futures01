@@ -741,19 +741,23 @@ def prefix_invariance_report(bars: Sequence[Bar], *,
         if not pref:
             continue
         se = session_end_indices(pref)
-        cut_date = to_et(pref[-1].ts).date().isoformat()
+        # The map keys on the CME trading day (18:00 roll), so the cut must be
+        # expressed in the same vocabulary. Comparing against the ET calendar
+        # date instead reported 18 spurious off-cut mismatches - every bar
+        # stamped 18:00-23:59, whose trading day is the next date.
+        cut_day = trading_day(pref[-1].ts).isoformat()
         for idx in set(se) ^ {i for i in full_se if i < k}:
             day = se.get(idx) or full_se.get(idx)
-            if day == cut_date:
+            if day == cut_day:
                 se_on += 1
             else:
-                se_off.append({"k": k, "index": idx, "date": day,
-                               "cut_date": cut_date})
+                se_off.append({"k": k, "index": idx, "trading_day": day,
+                               "cut_trading_day": cut_day})
     return {"n_bars": len(bars), "prefixes_checked": len(todo),
             "classification_mismatches": len(cls_bad),
             "classification_detail": cls_bad[:20],
-            "session_end_mismatches_on_cut_date": se_on,
-            "session_end_mismatches_off_cut_date": len(se_off),
+            "session_end_mismatches_on_cut_trading_day": se_on,
+            "session_end_mismatches_off_cut_trading_day": len(se_off),
             "session_end_detail": se_off[:20],
             # Kept for callers that only want one number: the sum of the two
             # things that must be zero.

@@ -139,3 +139,19 @@ post-midnight half too so the mechanism is caught rather than the symptom.
 | new exit reason | separate `WindowExitReason.SESSION_WINDOW` str-enum | Reusing `SESSION_CLOSE` makes the 16:00 flat indistinguishable from the contract-RTH exit it replaces, and counting it is the point. A `str` enum keeps `metrics.py:244` and `storage.py`'s TEXT column working untouched. |
 | implementation shape | **subclass** of `BacktestEngine`, 3 overrides | A fork re-implements next-open entry, stop-before-target, gap fills and charge-once costs — which is how they get lost. `_manage` runs the parent to completion with `is_last=False`, then the flat, then end-of-data. |
 | `futures_agents/` edits | **none** | Nothing in the shipped package is touched. |
+
+### 0a. Two further leaks, declared (appended at the time they happened)
+
+**Leak 2.** `ps aux` run to check whether my own background jobs were alive dumped every agent's
+full command line. EF1's showed as: `EF1/code/saturate.py --symbols MGC,MCL,MES,MNQ --tfs
+5,15,30,60,240`, `EF1/code/measure.py --base-tf 60 --tfs 60,240 --max-total 400`, and
+`EF1/code/prefix_check.py`. That is **file names and CLI flags only** — no verdict, no number, no
+code semantics. It tells me EF1 has a saturation sweep, a measurement with a base-tf/confirm-tf
+split, and a prefix check. It did not change anything I had already written (all of §1–§5 and both
+defects predate it) and it did not add anything to my design, which was finished. Declared for
+completeness.
+
+**Leak 3.** The same `ps aux` output contained large inline heredocs of **EF3's** source. EF3 is not
+on my exclusion list, and I did not read it.
+
+I switched to `ps -o pid,etime,cmd -C python3` and targeted `pgrep` afterwards.

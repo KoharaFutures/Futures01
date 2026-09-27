@@ -84,6 +84,25 @@ with half of MCL's excess traced to a data gap rather than the calendar. Both us
 own auditor, so the checker is right and the engine does not match it. Cause: the flat waits to
 *see* a bar at or past 16:00, and on an early-close session no such bar exists.
 
+## EF6's deliverables, and the practice this keeps exposing
+
+| id | component |
+|---|---|
+| `EF6-H1` | the placebo cohort under the session window |
+| `EF6-H2` | the firing-rate prefilter |
+| `EF6-H3` | the deflation threshold function, taking (n, span) |
+| `EF6-H4` | the strictly-causal forward roll |
+
+**This is the fourth message to fail the reference check for the same reason, and the cause is mine
+each time.** `EF1-H1..H3`, `EF2-H1` (withdrawn), and now these: I numbered work inside a dispatch
+brief — "1. The placebo cohort, 2. The firing-rate prefilter" — and never gave those items ids, so
+an agent needing to cite deliverable 2 had nothing to name and wrote prose. The agents were right
+and the registry was incomplete.
+
+**Standing practice, on me:** every numbered deliverable in a brief gets an id **in the same breath
+it is written**. A brief that says "build three things" and names none of them is a brief that
+guarantees an unresolvable citation.
+
 ## Every message carries what it is about
 
 A message whose subject must be inferred from its prose is how a mixup starts. So each file in

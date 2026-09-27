@@ -686,6 +686,36 @@ def test_h3_prefix_invariance_of_realised_trades():
         assert got[:-1] == ref[:len(got) - 1], f"prefix k={k}"
 
 
+@pytest.mark.parametrize("symbol", SYMBOLS)
+def test_h3_engine_prefix_invariance_on_real_bars(symbol):
+    """The deliverable's prefix-invariance clause, at engine level, on real bars.
+
+    Two formulations of the same statement, cross-checked against each other:
+    running the full frame with ``end=k`` must equal running a frame physically
+    truncated to ``k`` bars. If either the flat decision or the entry veto
+    consulted anything past ``k``, they would diverge.
+
+    A 1,200-bar slice rather than the whole 11,000: each ``k`` rebuilds a
+    ``SymbolFrame``, so the full series would be an hour of indicator arithmetic
+    to re-prove a statement the ``flat_flags`` prefix test already covers over all
+    11,000 bars.
+    """
+    bars = ARCHIVE.load(symbol, 60).bars[:1200]
+    spec = get_contract(symbol)
+    strat = fixture_strategy(symbol, name=f"EF7-prefix-{symbol}")
+    costs = CostModel(spec=spec)
+    full = SymbolFrame(BarSeries(symbol, 60, bars), (60,), spec)
+    key = lambda t: (to_et(t.entry_ts).isoformat(), to_et(t.exit_ts).isoformat(),
+                     t.exit_reason.value, round(t.exit_price, 10),
+                     round(t.net_r, 10))
+    for k in (200, 300, 401, 500, 617, 700, 800, 901, 1000, 1100, 1200):
+        a = SessionWindowEngine(full, costs).run(strat, end=k)
+        trunc = SymbolFrame(BarSeries(symbol, 60, bars[:k]), (60,), spec)
+        b = SessionWindowEngine(trunc, costs).run(strat)
+        assert [key(t) for t in a.trades] == [key(t) for t in b.trades], \
+            f"{symbol}: end={k} differs from a frame truncated to {k}"
+
+
 def test_h3_determinism():
     bars = hourly_cycle(date(2025, 6, 10)) + hourly_cycle(date(2025, 6, 11))
     strat = fixture_strategy()

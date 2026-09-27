@@ -154,3 +154,28 @@ correction checked nine `dataclasses.replace` call sites on a `Strategy` and fou
 passing `_id=None` — mine did too. **Passing `_id=None` is necessary and not sufficient:** a
 fresh id is still a *colliding* id when two different strategies hash to the same condition
 labels. The guard that catches it is the uniqueness assertion at emission, not the `_id=None`.
+
+## 7. Harness-revision stability: EF1 changed `session_window.py` mid-study and my numbers did not move
+
+While EF4's runs were in flight, EF1 added a `session_end_indices` mechanism (a forced flat on
+the last bar of a trading day, to close the flat-unreachability gap `EF2-02` and `EF3-01`
+reported) and briefly shipped it with a missing `trading_day` import, which crashed one of my
+placebo cells. Once it was importable I re-ran MGC 15m Track A against the new version and
+compared to the old:
+
+```
+A1_ON_SWEEP   now n=50  E=-0.3167   then n=50  E=-0.3167   dn=+0  dE=+0.0000
+A2_PD_SWEEP   now n=140 E=-0.1193   then n=140 E=-0.1193   dn=+0  dE=+0.0000
+A3_VA_EDGE    now n=79  E=-0.0320   then n=79  E=-0.0320   dn=+0  dE=+0.0000
+A4_VWAP_BAND  now n=330 E=-0.2171   then n=330 E=-0.2171   dn=+0  dE=+0.0000
+A5_ORB        now n=201 E=-0.1292   then n=201 E=-0.1292   dn=+0  dE=+0.0000
+A6_ON_COMPR   now n=101 E=-0.2584   then n=101 E=-0.2584   dn=+0  dE=+0.0000
+new counters: flats_forced_session_end = 0, bars_session_end = 0
+```
+
+**Identical to four decimal places, and the new branch never fires.** That is the predicted
+consequence of §1a: the flat is reachable in 41 of 41 cycles in all six of my cells, so a fix
+aimed at unreachable flats is a no-op here by construction. It is also the cheapest possible
+verification that an exact-zero difference is a *real* zero rather than a D48 collision — the
+two arms were run in separate engine instantiations with separately built frames, not as two
+arms of one `run_many`, so there is no shared-id path by which they could have collapsed.

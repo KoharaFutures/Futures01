@@ -14,25 +14,24 @@ hand a third time.
 
 So the file is deliberately in two halves:
 
-* **Half 1 — what is true today.** These pin the current arithmetic exactly, with
-  the numbers ALGO-1 published. They must keep passing until `align_bucket`
-  changes, and the moment one fails, a published number moved.
-* **Half 2 — what a fix must satisfy.** These are marked ``xfail(strict=False)``
-  and describe the *intended* behaviour: a 7200m bucket spans five sessions, a
-  weekly resample emits roughly one bar per five, and the daily frame's two
-  members are not the same series. They pass the day the fix lands and turn into
-  ``XPASS`` rather than breaking the suite, which is the point — a regression
-  test for an unfixed defect has to be able to say "still unfixed" without
-  failing the build.
+* **Half 1 — what is true today.** These pin the current arithmetic, and the
+  reduction ALGO-1 rests on. They must keep passing until `align_bucket`
+  changes; the moment one fails, a published number moved.
+* **Half 2 — what a fix must satisfy.** Marked ``xfail(strict=False)`` and
+  describing the *intended* behaviour: a 7200m bucket spans five sessions and the
+  daily frame's two members are not the same series. They turn into ``XPASS`` the
+  day the fix lands rather than breaking the suite — a regression test for an
+  unfixed defect has to be able to say "still unfixed" without failing the build.
 
 Nothing here loads `csv/raw`: the collapse is exact arithmetic on timestamps and
-is provable on a handful of synthetic bars, so the whole file runs in
+is provable on a few hundred synthetic bars, so the whole file runs in
 milliseconds. The measured per-symbol counts live in
 `workspace/roundtable/backtest/BT4/ALGOS.md`, not here.
 """
 from __future__ import annotations
 
 import collections
+import math
 from datetime import datetime, timedelta
 
 import pytest
@@ -46,6 +45,9 @@ from futures_agents.timeutil import ET, trading_day
 # A Tuesday in March 2026, matching `conftest.SESSION_OPEN`'s choice of a date
 # well clear of any DST transition.
 TS = datetime(2026, 3, 17, 10, 30, tzinfo=ET)
+# A stamp that no two of {5, 15, 30, 60, 240} bucket the same way, so a test can
+# tell "reads minutes" from "happens to agree at :30".
+TS_ODD = datetime(2026, 3, 17, 10, 37, tzinfo=ET)
 
 #: Every `minutes` value above a day that `align_bucket` currently cannot tell
 #: apart. 2880 = 2 days, 4320 = 3, 7200 = 5 (the "week" `FRAMES` asks for),
@@ -53,11 +55,12 @@ TS = datetime(2026, 3, 17, 10, 30, tzinfo=ET)
 COARSE = (1440, 2880, 4320, 7200, 10080, 43200, 525600)
 
 
-def daily_bars(n: int = 40, *, start: datetime = TS, price: float = 2000.0) -> list:
-    """`n` synthetic daily bars, one per calendar day, deterministic and trending.
+def flat_bars(n: int = 40, *, start: datetime = TS, price: float = 2000.0) -> list:
+    """`n` daily bars, one per calendar day, drifting up. Bucketing tests only.
 
-    A monotone drift is deliberate: it makes `structure_trend` resolve to
-    UPTREND rather than UNDEFINED, which is what the frame tests need.
+    `structure_trend` is UNDEFINED on a monotone run because there are no fractal
+    pivots, which is fine here and is exactly why the frame tests below need
+    :func:`swing_bars` instead.
     """
     out = []
     for i in range(n):
@@ -65,6 +68,53 @@ def daily_bars(n: int = 40, *, start: datetime = TS, price: float = 2000.0) -> l
         out.append(Bar(ts=start + timedelta(days=i), open=o, high=o + 4.0,
                        low=o - 1.0, close=o + 3.0, volume=1000.0 + i, minutes=1440))
     return out
+
+
+def swing_bars(n: int = 180, leg: int = 20, *, start: datetime = TS,
+               price: float = 2000.0, amp: float = 12.0, period: int = 8,
+               drift: float = 3.0) -> list:
+    """Daily bars that actually resolve a structural trend, deterministically.
+
+    A trend label needs fractal swing pivots, so the series carries a short
+    zigzag (`period`) on top of a directional leg that flips sign every `leg`
+    bars. `leg=20` gives long UPTREND and DOWNTREND stretches; `leg=10` flips
+    fast enough that two labels 2-4 bars apart can be outright opposed, which is
+    the only way to exercise `mtf_not_conflicted`'s veto path.
+
+    No RNG: same bars on every machine, per the suite's convention.
+    """
+    out, base = [], price
+    for i in range(n):
+        d = drift if (i // leg) % 2 == 0 else -drift
+        base += d
+        v = base + amp * math.sin(2 * math.pi * i / period)
+        o, c = v, v + d
+        out.append(Bar(ts=start + timedelta(days=i), open=o, high=max(o, c) + 2.0,
+                       low=min(o, c) - 2.0, close=c, volume=1000.0 + i, minutes=1440))
+    return out
+
+
+def daily_frame(n: int = 180, leg: int = 20) -> SymbolFrame:
+    return SymbolFrame(BarSeries("MGC", 1440, swing_bars(n, leg)), FRAMES[1440])
+
+
+def rebuild_confirm_pointer(series: BarSeries) -> list:
+    """`_align[7200]`, rebuilt from the daily bars and the calendar alone.
+
+    This is the step that makes ALGO-1's reduction non-circular: `resample`
+    stamps the copy at `align_bucket(ts, 7200)` — the trading-day start, by the
+    collapse — and `Bar.end_ts` adds 7200 minutes to it, so the pointer
+    `_build_alignment` produces is a function of the daily timestamps and nothing
+    else. No second series is read here.
+    """
+    ends = [align_bucket(b.ts, 7200) + timedelta(minutes=7200) for b in series.bars]
+    ptr, k, j = [], -1, 0
+    for b in series.bars:
+        while j < len(ends) and ends[j] <= b.end_ts:
+            k = j
+            j += 1
+        ptr.append(k)
+    return ptr
 
 
 # --------------------------------------------------------------------------
@@ -98,15 +148,14 @@ def test_sub_daily_buckets_do_read_minutes():
     """
     assert align_bucket(TS, 60) == datetime(2026, 3, 17, 10, 0, tzinfo=ET)
     assert align_bucket(TS, 240) == datetime(2026, 3, 17, 8, 0, tzinfo=ET)
-    assert align_bucket(TS, 15) == datetime(2026, 3, 17, 10, 30, tzinfo=ET)
-    assert align_bucket(datetime(2026, 3, 17, 10, 37, tzinfo=ET), 15) == \
-        datetime(2026, 3, 17, 10, 30, tzinfo=ET)
-    assert len({align_bucket(TS, m) for m in (5, 15, 30, 60, 240)}) == 4
+    assert align_bucket(TS_ODD, 15) == datetime(2026, 3, 17, 10, 30, tzinfo=ET)
+    assert align_bucket(TS_ODD, 5) == datetime(2026, 3, 17, 10, 35, tzinfo=ET)
+    assert len({align_bucket(TS_ODD, m) for m in (5, 15, 30, 60, 240)}) == 4
 
 
 def test_a_weekly_bucket_holds_exactly_one_daily_bar():
     """One bar per bucket is the collapse in its plainest form."""
-    bars = daily_bars(40)
+    bars = flat_bars(40)
     per_bucket = collections.Counter(align_bucket(b.ts, 7200) for b in bars)
     assert set(per_bucket.values()) == {1}
     assert len(per_bucket) == len(bars)
@@ -114,7 +163,7 @@ def test_a_weekly_bucket_holds_exactly_one_daily_bar():
 
 def test_resampling_daily_to_7200_reproduces_the_daily_ohlcv_in_order():
     """The "weekly" series is the daily series, bar for bar, field for field."""
-    series = BarSeries("MGC", 1440, daily_bars(40))
+    series = BarSeries("MGC", 1440, flat_bars(40))
     weekly = resample(series, 7200, keep_partial=False)
     # One input is dropped: `count >= expected` fails on the last bucket because
     # `expected = 7200 // 1440 = 5` and every bucket holds 1.
@@ -131,7 +180,7 @@ def test_the_7200_copy_is_mislabelled_in_both_duration_and_timestamp():
     trading-day start, so `Bar.end_ts` lands five days past a bar that covers
     one. That is the whole mechanism by which the alignment pointer trails.
     """
-    series = BarSeries("MGC", 1440, daily_bars(40))
+    series = BarSeries("MGC", 1440, flat_bars(40))
     weekly = resample(series, 7200, keep_partial=False)
     assert weekly.bars[0].minutes == 7200
     assert weekly.bars[0].ts != series.bars[0].ts
@@ -144,8 +193,8 @@ def test_the_shipped_daily_frame_asks_for_a_timeframe_above_1440():
     """`FRAMES[1440]` is the only exposure, and every other row is clean.
 
     If a future frame map adds another coarse member this fails, which is the
-    early warning: the defect's blast radius is exactly `{tf: [m for m in
-    FRAMES[tf] if m > 1440]}`.
+    early warning: the defect's blast radius is exactly
+    `{tf: [m for m in FRAMES[tf] if m > 1440]}`.
     """
     assert FRAMES[1440] == [1440, 7200]
     exposed = {tf: [m for m in tfs if m > 1440] for tf, tfs in FRAMES.items()}
@@ -157,7 +206,7 @@ def test_the_shipped_daily_frame_asks_for_a_timeframe_above_1440():
 
 def test_the_daily_frames_two_members_hold_identical_bars():
     """Inside a built `SymbolFrame`, not just in `resample`'s output."""
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440])
+    frame = daily_frame()
     lo = frame.frames[1440].series.bars
     hi = frame.frames[7200].series.bars
     assert len(hi) == len(lo) - 1
@@ -165,19 +214,32 @@ def test_the_daily_frames_two_members_hold_identical_bars():
         assert (a.open, a.high, a.low, a.close) == (b.open, b.high, b.low, b.close)
 
 
-def test_the_confirming_pointer_trails_the_primary_by_two_to_four_bars():
+def test_the_confirming_pointer_trails_the_primary_by_a_few_bars():
     """`_build_alignment` advances on `end_ts`, and the copy's `end_ts` is +5 days.
 
     The primary pointer is the identity because `frames[1440] is base`; the
-    confirming pointer is 2-4 behind it. That lag is the only content the
-    "higher timeframe" can carry.
+    confirming pointer is a handful of bars behind it. That lag is the only
+    content the "higher timeframe" can carry. On the real daily files the
+    distribution is 1-4 with a mode at 2 (`backtest/BT4/ALGOS.md`); on a
+    calendar-dense synthetic series it concentrates at 4.
     """
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440])
-    assert frame._align[1440] == list(range(60))
+    frame = daily_frame()
+    assert frame._align[1440] == list(range(len(frame.base)))
     lags = collections.Counter(a - b for a, b in
                                zip(frame._align[1440], frame._align[7200]))
     assert set(lags) <= {1, 2, 3, 4, 5}
-    assert max(lags, key=lags.get) in (2, 3, 4, 5)
+    assert max(lags, key=lags.get) >= 2
+
+
+def test_the_confirming_pointer_needs_no_second_series_to_reconstruct():
+    """ALGO-1's non-circularity check, in the suite.
+
+    If the pointer is a function of the daily timestamps alone, then so is every
+    value the confirming timeframe reports, and "the higher timeframe" is a
+    derived object rather than a second observation of the market.
+    """
+    frame = daily_frame()
+    assert rebuild_confirm_pointer(frame.base) == frame._align[7200]
 
 
 def test_regime_tf_at_the_daily_frame_is_the_mislabelled_copy():
@@ -187,24 +249,38 @@ def test_regime_tf_at_the_daily_frame_is_the_mislabelled_copy():
     MULTI_TIMEFRAME ones, because `volatility_normal` is a base filter on 12 of
     13 templates.
     """
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440])
+    frame = daily_frame()
     assert frame.regime_tf == 7200
     assert 7200 not in (15, 30, 5, 60, 10, 3, 1)
     # And the override still works, which is what ALGO-1's control arm needs.
-    override = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440],
+    override = SymbolFrame(BarSeries("MGC", 1440, swing_bars()), FRAMES[1440],
                            regime_timeframe=1440)
     assert override.regime_tf == 1440
+
+
+def test_the_alignment_score_can_only_take_two_values_at_the_daily_frame():
+    """The decision table ALGO-1's reduction rests on.
+
+    Two voters weighted `log(1441)` and `log(7201)`: agreeing gives |a| = 1.0,
+    opposed gives 0.0996, and `mtf_aligned`'s threshold is 0.4. So "opposed" can
+    never fire, and the only reachable firing state is "both directional and
+    equal" — lagged self-agreement on one series.
+    """
+    w_lo, w_hi = math.log(1441.0), math.log(7201.0)
+    opposed = abs(w_lo - w_hi) / (w_lo + w_hi)
+    assert round(opposed, 4) == 0.0996
+    assert opposed < 0.4 < 1.0
 
 
 def test_the_two_mtf_signals_are_the_same_function_at_the_daily_frame():
     """With two voters, "0.4 weighted majority" and "unanimous" coincide.
 
     `R4-MT2` proves it from the weights; this pins it per bar. The two agree on
-    every bar of a real daily series too (2511/2511 MGC, 1859/1859 MNQ and MES —
-    `backtest/BT4/ALGOS.md`), which is why the published
-    "unanimous versus majority" comparison at 1440m measured nothing.
+    every bar of the real daily files too (2511/2511 MGC, 1859/1859 MNQ and MES —
+    `backtest/BT4/ALGOS.md`), which is why the published "unanimous versus
+    majority" comparison at 1440m measured nothing.
     """
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(80)), FRAMES[1440])
+    frame = daily_frame()
     a, s = CONDITIONS["mtf_aligned"], CONDITIONS["mtf_strongly_aligned"]
     fired = 0
     for i in range(len(frame.base)):
@@ -212,32 +288,64 @@ def test_the_two_mtf_signals_are_the_same_function_at_the_daily_frame():
         ra, rs = a.fn(snap, 1440), s.fn(snap, 1440)
         assert (ra.triggered, ra.direction) == (rs.triggered, rs.direction), i
         fired += ra.triggered
-    assert fired > 0, "the synthetic series must actually fire, or this proves nothing"
+    assert fired > 0, "the series must actually fire, or this proves nothing"
 
 
-def test_the_alignment_score_can_only_take_two_values_at_the_daily_frame():
-    """The decision table ALGO-1's reduction rests on.
+def test_mtf_aligned_at_1440m_reduces_to_one_series_and_one_lag():
+    """**The central ALGO-1 claim.** Nothing cross-timeframe is being measured.
 
-    Two voters weighted `log(1441)` and `log(7201)`: agreeing gives |a| = 1.0,
-    opposed gives 0.0996, and the condition's threshold is 0.4. So "opposed"
-    can never fire and the only reachable firing state is "both directional and
-    equal" — i.e. lagged self-agreement on one series.
+    The reference reads the daily series' own trend labels and the reconstructed
+    pointer, and never touches the 7200 series. If it reproduces the condition on
+    every bar, then `mtf_aligned` at 1440m is exactly "the daily structure trend
+    is directional now and was the same direction a few sessions ago".
     """
-    import math
-    w_lo, w_hi = math.log(1441.0), math.log(7201.0)
-    opposed = abs(w_lo - w_hi) / (w_lo + w_hi)
-    assert round(opposed, 4) == 0.0996
-    assert opposed < 0.4 < 1.0
+    frame = daily_frame()
+    tf = frame.frames[1440]
+    trend = [tf.snapshot(j).structure_trend for j in range(len(tf.series))]
+    ptr = rebuild_confirm_pointer(frame.base)
+    a = CONDITIONS["mtf_aligned"]
+    directional = ("UPTREND", "DOWNTREND")
+    fired = 0
+    for i in range(len(frame.base)):
+        now = trend[i]
+        then = trend[ptr[i]] if ptr[i] >= 0 else None
+        want = now in directional and now == then
+        assert a.fn(frame.snapshot(i), 1440).triggered is want, i
+        fired += want
+    assert fired > 0
+
+
+def test_mtf_not_conflicted_at_1440m_reduces_to_a_label_flip():
+    """Same reduction for the filter, on a series whose veto path is reachable.
+
+    It vetoes only on an outright UP<->DOWN flip across the lag. `structure_trend`
+    has a RANGE state between the two poles, so on the real daily files this
+    passes 99.1-99.6% of bars. A fast-flipping synthetic series is used here so
+    that both branches are exercised rather than only the passing one.
+    """
+    frame = daily_frame(leg=10)
+    tf = frame.frames[1440]
+    trend = [tf.snapshot(j).structure_trend for j in range(len(tf.series))]
+    ptr = rebuild_confirm_pointer(frame.base)
+    ok = CONDITIONS["mtf_not_conflicted"]
+    vetoed = 0
+    for i in range(len(frame.base)):
+        pair = (trend[i], trend[ptr[i]] if ptr[i] >= 0 else None)
+        conflicted = "UPTREND" in pair and "DOWNTREND" in pair
+        assert ok.fn(frame.snapshot(i), 1440).triggered is (not conflicted), i
+        vetoed += conflicted
+    assert vetoed > 0, "the veto branch must be reachable, or this proves nothing"
+    assert vetoed < len(frame.base) * 0.1
 
 
 def test_mtf_not_conflicted_ignores_its_timeframe_argument():
     """`_mtf_ok` reads every member of the frame regardless of `tf`.
 
     `R4-MT4`. Kept here because a fix to `align_bucket` would change this
-    filter's pass rate at 1440m without touching this inertness, and the two
-    must not be confused for each other.
+    filter's pass rate at 1440m without touching this inertness, and the two must
+    not be confused for each other.
     """
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440])
+    frame = daily_frame()
     ok = CONDITIONS["mtf_not_conflicted"]
     for i in range(0, len(frame.base), 7):
         snap = frame.snapshot(i)
@@ -262,13 +370,12 @@ def test_FIX_coarse_buckets_are_distinct_from_each_other():
 @pytest.mark.xfail(strict=False, reason="R4-M3 / BT4-REQ-1: a 7200m bucket holds one "
                                         "session. XPASS means fixed.")
 def test_FIX_a_weekly_bucket_spans_about_five_sessions():
-    bars = daily_bars(40)
-    per_bucket = collections.Counter(align_bucket(b.ts, 7200) for b in bars)
+    per_bucket = collections.Counter(align_bucket(b.ts, 7200) for b in flat_bars(40))
     assert max(per_bucket.values()) >= 4
 
 
 @pytest.mark.xfail(strict=False, reason="R4-M3 / BT4-REQ-1: the daily frame holds one "
                                         "series twice. XPASS means fixed.")
 def test_FIX_the_daily_frames_two_members_are_different_series():
-    frame = SymbolFrame(BarSeries("MGC", 1440, daily_bars(60)), FRAMES[1440])
+    frame = daily_frame()
     assert len(frame.frames[7200].series) < len(frame.frames[1440].series) / 2

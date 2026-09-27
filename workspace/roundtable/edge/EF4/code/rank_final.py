@@ -144,7 +144,7 @@ def main() -> None:
         print(f"of those, clearing their own declared free_t: {len(clearing)}")
         print(f"\n{'tf':>3} {'tr':>2} {'signals':<44}{'n':>5}{'wr':>6}{'grossE':>9}"
               f"{'cost':>7}{'netE':>9}{'t':>6}{'freeT':>6}{'ISn':>5}{'ISE':>8}"
-              f"{'OOSn':>5}{'OOSE':>8}{'folds (E)':>26}")
+              f"{'OOSn':>5}{'OOSE':>8}{'plcE':>8}{'pct':>6}{'z':>6}{'folds (E)':>26}")
         for r in rows[:12]:
             fs = " ".join(f"{f['expectancy_net_r']:+.2f}/{f['trades']}" for f in r["folds"])
             mark = "  <-- survives" if r in survivors else ""
@@ -153,7 +153,10 @@ def main() -> None:
                   f"{r['cost_total_r']:>7.4f}{r['expectancy_net_r']:>+9.4f}"
                   f"{r['t_stat']:>+6.2f}{r['free_t']:>6.2f}"
                   f"{r['is_trades']:>5}{r['is_expectancy_net_r']:>+8.3f}"
-                  f"{r['oos_trades']:>5}{r['oos_expectancy_net_r']:>+8.3f}{fs:>26}{mark}")
+                  f"{r['oos_trades']:>5}{r['oos_expectancy_net_r']:>+8.3f}"
+                  f"{r.get('placebo_mean_net_r', float('nan')):>+8.3f}"
+                  f"{r.get('placebo_percentile', float('nan')):>6.2f}"
+                  f"{r.get('placebo_z', float('nan')):>+6.2f}{fs:>26}{mark}")
     (OUT / "rank_final.json").write_text(json.dumps(out, indent=2))
     print(f"\nwrote {OUT / 'rank_final.json'}")
 

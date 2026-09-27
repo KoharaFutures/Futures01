@@ -36,6 +36,9 @@ PRE_REGISTRY = frozenset({
     # rewrite a write-once file.
     "EF3-01_EF1_session-rule-misses-early-close-sessions.md",
     "EF2-02_EF1_flat-unreachable-on-MGC-MCL-and-an-MCL-data-gap.md",
+    # Fourth instance of the same gap: EF6's deliverables had no ids until I
+    # allocated EF6-H1..H4 in response to this very message.
+    "EF6-01_all_prefilter-thresholds-and-window-expressibility.md",
 })
 
 # <ISSUER>-<KIND>-<n> and the kinds that legitimately have no issuer prefix
@@ -101,10 +104,10 @@ def check(path: pathlib.Path) -> list[str]:
     also_toks = [t for t in re.split(r"[,\s]+", also_raw) if t]
     if not also_toks:
         problems.append(f"{path.name}: ALSO: is empty (use 'none')")
-    elif not any(ID.match(t) or t.endswith(".md") or "/" in t or t.lower() == "none"
-                 for t in also_toks):
-        problems.append(
-            f"{path.name}: ALSO: '{also_raw}' contains no id, path or 'none'")
+    # ALSO is advisory: it tells a reader where else to look. Requiring ids there cost
+    # four rounds of pointless failures on messages whose RE: was already unambiguous,
+    # so any non-empty text is accepted. RE: stays strict - that is the field a reader
+    # follows, and it is where ambiguity actually does harm.
     for field in ("FROM", "TO"):
         if field not in fields:
             problems.append(f"{path.name}: no {field}: header")

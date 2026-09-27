@@ -569,3 +569,120 @@ description does not.
 
 **Group verdict: MISNAMED.** 4 distinct momentum conditions, 1 exact duplicate of one of them, 2
 whose direction rule is momentum's negation.
+
+---
+
+# Group 3 — `meanreversion` (3 conditions) → **CLEAN**, with a nested pair
+
+| condition | kind | arithmetic | fire rate, 23 cells | verdict |
+|---|---|---|---|---|
+| `bollinger_extreme` | SIGNAL | `close <= bb_lower` → LONG, `close >= bb_upper` → SHORT `[repo-verified: library.py:670-682]` | 10–14% | **CLEAN** |
+| `bollinger_mean_pull` | SIGNAL | `bb_pctb <= 0.15` → LONG, `>= 0.85` → SHORT `[repo-verified: library.py:685-696]` | 32–39% | **CLEAN** |
+| `keltner_outside` | SIGNAL | `close <= keltner_lower` → LONG, `>= keltner_upper` → SHORT `[repo-verified: library.py:699-709]` | 22–35% | **CLEAN** |
+
+Name, description and arithmetic agree in all three. None is VOID in any of my 47 cells.
+
+## R4-MR1 — `bollinger_extreme` is an algebraic strict subset of `bollinger_mean_pull`
+
+`bb_pctb = (close − bb_lower) / (bb_upper − bb_lower)`
+`[repo-verified: futures_agents/features.py:239-240]`. So `close <= bb_lower` ⟺ `bb_pctb <= 0`, and
+`0 < 0.15`, so every `bollinger_extreme` firing satisfies `bollinger_mean_pull`'s gate **in the same
+direction by construction**. Measured on 8 cells I chose independently of R1's:
+
+| cell | `bollinger_extreme` | also `bollinger_mean_pull` | same direction | `keltner_outside` ∩ `bollinger_extreme`, same direction |
+|---|---|---|---|---|
+| MGC 60m | 601 | **601/601** | 601/601 | 78.9% |
+| MGC 240m | 176 | **176/176** | 176/176 | 80.7% |
+| MNQ 60m | 635 | **635/635** | 635/635 | 82.7% |
+| MNQ 240m | 155 | **155/155** | 155/155 | 89.0% |
+| MES 60m | 670 | **670/670** | 670/670 | 80.9% |
+| MES 240m | 139 | **139/139** | 139/139 | 84.9% |
+| MCL 60m | 686 | **686/686** | 686/686 | 76.7% |
+| MCL 240m | 181 | **181/181** | 181/181 | 75.7% |
+
+`[measured: python3 over csv/raw with tfs=FRAMES[tf], per-bar comparison of (triggered, direction)]`
+
+The containment ratio is stable: `bollinger_extreme` is **28.5%–41.0% of `bollinger_mean_pull`'s
+firings** across all 23 corpus cells `[measured: census]`. `meanreversion` is **required by PULLBACK,
+REVERSAL and MEAN_REVERSION** — 3 of 13, joint-most-required with `trend` — and the required slot
+takes one member. Two `meanreversion` SIGNALs cannot co-occur (see `R4-MO1`'s structural argument),
+so this is not a double-count inside one strategy. It is a **variety claim about the search**: the
+required slot of three templates offers 3 names spanning a nested family whose pairwise overlap is
+76–89% (Keltner) and 100% (Bollinger, one-directionally), so its effective variety is nearer 1.5 than
+3. Any condition-level ranking among the three compares overlapping populations, not alternatives.
+
+**The library knows this and acted on it in one direction only.** `GLOBAL_EXCLUSIVE` bars
+`(stoch_extreme, keltner_outside)` and `(stoch_extreme, bollinger_mean_pull)` on the stated ground
+that "both are 'price is stretched to an extreme in volatility units'; the oscillator and the channel
+disagree on almost nothing" `[repo-verified: combinator.py:393-397]` — while
+`(bollinger_extreme, bollinger_mean_pull)`, a **provable** subset, is absent. Same asymmetry as
+`R4-MO1`. Both omissions are harmless *for confluence* (same group, cannot co-occur) and harmful for
+the denominator.
+
+## Note on the group name
+
+The arithmetic measures **location** — "price is stretched from its band". Reversion is the direction
+*assignment*, which is a hypothesis, not an observable. The group therefore names a hypothesis, but it
+does so transparently and each description states what it computes. **CLEAN.**
+
+---
+
+# Group 4 — `candlestick` (5 conditions) → **CLEAN**
+
+| condition | kind | arithmetic | fire rate, 23 cells | verdict |
+|---|---|---|---|---|
+| `candle_reversal` | SIGNAL | `hammer`: `lower_wick/range >= 0.60 and body_fraction <= 0.35` → LONG; `shooting_star`: upper wick `>= 0.60`, body `<= 0.35` → SHORT `[repo-verified: indicators/candles.py:107-113; library.py:1392-1404]` | 14–20% | **CLEAN** |
+| `candle_engulfing` | SIGNAL | `body_abs > prev.body_abs`, opposite sign, and `close >= prev.open and open <= prev.close` `[repo-verified: candles.py:120-130]` | 7–18% | **CLEAN** |
+| `candle_decisive_close` | SIGNAL | `marubozu`: `body_fraction >= 0.85`, direction `bar.is_up` `[repo-verified: candles.py:103-106]` | 5–16% | **CLEAN** |
+| `candle_close_strength` | SIGNAL | `abs(close_location_value) >= 0.6`, LONG if positive `[repo-verified: library.py:1435-1449]` | 40–51% | **CLEAN** |
+| `inside_bar_compression` | FILTER | `high <= prev.high and low >= prev.low` `[repo-verified: candles.py:133-137]` | 12–20% | **CLEAN** |
+
+Every name, description and arithmetic agree. I checked the two definitions most often got wrong:
+**engulfing is body-engulfing** (`close >= prev.open and open <= prev.close`), which is the standard
+definition and not the looser range-engulfing; and **`candle_reversal` is geometrically a pin bar** —
+a 60% lower wick with a ≤35% body leaves at most 5% upper wick, so the body necessarily "sits
+opposite" as the description claims. No condition in the group is VOID in any of my 47 cells; the
+thinnest is `candle_decisive_close` at 69 fires on MGC 240m, which is above `toolkit.FLOOR = 20` but
+is a small-sample cell and should be reported as one.
+
+**Required by:** nothing. Optional signal in TREND, REVERSAL, LIQUIDITY, SUPPLY_DEMAND;
+`inside_bar_compression` is an optional filter in SUPPLY_DEMAND `[measured: TEMPLATES]`. So a
+misnaming here would have been a footnote. There is none.
+
+## R4-C1 — the CLV duplication is a *reachable* false confluence, unlike the MACD one
+
+`candle_close_strength` computes `close_location_value(bar) = ((C−L) − (H−C)) / range`
+`[repo-verified: indicators/candles.py:51-61]`, and `Bar.estimated_delta()` is the same quantity
+times volume `[repo-verified: data/bars.py:106-117]` — which is the arithmetic under the `orderflow`
+group. R1 recorded this as `C-1` and I agree with the reading.
+
+**What I add is that this pair can actually co-occur, and the MACD pair cannot.**
+`candlestick` and `orderflow` are *different* optional groups in TREND, REVERSAL, LIQUIDITY and
+SUPPLY_DEMAND, so `itertools.combinations` over distinct group indices permits both
+`[repo-verified: combinator.py:539-546]`. Measured, one template at a time with the full budget:
+
+| template | strategies | `candle_close_strength` + `delta_confirms_bar` | + `cvd_directional` |
+|---|---|---|---|
+| REVERSAL | 336 | **8** | **8** |
+| LIQUIDITY | 328 | **4** | **16** |
+| TREND / SUPPLY_DEMAND / MOMENTUM | 366 / 360 / 365 | 0 | 0 |
+
+`[measured: python3, generate_strategies('MCL',[5,15,60,240],max_total=400,groups=[one template])]`
+
+Neither pair is in `GLOBAL_EXCLUSIVE` `[repo-verified: combinator.py:390-398 — it holds exactly three
+pairs, none of them these]`. So **the failure mode R1 attributed to the MACD duplicate — "counting
+one reading twice and calling it agreement" — is real, and it lives here and in `orderflow`, not in
+`momentum`.** A REVERSAL strategy carrying `candle_close_strength` and `delta_confirms_bar` requires
+two signals that R1 measured co-firing on 92–93% of the former's firings
+`[repo-verified: R1_group_audit.md:149-155]`, filed under two group names, one of which claims
+participant information. That is exactly what `GLOBAL_EXCLUSIVE` was built for and it is not in it.
+
+## R4-C2 — two detected patterns have no consumer
+
+`classify_candle` detects `doji` (`body_fraction <= 0.10`) and `outside_bar` and **no condition reads
+either** `[repo-verified: candles.py:100-102, 139-145]`
+`[measured: grep -c 'doji\|outside_bar' futures_agents/strategies/library.py → 0]`. `outside_bar` is
+the only pattern needing the 20-bar average range, so `_avg_range` is computed on every bar for a
+pattern nothing consumes. Dead code in the indicator, not a misnamed condition — recorded so the
+group's coverage is not overstated at 7 patterns when 5 are reachable. (R1 recorded the same as
+`C-2`; I reproduce the grep because it is one command and confirms the reading.)

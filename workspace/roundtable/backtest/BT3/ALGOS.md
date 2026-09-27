@@ -31,9 +31,10 @@ Nothing here touches `data/archive/` (BRIEF's 2026-09-27 data ruling, condition 
     governor), one look-ahead I had missed, one biased tiebreak, and four choices ruled
     FAITHFUL. R3 ruled from the code and the artefact directly because my question had not
     landed when it looked.
-  - Cycle 2: all five of R3's ranked items applied. **Everything below is the corrected
-    version**, and the numbers in cycle 1 are superseded. Re-asked in
-    `msgs/06_BT3_R3_verify-ALGO-1-v2.md`.
+  - Cycle 2: all five of R3's ranked items applied, plus the two it asked me to *report*
+    (the absorbing boundary, and the capacity slack). **Everything below is the corrected
+    version and the cycle-1 numbers are superseded.** Re-asked in
+    `msgs/06_BT3_R3_verify-ALGO-1-v2.md` — on the difference only, as R3 asked.
 
 ### What R3 ruled DIVERGENT, and what I changed
 
@@ -289,111 +290,223 @@ never spent.** So the shipped configuration has a **dead-but-not-failed absorbin
 $2,800 it is $21.60, because the de-risk ladder steps from ×0.50 to ×0.30. ALGO-1 therefore
 tracks and reports `absorbing`, `death_index`, `death_ts`, `death_drawdown` and
 `taken_before_death` per run, and **the death rate is a primary statistic.**
-
 ### What it measures
 
-**Mechanical, and not contingent on the fidelity verdict** — properties of the stop
-distribution and of `contracts_for` arithmetic, checkable by hand:
+All of it is the corrected (cycle-2) replay. Reported in three tiers by how much the fidelity
+verdict can still move it.
 
-**The integer floor at the opening $240 budget deletes 7,767 of 21,954 trades — 35.4%**
-`[measured: static_integer_floor() → deleted 7767/21954 (35.38%)]`, and it deletes them
-selected on symbol and bar size:
+#### Tier A — the structural result, which needs no trade data at all
+
+**The shipped `AccountConfig` has a dead-but-not-failed absorbing state at a $2,800 drawdown,
+and `max_total_drawdown` is unreachable from above it.**
+
+Past a $2,800 drawdown from peak the per-trade budget is **$21.60**, below
+`min_dollar_risk = $25`, and stage 7 vetoes every proposal *before* `contracts_for` is reached
+`[repo-verified: risk/manager.py:325-329]`. Equity can then move only through already-open
+positions; once they close it is frozen, `peak_equity` never falls, so the budget never
+recovers. Equity there is $47,200 against a failure threshold of $45,000 —
+**$2,200 of the $5,000 drawdown allowance is never spendable**
+`[measured: absorbing_boundary() → {'drawdown_at_which_the_account_dies': 2800.0,
+'budget_there': 21.6, 'equity_there': 47200.0, 'dollars_of_headroom_left_unused': 2200.0,
+'derisk_multiplier_there': 0.3, 'last_live_drawdown': 2799.0,
+'budget_one_step_earlier': 36.03}]`.
+
+The boundary is a **discontinuity, not a fade**: $36.03 at a $2,799 drawdown, $21.60 at
+$2,800, because the de-risk ladder steps ×0.50 → ×0.30 there. This is derived from
+`config.py` and `risk/manager.py` alone — no trade data, no ordering choice, no fidelity
+question can move it. **R3 found it; I reproduced it in code rather than citing it, because it
+is now the headline.** It also explains why every arm reports `failed=False`: the account
+cannot reach its own failure threshold, so risk-of-ruin as this repo models it is measuring the
+wrong event.
+
+#### Tier B — mechanical, checkable by hand, independent of the replay's path
+
+**The integer floor at the opening $240 budget deletes 9,042 of 21,954 trades — 41.19%**
+`[measured: static_integer_floor(vol_aware=True) → deleted 9042/21954 (41.19%)]`, against
+**35.38%** with the volatility multiplier pinned
+`[measured: static_integer_floor(vol_aware=False) → 7767/21954]`. So **the ×0.70 alone deletes
+1,275 more trades** — and R3 independently predicted 1,272 from the HIGH/EXTREME subset, which
+agrees to 3 rows out of 6,120 (the difference is `risk_points` rounded to 8dp in the cache
+versus the raw `|entry − stop|`)
+`[measured: HIGH/EXTREME n=6120, keeps 3627 at $240 and 2352 at $168 → 1275]`.
+
+**But 41.19% is a knife-edge, not a constant, and the headline is wrong without this.** The
+stop-distance distribution is concentrated right at the $240 boundary, so the deletion rate is
+steeply elastic in the budget `[measured: floor_budget_sensitivity()]`:
+
+| budget | $100 | $168 | **$240** | $375 | $500 | $1000 |
+|---|---|---|---|---|---|---|
+| deleted, vol-pinned | 78.1% | 57.0% | **35.4%** | 14.7% | 7.5% | 0.8% |
+| deleted, vol-aware | 80.4% | 60.8% | **41.2%** | 20.0% | 10.5% | 1.6% |
+
+**Elasticity near $240 is ≈ 2.0** — a 1% budget cut deletes about 2% more of the stream. Two
+consequences worth stating plainly. First, R3's B-3(c) assumption of $375/$500 would have
+measured **14.7%/7.5%**, so the $240 correction more than doubles the effect. Second, any
+result of the form "the floor deletes X%" is a statement about one account size and must always
+carry it.
+
+Deletions by cell, vol-aware:
 
 | cell | n | deleted by the floor | median contracts |
 |---|---|---|---|
 | MGC 240m | 1,204 | **99.42%** | 0 |
 | MNQ 240m | 1,293 | **94.59%** | 0 |
-| MGC 60m | 4,276 | 53.27% | 0 |
-| MNQ 60m | 4,374 | 46.98% | 1 |
-| MCL 240m | 1,179 | 29.26% | 1 |
-| MES 240m | 1,294 | 27.98% | 1 |
-| MCL 60m | 4,243 | 5.09% | 2 |
-| MES 60m | 4,091 | 2.22% | 2 |
+| MGC 60m | 4,276 | 61.34% | 0 |
+| MNQ 60m | 4,374 | 55.85% | 0 |
+| MCL 240m | 1,179 | 30.11% | 1 |
+| MES 240m | 1,294 | 29.60% | 1 |
+| MCL 60m | 4,243 | 10.18% | 2 |
+| MES 60m | 4,091 | 9.44% | 2 |
 
-**So R3's "some catalogue exits are untradeable at the modelled account size" is confirmed and
-understated.** It is not one exit on one symbol: on this population **MGC at 4h is untradeable
-at 99.4% of its signals and MNQ at 4h at 94.6%**, at both `atr1.0` and `atr1.5`, at a $50,000
-account. Both cells have a median of **zero** contracts.
+**R3's "some catalogue exits are untradeable at the modelled account size" is confirmed and
+understated.** It is not one exit on one symbol: **MGC at 4h is untradeable at 99.4% of its
+signals and MNQ at 4h at 94.6%**, at both `atr1.0` and `atr1.5`, on a $50,000 account, with a
+median of **zero** contracts in both cells.
 
-**R3's volatility-filter reading holds, conditioned on symbol and timeframe.** The claim is only
-about volatility if survival still varies with the volatility regime once `point_value` and bar
-size are held fixed — otherwise the floor is selecting on the contract, which merely *looks*
-like volatility. Held fixed `[measured: floor_by_volatility()]`:
+**R3's volatility-filter reading holds, and the corrected arm makes it a cliff.** The claim is
+only about volatility if survival varies with the regime once `point_value` and bar size are
+held fixed — otherwise the floor is selecting on the contract. Percent surviving the floor,
+conditioned on `(symbol, tf)` `[measured: floor_by_volatility()]`:
 
 | cell | DEAD | LOW | NORMAL | HIGH | EXTREME |
 |---|---|---|---|---|---|
-| MGC 60m | 68.6 | 69.7 | 48.2 | 37.3 | **14.2** |
-| MNQ 60m | 81.8 | 77.4 | 57.0 | 34.3 | **22.7** |
-| MES 240m | 94.4 | 91.3 | 64.9 | 48.9 | — |
-| MES 60m | 100 | 100 | 99.3 | 96.6 | 91.2 |
-| MCL 60m | 100 | 99.8 | 98.0 | 90.3 | 83.8 |
-| MCL 240m | 100 | 100 | **63.8** | 100 | 100 |
+| MGC 60m | 68.6 | 69.7 | 48.2 | **2.5** | **1.3** |
+| MNQ 60m | 81.8 | 77.4 | 57.0 | **4.8** | **1.1** |
+| MES 240m | 94.4 | 91.3 | 64.9 | **2.2** | — |
+| MES 60m | 100 | 100 | 99.3 | 80.3 | 64.6 |
+| MCL 60m | 100 | 99.8 | 98.0 | 75.8 | 70.4 |
+| MCL 240m | 100 | 100 | **63.8** | 75.0 | 88.5 |
 | MGC 240m | 0.0 | 0.0 | 0.8 | 0.0 | 0.0 |
 | MNQ 240m | 0.0 | 0.0 | 6.7 | 0.0 | — |
 
-(percent of trades surviving the floor at $240). **Monotone decreasing in 5 of the 6
-unsaturated cells**, and MGC 60m loses 4.8× as many EXTREME trades as DEAD ones. MCL 240m does
-not fit — NORMAL survives at 63.8% while DEAD, LOW, HIGH and EXTREME all survive at 100% — and I
-am reporting that rather than smoothing it; HIGH there is n=16. So: **integer sizing at this
-account size is a volatility filter, and it is a stronger symbol-and-timeframe filter than it is
-a volatility one.**
+Monotone decreasing in **5 of the 6** unsaturated cells, and on MGC 60m a HIGH-volatility
+signal is **27× less likely to be affordable than a DEAD one**. The two channels compound:
+HIGH/EXTREME trades have wider ATR stops *and* a 30%-smaller budget, and because the stop
+distribution sits on the boundary the second channel is what turns a gradient into a cliff —
+the vol-pinned arm has MGC 60m HIGH at 37.3% rather than 2.5%.
 
-**Stateful, therefore UNVERIFIED.** Reported so the shape is on record, not as results:
+**MCL 240m does not fit and I am not smoothing it**: NORMAL survives at 63.8% while DEAD, LOW,
+HIGH and EXTREME all survive better. HIGH there is n=16 and EXTREME n=52 against NORMAL's
+n=954, so it is plausibly small-sample, but it is one cell out of six behaving backwards and it
+should be checked before the monotonicity is quoted as general.
 
-*PER_STRATEGY (176 fresh accounts, the non-pooled reading, `is_live_eligible=True`):*
-**5,705 of 21,954 trades survive the governors — 26.0%.** Median survival per strategy 26.7%,
-range [0%, 100%], 29 of 176 strategies take **no trade at all**. **Zero of 176 accounts failed**
-over 254 trading days. And the refusals are almost entirely one governor:
+#### Tier C — the stateful replay. Corrected, and still contingent on R3's cycle-2 ruling
 
-| veto | count | share of 16,249 refusals |
+**PER_STRATEGY — 176 fresh $50,000 accounts, the non-pooled reading, which is the one I report
+as the governor effect.** **5,537 of 21,954 trades survive — 25.22%**, against 5,705 (25.99%)
+with the volatility multiplier pinned. Median survival per strategy 26.7%, range [0%, 100%],
+**30 of 176 strategies take no trade at all.** And the refusals are one governor:
+
+| veto | count | share of 16,417 refusals |
 |---|---|---|
-| `7_integer_floor_zero_contracts` | 15,769 | **97.05%** |
-| `1_buffer_exhausted` | 250 | 1.54% |
-| `1_consecutive_losses` | 202 | 1.24% |
+| `7_integer_floor_zero_contracts` | 16,184 | **98.58%** |
+| `1_consecutive_losses` | 205 | 1.25% |
 | `2_stop_inside_noise_floor` | 23 | 0.14% |
-| `1_daily_loss_limit` | 2 | 0.01% |
+| `7_below_min_dollar_risk` | 3 | 0.02% |
 | `1_trade_cap` | 2 | 0.01% |
-| `7_below_min_dollar_risk` | 1 | 0.01% |
-| `1_profit_giveback` | 0 | 0 |
-| `3_*` (all exposure caps) | 0 | 0 |
+| `1_daily_loss_limit`, `1_profit_giveback`, all `3_*` exposure caps | **0** | 0 |
 
-**The daily governors R3's Tier 0 item 1 was about — daily loss limit, giveback, trade cap,
-consecutive-loss stand-down — account for 206 of 16,249 refusals, 1.27%.** `max_trades_per_day
-= 6` **never binds**: no strategy's busiest day exceeds 6 trades, so `days_over_6_taken = 0`
-across all 176 `[measured]`. At 60m and 240m bars a single strategy does not generate seven
-signals in a session. **The trade cap is inert at this timeframe and only bites when you pool.**
+**So the daily governors that R3's Tier 0 item 1 is named after — daily loss limit, giveback,
+trade cap, consecutive-loss stand-down — account for 207 of 16,417 refusals, 1.26%, and two of
+the four never fire at all.** At this account size the integer floor is not one governor among
+nineteen: it is the governor.
 
-Of the 15,769 floor deletions, **7,728 fire at the opening $240 budget and 8,041 only after the
-budget has shrunk** `[measured]`, so about half the floor's bite is the de-risk ladder and the
-day-penalties, not the floor's static reach. Median dollar risk actually taken, across
-strategies, is **$169** against a $240 opening budget.
+`max_trades_per_day = 6` **never binds on a single strategy.** No strategy's busiest day
+exceeds 6 trades and `days_over_6_taken = 0` across all 176; the modal busiest day is 2–3
+trades `[measured: max_taken_in_a_day distribution {0:30, 1:15, 2:44, 3:45, 4:24, 5:13, 6:5}]`.
+At 60m and 240m bars a single strategy does not generate seven signals in a session. **The cap
+is inert at this timeframe and only bites when you pool.** And note it is 6 for the *whole
+account across all four symbols and both timeframes*, not 6 per symbol.
 
-*POOLED (the pooling diagnostic, not a result):* **238 of 21,954 taken — 1.08%**, against
-26.0% unpooled. **A factor of 24, and it is pooling, not governance.** The extra refusals are
-1,126 `3_symbol_already_held` + 126 `3_concurrent_limit` + 276 `1_trade_cap`, all of which exist
-only because 22 correlated arms are competing for one symbol slot. Median dollar risk taken
-falls to **$38**. Under the honest `is_live_eligible=False` arm the budget halves to $120 and
-the dominant veto *changes identity*: `7_below_min_dollar_risk` fires 14,372 times — **the
-account is below its own $25 minimum-meaningful-risk floor for 65% of candidates.**
+Of the 16,184 floor deletions, **7,766 fire at the opening budget and 8,418 only after the
+budget has shrunk**, so roughly half the floor's bite is the de-risk ladder rather than the
+floor's static reach. Median dollar risk actually taken is **$166.50** against a $240 opening
+budget. **2 of 176 accounts reached the absorbing state; 0 of 176 hard-failed.**
 
-*Placebo (R permuted, everything else identical):* **349 taken — 1.59%**, versus 1.08% real, and
-inside the [0.537%, 1.685%] ordering interval. **The governors' deletion count is not reading
-the signal.** The placebo also takes 7 trades on 2 days with the cap at 6, which is the
-close-counting leak (choice 11) showing up.
+**POOLED — 200 seeded within-timestamp orders. Reported as a diagnostic of pooling, never as a
+result.** Median survival **1.011%** of candidates, p05–p95 **[0.647%, 1.257%]**, versus 25.22%
+unpooled. **A factor of 25, and it is pooling, not governance**: the extra refusals are the
+per-symbol and concurrency caps firing because 22 correlated arms compete for one symbol slot.
+**26 of 200 orderings (13.0%) drove the account into the absorbing state**, median death date
+2026-01-22 … 2026-03-09, median 199.5 trades taken before it, and median max drawdown **$2,670**
+— which is $130 from the cliff, so most surviving orderings survive narrowly.
+
+#### The controls, with the tests named
+
+`paired_tests.py`. Every arm runs the **same 200 permutations**, so all comparisons are paired
+by seed; the tests are **exact McNemar** on the binary "did this account die" and the **exact
+two-sided sign test** on per-seed `taken`. Unpaired tests are not used, and `T.ab` is not used
+anywhere (D28). **Search size: 6** — three comparisons × two statistics, all reported, none
+discarded; `free_t = sqrt(2·ln 6) = 1.893` against the programme-wide 5.46.
+
+| comparison | death rate | McNemar exact p | `taken` sign test p |
+|---|---|---|---|
+| real vs **placebo** (R permuted, count-matched) | 13.0% vs 6.0% | 0.0288 | 0.0131 (median −19 trades) |
+| real vs **volatility pinned** (control) | 13.0% vs **41.0%** | **7.08e-10** | 0.52 (median −1 trade) |
+| real vs **barrier removed** (the look-ahead priced) | 13.0% vs 10.0% | 0.362 | 0.156 (median −4) |
+
+Three readings, in order of how much I would defend them:
+
+1. **The volatility multiplier decides whether the account lives, and barely touches how many
+   trades it takes.** Pinning it to NORMAL raises the death rate 13.0% → 41.0% (p = 7e-10,
+   against 1.893 free t-units — this one clears its own threshold by a wide margin) while
+   moving median `taken` by one trade (p = 0.52). **A governor that looks like it only shrinks
+   position size is the one that determines survival**, because smaller size in high-volatility
+   regimes keeps the drawdown under the $2,800 cliff. That is a Channel-2 effect arriving
+   through what looks like a Channel-4a knob, and it is the most interesting thing ALGO-1 found.
+2. **The governors' deletion rate does not read the signal at all.** Real median `taken` 1.011%
+   versus placebo 1.000% — the medians are indistinguishable, and although the sign test picks
+   up a direction (p = 0.0131, real takes ~19 fewer trades per seed) that is well inside 1.893
+   free t-units and the placebo's own spread is wider (p95 1.959% vs 1.257%). **Which trades
+   the governors delete is a property of the stop distribution and the calendar, not of the
+   entry.** That is the honest placebo verdict and it is a null.
+3. **The look-ahead I removed was not what moved the number.** Removing the barrier changes the
+   death rate 13.0% → 10.0% (p = 0.362) and `taken` by 4 trades (p = 0.156) — neither
+   detectable. **The leak was real and had to go on principle, and pricing it shows it was not
+   load-bearing.** Worth recording precisely because the instinct is to assume a look-ahead one
+   has just fixed was the whole result. On the biased lexicographic anchor it looked far larger
+   (192 taken and dead, versus 233 and alive), which is itself evidence that the anchor order
+   was unrepresentative — exactly R3's point.
+
+One robustness result falls out: **the `cap_on_open` divergence is empirically inert.** `taken`
+and `final_equity` are *identical* with the cap counted on closes and on opens in every anchor
+arm; the open-cap vetoes only relabel trades that stage 3 or stage 7 would have refused anyway.
+So the `DayState.record`-counts-closes ambiguity changes nothing here.
+
+And one capacity check, because "1% taken" invites the reader to assume saturation: the pooled
+stream demands 22,325,550 position-minutes over a 490,320-minute span, so two concurrent slots
+could service at most **4.39%** of it — well above the observed 0.65–1.26%. **The concurrency
+ceiling is slack and never binds, because the floor deletes most candidates before exposure can
+accumulate.** It is not saturation.
 
 ### What it does not measure, stated so nobody reads it as more than it is
 
-- **Not a portfolio result and not an expectancy claim.** I have deliberately not quoted the
-  surviving series' expectancy as a finding. The equal-weighted per-strategy means are
-  −0.1268R taken vs −0.0248R refused over the 113 strategies with ≥10 taken, i.e. **the
-  governors kept the worse half** — but that comparison is UNVERIFIED, unpaired, and over
-  correlated variants, so it is a number in a lab book, not a result.
-- **Search size: 1.** One algorithm, one parameter set (the shipped `AccountConfig` defaults),
-  no tuning of anything. The arms are not variants searched over — they are
-  `live_eligible ∈ {T,F}` × `cap ∈ {open,close}` plus 5 ordering seeds and 1 placebo, all
-  reported, none selected between. Nothing here is compared against `free_t = 5.46` because
-  nothing here is a t-statistic.
-- **No comparative claim is routed through `T.ab`** (D28). No comparative test is used at all.
+- **Not a portfolio result, and not an expectancy claim.** I have deliberately not promoted the
+  surviving series' expectancy to a finding. The equal-weighted per-strategy means are roughly
+  −0.13R taken against −0.02R refused, i.e. the governors appear to keep the *worse* half — but
+  that comparison is over correlated variants with no paired control on the R series itself, and
+  the population it is drawn from is settled negative everywhere anyway. **A governor cannot
+  rescue a negative E[R] and nothing here suggests one did.** It is a lab-book number.
+- **Nothing here is a search for a configuration that improves anything.** The
+  `AccountConfig` defaults are used as shipped throughout; no parameter was tuned, scanned or
+  chosen. Every arm exists to isolate a mechanism, and all arms are reported.
+- **Search size: 6 tests**, all in `paired_tests.py`, all reported, none discarded.
+  `free_t = 1.893`. The one result that clears its own threshold by a wide margin is the
+  volatility-multiplier survival effect (p = 7e-10); the placebo comparison (p = 0.029) does
+  **not** clear it and is therefore reported as a null, which is also what its medians say.
+- **No comparative claim is routed through `T.ab`** (D28). Exact McNemar and an exact sign test,
+  both paired on the shared seeds, are the only tests used and both are named in the table.
+- **`session` cuts are forbidden on this artefact.** Its `session` label and its `ts` are on
+  different clocks (row 0: 20:00 ET labelled `POST_CLOSE`; 20:00 ET is `ASIA`), so a day cut and
+  a session cut would disagree. R3 found this; nothing in `assess` reads `session`, so no
+  ALGO-1 number is affected, but no future cut may use it without settling it first.
+- **`AccountState.equity_curve` is unusable for any path statistic here**: it is seeded with a
+  wall-clock stamp while every later point is stamped at the replay's own `ts`, so it is not
+  monotonic in time. ALGO-1 tracks peak, trough and max drawdown itself.
+- **The two arms I could not inform remain uninformed**: stage 4 (news — no event calendar
+  exists) and stage 5 (ATR/median volatility band — no `atr_median` in the artefact). Neither is
+  an account governor, but both would delete further trades, so **every deletion count here is a
+  lower bound.**
 
 ---
 

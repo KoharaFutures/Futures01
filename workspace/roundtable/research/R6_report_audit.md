@@ -161,6 +161,12 @@ Over-retracting is as bad as under-retracting, so this section comes before the 
 round-1/2 findings are real properties of the library that **cannot have reached any row in the four
 reports**, and one is narrower than round 2's framing implies. Saying so is part of the job.
 
+> **Navigation note.** This file was appended as the work proceeded, per `BRIEF.md` rule 1, so
+> §2.1–§2.2 sit here while **§2.3 (`R6-M3`, the 1h grid) appears after Report B** and **§2.4
+> (`R6-M4`, the chronology universe) appears after Report C** — each was written at the moment it
+> was measured, immediately before the report table that depends on it. Reading order is: §0, §1, §2,
+> Report A, Report B, §2.3, Report C, §2.4, Report D, §5–§9. Nothing was reordered after the fact.
+
 | finding | why it does not reach a published row |
 |---|---|
 | **D-MTF1** — both MULTI_TIMEFRAME signals DEAD at the frame's top timeframe | **R6-M1.** Every published harness trades the *lowest* timeframe of its frame and filters `s.primary_tf == tf` `[repo-verified: workspace/bigscan/cell.py:88-90; workspace/studies/toolkit.py:158-161; workspace/chrono/ledger.py:38-41]`, and `FRAMES` always places ≥1 timeframe above it `[repo-verified: futures_agents/scout.py:58]`. So **no published strategy ever traded at its frame's top timeframe.** Confirmed by measurement: `mtf_aligned` fires 1153/2511 (MGC) and 976/1859 (MES) at 1440m in `[1440,7200]` — alive, not dead (R6-M2). D-MTF1 is a **forward hazard for a study that builds a single-timeframe frame**, not a retraction. |

@@ -198,7 +198,7 @@ asks "does this axis do anything".
 This is the third instance of the identity-collision family — `ExitModel.label`, then D43's
 `StrategyFilters.label`, now the `_id` cache — and it is **not fixed by D43**, because D43
 repaired what goes *into* the hash and this defeats the hash entirely by not recomputing it.
-I have filed `R3-REQ-1` asking the manager for a `D<n>` number.
+Filed as `R3-REQ-1` and **allocated `D48`** by the manager in `msgs/13_manager_all_D48-D49-and-triage.md`, which also **amends `R-6`**: a paired re-emission that does not pass `_id=None` on every `replace` and assert arm-id uniqueness at emission **is not a paired re-emission and its output is not reportable**. The assert of §1.1 is what makes the discipline auditable, so it is now a gate condition rather than my advice.
 
 ### The rule, stated so it cannot be got wrong
 
@@ -568,7 +568,7 @@ Per my mandate, stating which hazards I actually checked rather than listing the
 | **Look-ahead in the treatment arms** | Yes, on the one path R3-A-11's clean bill could not cover — the trailing stop, which has never executed and so has never been audited | **Clean.** The trail reads `a = col[self.frame.tf_index(i, primary_tf)]`, and `tf_index` returns "index of the newest **completed** timeframe bar at `base_index`" `[repo-verified: features.py:921-926]`. No forming-bar ATR. |
 | **Repainting** | Yes, same path | **Not repainting, but lagged, and it must be declared.** The trail is computed from `bar.high` (a completed high) at step 3, *after* step 1 already ran this bar's stop check `[repo-verified: engine.py:404-422 then 451-462]`. So a tightened stop takes effect on bar *i+1*. That is **conservative** (favourable to the strategy) and makes the engine's trail coarser than a live intrabar trail — it will systematically under-capture. State it with any item-4 number. |
 | **Future-data leakage via the pairing** | Yes | **Found and forbidden.** Pairing on the entry-timestamp intersection conditions on which bars both arms were flat for, which is a function of prior outcomes — a selection on the dependent variable. §4.2. |
-| **Silent merging / identity collision** | Yes | **Found: R3-A-13**, §2. The most dangerous hazard in the design and it produces a *false null*, the exact shape of every one of these seven results. |
+| **Silent merging / identity collision** | Yes | **Found: R3-A-13**, §2 — allocated **`D48`**, and `R-6` amended to gate on it. The most dangerous hazard in the design and it produces a *false null*, the exact shape of every one of these seven results. |
 | **Data-mining bias / search size** | Yes | 8 arms for the factorial, `sqrt(2 ln 8) = 2.04` free t-units. Item 7's search size is the number of scopes tested and must be declared per scope family, not once. `free_t = 5.46` programme-wide. |
 | **Insufficient sample size** | Yes | n_pairs = 1,260 across four symbols at `max_total=400` (§1.2) — adequate at the **rule-set** level. Per-symbol it is 296–336, and **every symbol must be tested separately**: MNQ's answer is MNQ's. |
 | **Parameter sensitivity** | Yes | `trail_atr_mult=2.0` and the 0.2 residual are single arbitrary points. Both need at least a second value before any non-null is believed; both are inside the factorial's cells, so the sensitivity run multiplies the search size and must be declared when it happens. |

@@ -1984,10 +1984,13 @@ dollar outcome divided by the **control** rule set's `risk_points`, computable f
 post-processing step, not a configuration change. Specified in `R3_pairing_design.md` §5.4.
 It is the only one of the eight items with this property.
 
-## A-13 (NEW) `dataclasses.replace` inherits the cached `_id`, silently merging both arms of a pair
+## A-13 (NEW) `dataclasses.replace` inherits the cached `_id`, silently merging both arms of a pair — **allocated `D48`**
 
 Full statement and measurements in `research/R3_pairing_design.md` §2; filed for a defect number
-as `R3-REQ-1`. In one paragraph: `Strategy._id` is a real dataclass field
+as `R3-REQ-1` and **allocated `D48`** in `msgs/13_manager_all_D48-D49-and-triage.md`, where the
+manager also **amended `R-6`**: a paired re-emission that does not pass `_id=None` on every
+`replace` and assert arm-id uniqueness at emission is **not** a paired re-emission and its output
+is **not reportable**. In one paragraph: `Strategy._id` is a real dataclass field
 `[repo-verified: base.py:585]` memoised by `strategy_id` via `object.__setattr__`
 `[repo-verified: base.py:622]`; `generate_strategies` populates it before returning, because its
 dedupe is `seen.setdefault(st.strategy_id, st)` `[repo-verified: combinator.py:719]`; so
@@ -2208,7 +2211,9 @@ hourly bars to exist. My count of `csv/raw` finds the 1h grid **100% at `:00`** 
 checked, and the arithmetic says a `:00` grid can never be in-window for a 09:30 open. So on
 `csv/raw` the figure should be **0/5000, not 2/5000**, which makes R1's finding *stronger* than
 stated for MES and MNQ. R1's `:30` bars may come from a different data path. Raised with R1 in
-`msgs/11_R3_R1_re-stopkind-RANGE.md`; it does not change any conclusion either way.
+`msgs/11_R3_R1_re-stopkind-RANGE.md`; it does not change any conclusion either way. **The RANGE
+collapse is allocated `D49`**, and the manager adopted R1's refusal to state a single vocabulary
+size as the ruling on R3-Q1: the count is per-symbol and per-timeframe and nothing transfers.
 
 **And it hands the pairing design something it did not have: a known-answer calibration test.** On
 MGC/MES/MNQ at 1h, a `RANGE`-versus-`ATR` pair at matched `stop_mult` has a true difference of

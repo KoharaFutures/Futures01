@@ -16,14 +16,18 @@ Code: `EF2/code/firecount.py`. Cost control: `evaluate` never touches the `ExitM
 a **gate signature** `(primary_tf, sorted condition labels, allowed directions, filters.identity)`
 have identical fire sets and are evaluated once.
 
-### Result — MGC, on post-VOID-gate arms
+### Result — all eight cells, on post-VOID-gate arms
 
-| cell | arms the VOID gate kept | arms with ≥1 raw fire | **arms that still never fire** |
-|---|---|---|---|
-| `MGC:f60__p60` | 1,440 | 481 | **959 = 66.6%** |
-| `MGC:f60_240__p60` | 1,656 | 635 | **1,021 = 61.7%** |
-| `MGC:f240__p240` | 998 | 333 | **665 = 66.6%** |
-| `MGC:f60_240__p240` | 998 | 324 | **674 = 67.5%** |
+| cell | arms the VOID gate kept | arms with ≥1 raw fire | **arms that still never fire** | median fires (live arms) | p90 fires |
+|---|---|---|---|---|---|
+| `MGC:f60__p60` | 1,440 | 481 | **959 = 66.6%** | 13 | 347 |
+| `MGC:f60_240__p60` | 1,656 | 635 | **1,021 = 61.7%** | 12 | 287 |
+| `MGC:f240__p240` | 998 | 333 | **665 = 66.6%** | 26 | 361 |
+| `MGC:f60_240__p240` | 998 | 324 | **674 = 67.5%** | 23 | 339 |
+| `MCL:f60__p60` | 1,564 | 507 | **1,057 = 67.6%** | **5** | 111 |
+| `MCL:f60_240__p60` | 1,780 | 602 | **1,178 = 66.2%** | **4** | 95 |
+| `MCL:f240__p240` | 1,120 | 321 | **799 = 71.3%** | 22 | 315 |
+| `MCL:f60_240__p240` | 1,120 | 327 | **793 = 70.8%** | 20 | 381 |
 
 **So the VOID gate removed about a third of the candidates and roughly two thirds of what it passed
 still never fires over 718 days.** Those are two distinct findings and only the first is what the
@@ -33,15 +37,55 @@ programme's 19.0% figure describes:
 - these are *conjunctive* zeros — every condition fires somewhere, but the strict AND of 2–4 signals
   (which must also **agree on direction**) plus 2–4 filters plus `rth_only` is empty.
 
-Both produce the same null and neither is a market fact. The practical consequence is the
-**effective** search size: roughly a third of the published population, which lowers `free_t` by about
-0.55 t-units — worth stating, and nowhere near enough to rescue a threshold of ~4.1.
+Both produce the same null and neither is a market fact.
 
-Gate signatures equalled arm counts in every MGC cell (1,440 signatures for 1,440 arms, etc.), i.e.
-**no two surviving rule sets differ only by their exit geometry** in this draw, so the dedupe bought
-nothing. That is itself worth recording: it means the exit dimension in my population is spread across
-distinct rule sets rather than nested inside them, so "which geometry is best for this rule set" is
-**not** answerable from the screen and would need a deliberate re-emission.
+### The effective search size, which is what the deflation threshold should actually be paid on
+
+| floor on raw fires | MGC arms | `free_t` | Sharpe needed | MCL arms | `free_t` | Sharpe needed |
+|---|---|---|---|---|---|---|
+| — (published population) | 5,092 | 4.132 | **2.95** | 5,584 | 4.154 | **2.96** |
+| ≥ 1 | **1,773** | 3.868 | 2.76 | **1,757** | 3.866 | 2.76 |
+| ≥ 20 | 814 | 3.661 | 2.61 | 590 | 3.572 | 2.55 |
+| ≥ 30 | **712** | 3.624 | **2.59** | **502** | 3.527 | **2.52** |
+| ≥ 50 | 610 | 3.581 | 2.55 | 395 | 3.458 | 2.47 |
+| ≥ 100 | 408 | 3.467 | 2.47 | 264 | 3.339 | 2.38 |
+
+**Both denominators are reported on every row.** Discounting the non-firers moves the threshold from
+4.13 to 3.87 — 0.26 t-units, or 0.19 of annualised Sharpe. That is the manager's logarithmic point
+holding at cell scale: the VOID gate and the fire gate are about not reporting a null that was never a
+measurement, **not** about lowering the bar. Nothing here rescues a threshold of 2.5–3.0 Sharpe on a
+1.97-year span.
+
+**And a floor on raw fires is an upper bound on the trade floor.** The engine refuses a signal while
+positioned `[repo-verified: engine.py:306-307]`, and under the 18:00→16:00 rule holds are *longer*
+than under the shipped harness (which flattens at 13:30/14:30), so the realised trade count will be
+**below** the fire count and the qualifying pool will be smaller than 712 / 502. The top 10 is going to
+be drawn from a few hundred arms at most. Stated now, before the measurement, so it cannot look like
+an excuse afterwards.
+
+### Two caveats on these counts, one of which invalidates an obvious comparison
+
+**(i) Raw fire counts are NOT comparable between a p60 and a p240 cell.** A 240m-primary strategy is
+evaluated at every **60m** base bar against the last *completed* 240m bar
+`[repo-verified: features.py:828-847]`, so one 240m reading persists across up to **four** consecutive
+decision bars and is counted four times. That is why the 240m median (20–26) exceeds the 60m median
+(4–13) on both symbols despite 240m having a quarter of the bars. The realised trade count does not
+inherit the factor of four — `signals_skipped_in_position` absorbs most of it — but the **fire** count
+does. So "240m fires more often" is an artefact of the decision clock and is not reportable as a
+finding. My `EF2-H4` (60m vs 240m) is registered on **expectancy in R**, not on counts, and is
+unaffected.
+
+**(ii) MCL at 60m is the thinnest cell in the whole study: a median of 4–5 fires per live arm over 718
+days.** That is 2.5 fires a year. MGC at 60m is 12–13. Whatever else is true, an MCL 60m top 10 is
+going to be built on very few observations, and MCL is also the cost-fragile contract and the one with
+366 missing bars (burst 06). All three point the same way.
+
+**(iii) Gate signatures equalled arm counts in every one of the eight cells** (1,440 signatures for
+1,440 arms, and so on), i.e. **no two surviving rule sets differ only by their exit geometry** in this
+draw. So the dedupe bought nothing, and — more importantly — the exit dimension in my population is
+spread *across* distinct rule sets rather than nested *inside* them. "Which geometry is best for this
+rule set" is therefore **not answerable from the screen** and would need a deliberate paired
+re-emission on R3's recipe.
 
 ---
 

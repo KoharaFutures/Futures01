@@ -35,6 +35,7 @@ PRE_REGISTRY = frozenset({
     # so EF3 also had nothing to cite. Grandfathered rather than asking anyone to
     # rewrite a write-once file.
     "EF3-01_EF1_session-rule-misses-early-close-sessions.md",
+    "EF2-02_EF1_flat-unreachable-on-MGC-MCL-and-an-MCL-data-gap.md",
 })
 
 # <ISSUER>-<KIND>-<n> and the kinds that legitimately have no issuer prefix
@@ -52,6 +53,7 @@ ID = re.compile(
       | R-\d+                       # board rule
       | D-[A-Z]+\d+                 # researcher-local defect note, e.g. D-L1, D-MTF3
       | X-\d+                       # cross-cutting avenue
+      | (R[1-6]|BT[1-6]|EF[1-7]|DISC2?|MGR)-\d{2}   # a message, by its per-sender prefix
       | round-1                     # the pre-registry round
       | none
     )$""",

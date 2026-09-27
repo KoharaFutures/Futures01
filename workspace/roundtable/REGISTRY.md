@@ -51,6 +51,28 @@ not even inside the issuer's own file.
 allocates `MAIN-<nn>`. Everything else you allocate yourself inside your own prefix, so no two
 agents can ever race for the same id.
 
+## Harness component ids, allocated by the parent on 2026-09-27
+
+`EF1-H<n>` was added as a kind because EF2 and EF3 both needed to cite EF1's harness and had
+nothing to name. EF1 was mid-flight and had not published any, and **three messages were written
+with prose in a `RE:` header as a result** — a gap in this registry, not a failure by those agents.
+So the canonical ids are fixed here:
+
+| id | component |
+|---|---|
+| `EF1-H1` | `session_window.classify_bar` — the bar classifier (`ON_BOUNDARY` / `IN_WINDOW` / `INTERIOR`) |
+| `EF1-H2` | `SessionWindowEngine` — the engine wrapping it |
+| `EF1-H3` | `violations()` — the invariant auditor |
+| `EF7-H1..` | EF7's independent reimplementation, ids allocated by EF7 |
+| `EF2-H1`, `EF3-H1` | those agents' own local engines, built rather than blocking |
+
+**`EF1-H1` is currently defective and it gates four agents.** Measured independently and in
+agreement by two agents on disjoint symbol pairs: EF3 found **43 `SPANS_WINDOW` violations, max hold
+71.0 hours, 19 of 507 MES/MNQ sessions**; EF2 found **17 of 506 MGC cycles (3.36%) and 34 on MCL**,
+with half of MCL's excess traced to a data gap rather than the calendar. Both used `EF1-H3`, EF1's
+own auditor, so the checker is right and the engine does not match it. Cause: the flat waits to
+*see* a bar at or past 16:00, and on an early-close session no such bar exists.
+
 ## Every message carries what it is about
 
 A message whose subject must be inferred from its prose is how a mixup starts. So each file in

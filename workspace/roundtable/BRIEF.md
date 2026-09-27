@@ -135,3 +135,53 @@ You cannot call each other directly. The parent session relays, and the manager 
 
 Read the whole `msgs/` directory before writing, so you are answering the current state of the
 conversation rather than the state when you were launched.
+
+---
+
+# Data policy — ruling on BT1-REQ-1 (2026-09-27)
+
+**BT1-REQ-1 asked whether a backtester may measure on `data/archive/` rather than the frozen
+`csv/raw/`.** It blocks measurement for every rare-signal algorithm all three backtesters will
+build, so it is answered here rather than deferred to the board.
+
+**Ruling: yes. Measure on `data/archive/` where you have verified the two stores agree for your
+symbol AND timeframe.**
+
+I checked the thing the ruling depends on — whether the two stores are even the same series,
+since `csv/raw` was supplied as a zip and the archive was pulled from Yahoo. They are:
+
+| symbol | archive 60m | csv/raw 60m | overlap | closes identical | archive-only bars |
+|---|---|---|---|---|---|
+| MGC | 11,297 | 5,000 | 4,987 | **4,987 / 4,987** | 6,310 |
+| MNQ | 11,291 | 5,000 | 4,988 | **4,988 / 4,988** | 6,303 |
+| MES | 11,287 | 5,000 | 4,988 | **4,988 / 4,988** | 6,299 |
+| MCL | 10,934 | 5,000 | 4,987 | **4,987 / 4,987** | 5,947 |
+
+`max |close difference|` is **0.0000** on all four. Volume differs on 2 of 4,987 bars for MGC and
+nowhere else. So `csv/raw` is a 5,000-bar window of the same series the archive holds more of —
+not a second vendor's version of it — and the archive extends the span by ~6,000 bars per symbol
+**before** everything the programme has ever searched. That is the only genuine answer this
+project has to its nested-window problem, where 30 ⊂ 90 ⊂ 180 ⊂ 274 days all end on the same bar.
+
+## The three conditions
+
+1. **State which store every number was measured on.** Never pool or compare an
+   archive-measured row against a `csv/raw`-measured one without saying the samples differ.
+2. **Verify equivalence for your own symbol and timeframe before relying on it.** The table above
+   is 60m only. **MCL has no usable daily history on this vendor — `MCL_1440m.jsonl` holds
+   exactly one row**, and full-size `CL=F` is not a substitute (0.95¢ mean close difference,
+   4¢ at worst: fine for context, wrong for a stop). Do not assume the 60m result generalises.
+3. **`csv/raw` stays frozen and read-only.** It is the reproducibility baseline for every result
+   already published in `scan_reports/`. **Never delete or edit any file under `csv/`, no matter
+   what.** `data/archive/` is append-only.
+
+## The timezone trap, recorded because it cost me a wrong answer first
+
+**`csv/raw` timestamps are `+00:00` (UTC). `data/archive/` timestamps are `-04:00` (ET.)**
+
+My first comparison sliced the offset off and matched `16:00` against `16:00` — bars four hours
+apart. It reported 4,588 overlapping stamps with **zero** identical closes and a mean difference
+of 23.0 points, which on micro gold is $230 a contract. That number was entirely an artefact of
+my own comparison, and it is exactly the shape of mistake that gets written into a report as a
+vendor discrepancy. Normalise both sides to UTC before you compare anything across the two
+stores, and if a cross-store difference looks large, suspect your own alignment first.

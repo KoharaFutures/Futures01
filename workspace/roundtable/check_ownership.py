@@ -22,6 +22,9 @@ ROOT = "workspace/roundtable/"
 
 # Most specific pattern wins, so order matters: the first match is the owner.
 RULES: list[tuple[str, str]] = [
+    ("tests/test_bt1_*.py", "BT1"),
+    ("tests/test_bt2_*.py", "BT2"),
+    ("tests/test_bt3_*.py", "BT3"),
     (ROOT + "discovery/AVENUES.md", "discovery"),
     (ROOT + "discovery/MAIN_TASKS.md", "discovery"),
     (ROOT + "discovery/bursts/*", "discovery"),
@@ -59,7 +62,7 @@ def owner(path: str) -> str | None:
 
 def changed() -> list[tuple[str, str]]:
     out = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", ROOT],
+        ["git", "status", "--porcelain", "--untracked-files=all", "--", ROOT, "tests"],
         capture_output=True, text=True, check=True,
     ).stdout
     rows = []

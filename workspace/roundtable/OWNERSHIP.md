@@ -35,6 +35,7 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `backtest/<bt>/REQUESTS.md` | **that backtester** | read |
 | `backtest/<bt>/bursts/*.md` | **that backtester** | read |
 | `backtest/<bt>/code/*` | **that backtester** | read, and run |
+| `tests/test_bt<n>_*.py` (repo tests) | **that backtester** | read, and run |
 | `msgs/NN_from_to_topic.md` | **whoever created it**, once | read only, forever |
 
 ## Read is universal. Write is exclusive. Asking is how you cross the line.
@@ -91,3 +92,16 @@ writes `msgs/NN_<from>_<to>_<topic>.md` — write-once, no contention — and th
 into `OPEN_QUESTIONS.md`. Every dispatch prompt after round 1 says this. If you are a researcher
 reading this file and your prompt told you to edit `OPEN_QUESTIONS.md` directly, your prompt is
 stale: post a message instead and say so in your report.
+
+## A second narrow allowance: backtesters may add repo regression tests
+
+BT1 raised this and it is right. Its standing role brief gives it `tests/`, while its dispatch
+restricted it to `backtest/BT1/**`; it followed the dispatch and put its 33 checks in
+`code/test_absorption.py`. The consequence is that **no regression test for D38 exists in the
+repo's own `tests/`**, which is where it belongs and where it would stop the next agent losing a
+burst to the same silent-zeroing defect.
+
+So each backtester may also write `tests/test_bt<n>_*.py` — its own prefix, so two backtesters
+cannot collide, and narrow enough that it cannot touch another agent's tests or the existing
+suite. Run the full suite before finishing: a new test that breaks the other 817 is worse than
+no test.

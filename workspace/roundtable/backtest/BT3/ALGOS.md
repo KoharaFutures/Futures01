@@ -22,8 +22,9 @@ Nothing here touches `data/archive/` (BRIEF's 2026-09-27 data ruling, condition 
     200-seed ensemble. Named, per PIPELINE §4 obligation 3.
   - `backtest/BT3/code/checks.py` — five assertions, all passing
     `[measured: python3 code/checks.py → "all checks passed"]`.
-  - `tests/test_bt3_governor_replay.py` — 7 tests inside the repo suite
-    `[measured: python3 -m pytest -q tests → 824 passed]`.
+  - `tests/test_bt3_governor_replay.py` — 10 tests inside the repo suite, including the two that
+    pin the barrier semantics `[measured: python3 -m pytest -q tests/test_bt3_governor_replay.py
+    → 10 passed]`.
   - Output: `code/algo1_report.json`, `code/paired_tests.json`, `code/stops_cache.json`.
 - **Fidelity:** **DIVERGENT → corrected → RE-ASKED.**
   - Cycle 1: asked in `msgs/04_BT3_R3_verify-ALGO-1.md`. R3 ruled **DIVERGENT** in
@@ -640,8 +641,17 @@ gappy trades where it binds most.**
   The question was "is the R series serially dependent", because Channel 4b's streak sizing
   needs `Cov(w,R) ≠ 0`. The two modes are two *resamplers*: `iid` destroys serial structure,
   `block` preserves runs of length 10. Comparing their outputs detects dependence only
-  indirectly and only at the block scale. A direct test — lag-1 autocorrelation, a runs test,
-  Ljung-Box — does not exist anywhere in this repository. REQ-1.
+  indirectly and only at the block scale. Filed as REQ-1 and **granted as board task `MGR-T11`**,
+  with the manager backing me against R3's wording and R3 accepting the correction: item 2 is a
+  *precondition check*, not the verdict on Channel 4b's streak sub-case
+  `[msgs/09_manager_BT3_requests-ruling.md; msgs/10_R3_BT3_re-verify-ALGO-1-questions.md]`.
+  A direct test is cheaper than I first said — `workspace/chrono/analyse.py:92-103` already has
+  `corr` and `fisher_z`, applied to a group's *monthly expectancy* rather than a *per-trade R
+  sequence*.
+- **Reportability: GATED, and I asked for the gate.** The manager has gated `MGR-T8` behind the
+  D44 fix (`MGR-T16`, the parent's), because the instrument the measurement uses is defective —
+  see below. **The numbers in this section are therefore provisional and carry the bias**, which
+  is why they are stated with it rather than corrected silently.
 
 **Measured, at 2,000 runs, `block=10`, `seed=20260922` (montecarlo's own default):**
 
@@ -667,8 +677,20 @@ appears at 0.122× its due frequency, index 9 at 1.121×, and the whole tail at 
 `iid` over the same series is flat within [0.988, 1.011]
 `[measured: code/checks.py::check_block_bootstrap_undersamples_the_start]`. **The block
 bootstrap silently discounts the beginning of every sequence it resamples.** No call site has
-ever used `mode="block"`, so the defect has never touched a published number — this is its
-first use. Filed as REQ-2; the fix is a circular block, one line.
+ever used `mode="block"`, so the defect has never touched a published number — this is its first
+use. Filed as REQ-2 and **allocated `D44`** `[msgs/09_manager_BT3_requests-ruling.md]`; the fix is
+one line, a circular block:
+`path.extend(r_values[(start + k) % n] for k in range(block))`. Assigned to the parent as
+`MGR-T16`, and `MGR-T8` is gated behind it.
+
+A process note the manager turned into board rule `R-9`, worth carrying: my REQUESTS entry said
+"add it as D44 (next free)", and the manager was drafting a different D44 at the same moment. It
+moved its own rather than edit my write-once file. **Describe the defect; do not name the number** —
+"next free" is a read of a file another agent may be about to change.
 
 **Fidelity:** this is not an ALGO and has no fidelity verdict. It is one measurement with its
-caveats attached, and the caveats are larger than the measurement.
+caveats attached, the caveats are larger than the measurement, and it is gated. R3 has since
+narrowed its own item-2 wording and dropped it from its ranked candidates
+`[msgs/10_R3_BT3_re-verify-ALGO-1-questions.md]`, noting that my pooled-versus-per-strategy
+inversion here and the same inversion in ALGO-1's population unit are **two independent
+instruments both saying the pooled unit fabricates structure**.

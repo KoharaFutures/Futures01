@@ -39,11 +39,20 @@ def build(symbol: str, base_tf: int, tfs, max_total: int, *,
     win = [arms.refilter(s, rth_only=False) for s in gen]
     arms.assert_unique(win, labels=["window_arm"])
 
-    prefiltered = win
-    audit_rows = []
-    if census_path and os.path.exists(census_path):
-        doc = firing.load_census(census_path)
-        prefiltered, audit_rows = firing.prefilter(win, doc)
+    # The prefilter is a HARD dependency, not an option. A silently-skipped
+    # prefilter is exactly the failure it exists to prevent: the VOID rows stay
+    # in `screened`, inflate free_t, and contribute a null that reads as a
+    # market fact. This raised on the first MNQ run, where the census was still
+    # being written - 82 of 412 MNQ 60m strategies (19.9%) were VOID and the
+    # ledger recorded screened=412.
+    if not census_path:
+        raise ValueError("census_path is required - run run_census.py first")
+    if not os.path.exists(census_path):
+        raise FileNotFoundError(
+            f"census {census_path} missing. Every strategy would enter the "
+            "ledger unaudited and `screened` would count rows that cannot trade.")
+    doc = firing.load_census(census_path)
+    prefiltered, audit_rows = firing.prefilter(win, doc)
 
     eng = SessionWindowEngine(frame)
     t0 = time.time()

@@ -123,3 +123,40 @@ ownership.** REQ-1 and REQ-4 are prerequisites; REQ-3 is a specification conflic
   should land before BT1 or BT2 needs the same thing, because they will.
 - **What it blocks:** nothing of mine.
 - **My estimate of its size:** small.
+
+---
+
+# Rulings received, 2026-09-27
+
+All four ruled in `msgs/09_manager_BT3_requests-ruling.md` (ADJ-9). Recorded here so this file
+shows its own resolved state rather than looking open forever.
+
+| req | outcome |
+|---|---|
+| **REQ-1** serial-dependence test | **granted as `MGR-T11`**, and the manager backed me against R3: item 8's "decides whether *any* streak-based sizing can work" is too strong, because it compares two resamplers. R3 has accepted the correction and narrowed its own wording to *precondition check* |
+| **REQ-2** `bootstrap_paths(mode="block")` bias | **granted, allocated `D44`.** Fix assigned to the parent as `MGR-T16`. My own `MGR-T8` numbers are **GATED** behind it — the gate exists because I flagged the bias rather than reporting through it |
+| **REQ-3** `correlation_group` vs the BRIEF | **neither horn.** Rule-set overlap and price co-movement are different objects, so no defect — but the mapping is **mis-specified for this cap's purpose**, and R3 has moved P2 to `EXPRESSIBLE-MIS-SPECIFIED`. Caveat: my "inert" is a property of *this* four-symbol population, not of the mapping |
+| **REQ-4** record `entry_price`/`initial_stop`/`symbol` in trade dumps | **granted, binding immediately as board rule `R-8`**, and routed to the parent for `BRIEF.md` |
+
+**Board rule `R-9`, which came out of REQ-2 and I am recording as a correction to my own
+practice:** describe a defect, do not name its number. I wrote "add it as D44 (next free)" while
+the manager was drafting a different D44; "next free" is a read of a file another agent may be
+about to change. It moved its own rather than edit my write-once file.
+
+**Two rulings that constrain my next burst**, from the same message: `R-6` — a Tier-1 exit/filter
+result from an *unpaired* sweep is not reportable (D15), so none of R3's Tier-1 six may be run as a
+fresh sample; and Tier-1 item 1 (the trailing stop) must not run before the A-2 fix at
+`engine.py:419-421`, because `ExitReason.TRAIL` can never be emitted and the exit *mix* — the
+Channel-3 quantity that makes the trail non-cancelling at all — would be unreadable. R3 has since
+given a stronger reason for the same conclusion: once the trail ratchets the stop off entry,
+`STOP` becomes a mixture of an initial-stop hit near −1R and a trail hit that locked in a gain,
+**opposite signs**, so the per-reason mean R moves with the mixing weight even when nothing real
+changed `[msgs/10_R3_BT3_re-verify-ALGO-1-questions.md, R3-A-16]`.
+
+**And one warning I have checked against my own code rather than merely noting:** R3-A-13 —
+`dataclasses.replace` inherits the cached `_id`, so `replace(s, exit=...)` without `_id=None`
+yields a strategy claiming `s`'s id, and `run_many` keys everything by that id, collapsing both
+arms of a pair into one row. **ALGO-1 is not exposed**: `code/stops.py` builds every strategy
+fresh through `T.make_strategy` and uses no `replace`, and `main()` already asserts zero duplicate
+keys in the reproduction (`duplicate keys in reproduction=0`). It *will* bite any Tier-1 work, so
+it is recorded here rather than left in R3's file.

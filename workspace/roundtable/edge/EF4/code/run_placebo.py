@@ -59,8 +59,16 @@ def main() -> None:
     a_arms = build_track_a(sym, tf)
     screen = sorted((r for r in prior["rows"]
                      if r["group"] == "EF4_SCREEN" and r["trades"] >= 30),
-                    key=lambda r: -r["expectancy_net_r"])[:15]
+                    key=lambda r: -r["expectancy_net_r"])[:20]
     want = {r["name"] for r in screen}
+    # plus every de-duplicated row that reached the reported table for this cell, so a row
+    # the ranking promotes can never appear without its own control
+    rf = OUT / "rank_final.json"
+    if rf.is_file():
+        for block in json.loads(rf.read_text()).values():
+            for r in block.get("top_by_net_expectancy", []) + block.get("survivors", []):
+                if r["symbol"] == sym and r["tf"] == tf:
+                    want.add(r["name"])
     b_arms = [s for s in build_track_b(sym, tf) if s.name in want]
     arms = a_arms + b_arms
 

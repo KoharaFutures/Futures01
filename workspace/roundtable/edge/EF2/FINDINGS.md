@@ -37,16 +37,32 @@ The overnight regime the EDGE_BRIEF calls "genuinely unmeasured" is reachable on
 `rth_only` as an explicit **paired arm** (`EF2-HYP-1`). Posted to EF1 as
 `msgs/EF2-01_EF1_rth-only-makes-the-overnight-switch-inert.md`.
 
-**F1c.** A 240m bar cannot straddle the 2-hour break cleanly. The 240m ET grid is 00/04/08/12/16/20:
-the bar stamped **12:00 closes at exactly 16:00** (so a next-bar-open fill lands at the deadline and is
-inadmissible) and the bar stamped **16:00 spans the whole no-position window**.
+**F1c — CORRECTED in Burst 05, after cross-checking against EF6's `window.signal_mask`.** My first
+number (8.7% / 35.5% "inadmissible") was the **union** of two different sets, mislabelled as one of
+them. EF6's vocabulary separates them and its convention is the engine-faithful one — it asks what the
+**next bar in the series actually is** rather than assuming a contiguous grid, and the 17:00 bar mostly
+does not exist, so a signal on the 16:00 bar fills legally at the 18:00 open.
 
-| symbol | tf | bars inadmissible as a signal bar |
-|---|---|---|
-| MGC | 60m | 984 / 11,297 = **8.7%** |
-| MGC | 240m | 1,083 / 3,052 = **35.5%** |
-| MCL | 60m | 944 / 10,934 = **8.6%** |
-| MCL | 240m | 1,054 / 2,990 = **35.3%** |
+| symbol | tf | bars | **position-illegal** | **signal-inadmissible** | `STRADDLE` | union |
+|---|---|---|---|---|---|---|
+| MGC | 60m | 11,297 | 495 = 4.4% | 496 = 4.4% | **0** | ~8.8% |
+| MCL | 60m | 10,934 | 474 = 4.3% | 475 = 4.3% | **0** | ~8.7% |
+| MGC | 240m | 3,052 | **586 = 19.2%** | 586 = 19.2% | **586** | ~35% |
+| MCL | 240m | 2,990 | **563 = 18.8%** | 563 = 18.8% | **563** | ~35% |
+
+The clean form, which is stronger than what I first wrote:
+
+> **At 240m, 19.2% of MGC bars and 18.8% of MCL bars are `STRADDLE` — they contain 16:00 or 18:00
+> strictly inside them. At 60m there are ZERO `STRADDLE` bars on either symbol.**
+
+A `STRADDLE` bar is a defect report, not a third trading state: the rule cannot be applied to it
+without breaking it or discarding a legal part of the bar. EF1 goes further and **refuses** such a grid
+(`SessionGridError`). **So a 240m *base* series is not a valid substrate for this programme's rule on a
+fifth of its bars, while a 240m *thesis* on a 60m base is entirely valid** — an independent and much
+better justification for the substrate choice I made for span reasons, and the exact thing the three of
+us would have disagreed about silently had I loaded `MGC_240m.jsonl` as a base. **The correction does
+not touch any VOID verdict, the population, or F1b**: the census scores against `RTH ∩ swing`, the
+16:00 bar is not RTH on either contract, so that intersection is unchanged at 2,477 / 2,881.
 
 **F1d.** 22h / 4h = **5.5 bars of runway at 240m**, 22 at 60m. Every geometry in
 `expand_exit_models()` carries `time_stop_bars` 30-120 `[repo-verified: combinator.py:52-110]` —
@@ -171,19 +187,59 @@ Raw fire counts are **harness-independent** — `Strategy.evaluate` reads only `
 `BacktestResult.signals_generated` is **not** this number (the engine skips evaluation while
 positioned, `engine.py:306-307`).
 
-| cell | arms kept by the VOID gate | arms with >=1 raw fire | **arms that still never fire** |
-|---|---|---|---|
-| `MGC:f240__p240` | 998 | 333 | **665 = 66.6%** |
-| `MGC:f60_240__p240` | 998 | 324 | **674 = 67.5%** |
-| `MGC:f60_240__p60` | 1,656 | 635 | **1,021 = 61.7%** |
+| cell | arms the VOID gate kept | arms with >=1 raw fire | **arms that still never fire** | median fires (live) | p90 |
+|---|---|---|---|---|---|
+| `MGC:f60__p60` | 1,440 | 481 | **959 = 66.6%** | 13 | 347 |
+| `MGC:f60_240__p60` | 1,656 | 635 | **1,021 = 61.7%** | 12 | 287 |
+| `MGC:f240__p240` | 998 | 333 | **665 = 66.6%** | 26 | 361 |
+| `MGC:f60_240__p240` | 998 | 324 | **674 = 67.5%** | 23 | 339 |
+| `MCL:f60__p60` | 1,564 | 507 | **1,057 = 67.6%** | **5** | 111 |
+| `MCL:f60_240__p60` | 1,780 | 602 | **1,178 = 66.2%** | **4** | 95 |
+| `MCL:f240__p240` | 1,120 | 321 | **799 = 71.3%** | 22 | 315 |
+| `MCL:f60_240__p240` | 1,120 | 327 | **793 = 70.8%** | 20 | 381 |
 
 **The VOID gate removes about a third of the candidates and roughly two thirds of what it passes still
 never fires.** Two different findings; only the first is what the 19.0% figure describes. A VOID
 condition is a *structural* zero; these are *conjunctive* zeros — every condition fires somewhere, but
-the strict AND of 2-4 signals plus 2-4 filters plus `rth_only` is empty over 718 days. It changes the
-**effective** search size by a factor of three.
+the strict AND of 2–4 signals (which must also agree on direction) plus 2–4 filters plus `rth_only` is
+empty over 718 days.
 
----
+### The effective search size
+
+| floor on raw fires | MGC arms | free_t | Sharpe | MCL arms | free_t | Sharpe |
+|---|---|---|---|---|---|---|
+| — (published population) | 5,092 | 4.132 | **2.95** | 5,584 | 4.154 | **2.96** |
+| >= 1 | **1,773** | 3.868 | 2.76 | **1,757** | 3.866 | 2.76 |
+| >= 20 | 814 | 3.661 | 2.61 | 590 | 3.572 | 2.55 |
+| >= 30 | **712** | 3.624 | **2.59** | **502** | 3.527 | **2.52** |
+| >= 100 | 408 | 3.467 | 2.47 | 264 | 3.339 | 2.38 |
+
+Both denominators travel on every row. Discounting the non-firers moves the threshold 0.26 t-units —
+0.19 of annualised Sharpe. The gates are about not reporting a null that was never a measurement,
+**not** about lowering the bar. And a fire floor is an **upper bound** on a trade floor, because the
+engine refuses a signal while positioned and the swing rule makes holds longer: the qualifying pool
+will be **smaller** than 712 / 502, so the top 10 will be drawn from a few hundred arms at most.
+Stated before the measurement so it cannot look like an excuse afterwards.
+
+### Three caveats, one of which invalidates an obvious comparison
+
+**(i) Raw fire counts are NOT comparable between a p60 and a p240 cell.** A 240m-primary strategy is
+evaluated at every **60m** base bar against the last *completed* 240m bar
+`[repo-verified: features.py:828-847]`, so one 240m reading persists across up to four consecutive
+decision bars and is counted four times. That is why the 240m median (20–26) exceeds the 60m median
+(4–13) despite a quarter of the bars. Realised trades do not inherit the factor of four
+(`signals_skipped_in_position` absorbs it); **fire counts do**. So "240m fires more often" is an
+artefact of the decision clock. `EF2-HYP-4` is registered on expectancy in R, not counts, and is
+unaffected.
+
+**(ii) MCL at 60m is the thinnest cell in the study: a median of 4–5 fires per live arm over 718
+days**, i.e. ~2.5 a year, against MGC's 12–13. MCL is also the cost-fragile contract and the one with
+366 missing bars (F9). All three point the same way.
+
+**(iii) Gate signatures equalled arm counts in all eight cells**, so **no two surviving rule sets
+differ only by their exit geometry**. The exit dimension is spread *across* rule sets rather than
+nested *inside* them, so "which geometry suits this rule set" is **not answerable from the screen** and
+would need a deliberate paired re-emission on R3's recipe.
 
 ## F5 — Anti-overfitting: checked, with findings
 
@@ -213,11 +269,47 @@ independently and replicates the BRIEF's corrected table: MGC `max|dclose| = 3.4
 
 ---
 
-## F6 — Stop-kind fidelity (D45) per cell
+## F6 — Stop-kind fidelity: D45 replicates, exceeds its published range, and is NOT confined to `VWAP_BAND`
 
-See `bursts/04`.
+`ExitModel.stop_price` ends **every** branch with `dist = max(dist, min_dist)` where
+`min_dist = spec.min_stop_ticks * spec.tick_size` `[repo-verified: base.py:313-315]`. When the clamp
+binds the stop is a **fixed number of ticks** whatever the enum says, and two arms differing only in
+`stop_mult` become the same trade. Measured `min_dist`: MGC `25 x 0.1 = 2.5` points ($25); MCL
+`15 x 0.01 = 0.15` ($15). Every distinct `ExitModel` any template can draw (9 of them), both
+directions, every swing-admissible bar.
 
----
+| cell | `VWAP_BAND` m1.0 | `STRUCTURE` m1.0 | `ATR` m0.75 | `ATR` m1.0–2.5 |
+|---|---|---|---|---|
+| MGC 60m | **19.2%** | 3.8% | 0.0% | 0.0% |
+| MGC 240m | **12.4%** | 1.7% | 0.0% | 0.0% |
+| MCL 60m | **37.2%** | **7.5%** | 1.0% | 0.0% |
+| MCL 240m | **24.6%** | 3.7% | 0.0% | 0.0% |
+
+**(a) D45's published range is 6–34%; MCL at 60m measures 37.2%** — outside the top of it, on a
+718-day substrate rather than the 5,000-bar `csv/raw` window. Extends the finding.
+
+**(b) `STRUCTURE` collapses too, and I have not seen that recorded.** The clamp is on the shared tail,
+so the collapse belongs to the **floor**, not to `VWAP_BAND`. `STRUCTURE` hits the floor on 7.5% of MCL
+60m bars, and it carries **17.6% of MGC arms and 23.4% of MCL arms** against `VWAP_BAND`'s 2.6% / 4.3%
+— so in **arm-weighted** terms the `STRUCTURE` collapse touches more of the population than the
+`VWAP_BAND` one does. Anyone re-reading `x_exits`' "no stable best stop width" (the open obligation the
+manager recorded) should look at both.
+
+**(c) The floor is what actually enforces BRIEF rule 4.** "Structural stops never tighter than ~0.5
+ATR" is not a rule anywhere in the code; it is a consequence of `min_stop_ticks`. And on MCL the
+catalogue's tightest ATR geometry (`m0.75`) does reach the floor, on 1.0% of bars — so `ATR m0.75` and
+`ATR m1.0` are the same stop there.
+
+**Reporting rule EF2 adopts:** every top-10 row states its `stop_kind`, and a row carrying `VWAP_BAND`
+or `STRUCTURE` also states the measured collapse rate for **its own** cell. A `VWAP_BAND` row on MCL
+60m is partly a result about a fixed-tick stop on 37% of its candidate bars and cannot be called a
+VWAP-band strategy without that number beside it. Enforced in `rank.py` (`STOP_COLLAPSE`).
+
+**The other silent route to a low trade count, quantified.** `stop_price` returns `None` when the stop
+cannot be placed and the trade is then simply not taken. Rates: `ATR` 0.1% (60m) / 0.5% (240m),
+`STRUCTURE` 0.1–0.4%, `VWAP_BAND` **0.0%** everywhere. Small, consistent with warm-up rather than a
+structural hole, so it is **not** a material contributor to F4's two-thirds attrition — worth having
+measured, since an unmeasurable-stop veto and a never-firing gate are the same null.
 
 ## F7 — What is ready to measure the moment EF1 validates
 
@@ -256,3 +348,76 @@ beside it and never rank. The trade floor and the t-statistic **gate** a row; th
   arm and **this axis is not tested in the swing cell.**
 - **`time_stop_bars`.** Unreachable inside a 22-hour ceiling (F1d).
 - **MULTI_TIMEFRAME in 3 of 4 cells, VOLUME_PROFILE at 240m.** Structurally void (F3).
+
+
+---
+
+## F9 — MCL's 60m series is missing 366 bars in two contiguous runs, in BOTH stores, and the 16:00 flat cannot fire in 34 of its 505 cycles
+
+Prompted by `EF3-01`, which found EF1's `classify_bar` under-enforcing the flat on 19 of 507 MES/MNQ
+sessions. **I re-measured on my own symbols rather than inheriting the count** — MGC is COMEX, MCL is
+NYMEX, neither shares the equity complex's calendar. Detail: `bursts/06`.
+
+| cell | bars | cycles | **cycles where the flat cannot fire** | share |
+|---|---|---|---|---|
+| MGC 60m | 11,297 | 506 | **17** | **3.36%** |
+| MGC 240m | 3,052 | 602 | 9 | 1.50% |
+| **MCL 60m** | 10,934 | 505 | **34** | **6.73%** |
+| MCL 240m | 2,990 | 596 | 14 | 2.35% |
+
+Zero `INTERIOR` bars in any cell, so `SessionGridError` never fires and the run proceeds while those
+cycles go untested. **The audit is per series; the hole is per cycle.**
+
+**16 of MGC's 17 and 16 of MCL's 34 are the same holiday dates.** MCL's other **18** are ordinary
+weekdays on which MCL is simply missing bars:
+
+```
+MGC archive 60m 11,297 bars   MCL archive 60m 10,934 bars
+bars MGC has that MCL lacks: 366, over 34 dates, in two contiguous runs:
+    2026-01-09 -> 2026-01-16   and   2026-02-20 -> 2026-03-11
+on those dates: MGC 442 bars, MCL 102 bars
+csv/raw/MCL_1h.csv on those dates: 102 bars — bars csv/raw has that the archive LACKS: 0
+```
+
+**Absent from both stores.** So `BarArchive` behaved correctly, this is the vendor's MCL series, and
+**every published MCL result in `scan_reports/` rests on the same gap.** The BRIEF's data policy
+verified the two stores hold the *same* series over *overlapping* stamps; it never asked whether either
+is *complete*. On MCL at 60m it is not — 3.3% of the series.
+
+**Independently confirmed by EF1** on a different method and a different population:
+*"a two-month hole in MCL 60m — 17 further dates, 2026-01-12 to 2026-03-10 … 1 to 5 bars each …
+this is a substrate defect, not a calendar one"*. EF1's arm-C validation found **33 `SPANS_WINDOW`
+violations, every one at `primary_tf = 240m`, 18 of them MCL.** Two agents, disjoint methods, agreeing.
+
+Raised with the manager as a D-candidate (`msgs/EF2-03`); only the manager allocates `D` numbers.
+Every MCL row will be reported **with and without** the two windows, named above before any expectancy
+exists. `D40`'s consequence without `D40`'s cause: not splicing, absence — but the bar after a
+multi-day hole still carries a multi-day return that a one-bar momentum rule reads as a one-hour move.
+
+## F10 — In the swing setting the clock is the dominant exit, which constrains what the exit axis can mean
+
+From EF1's arm-C validation run, `max_total=400` `[EF1/bursts/03]`:
+
+```
+MGC  184 strategies   554 trades   flats 420 = 75.8% of trades
+MCL  167 strategies  2179 trades   flats 1283 = 58.9% of trades
+```
+
+**59–76% of all trades are closed by the 16:00 flat**, not by stop, target or time stop. So the
+catalogue's twelve geometries are differentiated mostly by where their **stop** sits; the target is
+usually never reached. Falsifiable prediction, registered before my own measurement: the spread of
+expectancy across geometries sharing one rule set should be **narrower** in the swing setting than the
+published RTH-only corpus reports, and `target_kind` (`R_MULTIPLE` 50% / `ANCHOR_ATR` 32–35% /
+`ANCHOR_STRUCTURE` 15–18% of my population) should matter **less** than `stop_kind`. This is a **Tier B**
+observation — it came from EF1's number rather than my own design, so it faces the screen's threshold,
+not Tier A's. It also makes F1d harmless: `time_stop_bars` being unreachable costs nothing, because the
+flat gets there first in three quarters of MGC trades.
+
+## F11 — Id hygiene: `EF2-H1` collided and my hypotheses were renamed
+
+`REGISTRY.md` allocated `EF2-H1` to "EF2's own local engine, built rather than blocking". **EF2 built no
+local engine** — `measure.py` imports `EF1-H2` (`SessionWindowEngine`) directly. My six pre-registered
+hypotheses were already `EF2-H1..H6`, so that was a live collision of exactly the kind the registry
+exists to prevent. Renamed to **`EF2-HYP-1` … `EF2-HYP-6`** across every EF2 file; no stale
+`EF2-H<digit>` remains `[measured: grep -rn "EF2-H[0-9]" over EF2/** → no matches]`. Raised as
+`msgs/EF2-03_manager_id-collision-EF2-H1-and-no-local-engine.md`, since `REGISTRY.md` is not mine.

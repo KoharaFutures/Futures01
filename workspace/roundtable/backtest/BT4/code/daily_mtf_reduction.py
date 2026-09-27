@@ -68,16 +68,24 @@ def resample_identity(series) -> Dict[str, object]:
     """`resample(daily, 7200)` against the daily series, in order, field by field."""
     up = resample(series, 7200, keep_partial=False)
     n = min(len(up), len(series))
-    fields = ("ts", "open", "high", "low", "close", "volume")
-    identical = 0
+    ohlcv = ("open", "high", "low", "close", "volume")
+    same_ohlcv = same_ts = 0
     for i in range(n):
         a, b = up.bars[i], series.bars[i]
-        if all(getattr(a, f) == getattr(b, f) for f in fields):
-            identical += 1
+        if all(getattr(a, f) == getattr(b, f) for f in ohlcv):
+            same_ohlcv += 1
+        if a.ts == b.ts:
+            same_ts += 1
+    # Bars per "7200m" bucket: one, on every bucket, is the collapse in its
+    # plainest form.
+    per_bucket = collections.Counter(
+        collections.Counter(align_bucket(b.ts, 7200) for b in series.bars).values())
     return {
         "daily_bars": len(series),
         "resampled_7200_bars": len(up),
-        "ohlcv_and_ts_identical_in_order": f"{identical}/{n}",
+        "ohlcv_identical_in_order": f"{same_ohlcv}/{n}",
+        "ts_identical_in_order": f"{same_ts}/{n}",
+        "bars_per_7200_bucket": dict(per_bucket),
         "minutes_label_on_the_7200_copy": up.bars[0].minutes if len(up) else None,
         "expected_constituents_per_bucket": max(1, 7200 // series.minutes),
     }
@@ -143,7 +151,10 @@ def reference_from_one_series(primary: List[Optional[str]],
         out["mtf_aligned"].append(fired)
         out["mtf_strongly_aligned"].append(fired)
         conflicted = ("UPTREND" in (a, b)) and ("DOWNTREND" in (a, b))
-        out["mtf_not_conflicted"].append((not conflicted, None))
+        # `_mtf_ok` passes with `Direction.NEUTRAL` (FLAT), not with no direction
+        # — it is a FILTER, so the direction field is inert but it is populated.
+        out["mtf_not_conflicted"].append((False, None) if conflicted
+                                         else (True, "NEUTRAL"))
     return out
 
 
@@ -209,8 +220,9 @@ def run_symbol(sym: str, fname: str) -> Dict[str, object]:
     # Is the "higher timeframe" snapshot literally an earlier value of the
     # primary's own snapshot? Compare tfs[7200] at bar i against the daily
     # series' own trend at the bar the 7200 pointer is sitting on.
-    daily_frame_trend = [frame.frames[1440].structure_trend(j)
-                         for j in range(len(frame.frames[1440].series))]
+    daily_tf = frame.frames[1440]
+    daily_frame_trend = [daily_tf.snapshot(j).structure_trend
+                         for j in range(len(daily_tf.series))]
     same_as_history = 0
     checked = 0
     for i in range(len(frame.base)):
@@ -244,33 +256,42 @@ def run_symbol(sym: str, fname: str) -> Dict[str, object]:
     }
 
 
-def run_control(sym: str = "MGC") -> Dict[str, object]:
+def run_control(sym: str = "MGC", max_lag: int = 24) -> Dict[str, object]:
     """The 240m frame `[240, 1440]`, where the confirming series is genuinely daily.
 
-    Same two-voter degeneracy, same reduction attempt. The reduction must FAIL
-    here: 1440 is a real independent series at 240m, so a lagged self-comparison
-    on the 4-hour series cannot reproduce the condition.
+    The 240m row has the same two-voter degeneracy (`R4-MT2`, `D17`) but *not*
+    the collapse: 1440 is a real, independent series there. So the reduction
+    must fail, and it is given every chance to succeed — rather than one lag, it
+    is fitted over `max_lag` candidate lags on the primary series and the best
+    match of all of them is reported. A best-of-25-lags fit that still misses is
+    the statement that the method is not vacuous.
+
+    Note the lag here is measured in **240m bars of the primary series**, not as
+    a pointer difference: at 1440m the two pointers index bit-identical series so
+    their difference is a bar lag, and at 240m they index different series so it
+    is not. Using the pointer difference here would be a category error.
     """
     h1 = load_csv(os.path.join(REPO, "csv/raw", f"{sym}_1h.csv"), sym, 60)
     frame = SymbolFrame(h1, FRAMES_240)
     tv = trend_vectors(frame, FRAMES_240)
     got = condition_vectors(frame, 240)
-    # The analogue of the 1440m reduction: treat the confirming timeframe as a
-    # lagged copy of the primary, using the modal pointer lag.
-    lag_counts = pointer_lag(frame, 1440, 240)
-    modal = lag_counts.most_common(1)[0][0]
-    lagged = [tv[240][max(0, i - modal)] for i in range(len(tv[240]))]
-    want = reference_from_one_series(tv[240], lagged)
-    matches = {n: sum(1 for a, b in zip(got[n], want[n]) if a == b) for n in got}
+    n = len(got["mtf_aligned"])
+    best = {name: (0, None) for name in got}
+    for k in range(0, max_lag + 1):
+        lagged = [tv[240][max(0, i - k)] for i in range(len(tv[240]))]
+        want = reference_from_one_series(tv[240], lagged)
+        for name in got:
+            m = sum(1 for a, b in zip(got[name], want[name]) if a == b)
+            if m > best[name][0]:
+                best[name] = (m, k)
     ident = sum(1 for a, b in zip(tv[240], tv[1440]) if a == b)
     return {
         "symbol": sym, "frame": FRAMES_240, "bind": 240, "base_bars": len(h1),
-        "pointer_lag_240_minus_1440": dict(sorted(lag_counts.items())),
-        "modal_lag_used_for_the_reduction": modal,
-        "primary_trend_equals_confirm_trend": f"{ident}/{len(tv[240])}",
-        "reduction_match_vs_one_series_reference":
-            {n: f"{matches[n]}/{len(got[n])}" for n in matches},
-        "condition_fires": {n: sum(1 for t, _ in got[n] if t) for n in got},
+        "lags_fitted": f"0..{max_lag} bars of the 240m series",
+        "primary_trend_equals_confirm_trend": f"{ident}/{n}",
+        "best_reduction_match_over_all_lags":
+            {name: f"{m}/{n} at lag {k}" for name, (m, k) in best.items()},
+        "condition_fires": {name: sum(1 for t, _ in got[name] if t) for name in got},
     }
 
 
@@ -281,7 +302,37 @@ def main() -> int:
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "daily_mtf_reduction.json")
     json.dump(out, open(path, "w"), indent=1, default=str)
-    print(json.dumps(out, indent=1, default=str))
+
+    for sym, r in out["treatment_1440m"].items():
+        print(f"\n=== {sym} 1440m, frame [1440, 7200] — {r['bars']} bars {r['span']}")
+        print(f"  align_bucket: {r['bucket_collapse']['minutes_tested']} -> "
+              f"{r['bucket_collapse']['distinct_bucketings']} distinct bucketing(s)")
+        ri = r["resample_identity"]
+        print(f"  resample(daily,7200) vs daily, in order: OHLCV "
+              f"{ri['ohlcv_identical_in_order']}, ts {ri['ts_identical_in_order']}"
+              f"  (bars per bucket {ri['bars_per_7200_bucket']}, "
+              f"label minutes={ri['minutes_label_on_the_7200_copy']})")
+        print(f"  pointer lag idx(1440)-idx(7200): {r['pointer_lag_1440_minus_7200']}")
+        print(f"  confirm snapshot == an earlier value of the primary: "
+              f"{r['confirm_tf_snapshot_is_a_historical_value_of_the_primary']}")
+        print(f"  fires: {r['condition_fires_at_1440m']}")
+        print(f"  REDUCTION to one series + one lag: "
+              f"{r['reduction_match_vs_one_series_reference']}")
+        print(f"  mtf_aligned == mtf_strongly_aligned: {r['aligned_equals_strongly_aligned']}")
+        print(f"  mtf_not_conflicted pass: {r['not_conflicted_pass_pct']}%")
+        print(f"  trend labels: {r['trend_label_census']}")
+        print("  lag sensitivity (real vs count-matched shuffle):")
+        for row in r["lag_sensitivity"]:
+            print(f"    lag {row['lag']:>3} {row['arm']:>9}  "
+                  f"not_conflicted {row['not_conflicted_pct']:>6}%   "
+                  f"aligned {row['aligned_pct']:>6}%")
+    c = out["control_240m"]
+    print(f"\n=== CONTROL {c['symbol']} 240m, frame {c['frame']} — "
+          f"{c['base_bars']} base bars")
+    print(f"  primary trend == confirm trend: {c['primary_trend_equals_confirm_trend']}")
+    print(f"  best reduction over {c['lags_fitted']}: "
+          f"{c['best_reduction_match_over_all_lags']}")
+    print(f"  fires: {c['condition_fires']}")
     print(f"\nwrote {path}", file=sys.stderr)
     return 0
 

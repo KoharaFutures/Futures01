@@ -1,0 +1,2165 @@
+{
+  "MGC": {
+    "distinct_signal_sets_meeting_the_sample_floor": 401,
+    "surviving_sign_agreement_and_all_folds": 19,
+    "clearing_their_declared_threshold": 0,
+    "top_by_net_expectancy": [
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "break_of_structure",
+          "candle_engulfing"
+        ],
+        "name": "break_of_structure+candle_engulfing",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 84,
+        "win_rate": 0.5357142857142857,
+        "avg_win_r": 1.4246175499348575,
+        "avg_loss_r": -0.9887919968522622,
+        "rr_realised": 1.4407656559418058,
+        "profit_factor": 1.6624219107020834,
+        "expectancy_gross_r": 0.356398922124377,
+        "cost_total_r": 0.05229294748353932,
+        "cost_commission_r": 0.01640098405380884,
+        "cost_slippage_r": 0.03589196342973048,
+        "expectancy_net_r": 0.30410597464083766,
+        "sd_r": 1.2271653876881465,
+        "t_stat": 2.271231998655597,
+        "sharpe_per_trade": 0.2478117274915503,
+        "sharpe_annualised": 5.704524718959692,
+        "sortino_per_trade": 0.44351800645140504,
+        "max_dd_r": 6.800297841382177,
+        "avg_dd_r": 1.0125903377684986,
+        "max_consec_wins": 5,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 49.285714285714285,
+        "avg_mae_r": 0.9115671478696432,
+        "avg_mfe_r": 1.369221848092171,
+        "pct_entries_outside_rth": 0.8095238095238095,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05952380952380952,
+          "STOP": 0.42857142857142855,
+          "TARGET": 0.5119047619047619
+        },
+        "is_trades": 48,
+        "is_expectancy_net_r": 0.40584159614623516,
+        "oos_trades": 36,
+        "oos_expectancy_net_r": 0.16845847930030763,
+        "oos_t_stat": 0.8096791319881355,
+        "folds": [
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.7823484006101634
+          },
+          {
+            "trades": 25,
+            "expectancy_net_r": -0.05950623106994045
+          },
+          {
+            "trades": 33,
+            "expectancy_net_r": 0.20277270396104924
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.1257941295642822
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "candle_engulfing",
+          "structure_trend"
+        ],
+        "name": "candle_engulfing+structure_trend",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 121,
+        "win_rate": 0.5371900826446281,
+        "avg_win_r": 1.4407173754750215,
+        "avg_loss_r": -1.0299806356276795,
+        "rr_realised": 1.3987810310599047,
+        "profit_factor": 1.6235851253373885,
+        "expectancy_gross_r": 0.350393483218382,
+        "cost_total_r": 0.05313965007188326,
+        "cost_commission_r": 0.016950282836633725,
+        "cost_slippage_r": 0.036189367235249535,
+        "expectancy_net_r": 0.2972538331464987,
+        "sd_r": 1.2482531610088732,
+        "t_stat": 2.61949439965267,
+        "sharpe_per_trade": 0.23813585451387909,
+        "sharpe_annualised": 6.579235658374081,
+        "sortino_per_trade": 0.42087810461484637,
+        "max_dd_r": 7.042658878421086,
+        "avg_dd_r": 0.9599214914536123,
+        "max_consec_wins": 7,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 55.04132231404959,
+        "avg_mae_r": 0.9416064013353944,
+        "avg_mfe_r": 1.4226416886806033,
+        "pct_entries_outside_rth": 0.7355371900826446,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.024793388429752067,
+          "STOP": 0.45454545454545453,
+          "TARGET": 0.5206611570247934
+        },
+        "is_trades": 75,
+        "is_expectancy_net_r": 0.3471229574934401,
+        "oos_trades": 46,
+        "oos_expectancy_net_r": 0.21594547823300744,
+        "oos_t_stat": 1.1570969337373396,
+        "folds": [
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.16979329829815873
+          },
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.45632288561481826
+          },
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.21636077717354307
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.1475326733406644
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "candle_close_strength",
+          "poc_reversion"
+        ],
+        "name": "candle_close_strength+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 78,
+        "win_rate": 0.5128205128205128,
+        "avg_win_r": 1.4682107298105551,
+        "avg_loss_r": -0.9667423174193716,
+        "rr_realised": 1.518719831909093,
+        "profit_factor": 1.598652454641151,
+        "expectancy_gross_r": 0.31887472420389706,
+        "cost_total_r": 0.03692317124894721,
+        "cost_commission_r": 0.011591296339785099,
+        "cost_slippage_r": 0.025331874909162107,
+        "expectancy_net_r": 0.2819515529549499,
+        "sd_r": 1.2299735596169148,
+        "t_stat": 2.0245383911857915,
+        "sharpe_per_trade": 0.22923383250837195,
+        "sharpe_annualised": 5.084918363178406,
+        "sortino_per_trade": 0.40706430243101216,
+        "max_dd_r": 6.007953467583153,
+        "avg_dd_r": 0.9970162252331135,
+        "max_consec_wins": 4,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 86.92307692307692,
+        "avg_mae_r": 0.8993612011046551,
+        "avg_mfe_r": 1.3582914732167333,
+        "pct_entries_outside_rth": 0.8333333333333334,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05128205128205128,
+          "STOP": 0.44871794871794873,
+          "TARGET": 0.5
+        },
+        "is_trades": 46,
+        "is_expectancy_net_r": 0.09802122582802268,
+        "oos_trades": 32,
+        "oos_expectancy_net_r": 0.5463513981999077,
+        "oos_t_stat": 2.6133937656614434,
+        "folds": [
+          {
+            "trades": 25,
+            "expectancy_net_r": 0.006302456645305122
+          },
+          {
+            "trades": 21,
+            "expectancy_net_r": 0.2072102367598293
+          },
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.5463513981999077
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.108208892114815
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "above_vwap",
+          "poc_reversion"
+        ],
+        "name": "above_vwap+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 87,
+        "win_rate": 0.5057471264367817,
+        "avg_win_r": 1.4831709951430874,
+        "avg_loss_r": -1.0308824677354358,
+        "rr_realised": 1.4387391788718695,
+        "profit_factor": 1.4721982295433076,
+        "expectancy_gross_r": 0.2998561154088339,
+        "cost_total_r": 0.05926326858501664,
+        "cost_commission_r": 0.017653728891921103,
+        "cost_slippage_r": 0.04160953969309553,
+        "expectancy_net_r": 0.24059284682381726,
+        "sd_r": 1.2598487057631156,
+        "t_stat": 1.7812461683073149,
+        "sharpe_per_trade": 0.19096963446740645,
+        "sharpe_annualised": 4.473855072346629,
+        "sortino_per_trade": 0.3296947738753771,
+        "max_dd_r": 8.19775205861586,
+        "avg_dd_r": 1.0119440652984386,
+        "max_consec_wins": 5,
+        "max_consec_losses": 4,
+        "avg_minutes_held": 56.55172413793103,
+        "avg_mae_r": 0.9173141227356917,
+        "avg_mfe_r": 1.309717267887333,
+        "pct_entries_outside_rth": 0.9425287356321839,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.011494252873563218,
+          "STOP": 0.4827586206896552,
+          "TARGET": 0.5057471264367817
+        },
+        "is_trades": 55,
+        "is_expectancy_net_r": 0.30105296692747124,
+        "oos_trades": 32,
+        "oos_expectancy_net_r": 0.13667701539566202,
+        "oos_t_stat": 0.6107178776556237,
+        "folds": [
+          {
+            "trades": 28,
+            "expectancy_net_r": 0.15420722781551624
+          },
+          {
+            "trades": 27,
+            "expectancy_net_r": 0.4533374371176468
+          },
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.13667701539566202
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.09520741301488814
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "poc_reversion",
+          "prior_day_sweep"
+        ],
+        "name": "poc_reversion+prior_day_sweep",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 67,
+        "win_rate": 0.5074626865671642,
+        "avg_win_r": 1.409393388559196,
+        "avg_loss_r": -1.0263863091162637,
+        "rr_realised": 1.3731607446836542,
+        "profit_factor": 1.414771676340735,
+        "expectancy_gross_r": 0.26258145043257364,
+        "cost_total_r": 0.052900450280693616,
+        "cost_commission_r": 0.016681968858767333,
+        "cost_slippage_r": 0.03621848142192628,
+        "expectancy_net_r": 0.20968100015188004,
+        "sd_r": 1.238093550190152,
+        "t_stat": 1.3862546618860747,
+        "sharpe_per_trade": 0.1693579617789595,
+        "sharpe_annualised": 3.4817772865929753,
+        "sortino_per_trade": 0.28953820406807,
+        "max_dd_r": 4.338114866299397,
+        "avg_dd_r": 0.9795494202015205,
+        "max_consec_wins": 6,
+        "max_consec_losses": 4,
+        "avg_minutes_held": 64.25373134328358,
+        "avg_mae_r": 0.8613551027893382,
+        "avg_mfe_r": 1.2570353213878036,
+        "pct_entries_outside_rth": 0.746268656716418,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.04477611940298507,
+          "STOP": 0.47761194029850745,
+          "TARGET": 0.47761194029850745
+        },
+        "is_trades": 34,
+        "is_expectancy_net_r": 0.07083593362402311,
+        "oos_trades": 33,
+        "oos_expectancy_net_r": 0.35273349293815687,
+        "oos_t_stat": 1.6820737819358778,
+        "folds": [
+          {
+            "trades": 17,
+            "expectancy_net_r": 0.14307852251287195
+          },
+          {
+            "trades": 17,
+            "expectancy_net_r": -0.0014066552648257253
+          },
+          {
+            "trades": 33,
+            "expectancy_net_r": 0.35273349293815687
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.0694740334743166
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "candle_reversal",
+          "poc_reversion"
+        ],
+        "name": "candle_reversal+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 81,
+        "win_rate": 0.49382716049382713,
+        "avg_win_r": 1.4361638625712332,
+        "avg_loss_r": -1.001658707138237,
+        "rr_realised": 1.4337856321085531,
+        "profit_factor": 1.3988152508376128,
+        "expectancy_gross_r": 0.2611430302745917,
+        "cost_total_r": 0.058938740025436004,
+        "cost_commission_r": 0.01793107692392493,
+        "cost_slippage_r": 0.04100766310151107,
+        "expectancy_net_r": 0.2022042902491557,
+        "sd_r": 1.2355181789474792,
+        "t_stat": 1.4729355207000652,
+        "sharpe_per_trade": 0.16365950230000723,
+        "sharpe_annualised": 3.699488688183722,
+        "sortino_per_trade": 0.27948931143773886,
+        "max_dd_r": 7.831480969132708,
+        "avg_dd_r": 0.8777182330867714,
+        "max_consec_wins": 7,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 59.629629629629626,
+        "avg_mae_r": 0.9329543581299702,
+        "avg_mfe_r": 1.4045132866652403,
+        "pct_entries_outside_rth": 0.8395061728395061,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.06172839506172839,
+          "STOP": 0.4691358024691358,
+          "TARGET": 0.4691358024691358
+        },
+        "is_trades": 42,
+        "is_expectancy_net_r": 0.002335805493557025,
+        "oos_trades": 39,
+        "oos_expectancy_net_r": 0.4174472738321081,
+        "oos_t_stat": 2.1536867987908193,
+        "folds": [
+          {
+            "trades": 18,
+            "expectancy_net_r": 0.11053415080969893
+          },
+          {
+            "trades": 24,
+            "expectancy_net_r": -0.0788129534935494
+          },
+          {
+            "trades": 39,
+            "expectancy_net_r": 0.4174472738321081
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.05762378918787686
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "poc_reversion"
+        ],
+        "name": "poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 180,
+        "win_rate": 0.5,
+        "avg_win_r": 1.3970425470041257,
+        "avg_loss_r": -0.9991575122127343,
+        "rr_realised": 1.3982205307251658,
+        "profit_factor": 1.3982205307251656,
+        "expectancy_gross_r": 0.23601231212119916,
+        "cost_total_r": 0.037069794725503494,
+        "cost_commission_r": 0.011646299752165499,
+        "cost_slippage_r": 0.02542349497333799,
+        "expectancy_net_r": 0.19894251739569568,
+        "sd_r": 1.2225999143182356,
+        "t_stat": 2.1831295126162673,
+        "sharpe_per_trade": 0.1627208664631986,
+        "sharpe_annualised": 5.4832426968190005,
+        "sortino_per_trade": 0.27872230495750283,
+        "max_dd_r": 11.828577582396807,
+        "avg_dd_r": 0.887989294560755,
+        "max_consec_wins": 8,
+        "max_consec_losses": 10,
+        "avg_minutes_held": 108.0,
+        "avg_mae_r": 0.9056983148081996,
+        "avg_mfe_r": 1.3094260152861172,
+        "pct_entries_outside_rth": 0.7944444444444444,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.07222222222222222,
+          "STOP": 0.4722222222222222,
+          "TARGET": 0.45555555555555555
+        },
+        "is_trades": 108,
+        "is_expectancy_net_r": 0.02468040589685086,
+        "oos_trades": 72,
+        "oos_expectancy_net_r": 0.4603356846439629,
+        "oos_t_stat": 3.3049701661843365,
+        "folds": [
+          {
+            "trades": 55,
+            "expectancy_net_r": 0.12602114536191644
+          },
+          {
+            "trades": 54,
+            "expectancy_net_r": -0.09811355533766992
+          },
+          {
+            "trades": 71,
+            "expectancy_net_r": 0.4813608749937182
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.038061141681225735
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "poc_reversion",
+          "pullback_to_support"
+        ],
+        "name": "poc_reversion+pullback_to_support",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 159,
+        "win_rate": 0.49056603773584906,
+        "avg_win_r": 1.4391247292847416,
+        "avg_loss_r": -1.010054119044678,
+        "rr_realised": 1.4247996242477423,
+        "profit_factor": 1.3720292677941217,
+        "expectancy_gross_r": 0.24741384358534368,
+        "cost_total_r": 0.05598399929860833,
+        "cost_commission_r": 0.017380954476005253,
+        "cost_slippage_r": 0.03860304482260308,
+        "expectancy_net_r": 0.19142984428673535,
+        "sd_r": 1.2375878850751747,
+        "t_stat": 1.95043804161254,
+        "sharpe_per_trade": 0.15467979817458163,
+        "sharpe_annualised": 4.8988047138134885,
+        "sortino_per_trade": 0.2628286609623631,
+        "max_dd_r": 7.569975999262898,
+        "avg_dd_r": 0.9678874993668845,
+        "max_consec_wins": 10,
+        "max_consec_losses": 6,
+        "avg_minutes_held": 57.16981132075472,
+        "avg_mae_r": 0.9146926848489233,
+        "avg_mfe_r": 1.250487117522469,
+        "pct_entries_outside_rth": 0.7861635220125787,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05660377358490566,
+          "STOP": 0.4779874213836478,
+          "TARGET": 0.46540880503144655
+        },
+        "is_trades": 97,
+        "is_expectancy_net_r": 0.08718859190257008,
+        "oos_trades": 62,
+        "oos_expectancy_net_r": 0.3545169649522842,
+        "oos_t_stat": 2.2967731532144624,
+        "folds": [
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.14694297006307835
+          },
+          {
+            "trades": 56,
+            "expectancy_net_r": 0.022027990353193198
+          },
+          {
+            "trades": 61,
+            "expectancy_net_r": 0.37757660719939035
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.0736264678808817
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "imbalance_pullback"
+        ],
+        "name": "imbalance_pullback",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 170,
+        "win_rate": 0.5294117647058824,
+        "avg_win_r": 1.2501425970107427,
+        "avg_loss_r": -1.0080263190919225,
+        "rr_realised": 1.2401884487866646,
+        "profit_factor": 1.3952120048849979,
+        "expectancy_gross_r": 0.21741190388979448,
+        "cost_total_r": 0.02993703210383542,
+        "cost_commission_r": 0.010359576878317948,
+        "cost_slippage_r": 0.01957745522551747,
+        "expectancy_net_r": 0.18747487178595906,
+        "sd_r": 1.1759084827718596,
+        "t_stat": 2.078710465938873,
+        "sharpe_per_trade": 0.15942981493257197,
+        "sharpe_annualised": 5.220979293849163,
+        "sortino_per_trade": 0.2696196969938261,
+        "max_dd_r": 5.228322587965719,
+        "avg_dd_r": 0.9382336615367856,
+        "max_consec_wins": 5,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 112.05882352941177,
+        "avg_mae_r": 0.9231109111690208,
+        "avg_mfe_r": 1.175221035859783,
+        "pct_entries_outside_rth": 0.5,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.14705882352941177,
+          "STOP": 0.45294117647058824,
+          "TARGET": 0.3941176470588235,
+          "TIME": 0.0058823529411764705
+        },
+        "is_trades": 95,
+        "is_expectancy_net_r": 0.20216191173449072,
+        "oos_trades": 75,
+        "oos_expectancy_net_r": 0.16887128785115232,
+        "oos_t_stat": 1.2247096318681534,
+        "folds": [
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.08650583081428653
+          },
+          {
+            "trades": 55,
+            "expectancy_net_r": 0.28178287872714936
+          },
+          {
+            "trades": 68,
+            "expectancy_net_r": 0.18098376213747586
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.08684706562932011
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "candle_engulfing",
+          "value_area_breakout"
+        ],
+        "name": "candle_engulfing+value_area_breakout",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 111,
+        "win_rate": 0.4864864864864865,
+        "avg_win_r": 1.418007349974774,
+        "avg_loss_r": -0.993007359897238,
+        "rr_realised": 1.4279927896219395,
+        "profit_factor": 1.3528352743786793,
+        "expectancy_gross_r": 0.22504188168524855,
+        "cost_total_r": 0.04512316650961579,
+        "cost_commission_r": 0.014856601661025754,
+        "cost_slippage_r": 0.030266564848590038,
+        "expectancy_net_r": 0.17991871517563277,
+        "sd_r": 1.2272802303203973,
+        "t_stat": 1.5445219762512898,
+        "sharpe_per_trade": 0.14659953833743633,
+        "sharpe_annualised": 3.8792883323752427,
+        "sortino_per_trade": 0.24898608989185356,
+        "max_dd_r": 8.748373582401335,
+        "avg_dd_r": 1.2429021926780401,
+        "max_consec_wins": 6,
+        "max_consec_losses": 8,
+        "avg_minutes_held": 51.486486486486484,
+        "avg_mae_r": 0.9329221099052759,
+        "avg_mfe_r": 1.2310949228005834,
+        "pct_entries_outside_rth": 0.6396396396396397,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.06306306306306306,
+          "STOP": 0.4774774774774775,
+          "TARGET": 0.4594594594594595
+        },
+        "is_trades": 71,
+        "is_expectancy_net_r": 0.27072591125599826,
+        "oos_trades": 40,
+        "oos_expectancy_net_r": 0.018735942132983956,
+        "oos_t_stat": 0.09802523721000213,
+        "folds": [
+          {
+            "trades": 33,
+            "expectancy_net_r": 0.19715675731342927
+          },
+          {
+            "trades": 43,
+            "expectancy_net_r": 0.3114426915253941
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": 0.002079104501717853
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.027436160320763556
+      }
+    ],
+    "survivors": [
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "candle_engulfing",
+          "structure_trend"
+        ],
+        "name": "candle_engulfing+structure_trend",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 121,
+        "win_rate": 0.5371900826446281,
+        "avg_win_r": 1.4407173754750215,
+        "avg_loss_r": -1.0299806356276795,
+        "rr_realised": 1.3987810310599047,
+        "profit_factor": 1.6235851253373885,
+        "expectancy_gross_r": 0.350393483218382,
+        "cost_total_r": 0.05313965007188326,
+        "cost_commission_r": 0.016950282836633725,
+        "cost_slippage_r": 0.036189367235249535,
+        "expectancy_net_r": 0.2972538331464987,
+        "sd_r": 1.2482531610088732,
+        "t_stat": 2.61949439965267,
+        "sharpe_per_trade": 0.23813585451387909,
+        "sharpe_annualised": 6.579235658374081,
+        "sortino_per_trade": 0.42087810461484637,
+        "max_dd_r": 7.042658878421086,
+        "avg_dd_r": 0.9599214914536123,
+        "max_consec_wins": 7,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 55.04132231404959,
+        "avg_mae_r": 0.9416064013353944,
+        "avg_mfe_r": 1.4226416886806033,
+        "pct_entries_outside_rth": 0.7355371900826446,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.024793388429752067,
+          "STOP": 0.45454545454545453,
+          "TARGET": 0.5206611570247934
+        },
+        "is_trades": 75,
+        "is_expectancy_net_r": 0.3471229574934401,
+        "oos_trades": 46,
+        "oos_expectancy_net_r": 0.21594547823300744,
+        "oos_t_stat": 1.1570969337373396,
+        "folds": [
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.16979329829815873
+          },
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.45632288561481826
+          },
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.21636077717354307
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.1475326733406644
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "candle_close_strength",
+          "poc_reversion"
+        ],
+        "name": "candle_close_strength+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 78,
+        "win_rate": 0.5128205128205128,
+        "avg_win_r": 1.4682107298105551,
+        "avg_loss_r": -0.9667423174193716,
+        "rr_realised": 1.518719831909093,
+        "profit_factor": 1.598652454641151,
+        "expectancy_gross_r": 0.31887472420389706,
+        "cost_total_r": 0.03692317124894721,
+        "cost_commission_r": 0.011591296339785099,
+        "cost_slippage_r": 0.025331874909162107,
+        "expectancy_net_r": 0.2819515529549499,
+        "sd_r": 1.2299735596169148,
+        "t_stat": 2.0245383911857915,
+        "sharpe_per_trade": 0.22923383250837195,
+        "sharpe_annualised": 5.084918363178406,
+        "sortino_per_trade": 0.40706430243101216,
+        "max_dd_r": 6.007953467583153,
+        "avg_dd_r": 0.9970162252331135,
+        "max_consec_wins": 4,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 86.92307692307692,
+        "avg_mae_r": 0.8993612011046551,
+        "avg_mfe_r": 1.3582914732167333,
+        "pct_entries_outside_rth": 0.8333333333333334,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05128205128205128,
+          "STOP": 0.44871794871794873,
+          "TARGET": 0.5
+        },
+        "is_trades": 46,
+        "is_expectancy_net_r": 0.09802122582802268,
+        "oos_trades": 32,
+        "oos_expectancy_net_r": 0.5463513981999077,
+        "oos_t_stat": 2.6133937656614434,
+        "folds": [
+          {
+            "trades": 25,
+            "expectancy_net_r": 0.006302456645305122
+          },
+          {
+            "trades": 21,
+            "expectancy_net_r": 0.2072102367598293
+          },
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.5463513981999077
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.108208892114815
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "above_vwap",
+          "poc_reversion"
+        ],
+        "name": "above_vwap+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 87,
+        "win_rate": 0.5057471264367817,
+        "avg_win_r": 1.4831709951430874,
+        "avg_loss_r": -1.0308824677354358,
+        "rr_realised": 1.4387391788718695,
+        "profit_factor": 1.4721982295433076,
+        "expectancy_gross_r": 0.2998561154088339,
+        "cost_total_r": 0.05926326858501664,
+        "cost_commission_r": 0.017653728891921103,
+        "cost_slippage_r": 0.04160953969309553,
+        "expectancy_net_r": 0.24059284682381726,
+        "sd_r": 1.2598487057631156,
+        "t_stat": 1.7812461683073149,
+        "sharpe_per_trade": 0.19096963446740645,
+        "sharpe_annualised": 4.473855072346629,
+        "sortino_per_trade": 0.3296947738753771,
+        "max_dd_r": 8.19775205861586,
+        "avg_dd_r": 1.0119440652984386,
+        "max_consec_wins": 5,
+        "max_consec_losses": 4,
+        "avg_minutes_held": 56.55172413793103,
+        "avg_mae_r": 0.9173141227356917,
+        "avg_mfe_r": 1.309717267887333,
+        "pct_entries_outside_rth": 0.9425287356321839,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.011494252873563218,
+          "STOP": 0.4827586206896552,
+          "TARGET": 0.5057471264367817
+        },
+        "is_trades": 55,
+        "is_expectancy_net_r": 0.30105296692747124,
+        "oos_trades": 32,
+        "oos_expectancy_net_r": 0.13667701539566202,
+        "oos_t_stat": 0.6107178776556237,
+        "folds": [
+          {
+            "trades": 28,
+            "expectancy_net_r": 0.15420722781551624
+          },
+          {
+            "trades": 27,
+            "expectancy_net_r": 0.4533374371176468
+          },
+          {
+            "trades": 32,
+            "expectancy_net_r": 0.13667701539566202
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.09520741301488814
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "poc_reversion",
+          "pullback_to_support"
+        ],
+        "name": "poc_reversion+pullback_to_support",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 159,
+        "win_rate": 0.49056603773584906,
+        "avg_win_r": 1.4391247292847416,
+        "avg_loss_r": -1.010054119044678,
+        "rr_realised": 1.4247996242477423,
+        "profit_factor": 1.3720292677941217,
+        "expectancy_gross_r": 0.24741384358534368,
+        "cost_total_r": 0.05598399929860833,
+        "cost_commission_r": 0.017380954476005253,
+        "cost_slippage_r": 0.03860304482260308,
+        "expectancy_net_r": 0.19142984428673535,
+        "sd_r": 1.2375878850751747,
+        "t_stat": 1.95043804161254,
+        "sharpe_per_trade": 0.15467979817458163,
+        "sharpe_annualised": 4.8988047138134885,
+        "sortino_per_trade": 0.2628286609623631,
+        "max_dd_r": 7.569975999262898,
+        "avg_dd_r": 0.9678874993668845,
+        "max_consec_wins": 10,
+        "max_consec_losses": 6,
+        "avg_minutes_held": 57.16981132075472,
+        "avg_mae_r": 0.9146926848489233,
+        "avg_mfe_r": 1.250487117522469,
+        "pct_entries_outside_rth": 0.7861635220125787,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05660377358490566,
+          "STOP": 0.4779874213836478,
+          "TARGET": 0.46540880503144655
+        },
+        "is_trades": 97,
+        "is_expectancy_net_r": 0.08718859190257008,
+        "oos_trades": 62,
+        "oos_expectancy_net_r": 0.3545169649522842,
+        "oos_t_stat": 2.2967731532144624,
+        "folds": [
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.14694297006307835
+          },
+          {
+            "trades": 56,
+            "expectancy_net_r": 0.022027990353193198
+          },
+          {
+            "trades": 61,
+            "expectancy_net_r": 0.37757660719939035
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.0736264678808817
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "imbalance_pullback"
+        ],
+        "name": "imbalance_pullback",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 170,
+        "win_rate": 0.5294117647058824,
+        "avg_win_r": 1.2501425970107427,
+        "avg_loss_r": -1.0080263190919225,
+        "rr_realised": 1.2401884487866646,
+        "profit_factor": 1.3952120048849979,
+        "expectancy_gross_r": 0.21741190388979448,
+        "cost_total_r": 0.02993703210383542,
+        "cost_commission_r": 0.010359576878317948,
+        "cost_slippage_r": 0.01957745522551747,
+        "expectancy_net_r": 0.18747487178595906,
+        "sd_r": 1.1759084827718596,
+        "t_stat": 2.078710465938873,
+        "sharpe_per_trade": 0.15942981493257197,
+        "sharpe_annualised": 5.220979293849163,
+        "sortino_per_trade": 0.2696196969938261,
+        "max_dd_r": 5.228322587965719,
+        "avg_dd_r": 0.9382336615367856,
+        "max_consec_wins": 5,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 112.05882352941177,
+        "avg_mae_r": 0.9231109111690208,
+        "avg_mfe_r": 1.175221035859783,
+        "pct_entries_outside_rth": 0.5,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.14705882352941177,
+          "STOP": 0.45294117647058824,
+          "TARGET": 0.3941176470588235,
+          "TIME": 0.0058823529411764705
+        },
+        "is_trades": 95,
+        "is_expectancy_net_r": 0.20216191173449072,
+        "oos_trades": 75,
+        "oos_expectancy_net_r": 0.16887128785115232,
+        "oos_t_stat": 1.2247096318681534,
+        "folds": [
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.08650583081428653
+          },
+          {
+            "trades": 55,
+            "expectancy_net_r": 0.28178287872714936
+          },
+          {
+            "trades": 68,
+            "expectancy_net_r": 0.18098376213747586
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.08684706562932011
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "candle_engulfing",
+          "value_area_breakout"
+        ],
+        "name": "candle_engulfing+value_area_breakout",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 111,
+        "win_rate": 0.4864864864864865,
+        "avg_win_r": 1.418007349974774,
+        "avg_loss_r": -0.993007359897238,
+        "rr_realised": 1.4279927896219395,
+        "profit_factor": 1.3528352743786793,
+        "expectancy_gross_r": 0.22504188168524855,
+        "cost_total_r": 0.04512316650961579,
+        "cost_commission_r": 0.014856601661025754,
+        "cost_slippage_r": 0.030266564848590038,
+        "expectancy_net_r": 0.17991871517563277,
+        "sd_r": 1.2272802303203973,
+        "t_stat": 1.5445219762512898,
+        "sharpe_per_trade": 0.14659953833743633,
+        "sharpe_annualised": 3.8792883323752427,
+        "sortino_per_trade": 0.24898608989185356,
+        "max_dd_r": 8.748373582401335,
+        "avg_dd_r": 1.2429021926780401,
+        "max_consec_wins": 6,
+        "max_consec_losses": 8,
+        "avg_minutes_held": 51.486486486486484,
+        "avg_mae_r": 0.9329221099052759,
+        "avg_mfe_r": 1.2310949228005834,
+        "pct_entries_outside_rth": 0.6396396396396397,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.06306306306306306,
+          "STOP": 0.4774774774774775,
+          "TARGET": 0.4594594594594595
+        },
+        "is_trades": 71,
+        "is_expectancy_net_r": 0.27072591125599826,
+        "oos_trades": 40,
+        "oos_expectancy_net_r": 0.018735942132983956,
+        "oos_t_stat": 0.09802523721000213,
+        "folds": [
+          {
+            "trades": 33,
+            "expectancy_net_r": 0.19715675731342927
+          },
+          {
+            "trades": 43,
+            "expectancy_net_r": 0.3114426915253941
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": 0.002079104501717853
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.027436160320763556
+      },
+      {
+        "symbol": "MGC",
+        "tf": 30,
+        "signals": [
+          "above_vwap",
+          "imbalance_pullback"
+        ],
+        "name": "above_vwap+imbalance_pullback",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 92,
+        "win_rate": 0.5108695652173914,
+        "avg_win_r": 1.2922701096142837,
+        "avg_loss_r": -1.0077179793339117,
+        "rr_realised": 1.2823727829768972,
+        "profit_factor": 1.339367128886982,
+        "expectancy_gross_r": 0.1977873583519582,
+        "cost_total_r": 0.03051142267972662,
+        "cost_commission_r": 0.010403034583883345,
+        "cost_slippage_r": 0.020108388095843276,
+        "expectancy_net_r": 0.16727593567223162,
+        "sd_r": 1.191352392156169,
+        "t_stat": 1.3467504840219577,
+        "sharpe_per_trade": 0.1404084440284602,
+        "sharpe_annualised": 3.3825568814289824,
+        "sortino_per_trade": 0.23542716833817653,
+        "max_dd_r": 4.839952090033523,
+        "avg_dd_r": 1.0054770374230677,
+        "max_consec_wins": 5,
+        "max_consec_losses": 3,
+        "avg_minutes_held": 121.30434782608695,
+        "avg_mae_r": 0.8732657189187081,
+        "avg_mfe_r": 1.2008979355804794,
+        "pct_entries_outside_rth": 0.532608695652174,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.10869565217391304,
+          "STOP": 0.4782608695652174,
+          "TARGET": 0.40217391304347827,
+          "TIME": 0.010869565217391304
+        },
+        "is_trades": 52,
+        "is_expectancy_net_r": 0.28980473693384023,
+        "oos_trades": 40,
+        "oos_expectancy_net_r": 0.007988494032140449,
+        "oos_t_stat": 0.04237746908648888,
+        "folds": [
+          {
+            "trades": 23,
+            "expectancy_net_r": 0.08761138020378924
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": 0.3406001124114853
+          },
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.04274471772812267
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.06828396058167775
+      },
+      {
+        "symbol": "MGC",
+        "tf": 5,
+        "signals": [
+          "above_vwap",
+          "poc_reversion"
+        ],
+        "name": "above_vwap+poc_reversion",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 275,
+        "win_rate": 0.48727272727272725,
+        "avg_win_r": 1.4557306962569658,
+        "avg_loss_r": -1.0876586712095255,
+        "rr_realised": 1.3384076593055867,
+        "profit_factor": 1.2719618889854514,
+        "expectancy_gross_r": 0.2637699724733943,
+        "cost_total_r": 0.11210437008106577,
+        "cost_commission_r": 0.0330556676062329,
+        "cost_slippage_r": 0.07904870247483288,
+        "expectancy_net_r": 0.15166560239232854,
+        "sd_r": 1.2737015035367285,
+        "t_stat": 1.9746302227870343,
+        "sharpe_per_trade": 0.11907468270328152,
+        "sharpe_annualised": 4.95956684449725,
+        "sortino_per_trade": 0.194576914074478,
+        "max_dd_r": 18.190087405606143,
+        "avg_dd_r": 0.9089531536834135,
+        "max_consec_wins": 6,
+        "max_consec_losses": 8,
+        "avg_minutes_held": 17.70909090909091,
+        "avg_mae_r": 0.9113809873779655,
+        "avg_mfe_r": 1.2046936528659038,
+        "pct_entries_outside_rth": 0.9527272727272728,
+        "exit_mix": {
+          "STOP": 0.509090909090909,
+          "TARGET": 0.48,
+          "TIME": 0.01090909090909091
+        },
+        "is_trades": 169,
+        "is_expectancy_net_r": 0.22608785480708377,
+        "oos_trades": 106,
+        "oos_expectancy_net_r": 0.03301125656125649,
+        "oos_t_stat": 0.2693762814322874,
+        "folds": [
+          {
+            "trades": 82,
+            "expectancy_net_r": 0.24209568006083032
+          },
+          {
+            "trades": 87,
+            "expectancy_net_r": 0.21100001951044908
+          },
+          {
+            "trades": 106,
+            "expectancy_net_r": 0.03301125656125649
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.02639436194690338
+      },
+      {
+        "symbol": "MGC",
+        "tf": 5,
+        "signals": [
+          "candle_engulfing",
+          "imbalance_bar"
+        ],
+        "name": "candle_engulfing+imbalance_bar",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 106,
+        "win_rate": 0.4811320754716981,
+        "avg_win_r": 1.4537040651580109,
+        "avg_loss_r": -1.0742853276129642,
+        "rr_realised": 1.3531824626033997,
+        "profit_factor": 1.2547691925958797,
+        "expectancy_gross_r": 0.2300327573525589,
+        "cost_total_r": 0.08802130165118609,
+        "cost_commission_r": 0.028530978334253148,
+        "cost_slippage_r": 0.05949032331693294,
+        "expectancy_net_r": 0.14201145570137283,
+        "sd_r": 1.2652059384551881,
+        "t_stat": 1.1556201083514595,
+        "sharpe_per_trade": 0.11224374734975423,
+        "sharpe_annualised": 2.9025055466460126,
+        "sortino_per_trade": 0.18342500813643423,
+        "max_dd_r": 10.555894142310514,
+        "avg_dd_r": 0.9931967271984182,
+        "max_consec_wins": 8,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 9.90566037735849,
+        "avg_mae_r": 1.2795795241297208,
+        "avg_mfe_r": 1.4619033852153476,
+        "pct_entries_outside_rth": 0.7264150943396226,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.009433962264150943,
+          "STOP": 0.5188679245283019,
+          "TARGET": 0.4716981132075472
+        },
+        "is_trades": 65,
+        "is_expectancy_net_r": 0.17527195653997465,
+        "oos_trades": 41,
+        "oos_expectancy_net_r": 0.08928139339627238,
+        "oos_t_stat": 0.457067024764511,
+        "folds": [
+          {
+            "trades": 28,
+            "expectancy_net_r": 0.19161928463024
+          },
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.13665141148112628
+          },
+          {
+            "trades": 36,
+            "expectancy_net_r": 0.10968097368031932
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.02598938199946224
+      },
+      {
+        "symbol": "MGC",
+        "tf": 15,
+        "signals": [
+          "above_vwap",
+          "candle_engulfing"
+        ],
+        "name": "above_vwap+candle_engulfing",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 159,
+        "win_rate": 0.4716981132075472,
+        "avg_win_r": 1.4510310777344357,
+        "avg_loss_r": -1.0284519634466063,
+        "rr_realised": 1.410888528883409,
+        "profit_factor": 1.2597219007887583,
+        "expectancy_gross_r": 0.19462789046474663,
+        "cost_total_r": 0.05351238165614445,
+        "cost_commission_r": 0.016586743713091524,
+        "cost_slippage_r": 0.036925637943052925,
+        "expectancy_net_r": 0.14111550880860219,
+        "sd_r": 1.2479853634394347,
+        "t_stat": 1.425817091135061,
+        "sharpe_per_trade": 0.11307465050686917,
+        "sharpe_annualised": 3.581143998459718,
+        "sortino_per_trade": 0.18772631165251139,
+        "max_dd_r": 7.923030127437265,
+        "avg_dd_r": 1.010913238952532,
+        "max_consec_wins": 7,
+        "max_consec_losses": 8,
+        "avg_minutes_held": 53.113207547169814,
+        "avg_mae_r": 0.9838192381750978,
+        "avg_mfe_r": 1.2391605595619606,
+        "pct_entries_outside_rth": 0.7672955974842768,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.025157232704402517,
+          "STOP": 0.5157232704402516,
+          "TARGET": 0.4591194968553459
+        },
+        "is_trades": 97,
+        "is_expectancy_net_r": 0.21475635291007703,
+        "oos_trades": 62,
+        "oos_expectancy_net_r": 0.025903220456294767,
+        "oos_t_stat": 0.164435438344539,
+        "folds": [
+          {
+            "trades": 49,
+            "expectancy_net_r": 0.2238573244871502
+          },
+          {
+            "trades": 51,
+            "expectancy_net_r": 0.18108555600987372
+          },
+          {
+            "trades": 59,
+            "expectancy_net_r": 0.03784734990159026
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.014789074493552282
+      }
+    ]
+  },
+  "MCL": {
+    "distinct_signal_sets_meeting_the_sample_floor": 177,
+    "surviving_sign_agreement_and_all_folds": 3,
+    "clearing_their_declared_threshold": 0,
+    "top_by_net_expectancy": [
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "delta_divergence",
+          "keltner_outside"
+        ],
+        "name": "delta_divergence+keltner_outside",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 95,
+        "win_rate": 0.4631578947368421,
+        "avg_win_r": 1.4241752067897164,
+        "avg_loss_r": -0.9921364982966401,
+        "rr_realised": 1.4354629723176464,
+        "profit_factor": 1.2384386427838516,
+        "expectancy_gross_r": 0.21157220110186842,
+        "cost_total_r": 0.08457485704272232,
+        "cost_commission_r": 0.026899482139254683,
+        "cost_slippage_r": 0.05767537490346763,
+        "expectancy_net_r": 0.12699734405914606,
+        "sd_r": 1.2401139822633025,
+        "t_stat": 0.9981477610810684,
+        "sharpe_per_trade": 0.10240779950514406,
+        "sharpe_annualised": 2.506991174671559,
+        "sortino_per_trade": 0.16889120446779293,
+        "max_dd_r": 8.38153274233587,
+        "avg_dd_r": 0.8882197036348787,
+        "max_consec_wins": 4,
+        "max_consec_losses": 7,
+        "avg_minutes_held": 99.47368421052632,
+        "avg_mae_r": 0.9507994614060914,
+        "avg_mfe_r": 1.1352119114582901,
+        "pct_entries_outside_rth": 0.7052631578947368,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.09473684210526316,
+          "STOP": 0.4842105263157895,
+          "TARGET": 0.42105263157894735
+        },
+        "is_trades": 58,
+        "is_expectancy_net_r": 0.08468646613812408,
+        "oos_trades": 37,
+        "oos_expectancy_net_r": 0.1933225040434508,
+        "oos_t_stat": 0.9338151467951441,
+        "folds": [
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.06030962293894712
+          },
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.22225626578504673
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": 0.1210159312938131
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.003993385849315065
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "bollinger_extreme"
+        ],
+        "name": "bollinger_extreme",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 152,
+        "win_rate": 0.47368421052631576,
+        "avg_win_r": 1.4076147840078217,
+        "avg_loss_r": -1.0505821829869135,
+        "rr_realised": 1.3398426194567927,
+        "profit_factor": 1.205858357511114,
+        "expectancy_gross_r": 0.20094316601694395,
+        "cost_total_r": 0.08711625937477238,
+        "cost_commission_r": 0.02791891823058316,
+        "cost_slippage_r": 0.059197341144189224,
+        "expectancy_net_r": 0.11382690664217154,
+        "sd_r": 1.2533787472272935,
+        "t_stat": 1.1196554573338386,
+        "sharpe_per_trade": 0.0908160497327546,
+        "sharpe_annualised": 2.812175170506448,
+        "sortino_per_trade": 0.14772882980113225,
+        "max_dd_r": 10.593984696736577,
+        "avg_dd_r": 0.690241466950887,
+        "max_consec_wins": 8,
+        "max_consec_losses": 6,
+        "avg_minutes_held": 82.89473684210526,
+        "avg_mae_r": 1.0409277513037933,
+        "avg_mfe_r": 1.1306709976549738,
+        "pct_entries_outside_rth": 0.7368421052631579,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05921052631578947,
+          "STOP": 0.506578947368421,
+          "TARGET": 0.4342105263157895
+        },
+        "is_trades": 86,
+        "is_expectancy_net_r": 0.1050341945148713,
+        "oos_trades": 66,
+        "oos_expectancy_net_r": 0.12528407698986582,
+        "oos_t_stat": 0.8120014929648757,
+        "folds": [
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.035502225019893675
+          },
+          {
+            "trades": 49,
+            "expectancy_net_r": 0.1982385761691473
+          },
+          {
+            "trades": 61,
+            "expectancy_net_r": 0.09994928076207087
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.00846621722112334
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "candle_engulfing"
+        ],
+        "name": "candle_engulfing",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 162,
+        "win_rate": 0.4691358024691358,
+        "avg_win_r": 1.3469040347426557,
+        "avg_loss_r": -1.0074380793323936,
+        "rr_realised": 1.3369596230025558,
+        "profit_factor": 1.1814992017231882,
+        "expectancy_gross_r": 0.18341130145618387,
+        "cost_total_r": 0.08634320381509751,
+        "cost_commission_r": 0.02761264791421897,
+        "cost_slippage_r": 0.05873055590087854,
+        "expectancy_net_r": 0.09706809764108634,
+        "sd_r": 1.2240711873314702,
+        "t_stat": 1.0093164467937623,
+        "sharpe_per_trade": 0.07929938932122005,
+        "sharpe_annualised": 2.535042929738442,
+        "sortino_per_trade": 0.12546694694633037,
+        "max_dd_r": 8.315481261389062,
+        "avg_dd_r": 1.2197198179124418,
+        "max_consec_wins": 4,
+        "max_consec_losses": 4,
+        "avg_minutes_held": 110.37037037037037,
+        "avg_mae_r": 0.9454713367387246,
+        "avg_mfe_r": 1.1158059154349391,
+        "pct_entries_outside_rth": 0.7283950617283951,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.11728395061728394,
+          "STOP": 0.46296296296296297,
+          "TARGET": 0.41358024691358025,
+          "TIME": 0.006172839506172839
+        },
+        "is_trades": 94,
+        "is_expectancy_net_r": 0.15416370729833748,
+        "oos_trades": 68,
+        "oos_expectancy_net_r": 0.01814181370312153,
+        "oos_t_stat": 0.12067786296734631,
+        "folds": [
+          {
+            "trades": 51,
+            "expectancy_net_r": 0.020885425674435704
+          },
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.3245106498131127
+          },
+          {
+            "trades": 64,
+            "expectancy_net_r": -0.009251959886820763
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.02110816018887344
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "candle_engulfing",
+          "value_area_breakout"
+        ],
+        "name": "candle_engulfing+value_area_breakout",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 74,
+        "win_rate": 0.47297297297297297,
+        "avg_win_r": 1.3238623591795475,
+        "avg_loss_r": -1.0166659147914794,
+        "rr_realised": 1.3021606605657423,
+        "profit_factor": 1.1686057210205383,
+        "expectancy_gross_r": 0.1764828201704578,
+        "cost_total_r": 0.08614211889455954,
+        "cost_commission_r": 0.02748682479462589,
+        "cost_slippage_r": 0.058655294099933655,
+        "expectancy_net_r": 0.09034070127589823,
+        "sd_r": 1.2425769057011413,
+        "t_stat": 0.6254261556466778,
+        "sharpe_per_trade": 0.0727043138025507,
+        "sharpe_annualised": 1.570847437374191,
+        "sortino_per_trade": 0.11254664690165453,
+        "max_dd_r": 4.281806506849296,
+        "avg_dd_r": 1.1742801509546994,
+        "max_consec_wins": 4,
+        "max_consec_losses": 3,
+        "avg_minutes_held": 86.75675675675676,
+        "avg_mae_r": 0.8682177706083086,
+        "avg_mfe_r": 1.0781179956208393,
+        "pct_entries_outside_rth": 0.7702702702702703,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.12162162162162163,
+          "STOP": 0.4594594594594595,
+          "TARGET": 0.4189189189189189
+        },
+        "is_trades": 44,
+        "is_expectancy_net_r": 0.1421998294330908,
+        "oos_trades": 30,
+        "oos_expectancy_net_r": 0.014280646645349108,
+        "oos_t_stat": 0.06079312053825724,
+        "folds": [
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.08133802170226906
+          },
+          {
+            "trades": 20,
+            "expectancy_net_r": 0.15155171169136583
+          },
+          {
+            "trades": 28,
+            "expectancy_net_r": 0.05497818201179133
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.013958001228936874
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "vwap_reclaim"
+        ],
+        "name": "vwap_reclaim",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 168,
+        "win_rate": 0.4523809523809524,
+        "avg_win_r": 1.3948564800607042,
+        "avg_loss_r": -1.0202163904694272,
+        "rr_realised": 1.367216301454337,
+        "profit_factor": 1.129439553375322,
+        "expectancy_gross_r": 0.16188349447484088,
+        "cost_total_r": 0.08956691970444673,
+        "cost_commission_r": 0.028281728784217496,
+        "cost_slippage_r": 0.061285190920229236,
+        "expectancy_net_r": 0.07231657477039413,
+        "sd_r": 1.2271656645679028,
+        "t_stat": 0.7638169528626274,
+        "sharpe_per_trade": 0.058929757292270325,
+        "sharpe_annualised": 1.9184357612716265,
+        "sortino_per_trade": 0.09381515922529768,
+        "max_dd_r": 14.195406695081033,
+        "avg_dd_r": 0.9114100884980233,
+        "max_consec_wins": 7,
+        "max_consec_losses": 8,
+        "avg_minutes_held": 126.60714285714286,
+        "avg_mae_r": 0.9653249067861508,
+        "avg_mfe_r": 1.1551647755239751,
+        "pct_entries_outside_rth": 0.7380952380952381,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.06547619047619048,
+          "STOP": 0.5059523809523809,
+          "TARGET": 0.4226190476190476,
+          "TIME": 0.005952380952380952
+        },
+        "is_trades": 117,
+        "is_expectancy_net_r": 0.010739516401824837,
+        "oos_trades": 51,
+        "oos_expectancy_net_r": 0.2135815910277002,
+        "oos_t_stat": 1.217607013159376,
+        "folds": [
+          {
+            "trades": 59,
+            "expectancy_net_r": 0.04093042160619116
+          },
+          {
+            "trades": 63,
+            "expectancy_net_r": -0.055870875374818274
+          },
+          {
+            "trades": 46,
+            "expectancy_net_r": 0.2881338007668367
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.04617378366104113
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "candle_close_strength",
+          "vwap_reclaim"
+        ],
+        "name": "candle_close_strength+vwap_reclaim",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 125,
+        "win_rate": 0.44,
+        "avg_win_r": 1.446833383608825,
+        "avg_loss_r": -1.012757464526503,
+        "rr_realised": 1.4286079681330877,
+        "profit_factor": 1.1224776892474264,
+        "expectancy_gross_r": 0.16040085626733985,
+        "cost_total_r": 0.09093834761429855,
+        "cost_commission_r": 0.028533155971772865,
+        "cost_slippage_r": 0.062405191642525684,
+        "expectancy_net_r": 0.06946250865304128,
+        "sd_r": 1.238106792763978,
+        "t_stat": 0.6272596683244153,
+        "sharpe_per_trade": 0.05610381031669456,
+        "sharpe_annualised": 1.5754525672767592,
+        "sortino_per_trade": 0.08942823376078636,
+        "max_dd_r": 18.539863623026527,
+        "avg_dd_r": 1.0037467944805034,
+        "max_consec_wins": 4,
+        "max_consec_losses": 16,
+        "avg_minutes_held": 122.88,
+        "avg_mae_r": 0.9147458033507182,
+        "avg_mfe_r": 1.1536265362581342,
+        "pct_entries_outside_rth": 0.752,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.048,
+          "STOP": 0.512,
+          "TARGET": 0.432,
+          "TIME": 0.008
+        },
+        "is_trades": 87,
+        "is_expectancy_net_r": -0.024748827819267714,
+        "oos_trades": 38,
+        "oos_expectancy_net_r": 0.2851568842606961,
+        "oos_t_stat": 1.3983469165548077,
+        "folds": [
+          {
+            "trades": 42,
+            "expectancy_net_r": -0.24563430693961497
+          },
+          {
+            "trades": 49,
+            "expectancy_net_r": 0.14113970065656972
+          },
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.35540026885064924
+          }
+        ],
+        "sign_agrees_is_oos": false,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.1435490386744151
+      },
+      {
+        "symbol": "MCL",
+        "tf": 15,
+        "signals": [
+          "bollinger_extreme",
+          "rsi_extreme_reversal"
+        ],
+        "name": "bollinger_extreme+rsi_extreme_reversal",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 105,
+        "win_rate": 0.4666666666666667,
+        "avg_win_r": 1.3930244459760157,
+        "avg_loss_r": -1.116648533702575,
+        "rr_realised": 1.2475048360624585,
+        "profit_factor": 1.0915667315546518,
+        "expectancy_gross_r": 0.18220538586934787,
+        "cost_total_r": 0.12767319572191382,
+        "cost_commission_r": 0.03961385912544774,
+        "cost_slippage_r": 0.08805933659646607,
+        "expectancy_net_r": 0.05453219014743404,
+        "sd_r": 1.265748669437983,
+        "t_stat": 0.4414688959134492,
+        "sharpe_per_trade": 0.043082952772644345,
+        "sharpe_annualised": 1.108812411449295,
+        "sortino_per_trade": 0.06683119243347659,
+        "max_dd_r": 10.869885445730615,
+        "avg_dd_r": 1.0406543851246384,
+        "max_consec_wins": 6,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 47.285714285714285,
+        "avg_mae_r": 1.1902879903560142,
+        "avg_mfe_r": 1.1449604955694737,
+        "pct_entries_outside_rth": 0.7904761904761904,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.01904761904761905,
+          "STOP": 0.5333333333333333,
+          "TARGET": 0.4380952380952381,
+          "TIME": 0.009523809523809525
+        },
+        "is_trades": 64,
+        "is_expectancy_net_r": 0.09228232520175966,
+        "oos_trades": 41,
+        "oos_expectancy_net_r": -0.004394849937366923,
+        "oos_t_stat": -0.022406928065646033,
+        "folds": [
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.13050311766799613
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": -0.044597084452353476
+          },
+          {
+            "trades": 36,
+            "expectancy_net_r": 0.07915755335002993
+          }
+        ],
+        "sign_agrees_is_oos": false,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.034274682931244804
+      },
+      {
+        "symbol": "MCL",
+        "tf": 15,
+        "signals": [
+          "bollinger_mean_pull",
+          "candle_reversal"
+        ],
+        "name": "bollinger_mean_pull+candle_reversal",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 79,
+        "win_rate": 0.46835443037974683,
+        "avg_win_r": 1.3639243017688105,
+        "avg_loss_r": -1.1042283416008778,
+        "rr_realised": 1.2351832047630955,
+        "profit_factor": 1.088137585148441,
+        "expectancy_gross_r": 0.19087963675585554,
+        "cost_total_r": 0.13913775298105652,
+        "cost_commission_r": 0.042561075380046,
+        "cost_slippage_r": 0.0965766776010105,
+        "expectancy_net_r": 0.05174188377479899,
+        "sd_r": 1.2538894239596639,
+        "t_stat": 0.36677231159368534,
+        "sharpe_per_trade": 0.041265109016872505,
+        "sharpe_annualised": 0.9212012330552892,
+        "sortino_per_trade": 0.06369930687470628,
+        "max_dd_r": 15.477720754578216,
+        "avg_dd_r": 2.124415411465457,
+        "max_consec_wins": 6,
+        "max_consec_losses": 11,
+        "avg_minutes_held": 57.34177215189873,
+        "avg_mae_r": 0.9327573041445968,
+        "avg_mfe_r": 1.1524754363716636,
+        "pct_entries_outside_rth": 0.7721518987341772,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05063291139240506,
+          "STOP": 0.5189873417721519,
+          "TARGET": 0.4177215189873418,
+          "TIME": 0.012658227848101266
+        },
+        "is_trades": 46,
+        "is_expectancy_net_r": 0.21524784502062694,
+        "oos_trades": 33,
+        "oos_expectancy_net_r": -0.17617551674968845,
+        "oos_t_stat": -0.8129091610167011,
+        "folds": [
+          {
+            "trades": 24,
+            "expectancy_net_r": 0.06344324753721921
+          },
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.24932004162606763
+          },
+          {
+            "trades": 29,
+            "expectancy_net_r": -0.13508104155041029
+          }
+        ],
+        "sign_agrees_is_oos": false,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.11314070264613854
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "bollinger_mean_pull",
+          "rsi_extreme_reversal"
+        ],
+        "name": "bollinger_mean_pull+rsi_extreme_reversal",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 85,
+        "win_rate": 0.4470588235294118,
+        "avg_win_r": 1.3394301672014992,
+        "avg_loss_r": -1.0076341072254338,
+        "rr_realised": 1.3292822837147513,
+        "profit_factor": 1.074738867684267,
+        "expectancy_gross_r": 0.12141246372799307,
+        "cost_total_r": 0.07977077768020976,
+        "cost_commission_r": 0.026046885309829036,
+        "cost_slippage_r": 0.05372389237038072,
+        "expectancy_net_r": 0.041641686047783295,
+        "sd_r": 1.202737069143743,
+        "t_stat": 0.3192030790798615,
+        "sharpe_per_trade": 0.034622435040959534,
+        "sharpe_annualised": 0.8017242871080349,
+        "sortino_per_trade": 0.05416701100167798,
+        "max_dd_r": 10.891365592536147,
+        "avg_dd_r": 1.0702806265200047,
+        "max_consec_wins": 4,
+        "max_consec_losses": 6,
+        "avg_minutes_held": 85.76470588235294,
+        "avg_mae_r": 1.032423442545374,
+        "avg_mfe_r": 1.1152579204290247,
+        "pct_entries_outside_rth": 0.6470588235294118,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.10588235294117647,
+          "STOP": 0.5058823529411764,
+          "TARGET": 0.38823529411764707
+        },
+        "is_trades": 49,
+        "is_expectancy_net_r": -0.06820473340093976,
+        "oos_trades": 36,
+        "oos_expectancy_net_r": 0.1911548680752119,
+        "oos_t_stat": 0.9527012309332801,
+        "folds": [
+          {
+            "trades": 24,
+            "expectancy_net_r": -0.26212109013907614
+          },
+          {
+            "trades": 27,
+            "expectancy_net_r": 0.12358174653607047
+          },
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.1909924212036913
+          }
+        ],
+        "sign_agrees_is_oos": false,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.05740784987917315
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "vwap_band_extension"
+        ],
+        "name": "vwap_band_extension",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 148,
+        "win_rate": 0.4527027027027027,
+        "avg_win_r": 1.3851344369189718,
+        "avg_loss_r": -1.08012469324514,
+        "rr_realised": 1.2823838262205234,
+        "profit_factor": 1.0607372389725318,
+        "expectancy_gross_r": 0.12569954981835463,
+        "cost_total_r": 0.08979477197568726,
+        "cost_commission_r": 0.02777764654061728,
+        "cost_slippage_r": 0.06201712543506998,
+        "expectancy_net_r": 0.035904777842667344,
+        "sd_r": 1.2427714511954142,
+        "t_stat": 0.35147289086819755,
+        "sharpe_per_trade": 0.02889089366200902,
+        "sharpe_annualised": 0.8827745449115989,
+        "sortino_per_trade": 0.04492419527575383,
+        "max_dd_r": 13.285842366385275,
+        "avg_dd_r": 2.478719858291661,
+        "max_consec_wins": 5,
+        "max_consec_losses": 5,
+        "avg_minutes_held": 119.79729729729729,
+        "avg_mae_r": 1.0444288186775101,
+        "avg_mfe_r": 1.1683869189193692,
+        "pct_entries_outside_rth": 0.8040540540540541,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.04054054054054054,
+          "STOP": 0.5472972972972973,
+          "TARGET": 0.41216216216216217
+        },
+        "is_trades": 87,
+        "is_expectancy_net_r": 0.147107953034846,
+        "oos_trades": 61,
+        "oos_expectancy_net_r": -0.12269647202158748,
+        "oos_t_stat": -0.7992926105540255,
+        "folds": [
+          {
+            "trades": 45,
+            "expectancy_net_r": 0.196554423429175
+          },
+          {
+            "trades": 47,
+            "expectancy_net_r": 0.07601209162782242
+          },
+          {
+            "trades": 56,
+            "expectancy_net_r": -0.1268501828590315
+          }
+        ],
+        "sign_agrees_is_oos": false,
+        "positive_in_all_usable_folds": false,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.045003875554238834
+      }
+    ],
+    "survivors": [
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "delta_divergence",
+          "keltner_outside"
+        ],
+        "name": "delta_divergence+keltner_outside",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 95,
+        "win_rate": 0.4631578947368421,
+        "avg_win_r": 1.4241752067897164,
+        "avg_loss_r": -0.9921364982966401,
+        "rr_realised": 1.4354629723176464,
+        "profit_factor": 1.2384386427838516,
+        "expectancy_gross_r": 0.21157220110186842,
+        "cost_total_r": 0.08457485704272232,
+        "cost_commission_r": 0.026899482139254683,
+        "cost_slippage_r": 0.05767537490346763,
+        "expectancy_net_r": 0.12699734405914606,
+        "sd_r": 1.2401139822633025,
+        "t_stat": 0.9981477610810684,
+        "sharpe_per_trade": 0.10240779950514406,
+        "sharpe_annualised": 2.506991174671559,
+        "sortino_per_trade": 0.16889120446779293,
+        "max_dd_r": 8.38153274233587,
+        "avg_dd_r": 0.8882197036348787,
+        "max_consec_wins": 4,
+        "max_consec_losses": 7,
+        "avg_minutes_held": 99.47368421052632,
+        "avg_mae_r": 0.9507994614060914,
+        "avg_mfe_r": 1.1352119114582901,
+        "pct_entries_outside_rth": 0.7052631578947368,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.09473684210526316,
+          "STOP": 0.4842105263157895,
+          "TARGET": 0.42105263157894735
+        },
+        "is_trades": 58,
+        "is_expectancy_net_r": 0.08468646613812408,
+        "oos_trades": 37,
+        "oos_expectancy_net_r": 0.1933225040434508,
+        "oos_t_stat": 0.9338151467951441,
+        "folds": [
+          {
+            "trades": 34,
+            "expectancy_net_r": 0.06030962293894712
+          },
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.22225626578504673
+          },
+          {
+            "trades": 35,
+            "expectancy_net_r": 0.1210159312938131
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": -0.003993385849315065
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "bollinger_extreme"
+        ],
+        "name": "bollinger_extreme",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 152,
+        "win_rate": 0.47368421052631576,
+        "avg_win_r": 1.4076147840078217,
+        "avg_loss_r": -1.0505821829869135,
+        "rr_realised": 1.3398426194567927,
+        "profit_factor": 1.205858357511114,
+        "expectancy_gross_r": 0.20094316601694395,
+        "cost_total_r": 0.08711625937477238,
+        "cost_commission_r": 0.02791891823058316,
+        "cost_slippage_r": 0.059197341144189224,
+        "expectancy_net_r": 0.11382690664217154,
+        "sd_r": 1.2533787472272935,
+        "t_stat": 1.1196554573338386,
+        "sharpe_per_trade": 0.0908160497327546,
+        "sharpe_annualised": 2.812175170506448,
+        "sortino_per_trade": 0.14772882980113225,
+        "max_dd_r": 10.593984696736577,
+        "avg_dd_r": 0.690241466950887,
+        "max_consec_wins": 8,
+        "max_consec_losses": 6,
+        "avg_minutes_held": 82.89473684210526,
+        "avg_mae_r": 1.0409277513037933,
+        "avg_mfe_r": 1.1306709976549738,
+        "pct_entries_outside_rth": 0.7368421052631579,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.05921052631578947,
+          "STOP": 0.506578947368421,
+          "TARGET": 0.4342105263157895
+        },
+        "is_trades": 86,
+        "is_expectancy_net_r": 0.1050341945148713,
+        "oos_trades": 66,
+        "oos_expectancy_net_r": 0.12528407698986582,
+        "oos_t_stat": 0.8120014929648757,
+        "folds": [
+          {
+            "trades": 42,
+            "expectancy_net_r": 0.035502225019893675
+          },
+          {
+            "trades": 49,
+            "expectancy_net_r": 0.1982385761691473
+          },
+          {
+            "trades": 61,
+            "expectancy_net_r": 0.09994928076207087
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.00846621722112334
+      },
+      {
+        "symbol": "MCL",
+        "tf": 30,
+        "signals": [
+          "candle_engulfing",
+          "value_area_breakout"
+        ],
+        "name": "candle_engulfing+value_area_breakout",
+        "track": "B",
+        "n_declared": 19152,
+        "free_t": 4.441,
+        "trades": 74,
+        "win_rate": 0.47297297297297297,
+        "avg_win_r": 1.3238623591795475,
+        "avg_loss_r": -1.0166659147914794,
+        "rr_realised": 1.3021606605657423,
+        "profit_factor": 1.1686057210205383,
+        "expectancy_gross_r": 0.1764828201704578,
+        "cost_total_r": 0.08614211889455954,
+        "cost_commission_r": 0.02748682479462589,
+        "cost_slippage_r": 0.058655294099933655,
+        "expectancy_net_r": 0.09034070127589823,
+        "sd_r": 1.2425769057011413,
+        "t_stat": 0.6254261556466778,
+        "sharpe_per_trade": 0.0727043138025507,
+        "sharpe_annualised": 1.570847437374191,
+        "sortino_per_trade": 0.11254664690165453,
+        "max_dd_r": 4.281806506849296,
+        "avg_dd_r": 1.1742801509546994,
+        "max_consec_wins": 4,
+        "max_consec_losses": 3,
+        "avg_minutes_held": 86.75675675675676,
+        "avg_mae_r": 0.8682177706083086,
+        "avg_mfe_r": 1.0781179956208393,
+        "pct_entries_outside_rth": 0.7702702702702703,
+        "exit_mix": {
+          "SESSION_CLOSE": 0.12162162162162163,
+          "STOP": 0.4594594594594595,
+          "TARGET": 0.4189189189189189
+        },
+        "is_trades": 44,
+        "is_expectancy_net_r": 0.1421998294330908,
+        "oos_trades": 30,
+        "oos_expectancy_net_r": 0.014280646645349108,
+        "oos_t_stat": 0.06079312053825724,
+        "folds": [
+          {
+            "trades": 26,
+            "expectancy_net_r": 0.08133802170226906
+          },
+          {
+            "trades": 20,
+            "expectancy_net_r": 0.15155171169136583
+          },
+          {
+            "trades": 28,
+            "expectancy_net_r": 0.05497818201179133
+          }
+        ],
+        "sign_agrees_is_oos": true,
+        "positive_in_all_usable_folds": true,
+        "usable_folds": 3,
+        "clears_own_threshold": false,
+        "durability": 0.013958001228936874
+      }
+    ]
+  }
+}

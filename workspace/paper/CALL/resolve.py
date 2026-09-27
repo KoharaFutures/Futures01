@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import re
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -441,7 +442,16 @@ def write_ledger(state: dict, basis: str, now_iso: str) -> None:
         L += ["", "⚠ = one bar held both the stop and the target; OHLC cannot order them, so it",
               "resolved as a loss (rule 3 of `resolve.py`).", ""]
 
-    LEDGER.write_text("\n".join(L))
+    text = "\n".join(L)
+    # Do not rewrite the ledger when the ONLY difference is the regenerated timestamp.
+    # The stop hook requires a clean tree at the end of every turn, so a file that churns
+    # every five minutes forces a commit every five minutes and buries the journal. Compare
+    # with the timestamp line masked out; write only if something real moved.
+    stamp_line = re.compile(r"^\*\*Regenerated:\*\* .*$", re.M)
+    if LEDGER.exists():
+        if stamp_line.sub("", LEDGER.read_text()) == stamp_line.sub("", text):
+            return
+    LEDGER.write_text(text)
 
 
 # ---------------------------------------------------------------- main

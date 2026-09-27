@@ -207,15 +207,27 @@ so in one line.
 commit would bury the real history of this desk under hundreds of empty ones, and
 `check_ownership.py` gets noisier the more paths change. "Nothing moved" is not a commit.
 
-**"State changed" means POSITION or LEDGER state, not data accumulating.** Commit on a fast check
-only when a plan triggered, a position resolved, a plan expired, a new plan was pre-registered, or a
-finding was written to `NOTES.md`. A new bar and a new `feed_lag.jsonl` row are *not* state changes
-for this purpose — they accumulate locally and ride along on the next hourly full check, which
-commits unconditionally. The reason this is safe rather than a risk of loss: **bar snapshots are
-fully re-fetchable** (Yahoo serves 5 days at 5m and 15m), so a reclaimed container costs nothing
-that cannot be pulled again, whereas a journal row is unique and is written and committed the moment
-a decision is made. Bounding the loss to at most an hour of re-derivable data is the correct trade
-against burying the journal under twelve commits an hour.
+**CORRECTED immediately after it was written, 2026-09-27.** An earlier version of this section said
+data should "accumulate locally and ride along on the next hourly full check". **That is not
+available in this environment and the rule was wrong.** `~/.claude/stop-hook-git-check.sh` fails any
+turn that ends with uncommitted *tracked* changes, and `BASIS` and `feed_lag.jsonl` are tracked and
+change on **every** fast check. So **every fast check commits.** There is no deferral.
+
+**What follows from that — reduce the churn at its source, not by deferring it.**
+
+- `resolve.py` no longer rewrites `LEDGER.md` when the only difference would be its own
+  "Regenerated" timestamp. Verified: a no-op run now leaves the file untouched. Without that, the
+  ledger alone forced a commit every five minutes.
+- A fast-check commit gets a **one-line message** naming the newest real bar and the lag, and nothing
+  else. Save the prose for a commit that carries a decision or a finding.
+- Untracked bar snapshots do not trip the hook (it tests `git diff` and `git diff --cached`), but
+  commit them anyway with the same commit — an uncommitted snapshot is lost if the container is
+  reclaimed, and the before/after stub comparison in `NOTES.md` N5a exists *only* because an earlier
+  snapshot was kept.
+
+The history will therefore carry one small commit per check while a loop is running. That is the
+cost of the hook's guarantee, and it is the right way round: **a clean tree at every turn boundary
+is worth more than a tidy log**, because the thing being protected is the journal.
 
 **Do not re-derive the read every five minutes.** Re-reading a chart twelve times an hour and
 re-deciding each time is unbounded search width with no pre-registration — it is exactly what

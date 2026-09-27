@@ -21,6 +21,12 @@ import sys
 ROOT = "workspace/roundtable/"
 
 # Most specific pattern wins, so order matters: the first match is the owner.
+SHARED_ROLE_DIRS = (
+    "workspace/developer/*",
+    "workspace/manager/*",
+    "workspace/strategy_research/*",
+)
+
 RULES: list[tuple[str, str]] = [
     ("tests/test_bt1_*.py", "BT1"),
     ("tests/test_bt2_*.py", "BT2"),
@@ -79,6 +85,9 @@ def owner(path: str) -> str | None:
     for pattern, who in RULES:
         if fnmatch.fnmatch(path, pattern):
             return who
+    for pat in SHARED_ROLE_DIRS:
+        if fnmatch.fnmatch(path, pat):
+            return "shared-role"
     if fnmatch.fnmatch(path, ROOT + "discovery/claims/*"):
         return "msgs"          # write-once, same rule as a message
     if fnmatch.fnmatch(path, ROOT + "lib/*"):
@@ -92,7 +101,8 @@ def owner(path: str) -> str | None:
 
 def changed() -> list[tuple[str, str]]:
     out = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", ROOT, "tests"],
+        ["git", "status", "--porcelain", "--untracked-files=all", "--",
+         "workspace", "tests"],
         capture_output=True, text=True, check=True,
     ).stdout
     rows = []
@@ -129,6 +139,13 @@ def main(argv: list[str]) -> int:
         who = owner(path)
         if who is None:
             violations.append(f"  UNASSIGNED  {path}\n              no owner in OWNERSHIP.md")
+        elif who == "shared-role":
+            # A standing role directory. Legal, but it is shared by every agent of
+            # that type - six live agents are `developer` right now - so it cannot
+            # hold anything two of them would both write. Reported, never failed.
+            print(f"  shared-role {path}\n              role dir, not a private lane "
+                  f"- move anything durable into your own directory")
+            ok += 1
         elif who == "msgs":
             if status == "M":
                 violations.append(

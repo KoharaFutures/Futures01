@@ -72,7 +72,7 @@ decision bars and is counted four times. That is why the 240m median (20–26) e
 (4–13) on both symbols despite 240m having a quarter of the bars. The realised trade count does not
 inherit the factor of four — `signals_skipped_in_position` absorbs most of it — but the **fire** count
 does. So "240m fires more often" is an artefact of the decision clock and is not reportable as a
-finding. My `EF2-H4` (60m vs 240m) is registered on **expectancy in R**, not on counts, and is
+finding. My `EF2-HYP-4` (60m vs 240m) is registered on **expectancy in R**, not on counts, and is
 unaffected.
 
 **(ii) MCL at 60m is the thinnest cell in the whole study: a median of 4–5 fires per live arm over 718

@@ -105,4 +105,13 @@ did not touch any of R3's Tier-1 six (blocked by the manager's `R-6` pairing rul
 prerequisite), and did not re-run the block-vs-iid measurement (`MGR-T8` is GATED behind the D44
 fix, which is the parent's `MGR-T16`).
 
-`python -m pytest -q tests` → **827 passed**, of which 10 are mine.
+`python -m pytest -q tests` → **911 passed, 1 failed**, of which 10 passing are mine. The one
+failure was `tests/test_ef1_session_window.py::test_the_engine_produces_a_prefix_of_its_own_trades_on_every_prefix`
+with a `NameError`, and it is **not a defect**: EF1 was editing that file while my run was in
+flight, and the test passes both in isolation and on a re-run of the whole file
+`[measured: python3 -m pytest -q tests/test_ef1_session_window.py tests/test_bt3_governor_replay.py
+→ 66 passed]`. Recording it because a red suite that turns out to be a concurrent edit is worth
+naming rather than leaving as an unexplained failure in the log.
+
+`python3 code/checks.py` → **all checks passed** (5 assertions, including the D44 block-mode bias
+and the exact 21,954-row cache/artefact match).

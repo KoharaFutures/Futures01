@@ -34,7 +34,7 @@ every strategy it returns already has `_id` populated and a bare `replace` would
 A note that is *not* a collision and must not be read as one: `f240__p240` and `f60_240__p240` hold
 **content-identical** strategies (`confirm_tfs=()` in both), so they legitimately share
 `strategy_id`. Arms are therefore keyed `cell|rth|strategy_id`, and the uniqueness assert is scoped
-*within* a (cell, arm) stratum. This is what makes hypothesis **EF2-H3** possible: the two 240m cells
+*within* a (cell, arm) stratum. This is what makes hypothesis **EF2-HYP-3** possible: the two 240m cells
 differ **only** in the frame they are evaluated in, so the comparison is a single-variable test of
 `_default_regime_tf` (60 for `(60,240)`, falling through to 240 for `(240,)`
 `[repo-verified: features.py:820-826]`) plus the alignment vote's membership.
@@ -133,16 +133,16 @@ close to out of reach, and I am saying so before measuring rather than after.
 `EF2/data/plan.json` holds the full text with each one's predicted **direction** and named test.
 In one line each:
 
-- **EF2-H1** — `rth_only=False` does **not** improve expectancy in R (D24 predicts worse). Paired t
+- **EF2-HYP-1** — `rth_only=False` does **not** improve expectancy in R (D24 predicts worse). Paired t
   on the per-rule-set difference. *This is the axis the programme's session rule exists to open.*
-- **EF2-H2** — a 60m thesis in a 60m+240m frame is **not** better than in a 60m-only frame
+- **EF2-HYP-2** — a 60m thesis in a 60m+240m frame is **not** better than in a 60m-only frame
   (BRIEF rule 2). Paired t, rule set held fixed.
-- **EF2-H3** — the two 240m cells differ (prediction: **non-zero**, because frame composition alone
+- **EF2-HYP-3** — the two 240m cells differ (prediction: **non-zero**, because frame composition alone
   moved a base filter's pass rate 13 points in R1). The only single-variable test available here.
-- **EF2-H4** — 60m vs 240m, **two-sided, no direction registered**, because the published priors point
+- **EF2-HYP-4** — 60m vs 240m, **two-sided, no direction registered**, because the published priors point
   opposite ways on my two symbols.
-- **EF2-H5** — MCL's cost fragility replicates (prior: 8/183 MCL vs 1/259 MGC flipped by costs).
-- **EF2-H6** — win rate and payoff cancel on **this** substrate: corr(win, payoff) < −0.5.
+- **EF2-HYP-5** — MCL's cost fragility replicates (prior: 8/183 MCL vs 1/259 MGC flipped by costs).
+- **EF2-HYP-6** — win rate and payoff cancel on **this** substrate: corr(win, payoff) < −0.5.
 
 Controls, forward roll and the trade floor are pre-registered in the same file:
 `placebo_random` + `placebo_shuffle` only (**`placebo_shift` excluded, D42 — it leaks**), 200 draws,

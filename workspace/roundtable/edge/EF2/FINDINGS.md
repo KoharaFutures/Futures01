@@ -34,7 +34,7 @@ swing-admissible equals the count of RTH bars **exactly** — 2,477/2,477 MGC, 2
 
 The overnight regime the EDGE_BRIEF calls "genuinely unmeasured" is reachable only with
 `rth_only=False`, a departure from the generated default that runs into **D24**. EF2 therefore carries
-`rth_only` as an explicit **paired arm** (`EF2-H1`). Posted to EF1 as
+`rth_only` as an explicit **paired arm** (`EF2-HYP-1`). Posted to EF1 as
 `msgs/EF2-01_EF1_rth-only-makes-the-overnight-switch-inert.md`.
 
 **F1c.** A 240m bar cannot straddle the 2-hour break cleanly. The 240m ET grid is 00/04/08/12/16/20:
@@ -151,7 +151,7 @@ best" on MGC; in three of four EF2 cells it cannot fire, so that claim is about 
 **D48 discipline, asserted not trusted.** `_id=None` on every `replace`; `population.py` **raises**
 unless `max_arms_sharing_an_id_within_cell_and_arm == 1`. It passes on both symbols. Arms are keyed
 `cell|rth|strategy_id`, because `f240__p240` and `f60_240__p240` hold **content-identical**
-strategies (`confirm_tfs=()` in both) that legitimately share an id — which is what makes `EF2-H3` a
+strategies (`confirm_tfs=()` in both) that legitimately share an id — which is what makes `EF2-HYP-3` a
 clean single-variable test of `_default_regime_tf`.
 
 **Construction decisions that fix a confound, stated because each is a place a silent one would live.**
@@ -201,7 +201,7 @@ the strict AND of 2-4 signals plus 2-4 filters plus `rth_only` is empty over 718
 | **data-mining bias** | `free_t` on the exact population; both denominators published | **4.132 / 4.154; Sharpe 2.95 / 2.96** |
 | **insufficient sample size** | 30-trade floor + per-row t + span arithmetic | fixed in advance |
 | **survivorship bias** | not applicable classically (one symbol per backtest, no cross-sectional universe). The analogue is the VOID gate shrinking the denominator | both denominators published |
-| **understated costs** | 0.35 commission + 0.37 exchange per side, 1.0-tick typical slippage, both symbols `[config.py]`; gross **and** net on every row | `EF2-H5` tests MCL's cost fragility |
+| **understated costs** | 0.35 commission + 0.37 exchange per side, 1.0-tick typical slippage, both symbols `[config.py]`; gross **and** net on every row | `EF2-HYP-5` tests MCL's cost fragility |
 | **unrealistic fills** | entry is the fill bar's **open** plus adverse slippage, never a bar extreme `[engine.py:341-347]`; thin-market slippage when the fill bar is outside RTH `[engine.py:339]` | matters much more in the `rth_only=False` arm; reported separately for it |
 | **parameter sensitivity** | 12 distinct geometries, deliberately not a fine grid `[combinator.py:44-50]`; reported as the spread across geometries sharing one rule set | rule sets that work at one geometry only are flagged |
 
@@ -238,7 +238,7 @@ See `bursts/04`.
    counted in the fold containing its **entry** bar.
 5. The benchmark the prior attempt failed, pre-registered as a **required** output: expectancy of the
    selected top 10 against expectancy of the **entire qualifying universe** over the same folds.
-6. Six pre-registered hypotheses `EF2-H1..H6` with directions fixed in writing, at Bonferroni
+6. Six pre-registered hypotheses `EF2-HYP-1..H6` with directions fixed in writing, at Bonferroni
    `|t| >= 2.39` — Sharpe **1.70** needed, against the screen's 2.96.
 
 **Rank key: expectancy in R, and nothing else.** Win rate, payoff and profit factor are reported

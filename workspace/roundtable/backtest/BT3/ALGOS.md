@@ -256,22 +256,46 @@ smaller budget). The `live_eligible` both-arms treatment was the model for this,
 for the same shape. Alongside: `analyst_agreement=0.0` is a true no-op (the ×0.60 needs `< 0`)
 and stays; `news_risk=NONE` stays OUT.
 
-**13. Concurrency is attributed by symbol.** `assess` stage 3 checks
-`st.position_for(proposal.symbol)` *before* the concurrent and correlated caps
-`[repo-verified: manager.py:245-252]`, so the live path permits **one position per symbol**,
-full stop. On the pooled stream that collapses 22 same-symbol arms into one slot and produces
-1,126 `3_symbol_already_held` refusals. On the per-strategy stream it never fires. **The
-per-symbol rule is unambiguous in the live code; whether it is the right rule to apply to a
-pooled research artefact is VERIFY Q3.**
+**13. Concurrency is attributed by symbol. [RULED FAITHFUL — do not re-key.]** `assess` stage 3
+checks `st.position_for(proposal.symbol)` *before* the concurrent and correlated caps
+`[repo-verified: manager.py:245-252]`, so the live path permits **one position per symbol**, full
+stop, and `max_concurrent_positions = 2` only ever binds across different symbols. On the pooled
+stream that collapses 22 same-symbol arms into one slot and dominates the pooled refusal count.
+
+I asked whether that was the right rule to apply to a research pool. R3 ruled **FAITHFUL and
+explicitly told me not to re-key it to strategy**: re-keying would not adjust the population, it
+would *invent a capability the live system does not have* — two strategies long MGC is one MGC
+position with two owners, which nothing in `AccountState` can represent, and `close_position`
+resolves by symbol `[repo-verified: risk/account.py:203-208]` so it would be ambiguous the moment
+two same-symbol positions coexisted. **A divergence that makes the state model incoherent is worse
+than the artefact it was trying to fix.** Accepted.
+
+And the question dissolves at the unit that matters: **at PER_STRATEGY stage 3 fires exactly zero
+times, structurally.** `engine.py:304-309` skips an already-positioned strategy, so no strategy in
+`geo_trades.json` ever has two overlapping trades, so `position_for(symbol)` in a one-strategy
+account can never find one. Stage 3 is redundant with the engine's own skip rule here — faithful
+*and* inert, for a reason that is a property of how the artefact was generated.
 
 **14. The correlation cap cannot bind on this population, and that is a finding not a choice.**
 `max_correlated_positions = 1` is enforced on `ContractSpec.correlation_group`, and the four
 symbols in the artefact have four *distinct* groups: MGC `PRECIOUS_METALS`, MES
 `US_EQUITY_BROAD`, MNQ `US_EQUITY_TECH`, MCL `ENERGY`
 `[measured: code/checks.py::check_correlation_cap_is_inert]`. So the cap degenerates into the
-per-symbol check that already precedes it and **fires zero times**. Note this contradicts the
-BRIEF, which says MES/MNQ/NQ/ES are one index complex sharing 0.5–0.8% of rule sets (D14/D41).
-Filed as REQ-3.
+per-symbol check that already precedes it and **fires zero times**. I filed the apparent conflict
+with the BRIEF ("MES/MNQ/NQ/ES are one index complex", D14/D41) as REQ-3 rather than editing
+anyone's file, and it is **ruled**
+`[msgs/09_manager_BT3_requests-ruling.md]`: neither horn. The BRIEF's claim is about **rule-set
+overlap between sampler populations**; `correlation_group` is about **price co-movement for
+sizing**; different objects, no defect. But the measurement survives the distinction, and the
+ruling is that splitting the index complex into `US_EQUITY_BROAD` and `US_EQUITY_TECH` is **too
+fine for a cap whose purpose is "do not hold two positions that are the same bet"** — so the
+mapping is mis-specified for this consumer. R3 has moved P2 in
+`R3_operating_vocabulary.md` §7 from `INEXPRESSIBLE-ARCH` to `EXPRESSIBLE-MIS-SPECIFIED`
+`[msgs/10_R3_BT3_re-verify-ALGO-1-questions.md]`.
+
+**The caveat travels with the finding:** "the cap is inert" is measured on four symbols in four
+groups, which is a property of *this population*. It is **not** evidence the cap would be inert on
+a population containing MES **and** ES.
 
 **15. The placebo.** PIPELINE §4 requires one. The governors' input is the *sequence* of
 outcomes, so the control is: **permute the R values count-matched, leaving every timestamp,

@@ -3,7 +3,7 @@
  "sqrt_years": 1.4020616481313684,
  "tier_a": [
   {
-   "id": "EF2-H1",
+   "id": "EF2-HYP-1",
    "claim": "Allowing entries outside RTH (rth_only=False) under the 18:00->16:00 rule does NOT improve expectancy in R, on either symbol, at either timeframe.",
    "axis": "rth_only True vs False",
    "predicted": "no improvement; D24 predicts the False arm is worse",
@@ -12,7 +12,7 @@
    "why": "This is the axis the programme's session rule exists to open, and Burst 01 measured that with rth_only=True the rule adds zero entry opportunity on MGC and MCL. If the False arm is not better, the 18:00->16:00 regime is unreachable in practice on these two contracts and that is the headline, not a footnote."
   },
   {
-   "id": "EF2-H2",
+   "id": "EF2-HYP-2",
    "claim": "Evaluating a 60m thesis inside a 60m+240m frame does NOT improve expectancy over evaluating it in a 60m-only frame.",
    "axis": "cell f60__p60 vs f60_240__p60, rule set held fixed",
    "predicted": "no improvement (BRIEF rule 2: multi-timeframe agreement is not a virtue, z = -4.09)",
@@ -21,7 +21,7 @@
    "why": "This is the repo's settled multi-timeframe finding re-asked on a 718-day span with the rule set held fixed, which the original measurement did not do. Note the frame ALSO changes which structure SIGNALs are bound upward (combinator.py:612-625), so a difference is 'frame composition', not 'alignment' alone."
   },
   {
-   "id": "EF2-H3",
+   "id": "EF2-HYP-3",
    "claim": "Evaluating a 240m thesis in a frame whose regime timeframe is 60m gives the same expectancy as one whose regime timeframe is 240m.",
    "axis": "cell f240__p240 vs f60_240__p240",
    "predicted": "difference is non-zero; R1 measured a 13-point swing in a base filter's pass rate from frame composition alone",
@@ -30,7 +30,7 @@
    "why": "These two cells hold CONTENT-IDENTICAL strategies - same conditions, same exits, confirm_tfs=() in both, so the same strategy_id - and differ only in the frame they are evaluated in. _default_regime_tf picks 60 for (60,240) and falls through to 240 for (240,) (features.py:820-826). So this is a clean single-variable test of a nuisance parameter nobody registers, and a non-zero result means every published 240m number is partly a statement about the frame it was measured in."
   },
   {
-   "id": "EF2-H4",
+   "id": "EF2-HYP-4",
    "claim": "60m and 240m do not have the same expectancy; the direction is not predicted.",
    "axis": "primary_tf 60 vs 240, rule set held fixed, both in the group frame",
    "predicted": "two-sided, no direction registered",
@@ -39,7 +39,7 @@
    "why": "The brief asks each timeframe on its own. Registered two-sided deliberately: the prior corpus says MGC at 240m is worse than its own placebo and MCL MOMENTUM measured best at both, which are opposite priors on the two symbols and so no single direction is defensible."
   },
   {
-   "id": "EF2-H5",
+   "id": "EF2-HYP-5",
    "claim": "MCL's cost fragility reproduces: costs flip a materially larger share of MCL rows from positive gross to negative net than MGC's.",
    "axis": "gross vs net R, per symbol",
    "predicted": "MCL share > MGC share (prior: 8/183 vs 1/259 at 60m)",
@@ -48,7 +48,7 @@
    "why": "A named prior from scan_reports/2026-09-24. Re-testing it on a 718-day span and a different harness is a replication, and it is the one economic difference between my two symbols that the corpus asserts."
   },
   {
-   "id": "EF2-H6",
+   "id": "EF2-HYP-6",
    "claim": "Win rate and reward:risk cancel: across the population, corr(win rate, payoff) is strongly negative and neither correlates with expectancy as strongly as it does with the other.",
    "axis": "win rate, payoff, expectancy across arms",
    "predicted": "corr(win, payoff) < -0.5",
@@ -130,7 +130,7 @@
   },
   {
    "name": "understated costs and slippage",
-   "how": "commission 0.35 + exchange fee 0.37 per side and 1.0 tick typical slippage on both symbols (config.py). Gross AND net reported on every row; EF2-H5 tests MCL's cost fragility explicitly.",
+   "how": "commission 0.35 + exchange fee 0.37 per side and 1.0 tick typical slippage on both symbols (config.py). Gross AND net reported on every row; EF2-HYP-5 tests MCL's cost fragility explicitly.",
    "status": "ready"
   },
   {

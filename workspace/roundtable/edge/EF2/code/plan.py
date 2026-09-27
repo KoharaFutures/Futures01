@@ -44,7 +44,7 @@ SQRT_YEARS = math.sqrt(SPAN_DAYS / 365.25)          # 1.4019
 # --------------------------------------------------------------- Tier A
 #: Each entry: id, the claim, the axis, the predicted sign, the test, the unit.
 TIER_A: List[dict] = [
-    dict(id="EF2-H1",
+    dict(id="EF2-HYP-1",
          claim="Allowing entries outside RTH (rth_only=False) under the "
                "18:00->16:00 rule does NOT improve expectancy in R, on either "
                "symbol, at either timeframe.",
@@ -58,7 +58,7 @@ TIER_A: List[dict] = [
              "entry opportunity on MGC and MCL. If the False arm is not better, "
              "the 18:00->16:00 regime is unreachable in practice on these two "
              "contracts and that is the headline, not a footnote."),
-    dict(id="EF2-H2",
+    dict(id="EF2-HYP-2",
          claim="Evaluating a 60m thesis inside a 60m+240m frame does NOT improve "
                "expectancy over evaluating it in a 60m-only frame.",
          axis="cell f60__p60 vs f60_240__p60, rule set held fixed",
@@ -71,7 +71,7 @@ TIER_A: List[dict] = [
              "measurement did not do. Note the frame ALSO changes which "
              "structure SIGNALs are bound upward (combinator.py:612-625), so a "
              "difference is 'frame composition', not 'alignment' alone."),
-    dict(id="EF2-H3",
+    dict(id="EF2-HYP-3",
          claim="Evaluating a 240m thesis in a frame whose regime timeframe is "
                "60m gives the same expectancy as one whose regime timeframe is "
                "240m.",
@@ -88,7 +88,7 @@ TIER_A: List[dict] = [
              "single-variable test of a nuisance parameter nobody registers, "
              "and a non-zero result means every published 240m number is partly "
              "a statement about the frame it was measured in."),
-    dict(id="EF2-H4",
+    dict(id="EF2-HYP-4",
          claim="60m and 240m do not have the same expectancy; the direction is "
                "not predicted.",
          axis="primary_tf 60 vs 240, rule set held fixed, both in the group frame",
@@ -100,7 +100,7 @@ TIER_A: List[dict] = [
              "own placebo and MCL MOMENTUM measured best at both, which are "
              "opposite priors on the two symbols and so no single direction is "
              "defensible."),
-    dict(id="EF2-H5",
+    dict(id="EF2-HYP-5",
          claim="MCL's cost fragility reproduces: costs flip a materially larger "
                "share of MCL rows from positive gross to negative net than MGC's.",
          axis="gross vs net R, per symbol",
@@ -112,7 +112,7 @@ TIER_A: List[dict] = [
              "718-day span and a different harness is a replication, and it is "
              "the one economic difference between my two symbols that the "
              "corpus asserts."),
-    dict(id="EF2-H6",
+    dict(id="EF2-HYP-6",
          claim="Win rate and reward:risk cancel: across the population, "
                "corr(win rate, payoff) is strongly negative and neither "
                "correlates with expectancy as strongly as it does with the other.",
@@ -318,7 +318,7 @@ OVERFITTING_CHECKS = [
     dict(name="understated costs and slippage", how=(
         "commission 0.35 + exchange fee 0.37 per side and 1.0 tick typical "
         "slippage on both symbols (config.py). Gross AND net reported on every "
-        "row; EF2-H5 tests MCL's cost fragility explicitly."),
+        "row; EF2-HYP-5 tests MCL's cost fragility explicitly."),
         status="ready"),
     dict(name="survivorship bias", how=(
         "not applicable in the classical sense - every backtest is one symbol, "

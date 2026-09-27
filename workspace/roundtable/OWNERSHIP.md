@@ -139,3 +139,24 @@ other's closures, which is the failure the ledger exists to prevent.
 **Main task numbering:** DISC1 allocates odd (`MAIN-01`, `MAIN-03`, …), DISC2 even (`MAIN-02`,
 `MAIN-04`, …). Disjoint by construction, so the two cannot race for a number the way the message
 counter did.
+
+## Standing role directories are shared, not private — a hazard, found 2026-09-27
+
+Several agent types carry a standing role brief that points at a directory named after the *role*:
+`workspace/developer/`, `workspace/manager/`, `workspace/strategy_research/`. EF1 wrote its
+validation output to `workspace/developer/ef1_validation_swing_60m.json`, following its role brief
+rather than its dispatch — the same conflict BT1 raised earlier about `tests/`.
+
+**The output was fine. The location is a collision zone.** At the time this was found, **six live
+agents were of type `developer`** — EF1, EF7, BT3, BT4, BT5, BT6 — so all six share that one
+directory. `workspace/developer/out/test_report.json` and `log/activity.log` can be silently
+overwritten by any of them, which is precisely the one-writer rule this file exists to enforce.
+
+Worse, **the audit could not see it**: `check_ownership.py` scanned only `workspace/roundtable/`
+and `tests/`. A write outside those was invisible. The scan now covers all of `workspace/`, and
+these directories are reported as `shared-role` — never failed, because the role briefs legitimately
+use them, but always flagged.
+
+**So: if it is durable, it belongs in your own lane.** `workspace/roundtable/edge/EF1/`,
+`backtest/BT4/`, `research/R4_*` — those are yours alone and nothing else writes them. Treat a role
+directory as scratch that another agent may clobber between your writing it and anyone reading it.

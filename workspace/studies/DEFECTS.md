@@ -667,7 +667,21 @@ systematically under-sampled. Any block-bootstrap confidence interval computed h
 toward the middle of the series. **[agent-measured]** BT3 flagged the bias rather than reporting
 through it, and gated its own `MGR-T8` numbers behind the fix.
 
-## D45 — `StopKind.VWAP_BAND` collapses to `FIXED_TICKS` (found by R1, answering R3-Q1)
+## D45 — the noise-floor clamp collapses EVERY stop kind, not just `VWAP_BAND` (R1; **widened by EF2, 2026-09-27**)
+
+**AMENDED.** This entry was written as a `VWAP_BAND` defect at "6.0%–33.7% of 1h bars". Both halves
+were too narrow. **[verified here]** `dist = max(dist, min_dist)` sits at the **shared tail** of
+`stop_price` (`base.py:313-315`), *after* every per-kind branch — so the clamp applies to ATR,
+STRUCTURE, FIXED_TICKS, VWAP_BAND and RANGE alike, and the collapse is a property of the clamp
+rather than of any one stop kind.
+
+EF2 measured the consequence: **37.2% on MCL 60m**, above the published range; and `STRUCTURE`
+collapses too, on 7.5% of MCL and 3.8% of MGC bars. **In arm-weighted terms `STRUCTURE` is the
+bigger exposure** — it carries 17.6% of MGC and 23.4% of MCL generated arms against `VWAP_BAND`'s
+2.6% and 4.3%. So the defect reaches more of the population through the stop kind nobody was looking
+at. The open `x_exits` re-read must cover both kinds.
+
+### Original entry, retained
 
 σ is **exactly 0 on the first bar of every CME trading day**, with no warm-up guard, so at
 `stop_mult=1` the distance falls below `min_stop_ticks` on **6.0% (MNQ) to 33.7% (MCL)** of 1h bars
@@ -704,7 +718,16 @@ zero** — indistinguishable from "this axis does nothing", which is the shape o
 settled findings. **Scope: no published result is affected.** All nine existing `replace` call sites
 on a `Strategy` pass `_id=None` explicitly. A forward hazard with no guard, not a retraction.
 
-## D49 — `StopKind.RANGE` is `StopKind.ATR` (found by R1)
+## D49 — `StopKind.RANGE` is `StopKind.ATR` — mechanism real, **blast radius zero** (R1; scoped by EF2)
+
+**SCOPED 2026-09-27.** The mechanism below is correct and reproduces. Its practical reach is not:
+**`StopKind.RANGE` has zero carriers in any generated population.** **[verified here]** it is emitted
+only under `generate_strategies(..., include_aggressive=True)` (`combinator.py:44,76`), the parameter
+defaults to `False`, and nothing in the repository sets it. So no published or stored result contains
+a `RANGE` stop, and this is a latent defect rather than a live one — the same shape as D48. It stays
+in the register because `include_aggressive=True` is one keyword from being true.
+
+### Mechanism, unchanged
 
 `RANGE` falls through to `dist = stop_mult * atr` when `snap.opening_range is None`, and the
 fall-through is **byte-identical** to the ATR branch (neither adds `pad`). That is **5000 of 5000

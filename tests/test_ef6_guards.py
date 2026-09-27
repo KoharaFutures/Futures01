@@ -27,12 +27,34 @@ import pytest
 
 EF6 = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                    "workspace", "roundtable", "edge", "EF6", "code")
-if EF6 not in sys.path:
-    sys.path.insert(0, EF6)
 
-import arms                       # noqa: E402
-import deflation as D             # noqa: E402
-import window as W                # noqa: E402
+
+def _load(name: str):
+    """Load an EF6 module by path under a namespaced key.
+
+    `sys.path.insert(0, EF6)` would be shorter and it is not safe here: `arms`,
+    `window`, `forward` and `attack` are generic names, another agent's test
+    already inserts its own `code/` directory at `sys.path[0]`
+    (`tests/test_bt3_governor_replay.py:31-32`), and `workspace/strategy_research/
+    scratch/arms.py` exists. Whichever test imported last would win, silently, and
+    the loser would test the wrong module. Loading by explicit file path under an
+    `ef6_` prefix means this file can neither shadow nor be shadowed.
+    """
+    import importlib.util
+    key = f"ef6_{name}"
+    if key in sys.modules:
+        return sys.modules[key]
+    spec = importlib.util.spec_from_file_location(key, os.path.join(EF6, f"{name}.py"))
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[key] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+W = _load("window")            # no intra-EF6 imports
+D = _load("deflation")         # no intra-EF6 imports
+sys.modules.setdefault("window", W)   # arms/attack do `import window`
+arms = _load("arms")
 
 from futures_agents.strategies.base import Strategy  # noqa: E402
 from futures_agents.strategies.combinator import generate_strategies  # noqa: E402

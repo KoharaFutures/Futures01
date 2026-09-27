@@ -479,3 +479,30 @@ tested" must name the dimension that was varied. And "multi-timeframe agreement 
 z = −4.09 stands, nothing is retracted, and rule 2 stays on the list. Rules 1, 3, 4, 5, 6, 7 and 8
 are untouched — and rule 5 is explicitly **not** narrowed by association, because the session
 window makes 15:00–16:00 ET newly load-bearing.
+
+---
+
+# The independence rule has a blind spot, and EF2 found it (2026-09-27)
+
+The rule says: where two agents cover overlapping ground, **audit first and compare second**. It has
+paid repeatedly — R6 broke a deadlocked R1/R3 disagreement, R4 corrected three of R1's attributions,
+and three agents independently scoped EF1's harness defect.
+
+**But it encourages a framing that cannot see a common-mode failure.** EF2 measured MCL's data
+completeness *relative to* MGC's, which is the natural shape under an independence rule — and a
+relative test cannot find a hole both series share. It only found the real one by measuring each
+absolutely: **`2026-02-02` is 3 of 22 hours on both contracts**, a 51-hour gap spanning COMEX *and*
+NYMEX, so the vendor rather than either exchange. MGC carries all 22 bars in 93.3% of cycles, MCL in
+89.5%, and `csv/raw` holds the same 102 bars with **zero the archive lacks** — so every published
+MGC and MCL result rests on it.
+
+**So the rule gains a clause: measure absolutely before you measure relatively.** A comparison
+against a sibling series, a sibling symbol or another agent's figures is the second test, never the
+first. Ask "is this series complete?" before "is this series more complete than that one?" — the
+first question can find a shared defect and the second is structurally blind to it.
+
+EF2 also found **two defects in its own VOID gate** before measuring anything with it, both by
+cross-checking against `EF6-H2`: the gate was **arm-blind**, scoring the `rth_only=False` arm against
+an RTH-only denominator, so it deleted precisely the carriers the session rule exists to make
+measurable; and it was reading a superseded mask after the prose had been corrected but not the code.
+Neither moved a threshold; both changed whether the thing being reported had ever been measured.

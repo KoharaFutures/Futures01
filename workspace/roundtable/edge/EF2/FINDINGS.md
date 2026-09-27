@@ -467,6 +467,10 @@ hypotheses were already `EF2-H1..H6`, so that was a live collision of exactly th
 exists to prevent. Renamed to **`EF2-HYP-1` … `EF2-HYP-6`** across every EF2 file; no stale
 `EF2-H<digit>` remains `[measured: grep -rn "EF2-H[0-9]" over EF2/** → no matches]`. Raised as
 `msgs/EF2-03_manager_id-collision-EF2-H1-and-no-local-engine.md`, since `REGISTRY.md` is not mine.
+**RESOLVED 2026-09-27: the manager withdrew `EF2-H1`** — EF2 never built a local engine, it uses
+`EF1-H2` directly, and the id is vacated. So `EF2-H<n>` names nothing and `EF2-HYP-1..6` are the
+only EF2 hypothesis ids. Recorded because a vacated id that stays in a citation is the same hazard
+as a colliding one.
 
 
 ## F12 — EF6's placebo faults, re-measured on MCL (which EF6 did not cover), plus a power result
@@ -641,3 +645,302 @@ fires, 1,414 / 1,600 inside RTH; EF6 measured 1,652–2,134 at 240m across four 
 ("structurally dead inside every strategy the combinator can build") is **true at 60m under
 `rth_only=True` and false at 240m** — the per-(symbol, timeframe) point the `VOID` vocabulary was
 invented for, landing on its own author's example.
+
+---
+
+# PARKED 2026-09-27
+
+**Written for a reader arriving cold.** EF2's cell was *SWING on MGC and MCL at 60m and 240m*; the 240m
+half was withdrawn by ruling on 2026-09-27 (below), so **the cell is MGC and MCL at 60m**. No
+profitability number is reported anywhere in this file and none was ever computed on a validated
+harness: `EF1-H2` had 33 `SPANS_WINDOW` violations when EF2 parked, fixed but not yet re-declared.
+
+## 1. The two things that changed under EF2, both accepted
+
+**(a) 240m is withdrawn and cannot exist.** The window is 22 h = 1,320 min and `1320 = 2³·3·5·11`, so
+5/15/30/60/120 divide it and **240 gives 5.5**. A four-hour bar cannot align with a twenty-two-hour
+window: arithmetic, not an implementation limit. Every 240m number EF2 measured is kept in
+`bursts/13_240m-withdrawn-with-reason.md` rather than deleted, including the tape-level confirmation of
+the same fact (**19.2% of MGC and 18.8% of MCL 240m bars are `STRADDLE`** — they contain 16:00 or 18:00
+strictly inside them; at 60m there are **zero**).
+
+Two of four cells go. **`f60_240__p60` survives**: its `primary_tf` is 60, its base grid is 60m, and
+240m enters only as a *confirmation* timeframe read out of the snapshot. It is also the **only** cell in
+the whole assignment where `MULTI_TIMEFRAME` is expressible at all.
+Two of six pre-registered hypotheses die with the cells — **`EF2-HYP-3`** (the two 240m cells differ
+only by `_default_regime_tf`, the one clean single-variable test of frame composition) and
+**`EF2-HYP-4`** (60m vs 240m). Recorded as losses, not quietly dropped.
+
+**(b) The threshold comes from `EF6-H3`, computed on EF2's own search size.** `rank.py` imports
+`EF6/code/deflation.threshold`. **Nobody should quote 5.46** — it is the threshold for a search this
+programme never ran.
+
+## 2. The population, exactly
+
+Seed `20260927`, `max_total=2000`, **all 13 groups passed explicitly** (the default `groups_for` gives
+MGC 6 and MCL 13, which would have narrowed MGC to 6/13 while MCL got the lot). Rule sets drawn **once
+per symbol** and rebuilt in every cell, so a between-cell difference is a cell difference and not two
+unrelated samples (D14's shape). `rth_only` carried as a **paired arm**, `_id=None` on every
+`dataclasses.replace`, and `population.py` **raises** unless every arm id is unique inside its
+(cell, arm) stratum — it passes, `max_arms_sharing_an_id = 1` on both symbols.
+
+### The live cell — 60m only
+
+| symbol | candidates | removed by VOID gate | **population** | `free_t` | **required annual Sharpe** | groups |
+|---|---|---|---|---|---|---|
+| **MGC** | 3,888 | 732 (18.8%) | **3,156 arms** | **4.014** | **2.861** | 13/13 |
+| **MCL** | 3,892 | 484 (12.4%) | **3,408 arms** | **4.033** | **2.875** | 13/13 |
+
+Span 718.83 days, sqrt-years 1.403. Per cell and arm:
+
+| cell | MGC rth=T | MGC rth=F | MCL rth=T | MCL rth=F |
+|---|---|---|---|---|
+| `f60__p60` | 720 | 750 | 782 | 814 |
+| `f60_240__p60` | 828 | 858 | 890 | 922 |
+
+The `rth=F` arm keeps ~30 more arms per cell than `rth=T`. That asymmetry is the **arm-aware VOID gate**
+working (§5) and it is reported as a column so an arm-blind gate would be visible.
+
+### The full population as built, for reproducibility of the withdrawn half
+
+MGC **5,152** arms (2,624 removed, 33.7% of 7,776 candidates); MCL **5,648** (2,136 removed, 27.4% of
+7,784). 240m cells accounted for 48.7% (MGC) and 42.4% (MCL) removal against 5.2–25.9% at 60m.
+
+### Effective search size, which is the more honest denominator
+
+Raw fire counts are **harness-independent** (`Strategy.evaluate` reads only `snap`,
+`[repo-verified: base.py:658-660]`; `BacktestResult.signals_generated` is not this number because the
+engine skips evaluation while positioned, `engine.py:306-307`):
+
+| floor on raw fires | MGC 60m arms | `free_t` | Sharpe | MCL 60m arms | `free_t` | Sharpe |
+|---|---|---|---|---|---|---|
+| — (published) | 3,156 | 4.014 | **2.86** | 3,408 | 4.033 | **2.88** |
+| ≥ 1 | **1,116** | 3.746 | 2.67 | **1,109** | 3.745 | 2.67 |
+| ≥ 30 | **404** | 3.465 | 2.47 | **217** | 3.280 | 2.34 |
+| ≥ 100 | 230 | 3.298 | 2.35 | 115 | 3.081 | 2.20 |
+
+**Both denominators are published so `free_t` can be recomputed either way.** Discounting non-firers
+moves the threshold ~0.27 t-units. It does not lower the bar; it stops a null being reported that was
+never a measurement.
+
+## 3. The firing-rate census, per cell — and what it removed
+
+Substrate: `data/archive/{MGC,MCL}_60m.jsonl`, 11,297 / 10,934 bars, **718 calendar days**. All 79
+conditions at every bar at every timeframe binding the frame admits. Admissibility from
+`EF6/code/window.signal_mask`. Denominator for "usable fires" is the arm's own: RTH ∩ swing-admissible
+for `rth_only=True` (**2,477 MGC / 2,880 MCL** bars, 22–26% of the tape) and swing-admissible alone for
+`rth_only=False` (**10,801 / 10,459**).
+
+| cell | `VOID_RAW` | `VOID_IN_STRATEGY` | total / 79 | arms removed (T / F) |
+|---|---|---|---|---|
+| `MGC:f60__p60` | 6 | 1 | **7** | 252 / 222 |
+| `MGC:f60_240__p60` | 4 | 1 | **5** | 144 / 114 |
+| `MCL:f60__p60` | 4 | 1 | **5** | 191 / 159 |
+| `MCL:f60_240__p60` | 2 | 1 | **3** | 83 / 51 |
+| *(withdrawn)* `MGC:f240__p240`, `MGC:f60_240__p240` | 12 | 0 | 12 | 473 / 473 each |
+| *(withdrawn)* `MCL:f240__p240`, `MCL:f60_240__p240` | 10 | 0 | 10 | 413 / 413 each |
+
+**Names at 60m.** MGC `f60__p60`: `mtf_aligned`, `mtf_strongly_aligned`, `oi_expanding`,
+`oi_price_confirmation`, `opening_range_breakout`, `opening_range_fade`, + in-strategy
+`session_extreme_sweep`. MGC `f60_240__p60`: the same minus the two `mtf_*` (the group frame rescues
+them). MCL `f60__p60`: `mtf_aligned`, `mtf_strongly_aligned`, `oi_expanding`, `oi_price_confirmation`,
++ `session_extreme_sweep`. MCL `f60_240__p60`: `oi_*` only, + `session_extreme_sweep` — **3 of 79, the
+cleanest cell in the study**.
+
+**`VOID_IN_STRATEGY` is a verdict EF2 needed and the vocabulary lacked:** fires somewhere, never on a
+bar a strategy could act on. Zero swallowed exceptions in any census pass, so no verdict here is the
+"raised on every bar, recorded as 0% trigger rate" failure `base.py:131-146` warns about.
+
+**Against the brief's known-VOID list:** all six `profile` conditions at 240m — CONFIRMED both symbols
+(and it reaches **eight** strategy groups, not just VOLUME_PROFILE, because 2 of the 6 are FILTERs that
+sit in other templates' `optional_filters`). Both MTF signals VOID at the frame's top timeframe —
+CONFIRMED. `openinterest` — CONFIRMED, all cells. OPENING_RANGE at 1h — CONFIRMED on MGC, **and MCL is
+clean** (RTH open 09:00 is on the hourly grid, 08:20 is not). **`StopKind.RANGE` (D49) — UNREACHABLE:
+zero carriers in any generated population**, because it exists only under
+`expand_exit_models(include_aggressive=True)` and nothing sets it; measured stop kinds are
+`{ATR, STRUCTURE, VWAP_BAND}` only. `D45` — reachable and **worse than its published range** (§6).
+
+## 4. The single most consequential measurement EF2 made
+
+**With the generated default, the 18:00→16:00 rule adds ZERO entry opportunity on MGC and MCL.**
+`rth_only=True` on **184/184 MGC and 167/167 MCL** generated strategies; MGC RTH **08:20–13:30** and MCL
+**09:00–14:30** sit wholly inside one cycle; and the census confirms it arithmetically — the count of
+bars that are RTH **and** swing-admissible equals the count of RTH bars exactly (2,477/2,477 MGC).
+So the rule buys **hold time, not entry time**: from the contract's own RTH close out to 16:00, which is
+**+2h30m on MGC and +1h30m on MCL**, not +22 hours.
+
+And the 22-hour figure is only reachable from an 18:00 ET entry at all. The hold available to an entry at
+time *T* is `16:00 − T`: **7h40m** from MGC's RTH open, **7h00m** from MCL's, one hour from 15:00.
+
+Consequence, and it is now a board fact: reaching the genuinely unmeasured overnight regime requires
+`rth_only=False`, carried as a **paired arm** (`EF2-HYP-1`).
+
+## 5. Two defects EF2 found in its OWN gate, both fixed before any measurement
+
+**A — the gate was arm-blind.** It scored usable fires as RTH **and** swing-admissible, right for
+`rth_only=True` and wrong for `rth_only=False`. So the `rth_only=False` arm was losing carriers of
+conditions that fire only outside RTH — **the arm the session rule exists to open, losing the conditions
+it newly makes measurable**, silently, with a result indistinguishable from "those strategies don't
+work". Found because `EF6-01` said `session_extreme_sweep` is ALIVE and EF2's census said VOID; both
+true, of different arms. Fixed: `void_sets()` keyed `cell → rth arm → bound_tf`, per-arm split reported.
+
+**B — the census used EF2's own superseded admissibility mask** after burst 05 had already corrected the
+*prose* and not the code. Fixed: `census.py` imports `EF6/code/window.signal_mask`. `entry_admissible`
+retained, marked `DEPRECATED`, only so burst 04's stop-fidelity denominator stays reproducible.
+
+Neither moved the threshold (4.012 → 4.014 on MGC). Both changed whether the thing reported was ever
+measured. **That is the firing census's own argument applied to the gate that implements it**, and it is
+the most transferable thing in this file.
+
+## 6. Findings that survive the park, ranked by how much they should change someone's behaviour
+
+1. **`rth_only=True` makes the session rule an exit-time change, not an entry-time one** (§4).
+2. **Both archive hourly series are incomplete, and one hole is shared.** MGC **93.3%** of cycles carry
+   all 22 bars, MCL **89.5%** (472/506 and 452/505). MCL short 650 bars, MGC 330 — most of MGC's genuine
+   holidays. MCL has two multi-day runs MGC does not (**2026-01-09→01-16**, **2026-02-20→03-11**) and
+   **`2026-02-02` is 3 of 22 hours on *both*** — a 51-hour hole shared by COMEX and NYMEX, so it is the
+   vendor. `csv/raw` has the same 102 bars on those dates and **zero** the archive lacks, so every
+   published result on these contracts rests on it. *Methodological half, worth more than the numbers:*
+   EF2's first measurement was MCL **relative to** MGC, and **a relative test cannot find a shared
+   hole** — a blind spot the independence rule actively encourages. The absolute test costs the same.
+3. **`D45` exceeds its published range and is not confined to `VWAP_BAND`.** Register says 6–34%;
+   measured **37.2% on MCL at 60m**. And because the `max(dist, min_stop_ticks·tick)` clamp is on the
+   **shared tail** of `stop_price` `[repo-verified: base.py:313-315]`, `STRUCTURE` collapses too — 7.5%
+   of MCL 60m bars, 3.8% of MGC — and `STRUCTURE` carries **17.6% of MGC and 23.4% of MCL arms** against
+   `VWAP_BAND`'s 2.6% / 4.3%, so in arm-weighted terms it touches **more** of the population. Whoever
+   takes the open `x_exits` re-read obligation should look at both kinds.
+4. **The flat cannot fire in 17 of 506 MGC and 34 of 505 MCL cycles**, measured by importing `EF1-H1`
+   directly and asking per cycle whether any bar exists the rule could act on — no engine, no tape.
+   EF1's post-fix `1b` counters return **17** on MGC 60m and **9** on MGC 240m: exact agreement.
+   16 of MGC's 17 and 16 of MCL's 34 are shared holiday dates; MCL's other 18 are the data runs, so
+   **any fix must be calendar-free**.
+5. **After the VOID gate, 62–68% of surviving 60m arms still never fire.** Conjunctive zeros, not
+   structural ones. **The median live MCL 60m arm fires 4–5 times in 718 days** (~2.5/year) against
+   MGC's 12–13. MCL 60m is the thinnest cell in the study, and it is also the cost-fragile contract and
+   the one with the data runs — three things pointing the same way.
+6. **In the swing setting the clock is the dominant exit** — EF1's arm C closes **59–76% of trades** on
+   the 16:00 flat. So the twelve exit geometries differ mostly in their **stop**; the target is usually
+   never reached, and `time_stop_bars` (30–120 bars = 30–120 hours at 60m) is **unreachable** under a
+   22-hour ceiling and must not be reported as a tested axis.
+7. **`EF6`'s `forward.roll` is well calibrated on pure noise** — 40 mean-zero ledgers in EF2's own
+   emitted shape: mean `z_vs_null` −0.078, **0 of 40** above +1.96, mean `selection_edge_vs_universe_r`
+   −0.0020 R, `share edge > 0` 0.525, and **0 of 40** firing its "beat both universe and null" verdict.
+   Limit: calibrated at n = 300; EF2's cells are 1,470–1,812 arms.
+8. **The gap-fill tail differs by cell.** With `veto_signals_in_window=False` a signal on the 16:00–17:00
+   bar fills at the next bar's open — after a Friday, the Sunday reopen. MGC 60m: 503 such fills, median
+   0.07 R, max 8.60 R on ATR×0.75. MCL 60m: 552, median 0.15 R, **max 15.45 R**. (Withdrawn 240m cells
+   were worse: MCL 240m median **1.08 R**, 7.3% over 5 R.) The 405.70-point MGC figure was **checked,
+   not assumed**: a real crash (gold 5447→4676 over five days) **plus** the 51-hour hole.
+9. **`session_extreme_sweep` is VOID at 60m and LIVE at 240m** (200/107 fires, **zero** in RTH at 60m;
+   1,891/1,705 fires with 1,414/1,600 in RTH at 240m; EF6 independently 1,652–2,134 at 240m). R1's
+   D-L4 is true at 60m under `rth_only=True` and false at 240m — the clearest instance in the corpus of
+   why `VOID` had to be per-(symbol, timeframe), landing on its own author's example.
+10. **`MULTI_TIMEFRAME` is expressible in exactly one EF2 cell** (`f60_240__p60`) and **unaskable at
+    240m on MCL at all**, because making its signals live needs a timeframe above 240m and
+    `MCL_1440m.jsonl` holds **one row**. `scan_reports/2026-09-24` Part B lists MULTI_TIMEFRAME among
+    what "measured best" on MGC; that is a statement about the frame it was measured in.
+
+## 7. What is ready to run the instant a validated harness exists
+
+One command, then three calls. Everything below is on disk and tested end to end **except** where noted.
+
+```
+python3 workspace/roundtable/edge/EF2/code/measure.py --engine session   # the swing setting
+python3 workspace/roundtable/edge/EF2/code/measure.py --engine shipped   # labelled NON-swing control
+```
+then, per (symbol, cell, `rth` arm) ledger the first command writes to `EF2/data/ledgers/`:
+```
+EF6/code/forward.roll(Ledger(json), lookback_days=180, trade_days=60, criterion="expectancy")
+EF6/code/placebo_w.build_cohort(frame, shortlist, realised, seed=0..19)
+EF2/code/rank.select(rows, k=10)
+```
+
+- **`measure.py`** is a drop-in against `EF1-H2`, **one `rth` stratum at a time** (asserted — one
+  `run_many` over both strata would collide ids and measure a between-arm difference of exactly zero,
+  D48). The 60m base passes `_audit_grid`: **zero `INTERIOR` bars**, so no `SessionGridError`.
+  **Verified end to end on real output:** 60 MGC arms → 566 trades → a valid `forward.Ledger` with
+  `S = 60`.
+- **Metrics implemented and verified present on a real row:** expectancy in R, win rate **and** payoff
+  together, avg win/loss, profit factor, per-trade Sharpe and Sortino, t of the R series, max and avg
+  drawdown in R, max consecutive wins and losses, avg and max duration (from the engine's own
+  `minutes_held`), MAE, MFE, gross vs net and the cost drag, trade count, per-fold expectancy and trade
+  count, and **slices by session, regime, volatility, time bucket, day of week, exit reason and
+  direction** — every one already carried on `Trade` `[repo-verified: engine.py:148-152]`.
+- **Controls:** `EF6/code/placebo_w.py`, kinds `placebo_random_legal` + `placebo_session_shuffle`.
+  **`placebo_shift` excluded (D42 — it leaks)** and **`placebo_shuffle` excluded** (EF6 Fault 2: it
+  permutes *direction labels*, so on a one-sided rule set it destroys nothing; EF2 measured degeneracy
+  **0.52–0.68** on its own cells). 20 seeds × 2 kinds = **40 control observations per row**, empirical
+  p floored at 0.025.
+- **`rank.py` enforces reportability in code:** a row missing its control, its search size or its
+  forward result is **dropped**, not printed blank; `select` returns however many rows clear their own
+  controls **up to** ten with every rejection reason counted; a defensive clone-collapse pass on
+  (cell, signals, filters); and each row carries its cell's flat-unreachable count, the measured D45
+  collapse rate for its own `stop_kind` and cell, gross-vs-net and whether costs flipped the sign, and —
+  for MCL — a with-and-without variant for the two gap runs, **named before any expectancy exists**.
+- **Pre-registered and fixed in writing:** `EF2-HYP-1` (`rth_only` paired arm, **two-sided** — amended
+  before measurement because EF4 is right that **D24's sign does not transfer**: D24 measured
+  `rth_only=False` under the old regime where a position was flattened at the contract's RTH close, so
+  an overnight entry had no runway), `EF2-HYP-2` (60m alone vs 60m in the 60m+240m frame, rule set held
+  fixed — now *cleaner* than the withdrawn 4-cell version, since both arms share a base grid, a primary
+  timeframe and a hold ceiling), `EF2-HYP-5` (MCL cost fragility replicates), `EF2-HYP-6` (win rate and
+  payoff cancel on this substrate). `EF2-HYP-3` and `EF2-HYP-4` withdrawn with the 240m cells.
+- **`EF2-HYP-A2`, the answerable form of the deliverable** (`bursts/11`). At `n = 26` (13 groups × 2 surviving cells) the threshold is `free_t` 2.553 → **Sharpe 1.82**, against the
+  strategy-level screen's 2.86–2.88. Trade-weighted pooling registered, equal-weighted reported beside
+  it, controls pooled the same way, and a structurally empty (group, cell) reported as **VOID, never as
+  0.00R**.
+- **Not run:** `EF2/code/prefix_invariance.py` — written and importable, artefact not produced before the
+  park. It is the look-ahead test done by measurement rather than by reading: build the frame on a
+  prefix and on the full series and require the fire sets to match exactly, stopping 8 bars before the
+  cut so the fractal swing detector's 3-bar confirmation lag cannot manufacture a pass. **Run it first
+  on resumption.** The four guards it tests were verified by code reading and all pass
+  (`_build_swing_pointers` gates on `confirmed_index <= i`; `active_fvgs` masks `filled_index`;
+  `active_zones` applies `as_of`; 240m resampled `keep_partial=False`).
+
+## 8. What I would do next, in order
+
+1. **Run `prefix_invariance.py`.** It is the only anti-overfitting check on my register that is written
+   and unmeasured, and it is the one that would catch a future change breaking one of the four
+   look-ahead guards.
+2. **Re-run the census and population once EF1 re-declares**, because `EF1-H1`'s component-1b
+   session-end flat changes which bars are holdable and therefore could change `fires_swing` at the
+   margin. Cheap (~15 min) and it is the foundation everything else sits on.
+3. **Measure `EF2-HYP-A2` before the strategy-level screen.** It is the only tier whose width this span
+   can settle (Sharpe 1.82 vs 2.86), and it makes `scan_reports/2026-09-24` Part B's per-symbol group
+   claim a testable prediction instead of a summary. If MCL MOMENTUM at 60m does not reproduce, that is
+   a clean, reportable negative on the corpus's strongest published claim.
+4. **Then the strategy-level top 10**, with `free_t = 4.014 / 4.033` and "needs Sharpe 2.86 / 2.88" on
+   every row, each row's placebo, and `selection_edge_vs_universe_r` from `forward.roll`. **Expect to
+   hand over fewer than ten.** `rank.py` is built to; the prior attempt's list underperformed trading
+   the whole qualifying universe, and a padded list is the specific failure being avoided.
+5. **Ask the board for a ruling on one thing I deliberately did not act on:** `EF6`'s divisibility rule
+   is stated about the **base** grid, EF2's 240m cells always used a 60m base, and EF1's post-fix
+   saturation at 240m reports `viol = 0` under the strict audit with `over = 0`. What a 240m thesis
+   could *not* do is reach the window's ceiling — **16 hours, not 22**, because the flat lands on the
+   `[12:00,16:00)` bucket and `[16:00,20:00)` is `IN_WINDOW` and vetoed. That 16-vs-22 shortfall is the
+   5.5-window misalignment expressed as hold time and is a **substantive** reason to drop the cell, not
+   a technicality. Recorded in `bursts/13`; not contested.
+
+## 9. Files
+
+| path | what |
+|---|---|
+| `EF2/FINDINGS.md` | this file |
+| `EF2/bursts/01`–`13` | one burst per unit of work, written as it was done |
+| `EF2/code/substrate.py` | the substrate decision, the `csv/raw` equivalence check, the session arithmetic |
+| `EF2/code/census.py` | the firing-rate census (uses `EF6/code/window.signal_mask`) |
+| `EF2/code/census_report.py` | census → per-cell VOID verdicts |
+| `EF2/code/population.py` | the population, the arm-aware VOID gate, the D48 uniqueness assert |
+| `EF2/code/firecount.py` | the harness-independent raw-fire census |
+| `EF2/code/stopfidelity.py` | D45 per cell, and the `stop=None` rate |
+| `EF2/code/flat_reachability.py` | imports `EF1-H1`; cycles where the flat cannot fire |
+| `EF2/code/weekend_gap.py` | the gap-fill tail in R |
+| `EF2/code/mcl_placebo_probe.py` | EF6's placebo Faults 1 and 2 re-measured on MCL |
+| `EF2/code/calibrate_roll.py` | `forward.roll` on 40 mean-zero ledgers |
+| `EF2/code/prefix_invariance.py` | the look-ahead test — **written, not yet run** |
+| `EF2/code/plan.py` | the pre-registered plan: `EF2-HYP-1..6`, `A2`, controls, forward roll, floor, the 15-item overfitting register |
+| `EF2/code/measure.py` | the measurement run and the EF6 ledger emitter |
+| `EF2/code/rank.py` | ranking on expectancy in R, reportability enforced in code |
+| `EF2/data/*.json` | every artefact above |
+| `msgs/EF2-01`…`EF2-05` | `rth_only`; flat reachability + the MCL gap; the id collision; the roll calibration; this handover |
+
+**Nothing in EF2 was committed or pushed.** `csv/` was read only.

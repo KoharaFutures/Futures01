@@ -56,11 +56,11 @@
  },
  "population": {
   "MGC": 5152,
-  "MCL": 5584
+  "MCL": 5648
  },
  "removed_by_void": {
   "MGC": 2624,
-  "MCL": 2200
+  "MCL": 2136
  },
  "build_failures": {
   "MGC": 0,
@@ -301086,6 +301086,99 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-deb23d197c01": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-deb23d197c01",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-deb23d197c01",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 3,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-88b10d557eae": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-88b10d557eae",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-88b10d557eae",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 3,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range"
+     ],
+     11
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-b3f8b6de9b65": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-b3f8b6de9b65",
     "cell": "MCL:f240__p240",
@@ -301263,6 +301356,103 @@
       "volatility_normal",
       "volume_not_thin",
       "after_opening_range"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-8d731f543106": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-8d731f543106",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-8d731f543106",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "no_imminent_release"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-bdc3580ba2a9": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bdc3580ba2a9",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-bdc3580ba2a9",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "no_imminent_release"
      ],
      11
     ],
@@ -301458,6 +301648,103 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-d44cb1df7b6d": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-d44cb1df7b6d",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-d44cb1df7b6d",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "outside_news_blackout"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-37ee930607d2": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-37ee930607d2",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-37ee930607d2",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "outside_news_blackout"
+     ],
+     11
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-77c091d7e51f": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-77c091d7e51f",
     "cell": "MCL:f240__p240",
@@ -301643,6 +301930,103 @@
       "volume_not_thin",
       "after_opening_range",
       "outside_news_blackout"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-a93740ef7844": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-a93740ef7844",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-a93740ef7844",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_power_hour",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "power_hour"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "power_hour"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-75bcb0d36df1": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-75bcb0d36df1",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-75bcb0d36df1",
+    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_power_hour",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "candle_close_strength",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "power_hour"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "candle_close_strength",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "power_hour"
      ],
      11
     ],
@@ -314510,6 +314894,103 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-30f888f3e8b5": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-30f888f3e8b5",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-30f888f3e8b5",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-5785a5d1aad8": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-5785a5d1aad8",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-5785a5d1aad8",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range"
+     ],
+     1
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-2b24fed0cbfe": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-2b24fed0cbfe",
     "cell": "MCL:f240__p240",
@@ -314695,6 +315176,107 @@
       "volatility_normal",
       "volume_not_thin",
       "after_opening_range"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-52725afb7221": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-52725afb7221",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-52725afb7221",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_no_imminent_release",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "no_imminent_release"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-ead9df95fc13": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-ead9df95fc13",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-ead9df95fc13",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_no_imminent_release",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "no_imminent_release"
      ],
      1
     ],
@@ -314898,6 +315480,107 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-33e212b7a116": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-33e212b7a116",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-33e212b7a116",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_outside_news_blackout",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "outside_news_blackout"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-bbb7d99ad578": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bbb7d99ad578",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-bbb7d99ad578",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_outside_news_blackout",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "outside_news_blackout"
+     ],
+     1
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-c01b83990d70": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-c01b83990d70",
     "cell": "MCL:f240__p240",
@@ -315091,6 +315774,107 @@
       "volume_not_thin",
       "after_opening_range",
       "outside_news_blackout"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-22fd60580ca6": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-22fd60580ca6",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-22fd60580ca6",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_power_hour",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "power_hour"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "power_hour"
+     ],
+     1
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-6f06ea7c2344": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-6f06ea7c2344",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-6f06ea7c2344",
+    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_power_hour",
+    "group": "LIQUIDITY",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 1,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 2.5,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "fresh_zone_approach",
+     "imbalance_pullback",
+     "session_extreme_sweep",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "after_opening_range",
+     "power_hour"
+    ],
+    "rule_set": [
+     "LIQUIDITY",
+     [
+      "fresh_zone_approach",
+      "imbalance_pullback",
+      "session_extreme_sweep",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "after_opening_range",
+      "power_hour"
      ],
      1
     ],
@@ -366856,6 +367640,103 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-0164b241bd85": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-0164b241bd85",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-0164b241bd85",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-c7512241921a": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-c7512241921a",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-c7512241921a",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     4
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-549d1c345b2e": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-549d1c345b2e",
     "cell": "MCL:f240__p240",
@@ -367041,6 +367922,107 @@
       "volatility_normal",
       "volume_not_thin",
       "opening_drive_window"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-6f0b611e5250": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6f0b611e5250",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-6f0b611e5250",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-1a154fa7768c": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-1a154fa7768c",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-1a154fa7768c",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
      ],
      4
     ],
@@ -367244,6 +368226,107 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-2b91aa604def": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2b91aa604def",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-2b91aa604def",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-92fffe431aa6": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-92fffe431aa6",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-92fffe431aa6",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     4
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-a2afe1f222c1": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-a2afe1f222c1",
     "cell": "MCL:f240__p240",
@@ -367437,6 +368520,107 @@
       "volume_not_thin",
       "opening_drive_window",
       "outside_news_blackout"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-ff9afc35086f": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-ff9afc35086f",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-ff9afc35086f",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     4
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-ee51806a90aa": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-ee51806a90aa",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-ee51806a90aa",
+    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 4,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "cvd_directional",
+     "macd_directional",
+     "session_extreme_sweep",
+     "vwap_band1_bounce"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "cvd_directional",
+      "macd_directional",
+      "session_extreme_sweep",
+      "vwap_band1_bounce"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
      ],
      4
     ],
@@ -369093,6 +370277,1206 @@
       "relative_volume_high"
      ],
      9
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-e0b0f117d2aa": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-e0b0f117d2aa",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-e0b0f117d2aa",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-e0bc51981348": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-e0bc51981348",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-e0bc51981348",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-bbf687fe79c3": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-bbf687fe79c3",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-bbf687fe79c3",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-35f3bd28cf2e": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-35f3bd28cf2e",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-35f3bd28cf2e",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-b737e8158ede": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-b737e8158ede",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-b737e8158ede",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-407595f337ec": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-407595f337ec",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-407595f337ec",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-6540f4c26f59": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6540f4c26f59",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-6540f4c26f59",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-eebd1b62528b": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-eebd1b62528b",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-eebd1b62528b",
+    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 10,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     10
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-b67eda0c52a7": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-b67eda0c52a7",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-b67eda0c52a7",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-25ae1316c0dc": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-25ae1316c0dc",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-25ae1316c0dc",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-cb5786719c5b": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-cb5786719c5b",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-cb5786719c5b",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-7416cfc37345": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-7416cfc37345",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-7416cfc37345",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-6f8ea93952f0": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6f8ea93952f0",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-6f8ea93952f0",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-6106ea8e0417": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-6106ea8e0417",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-6106ea8e0417",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-91a1ea7a08a0": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-91a1ea7a08a0",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-91a1ea7a08a0",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-697804dd7507": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-697804dd7507",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-697804dd7507",
+    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 8,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "poc_reversion",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "poc_reversion",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     8
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-87b3687a5ae1": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-87b3687a5ae1",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-87b3687a5ae1",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-e4d0c4526be8": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-e4d0c4526be8",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-e4d0c4526be8",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-7786552e8d68": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-7786552e8d68",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-7786552e8d68",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-b29c989d4507": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-b29c989d4507",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-b29c989d4507",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-915a9a95f630": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-915a9a95f630",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-915a9a95f630",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-3a64ad398a85": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-3a64ad398a85",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-3a64ad398a85",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-2de05bbb2c11": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2de05bbb2c11",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-2de05bbb2c11",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     3
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-bb03893b0995": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bb03893b0995",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-bb03893b0995",
+    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 3,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.2,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "session_extreme_sweep",
+     "value_area_edge",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "session_extreme_sweep",
+      "value_area_edge",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     3
     ],
     "void": []
    },
@@ -372280,6 +374664,103 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-a531320cb5fa": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-a531320cb5fa",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-a531320cb5fa",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-d85c4de726a7": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-d85c4de726a7",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-d85c4de726a7",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-31d32145c0c8": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-31d32145c0c8",
     "cell": "MCL:f240__p240",
@@ -372465,6 +374946,107 @@
       "volatility_normal",
       "volume_not_thin",
       "opening_drive_window"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-ac9f5791f1bb": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-ac9f5791f1bb",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-ac9f5791f1bb",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-549eae1ef45a": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-549eae1ef45a",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-549eae1ef45a",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
      ],
      5
     ],
@@ -372668,6 +375250,107 @@
     ],
     "void": []
    },
+   "MCL:f60__p60|rth0|MCL-60m-23824e2c6f4d": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-23824e2c6f4d",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-23824e2c6f4d",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-b18652dcd58d": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-b18652dcd58d",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-b18652dcd58d",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MCL:f240__p240|rth1|MCL-240m-e165a9f1a349": {
     "arm_key": "MCL:f240__p240|rth1|MCL-240m-e165a9f1a349",
     "cell": "MCL:f240__p240",
@@ -372861,6 +375544,107 @@
       "volume_not_thin",
       "opening_drive_window",
       "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-c49bea21007c": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-c49bea21007c",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-c49bea21007c",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-611349de243e": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-611349de243e",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-611349de243e",
+    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "session_extreme_sweep",
+     "stoch_directional",
+     "vwap_band_extension"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "session_extreme_sweep",
+      "stoch_directional",
+      "vwap_band_extension"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
      ],
      5
     ],
@@ -378597,6 +381381,390 @@
       "relative_volume_high"
      ],
      2
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-2ebd6f7a6e82": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2ebd6f7a6e82",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-2ebd6f7a6e82",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 3,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-507f7ac09097": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-507f7ac09097",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-507f7ac09097",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 3,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-05bca6d19bed": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-05bca6d19bed",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-05bca6d19bed",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-dd1589d408cb": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-dd1589d408cb",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-dd1589d408cb",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-5e60487895f3": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-5e60487895f3",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-5e60487895f3",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-bd15ee68ca38": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bd15ee68ca38",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-bd15ee68ca38",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60__p60|rth0|MCL-60m-2242acb749a4": {
+    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2242acb749a4",
+    "cell": "MCL:f60__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-2242acb749a4",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MCL:f60_240__p60|rth0|MCL-60m-340f2f1e13c3": {
+    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-340f2f1e13c3",
+    "cell": "MCL:f60_240__p60",
+    "symbol": "MCL",
+    "strategy_id": "MCL-60m-340f2f1e13c3",
+    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 3,
+    "n_filters": 4,
+    "signals": [
+     "lvn_rejection",
+     "price_above_ema200",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "lvn_rejection",
+      "price_above_ema200",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     0
     ],
     "void": []
    },
@@ -661160,53 +664328,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-deb23d197c01",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-deb23d197c01",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 3,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-2f6e7c2fddfa",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -661257,56 +664378,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-88b10d557eae",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-88b10d557eae",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 3,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-639db615f526",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -661319,55 +664390,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "no_imminent_release"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-8d731f543106",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-8d731f543106",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -661457,58 +664479,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bdc3580ba2a9",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-bdc3580ba2a9",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "no_imminent_release"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-0c153d2609b8",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -661521,55 +664491,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "outside_news_blackout"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-d44cb1df7b6d",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-d44cb1df7b6d",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -661659,58 +664580,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-37ee930607d2",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-37ee930607d2",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "outside_news_blackout"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-b70a16735b48",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -661723,55 +664592,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "power_hour"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "power_hour"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-a93740ef7844",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-a93740ef7844",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_power_hour",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -661861,58 +664681,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-75bcb0d36df1",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-75bcb0d36df1",
-    "name": "liquidity_candle_close_strength_macd_hist_direction_session_extreme_sweep__f_power_hour",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "candle_close_strength",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "power_hour"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "candle_close_strength",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "power_hour"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-9ca1a5296052",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -661925,55 +664693,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-30f888f3e8b5",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-30f888f3e8b5",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 1,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -662063,58 +664782,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-5785a5d1aad8",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-5785a5d1aad8",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-3e5868780602",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -662127,57 +664794,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "no_imminent_release"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-52725afb7221",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-52725afb7221",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_no_imminent_release",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 1,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -662271,60 +664887,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-ead9df95fc13",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-ead9df95fc13",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_no_imminent_release",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "no_imminent_release"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-2032377f1d49",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -662337,57 +664899,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "outside_news_blackout"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-33e212b7a116",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-33e212b7a116",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_outside_news_blackout",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 1,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -662481,60 +664992,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bbb7d99ad578",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-bbb7d99ad578",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_outside_news_blackout",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "outside_news_blackout"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-cfccbd11a811",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -662547,57 +665004,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "power_hour"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "power_hour"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-22fd60580ca6",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-22fd60580ca6",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_power_hour",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 1,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -662652,60 +665058,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 1,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 2.5,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "fresh_zone_approach",
-     "imbalance_pullback",
-     "session_extreme_sweep",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "after_opening_range",
-     "power_hour"
-    ],
-    "rule_set": [
-     "LIQUIDITY",
-     [
-      "fresh_zone_approach",
-      "imbalance_pullback",
-      "session_extreme_sweep",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "after_opening_range",
-      "power_hour"
-     ],
-     1
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-6f06ea7c2344",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-6f06ea7c2344",
-    "name": "liquidity_fresh_zone_approach_imbalance_pullback_session_extreme_sweep_vwap_reclaim__f_power_hour",
-    "group": "LIQUIDITY",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 1,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -711602,55 +713954,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-0164b241bd85",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-0164b241bd85",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-6b8118dd2bba",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -711703,58 +714006,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-c7512241921a",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-c7512241921a",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-1a59a630ebd7",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -711767,57 +714018,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6f0b611e5250",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-6f0b611e5250",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 4,
     "stop_kind": "STRUCTURE",
     "target_kind": "R_MULTIPLE",
@@ -711911,60 +714111,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-1a154fa7768c",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-1a154fa7768c",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-82a1b5bdf8c4",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -711977,57 +714123,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2b91aa604def",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-2b91aa604def",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 4,
     "stop_kind": "STRUCTURE",
     "target_kind": "R_MULTIPLE",
@@ -712121,60 +714216,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-92fffe431aa6",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-92fffe431aa6",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-aed98b5319f2",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -712187,57 +714228,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-ff9afc35086f",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-ff9afc35086f",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 4,
     "stop_kind": "STRUCTURE",
     "target_kind": "R_MULTIPLE",
@@ -712331,60 +714321,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-ee51806a90aa",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-ee51806a90aa",
-    "name": "opening_range_cvd_directional_macd_directional_session_extreme_sweep_vwap_band1_bounce__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 4,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "cvd_directional",
-     "macd_directional",
-     "session_extreme_sweep",
-     "vwap_band1_bounce"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "cvd_directional",
-      "macd_directional",
-      "session_extreme_sweep",
-      "vwap_band1_bounce"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     4
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-2b6f59ef172b",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -712397,55 +714333,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-e0b0f117d2aa",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-e0b0f117d2aa",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 10,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -712498,58 +714385,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-e0bc51981348",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-e0bc51981348",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 10,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -712836,57 +714671,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-bbf687fe79c3",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-bbf687fe79c3",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-dcf36c79fd40",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -712902,60 +714686,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-35f3bd28cf2e",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-35f3bd28cf2e",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 10,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -713252,57 +714982,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-b737e8158ede",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-b737e8158ede",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-26f5c297ed45",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -713318,60 +714997,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-407595f337ec",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-407595f337ec",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 10,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -713668,57 +715293,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6540f4c26f59",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-6540f4c26f59",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-5a4c4b007849",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -713734,60 +715308,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 10,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     10
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-eebd1b62528b",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-eebd1b62528b",
-    "name": "opening_range_delta_confirms_bar_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 10,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -714082,55 +715602,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-b67eda0c52a7",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-b67eda0c52a7",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-841037ae2c02",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -714146,58 +715617,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-25ae1316c0dc",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-25ae1316c0dc",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 8,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -714484,57 +715903,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-cb5786719c5b",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-cb5786719c5b",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-5205706dc161",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -714550,60 +715918,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-7416cfc37345",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-7416cfc37345",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 8,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -714900,57 +716214,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-6f8ea93952f0",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-6f8ea93952f0",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-d6105bd52554",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -714966,60 +716229,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-6106ea8e0417",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-6106ea8e0417",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 8,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -715316,57 +716525,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-91a1ea7a08a0",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-91a1ea7a08a0",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-790b4d77e1e6",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -715382,60 +716540,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 8,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "poc_reversion",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "poc_reversion",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     8
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-697804dd7507",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-697804dd7507",
-    "name": "opening_range_delta_confirms_bar_poc_reversion_session_extreme_sweep_slope_directional__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 8,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -715730,55 +716834,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-87b3687a5ae1",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-87b3687a5ae1",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-7e780cca0016",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -715794,58 +716849,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-e4d0c4526be8",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-e4d0c4526be8",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 3,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -716132,57 +717135,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-7786552e8d68",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-7786552e8d68",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-3ef3c837b021",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -716198,60 +717150,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-b29c989d4507",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-b29c989d4507",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 3,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -716548,57 +717446,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-915a9a95f630",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-915a9a95f630",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-f99eed4645b3",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -716614,60 +717461,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-3a64ad398a85",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-3a64ad398a85",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 3,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -716964,57 +717757,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2de05bbb2c11",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-2de05bbb2c11",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-ee0d041e7113",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -717030,60 +717772,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 3,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.2,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "session_extreme_sweep",
-     "value_area_edge",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "session_extreme_sweep",
-      "value_area_edge",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     3
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bb03893b0995",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-bb03893b0995",
-    "name": "opening_range_delta_confirms_bar_session_extreme_sweep_value_area_edge_vwap_reclaim__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 3,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -719010,55 +719698,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-a531320cb5fa",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-a531320cb5fa",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-f87c4b24ed5a",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -719111,58 +719750,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-d85c4de726a7",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-d85c4de726a7",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-47b76506804c",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -719175,57 +719762,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-ac9f5791f1bb",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-ac9f5791f1bb",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -719319,60 +719855,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-549eae1ef45a",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-549eae1ef45a",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-82ae37fede7c",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -719385,57 +719867,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-23824e2c6f4d",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-23824e2c6f4d",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -719529,60 +719960,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-b18652dcd58d",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-b18652dcd58d",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60__p60|rth1|MCL-60m-f534614feeb9",
     "cell": "MCL:f60__p60",
     "symbol": "MCL",
@@ -719595,57 +719972,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-c49bea21007c",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-c49bea21007c",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -719700,60 +720026,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "session_extreme_sweep",
-     "stoch_directional",
-     "vwap_band_extension"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "session_extreme_sweep",
-      "stoch_directional",
-      "vwap_band_extension"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-611349de243e",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-611349de243e",
-    "name": "opening_range_delta_divergence_session_extreme_sweep_stoch_directional_vwap_band_extension__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -722256,53 +722528,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2ebd6f7a6e82",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-2ebd6f7a6e82",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 3,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-bfe8fc451c87",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -722318,56 +722543,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 3,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-507f7ac09097",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-507f7ac09097",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -722642,55 +722817,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-05bca6d19bed",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-05bca6d19bed",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-efae0ddb7d8a",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -722706,58 +722832,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-dd1589d408cb",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-dd1589d408cb",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -723042,55 +723116,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-5e60487895f3",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-5e60487895f3",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-6ecce9cd7177",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -723106,58 +723131,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-bd15ee68ca38",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-bd15ee68ca38",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -723442,55 +723415,6 @@
     ]
    },
    {
-    "arm_key": "MCL:f60__p60|rth0|MCL-60m-2242acb749a4",
-    "cell": "MCL:f60__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-2242acb749a4",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MCL:f60_240__p60|rth1|MCL-60m-3ffe5ba45542",
     "cell": "MCL:f60_240__p60",
     "symbol": "MCL",
@@ -723506,58 +723430,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 3,
-    "n_filters": 4,
-    "signals": [
-     "lvn_rejection",
-     "price_above_ema200",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "lvn_rejection",
-      "price_above_ema200",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MCL:f60_240__p60|rth0|MCL-60m-340f2f1e13c3",
-    "cell": "MCL:f60_240__p60",
-    "symbol": "MCL",
-    "strategy_id": "MCL-60m-340f2f1e13c3",
-    "name": "opening_range_lvn_rejection_price_above_ema200_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",

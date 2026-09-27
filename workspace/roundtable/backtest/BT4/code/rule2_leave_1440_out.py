@@ -30,6 +30,7 @@ Three caveats that travel with every number below:
 """
 from __future__ import annotations
 
+import collections
 import json
 import math
 import os
@@ -99,6 +100,14 @@ def main() -> int:
         print(f"  {name:<28} k={len(zs):>3}  stouffer z = {stouffer(zs):+.4f}   "
               f"cells negative {neg}/{len(zs)}  sign-test p = "
               f"{binom_two_sided(len(zs) - neg, len(zs)):.3f}")
+
+    # What the surviving cells actually are. `ADJ-14` §4's restatement calls them
+    # "the 60-minute frames"; they are not only 60m and saying so is a correction
+    # in the un-conservative direction, which is the kind most worth stating.
+    tfs = collections.Counter(c["cell"].split("/")[1] for c in rest)
+    syms = sorted({c["cell"].split("/")[0] for c in rest})
+    print(f"\n  the 11 surviving cells: timeframes {dict(sorted(tfs.items(), key=lambda kv: int(kv[0])))}"
+          f"  symbols {syms}")
 
     print("\n--- leave-one-cell-out, for context on how much any single cell carries ---")
     for c in sorted(compared, key=lambda r: r["cell"]):

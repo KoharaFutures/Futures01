@@ -363,9 +363,13 @@ def run_cell(symbol: str, primary_tf: int, arm: str, Engine, assert_distinct_ids
         "sharpe_needed_cell": round(sharpe_needed(free_t(len(strats))), 3),
         "free_t_single_prereg": 1.177,
         "sharpe_needed_single_prereg": round(sharpe_needed(1.177), 3),
-        "engine_counters": eng.counters.to_dict(),
+        "engine_counters": {k: v for k, v in eng.counters.to_dict().items()
+                            if not isinstance(v, list)},
         "rule_violations": violations(
             [t for tr in ledger.values() for t in tr]),
+        "PROVISIONAL": ("EF1 has published no VERIFY.md; if this ran with "
+                        "--no-require-validated every number here is provisional "
+                        "and must not be published."),
         "table": table,
     }
 

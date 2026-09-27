@@ -51,12 +51,17 @@ SESSION arm  120 strategies ->   102 trades, max 16 per strategy, 0 floored at 2
 Three things this establishes, and one it does not.
 
 * **The plumbing works and the rule is not violated.** `violations()` returns 0 on both arms.
-* **`flats_on_boundary` is 0 in the RTH arm and 23 in the SESSION arm.** That is direct evidence of
-  EF2's point in my cell: with `rth_only=True` **not one position in the sample survived to the 16:00
-  deadline**, so the 18:00→16:00 rule does literally nothing to a `rth_only=True` MES/MNQ strategy —
-  the contract's own RTH close is already 16:00. The overnight regime is reachable **only** through
-  the `rth_only=False` arm. Without that arm, an EF5 deliverable would be an ordinary RTH intraday
-  list wearing the session rule's name.
+* **`flats_on_boundary` is 0 in the RTH arm and 23 in the SESSION arm** *in this 120-strategy
+  subsample*. **CORRECTION, added after the full-population run below: that 0 is a subsample
+  artefact and I over-read it.** On the full 1,689-strategy MES 30m population the RTH arm produces
+  **845** `flats_on_boundary` — positions entered late in RTH are still open at 16:00 and the flat
+  fires normally. The correct statement of EF2's point for my cell is narrower and still decisive:
+  **the *exit* half of the 18:00→16:00 rule coincides exactly with MES/MNQ's shipped RTH close**
+  (`engine.py:470-473`, `rth_open 09:30 + 390 min = 16:00`), so for a `rth_only=True` MES/MNQ
+  strategy the rule changes **nothing** relative to the shipped engine. All of the rule's new content
+  is the **overnight entry window**, and that is reachable only through the `rth_only=False` arm.
+  Without that arm an EF5 deliverable would be an ordinary RTH intraday list wearing the session
+  rule's name.
 * **Trade counts are tiny.** 120 MNQ 30m strategies produced a maximum of 16 trades in the SESSION arm
   and 1 in the RTH arm, over 41 sessions. Zero cleared the 20-trade floor.
 * **It does not establish any profitability number.** EF1 has published no `VERIFY.md`, and

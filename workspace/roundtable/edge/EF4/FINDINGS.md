@@ -55,6 +55,30 @@ timeframe.
 **Two honest rows and a clear power statement is the deliverable. Ten rows would be a
 description of 41 sessions wearing a forecast's clothing.**
 
+## What that produced, stated here rather than buried
+
+| | MGC | MCL |
+|---|---|---|
+| distinct signal sets reaching 30 trades in the full sample **and** in both halves | 401 | 360 |
+| sign-consistent in-sample/out-of-sample, positive, and positive in every walk-forward fold | **19** | **3** |
+| **clearing their own declared threshold (`free_t` = 4.441)** | **0** | **0** |
+| largest *t* anywhere in the cell | **+2.62** | **+1.12** |
+
+**I hand you 5 candidate rows for MGC and 3 for MCL, and the statement that none of them is
+live-eligible.** MCL's best (+1.12) fails even `free_t = 1.177`, the code's own floor for a single
+pre-registered hypothesis and the most generous threshold in this repository — **so on MCL the
+answer is nothing, at every threshold.** MGC's best row achieves an annualised Sharpe of **6.58**,
+a number that does not exist in real futures trading, and is **still 41% short** of the 11.16 its
+search width demands.
+
+And the negatives, which are the results this span *can* produce, because a rejection needs the
+same power as a confirmation: **three of six pre-registered hypotheses are significantly negative
+at MGC 5m** (|t| = 4.00, 4.32, 5.14 against a threshold of 2.677), two of them **worse than their
+own count-matched placebos** at z = −2.99 and −2.69; the published **ORB negative replicates** on a
+different substrate under a session rule that did not exist when it was measured; and rule 7's
+**"sub-hourly graveyard" replicates at 5 minutes and nowhere else** — 12.2% of MGC 5m and 2.9% of
+MCL 5m arms profitable, against 36–38% at MGC 15m/30m.
+
 ---
 
 ## Contents
@@ -66,7 +90,15 @@ description of 41 sessions wearing a forecast's clothing.**
 | `bursts/03_census.md` | the firing-rate census, 79 conditions × 8 cells |
 | `bursts/04_session-rule-degeneracy.md` | always-on filters, duplicates, and what the 16:00–18:00 rule removes |
 | `bursts/05_population-declared.md` | the population and its exact size, declared before measuring |
-| `bursts/06_measurement.md` | rule 7, the split sample, the selection test, walk-forward |
+| `bursts/06_measurement.md` | rule 7, the split sample, the selection test, walk-forward, placebos |
+| `bursts/07_anti-overfitting-audit.md` | every hazard the brief names: what was checked, what was found |
+
+**Code:** `code/power.py`, `cost_in_r.py`, `census.py`, `degeneracy.py`, `or_resolvability.py`,
+`population.py`, `session_clock.py` (EF4's second harness implementation, for differential
+checking only), `run_cell.py`, `placebo.py`, `run_placebo.py`, `mtf_arms.py`, `analyse.py`,
+`analyse2.py`, `selection_control.py`, `selection_direction.py`, `rank_final.py`,
+`audit_lookahead.py`, `audit_fills.py`, `audit_stale_fills.py`, `audit_adverse_selection.py`,
+`trim_out.py`. **Data:** `out/*.json`.
 
 ---
 
@@ -142,7 +174,7 @@ Run **before** any population was constructed.
 5m cells and the reason is only sample: fewer bars means fewer fires of a rare condition, so
 part of any "30m is a cleaner timeframe" impression is 30m being unable to see rare things.
 
-**Then the arms.** Census gating cut the never-trade rate hard: **6.1–13.7% of my declared arms
+**Then the arms.** Census gating cut the never-trade rate hard: **5.0–13.7% of my declared arms
 took zero trades**, against the programme-wide figure of 82% of generated strategies never
 trading. That is the census doing its job.
 
@@ -156,8 +188,10 @@ their two LIVE conditions never co-fired with an agreeing direction on any bar.
 
 | cell | zero-trade arms | all of which are 2-signal | jointly-VOID pairs as a share of 2-signal arms |
 |---|---|---|---|
+| MGC 5m | 183 | 183 | 183 / 2,800 = **6.5%** |
 | MGC 15m | 290 | 290 | 277 / 3,150 = **8.8%** |
 | MGC 30m | 493 | 493 | 469 / 3,360 = **14.0%** |
+| MCL 5m | 150 | 150 | 142 / 2,793 = **5.1%** |
 | MCL 15m | 207 | 207 | 205 / 2,597 = **7.9%** |
 | MCL 30m | 413 | 413 | 411 / 3,150 = **13.0%** |
 
@@ -165,7 +199,11 @@ their two LIVE conditions never co-fired with an agreeing direction on any bar.
 `[repo-verified: base.py:670-703]`. **So two LIVE conditions can be jointly VOID, and a
 per-condition census cannot see it.** The programme's "19.0% of generated strategies carry a
 condition that can never fire" is therefore a *lower bound* on the dead population; the
-pairwise term adds 8–14% more on top in my cells, and it is again worse at 30m.
+pairwise term adds **5–14%** more on top in my cells, rising monotonically with the timeframe
+(5m → 15m → 30m: 6.5 → 8.8 → 14.0% on MGC, 5.1 → 7.9 → 13.0% on MCL), because a coarser grid has
+fewer bars on which two conditions can coincide. **That monotonicity is the signature of a sample
+effect rather than a content effect** — the same pairs are jointly VOID at 30m and jointly live at
+5m.
 
 **Recommendation for the next agent: the census must be run pairwise, not just per condition.**
 It is one extra pass over the same snapshots.
@@ -462,21 +500,30 @@ numbers on.**
 
 | cell | qualifying arms | ρ(IS, OOS) | top-10 IS → OOS | universe IS → OOS | first reading |
 |---|---|---|---|---|---|
+| MGC 5m | 1,198 | **−0.146** | +0.286 → −0.040 | −0.106 → −0.155 | selection wins |
 | MGC 15m | 653 | **+0.042** | +0.381 → **+0.147** | −0.032 → −0.089 | selection wins |
 | MGC 30m | 348 | +0.221 | +0.220 → **+0.122** | −0.043 → −0.060 | selection wins |
+| MCL 5m | 1,068 | +0.085 | +0.130 → −0.198 | −0.262 → −0.194 | selection **loses** |
 | MCL 15m | 552 | +0.309 | +0.256 → **−0.147** | −0.131 → −0.136 | selection **loses** |
 | MCL 30m | 420 | +0.207 | +0.185 → **−0.021** | −0.075 → −0.120 | selection wins |
+
+**Note ρ = −0.146 at MGC 5m over 1,198 arms — an in-sample rank *negatively* correlated with
+out-of-sample performance, in the cell where the sample is largest.** That is the programme's
+original negative in its purest form, and it sits in the same row as "selection wins", because the
+extreme tail and the rank correlation are different statistics and only one of them is a forecast.
 
 ## The four controls, and the one that settles it
 
 **Control 1 — RANDOM-10** (draw 10 arms uniformly from the same universe, pool the same way,
 2,000 draws). Random-10 lands within 0.0003 R of the trade-weighted universe every time, so the
-pooling itself is not broken. The real top 10 sits at **percentile 1.000, 1.000, 0.402, 0.985**.
+pooling itself is not broken. The real top 10 sits at percentile **0.999 / 1.000 / 1.000** (MGC
+5m / 15m / 30m) and **0.417 / 0.402 / 0.985** (MCL 5m / 15m / 30m).
 
 **Control 2 — MATCHED-10** (10 arms whose in-sample trade counts match the top 10's, 2,000
-draws). This matters because the top 10 trade *less* than the universe (median IS trades 60 vs
-96, 66 vs 83, 47 vs 84, 54 vs 64). After matching, the top 10 sits at percentile **1.000, 0.995,
-0.729, 0.960**. So trade count is not the explanation.
+draws). This matters because the top 10 trade *less* than the universe in every cell: median
+in-sample trades **57.5 vs 131.5, 60 vs 96, 66 vs 83** (MGC 5m/15m/30m) and **40 vs 102, 47 vs 84,
+54 vs 64** (MCL). After matching, the top 10 sits at percentile **0.980 / 1.000 / 0.995** and
+**0.620 / 0.729 / 0.960**. So trade count is not the explanation.
 
 **Control 3 — direction.** Over this window MGC ran 4151 → 4321 (+4.1%) and MCL 84.63 → 92.41
 (+9.2%), so a long-biased arm is favoured for a reason that has nothing to do with its rule. It
@@ -487,8 +534,10 @@ MCL 30m (+0.057 / +0.103). Only MCL 15m splits (+0.200 long, −0.065 short). **
 direction-symmetric, so it is not drift.**
 
 **Control 4 — REVERSE TIME, and this is the one that settles it.** Select on the *last* 16
-sessions and score on the *first* 25. **Selection wins in all four cells** (MGC 15m −0.008 vs
-−0.032; MGC 30m +0.050 vs −0.043; MCL 15m −0.117 vs −0.131; MCL 30m +0.005 vs −0.075).
+sessions and score on the *first* 25. **Selection wins in all six cells**, reverse-selected top 10 against the
+universe, both scored on the earlier half: MGC 5m **−0.088 vs −0.106**, MGC 15m **−0.008 vs
+−0.032**, MGC 30m **+0.050 vs −0.043**, MCL 5m **−0.164 vs −0.262**, MCL 15m **−0.117 vs −0.131**,
+MCL 30m **+0.005 vs −0.075**.
 
 > **A selection rule that works equally well backwards in time is not forecasting.** It is
 > detecting a property that is stationary across this one 41-session window. Two halves of one
@@ -502,6 +551,8 @@ sessions and score on the *first* 25. **Selection wins in all four cells** (MGC 
 | MGC 30m | `imbalance_pullback` **9/10**, `above_vwap` 4 |
 | MCL 15m | `candle_reversal` 5, `adx_trending` 4, `bollinger_mean_pull` 3, `opening_range_fade` 3 |
 | MCL 30m | `adx_trending` 4, `candle_engulfing` 4, `candle_close_strength` 3 |
+| MGC 5m | 13 distinct conditions across 10 rows, mean pairwise Jaccard 0.204 |
+| MCL 5m | 13 distinct conditions across 10 rows, mean pairwise Jaccard 0.190 |
 
 Nine to twelve distinct conditions across ten "different" rows, mean pairwise condition Jaccard
 0.12–0.33. **So the top 10 is one or two conditions and eight variants of them**, their trade
@@ -511,7 +562,7 @@ large factor. This is precisely the ORB/ICT report's lesson: *"a league table of
 sets containing a condition measures the search, not the condition."*
 
 **Verdict on the selection test.** The programme's "selecting is worse than not selecting" does
-**not** reproduce in this cell — but the correct replacement claim is not "selecting works". It
+**not** reproduce in four of six cells — but the correct replacement claim is not "selecting works". It
 is: *the cross-section of arms is not homogeneous, one or two conditions are better than the rest
 within this window in a way visible from either half, and neither the rank correlation
 (ρ = +0.042 on 653 arms) nor the reverse-time test permits calling that a forecast.* The ranked
@@ -547,7 +598,9 @@ list must therefore be de-duplicated by signal set before it is reported at all,
    predict and is why this had to be measured per symbol.
 3. **The number decomposes cleanly, and both halves matter.** Gross is 32.1–32.5% positive at 5m on
    **both** symbols and 43.9–50.7% at 15m/30m. So there is a genuine, symbol-independent
-   **gross** degradation at 5 minutes — the signal is worse there, not just more expensive. Cost
+   **gross** degradation at 5 minutes. **§11 then shows that the gross half is NOT a signal-quality
+   effect** — count-matched random entries also have negative gross at 5m and positive gross at
+   15m/30m, so it belongs to the exit geometry meeting a 5-minute bar grid. Cost
    then supplies the rest, and **cost is where the symbols differ**: median 0.093 R (MGC 5m) against
    **0.202 R (MCL 5m)**, a factor of 2.2. Rule 7's headline is therefore about half a signal-quality
    statement and half a cost statement, and the cost half is the one that makes MCL 5m the worst
@@ -672,6 +725,7 @@ matched, so both arms face identical downstream attrition) and direction-matched
 | MGC 15m | 34 | **−0.0123** | 61 | 0.0503 | +0.038 | +4.17 | 13 |
 | MGC 30m | 30 | **−0.0228** | 49 | 0.0346 | +0.012 | +3.19 | 12 |
 | MCL 15m | 28 | **−0.1115** | 52 | 0.1254 | +0.014 | +2.08 | 2 |
+| MCL 5m | 26 | **−0.2203** | 62 | 0.2021 | **−0.018** | +2.39 | 3 |
 | MCL 30m | 34 | **−0.0647** | 53 | 0.0835 | +0.019 | +2.04 | 5 |
 
 **Three readings, and the second one corrected something I had already written.**
@@ -682,8 +736,8 @@ matched, so both arms face identical downstream attrition) and direction-matched
    clustering. Placebo *net* is then approximately minus the cell's cost. The control is measuring
    what it should and nothing else.
 
-2. **At 5 minutes the placebo's gross is NEGATIVE (−0.038 R), and that overturns my own first
-   reading of rule 7.** In §8 I decomposed the 5-minute graveyard into a gross half and a cost half
+2. **At 5 minutes the placebo's gross is NEGATIVE on BOTH symbols (−0.038 R on MGC, −0.018 R on
+   MCL), and that overturns my own first reading of rule 7.** In §8 I decomposed the 5-minute graveyard into a gross half and a cost half
    and called the gross half a signal-quality effect. **It is not.** The placebo entries carry no
    information by construction, so a negative *placebo* gross at 5m means the degradation belongs
    to the **exit geometry meeting a 5-minute bar grid** — a 1.0-ATR stop, a 1.5 R target, the
@@ -699,6 +753,7 @@ matched, so both arms face identical downstream attrition) and direction-matched
 | MGC 5m | −0.131 | −0.132 | **ties** |
 | MGC 15m | −0.012 | −0.046 | **placebo wins** |
 | MGC 30m | −0.023 | −0.049 | **placebo wins** |
+| MCL 5m | −0.220 | −0.241 | **placebo wins** |
 | MCL 15m | −0.112 | −0.143 | **placebo wins** |
 | MCL 30m | −0.065 | −0.093 | **placebo wins** |
 
@@ -706,9 +761,13 @@ That is the programme's own placebo finding ("five separate placebo construction
 the real thing") reproduced under a session rule that has never been run — and in a sharper form,
 because at 15m and 30m the placebo does not merely match the median, it **beats** it.
 
-**And three pre-registered arms are significantly WORSE than their own placebos.** MGC 5m:
-`A1_ON_SWEEP` at percentile **0.00**, z = **−2.99**; `A6_ON_COMPRESSION` percentile **0.00**,
-z = **−2.69**; `A4_VWAP_BAND` percentile 0.05, z = −1.49. A placebo beating a real signal has
+**And pre-registered arms are significantly WORSE than their own placebos on both symbols.**
+MGC 5m: `A1_ON_SWEEP` percentile **0.00**, z = **−2.99**; `A6_ON_COMPRESSION` percentile **0.00**,
+z = **−2.69**; `A4_VWAP_BAND` percentile 0.05, z = −1.49. MCL 5m: `A2_PD_SWEEP` percentile **0.00**,
+z = **−2.32**; `A4_VWAP_BAND` percentile 0.15, z = −1.33. MGC 15m: `A1_ON_SWEEP` percentile **0.00**,
+z = **−3.10**. Note `A1_ON_SWEEP` is z = −2.99 on MGC 5m and z = −3.10 on MGC 15m — the same
+pre-registered hypothesis, beaten by its own control, on two independent timeframes of the same
+symbol. A placebo beating a real signal has
 happened five times in this repository. **A real signal losing to its own placebo at z = −3 is a
 different and stronger statement**: both arms share the exit, the sizing and the session rule, so
 the difference is attributable to where the entry fires, and the condition is not uninformative but

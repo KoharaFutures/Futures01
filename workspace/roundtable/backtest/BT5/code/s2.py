@@ -317,6 +317,7 @@ class _Compact:
             self.blocks.append([v for v in by.values() if len(v) > 1])
         strats = sorted({t["strategy"] for t in joined})
         si = {s: j for j, s in enumerate(strats)}
+        self.strat_index = si
         self.n_strat = len(strats)
         self.t_s = [si[t["strategy"]] for t in joined]
         self.t_c = [ci[(t["symbol"], t["tf"], t["slice"])] for t in joined]
@@ -331,8 +332,18 @@ class _Compact:
                 for i, g in zip(idx, pool):
                     lab[i] = g
 
-    def stats(self):
-        """(median d_mean_r, median d_win, median d_payoff, qualifying)."""
+    def stats(self, pool: Optional[Sequence[int]] = None):
+        """(median d_mean_r, median d_win, median d_payoff, qualifying).
+
+        `pool` fixes **which strategies may contribute**, and passing it is not
+        an option - it is what makes the permutation p meaningful. Measured: on
+        the RAW axis 116 strategies clear `min_n` on the observed labels and
+        ~134 clear it on a permuted draw, because the real strata are correlated
+        with *which* strategies trade (high-activity bars are RTH bars, and some
+        arms trade mostly overnight). A null whose statistic is a median over a
+        different, larger set of strategies is not the same statistic, so
+        `permutation_test` fixes the pool to the observed qualifiers.
+        """
         k, ns = self.k, self.n_strat
         n = [[0] * ns, [0] * ns]
         sr = [[0.0] * ns, [0.0] * ns]
@@ -357,7 +368,7 @@ class _Compact:
             else:
                 sl[a][s] -= r
         d_r, d_w, d_p = [], [], []
-        for s in range(ns):
+        for s in (range(ns) if pool is None else pool):
             if n[0][s] < self.min_n or n[1][s] < self.min_n:
                 continue
             d_r.append(sr[1][s] / n[1][s] - sr[0][s] / n[0][s])
@@ -393,9 +404,21 @@ def permutation_test(joined, bars, labels, block: str, *, draws: int = DRAWS,
     rng = random.Random(seed)
     placebo_draw = None
     comp = _Compact(joined, bars, labels, block, k, min_n)
+    # The pool is fixed to the strategies that qualify on the OBSERVED labels,
+    # so the null statistic is the same statistic as the observed one.
+    pool = sorted(comp.strat_index[r["strategy"]]
+                  for r in obs["rows"] if r.get("qualifies"))
+    qual_counts, free_counts = [], []
     for d in range(draws):
         comp.shuffle(rng)
-        vals = comp.stats()
+        vals = comp.stats(pool)
+        qual_counts.append(vals[3])
+        if d < 100:
+            # Diagnostic, not part of the test: how many strategies would clear
+            # `min_n` if the pool were *not* fixed. The gap between this and
+            # `qualifying` measures how much activity decides which strategies
+            # can be stratified at all.
+            free_counts.append(comp.stats()[3])
         if d == 0:
             placebo_draw = dict(zip(keys, vals[:3]))
             placebo_draw["qualifying"] = vals[3]
@@ -421,6 +444,11 @@ def permutation_test(joined, bars, labels, block: str, *, draws: int = DRAWS,
                                    / out[kk]["null_sd"])
     out["block"] = block
     out["qualifying"] = obs["qualifying"]
+    out["pool_size"] = len(pool)
+    out["null_qualifying_median"] = st.median(qual_counts) if qual_counts else None
+    out["null_qualifying_min"] = min(qual_counts) if qual_counts else None
+    out["null_unpooled_qualifying_median"] = (st.median(free_counts)
+                                             if free_counts else None)
     out["placebo_single_draw"] = placebo_draw
     return out
 

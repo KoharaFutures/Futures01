@@ -233,6 +233,29 @@ correct answer — see the gap below.
 
 ### 6 — how much of `BRIEF.md` rule 2 is affected, and how much survives
 
+**This section answers a pre-registration, which is the strongest form available here.** `ADJ-14` §5
+(`manager/ADJUDICATIONS.md:1437-1452`, ruled 2026-09-27 04:05 ET, before I measured) says:
+
+> **BT4 owes two numbers as part of `D50`'s blast radius:** the count of `primary_tf = 1440` rows
+> inside the 366-strategy and 1,151-strategy populations behind z = −4.09, and **the same z
+> recomputed with those rows excluded.**
+> — If z survives exclusion, narrowing (a) **costs nothing** and rule 2's first sentence is restored
+> to its full published scope with a footnote.
+> — If z does not survive, rule 2's first sentence is a **60m/240m result** and must say so.
+
+**Both numbers are below. The verdict is: z survives. 249/366 and 320/1,151; −4.093 → −3.053.**
+By `ADJ-14`'s own decision rule, **narrowing (a) costs nothing** — same sign, same order of
+magnitude, on 11 cells that cannot be `D50` casualties. Rule 2's first sentence is a real result on
+the frames that could disagree, and the footnote is the population share.
+
+**One reading I had to fix before answering.** "The same z recomputed with those rows excluded" has a
+trap: the published −4.09 is **not** a pooled statistic, it is a Stouffer combination over cells, so
+re-pooling the surviving rows through a fresh rank sum would be a *new* comparative test and would hit
+`D28` head-on. I recompute the **published combination** on the surviving cells instead. That is
+exact rather than approximate here, because a cell is `(symbol, tf, window, confirm_tfs)` and every
+`primary_tf = 1440` row therefore lives inside one of the three daily cells and nowhere else —
+**excluding the rows and excluding the cells are the same operation.**
+
 `[measured: PYTHONPATH=. python3 workspace/roundtable/backtest/BT4/code/rule2_leave_1440_out.py]`
 
 Rule 2 has three sentences and they fare differently. All of the evidence is one artefact,
@@ -282,6 +305,14 @@ frame, "requiring multi-timeframe alignment" is not what 68% of that arm require
 sentence should read as **"requiring this library's alignment conditions measured worse than
 requiring none (z = −3.05 on 11 cells where the frame could disagree; −4.09 on all 14)"**, which is
 weaker than a statement about multi-timeframe agreement as a practice.
+
+`ADJ-14` §4 already restated rule 2 as *"measured worse than requiring none on the **60-minute frames
+the corpus built** (z = −4.09, 366 vs 1,151)"*. That is very nearly right and slightly
+**over**-narrow. The 11 surviving cells are **8 at 60m, 2 at 15m, 1 at 30m**, across **five symbols**
+(MCL, MES, MGC, MNQ, NQ); no 5m or 240m cell reached the comparison, all of those were skipped for a
+thin arm. So "60-minute" understates it by three cells and two timeframes. The exact qualifier is
+*"on the frames whose members are distinct series"*. That correction runs **against** my own
+direction of travel — it makes rule 2 broader, not narrower — and it belongs in the record as such.
 
 **Sentence 2 — "on a two-timeframe frame, 'majority' and 'unanimous' are the same statement (D17)".**
 The payload has the comparison in two arms, and the author already knew:

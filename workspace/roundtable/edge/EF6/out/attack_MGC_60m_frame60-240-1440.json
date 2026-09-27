@@ -26,8 +26,8 @@
   "per_kind": {
    "placebo_random_legal": {
     "built": 10,
-    "count_matched": 0,
-    "short": 3148
+    "count_matched": 10,
+    "short": 0
    },
    "placebo_session_shuffle": {
     "built": 10,
@@ -475,7 +475,6 @@
    ],
    "gates_missing": [],
    "killed_by": [
-    "G2 PLACEBO",
     "G3 THRESHOLD",
     "G4 FORWARD"
    ],
@@ -494,8 +493,9 @@
     },
     {
      "gate": "G2 PLACEBO",
-     "verdict": "UNDERPOWERED",
-     "pass": false,
+     "verdict": "BEATS (LOW POWER)",
+     "pass": true,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 111,
@@ -513,7 +513,7 @@
       "placebo_trades": 111,
       "ratio": 1.0
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "separated at p<=0.05 but below the 80%-power detectable difference - treat as provisional"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -573,7 +573,6 @@
    ],
    "gates_missing": [],
    "killed_by": [
-    "G2 PLACEBO",
     "G3 THRESHOLD",
     "G4 FORWARD"
    ],
@@ -592,8 +591,9 @@
     },
     {
      "gate": "G2 PLACEBO",
-     "verdict": "UNDERPOWERED",
-     "pass": false,
+     "verdict": "BEATS (LOW POWER)",
+     "pass": true,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 110,
@@ -611,7 +611,7 @@
       "placebo_trades": 110,
       "ratio": 1.0
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "separated at p<=0.05 but below the 80%-power detectable difference - treat as provisional"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -692,6 +692,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 110,
@@ -709,7 +710,7 @@
       "placebo_trades": 108,
       "ratio": 0.982
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -790,6 +791,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 158,
@@ -807,7 +809,7 @@
       "placebo_trades": 152,
       "ratio": 0.962
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -888,6 +890,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 157,
@@ -905,7 +908,7 @@
       "placebo_trades": 153,
       "ratio": 0.975
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -965,7 +968,6 @@
    ],
    "gates_missing": [],
    "killed_by": [
-    "G2 PLACEBO",
     "G3 THRESHOLD",
     "G4 FORWARD"
    ],
@@ -984,8 +986,9 @@
     },
     {
      "gate": "G2 PLACEBO",
-     "verdict": "UNDERPOWERED",
-     "pass": false,
+     "verdict": "BEATS (LOW POWER)",
+     "pass": true,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 157,
@@ -1003,7 +1006,7 @@
       "placebo_trades": 156,
       "ratio": 0.994
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "separated at p<=0.05 but below the 80%-power detectable difference - treat as provisional"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -1084,6 +1087,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 90,
@@ -1101,7 +1105,7 @@
       "placebo_trades": 89,
       "ratio": 0.989
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -1161,7 +1165,6 @@
    ],
    "gates_missing": [],
    "killed_by": [
-    "G2 PLACEBO",
     "G3 THRESHOLD",
     "G4 FORWARD"
    ],
@@ -1180,8 +1183,9 @@
     },
     {
      "gate": "G2 PLACEBO",
-     "verdict": "UNDERPOWERED",
-     "pass": false,
+     "verdict": "BEATS (LOW POWER)",
+     "pass": true,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 84,
@@ -1199,7 +1203,7 @@
       "placebo_trades": 84,
       "ratio": 1.0
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "separated at p<=0.05 but below the 80%-power detectable difference - treat as provisional"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -1280,6 +1284,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 134,
@@ -1297,7 +1302,7 @@
       "placebo_trades": 126,
       "ratio": 0.94
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",
@@ -1378,6 +1383,7 @@
      "gate": "G2 PLACEBO",
      "verdict": "UNDERPOWERED",
      "pass": false,
+     "low_power": true,
      "permutation": {
       "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
       "n_a": 180,
@@ -1395,7 +1401,7 @@
       "placebo_trades": 177,
       "ratio": 0.983
      },
-     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect, and the permutation test did not separate them"
     },
     {
      "gate": "G3 THRESHOLD",

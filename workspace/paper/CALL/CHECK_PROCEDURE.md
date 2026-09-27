@@ -313,11 +313,25 @@ the owner reads this on:
 python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002
 ```
 
-**One card per symbol, landscape.** Each call writes its own `card_{SYMBOL}_{call_id}.png` at
-1480px wide, roughly 2.3–2.8:1 — the mechanics in the left column (the numbers a reader checks
-first: trigger, entry, stop, target, R:R, size, risk, window), the reasoning in the right (thesis,
-weakness, confidence). Do not stack every call into one tall image; a 728×2463 strip is a scroll,
-not a card, and it buries the one number the reader wanted.
+**One card per symbol, 1700x~1000.** Each call writes its own `card_{SYMBOL}_{call_id}.png`:
+symbol top-left at 104px, direction beneath it, the whole card a diagonal gradient in the direction
+colour with an outline running the outside, and **Entry / TP1 / SL as three large popout panels** —
+those are the three numbers a reader acts on, so those are the three that are big. Secondary
+mechanics strip below, then thesis, weakness, confidence. Do not stack calls into one tall image;
+a 728x2463 strip is a scroll, not a card, and it buries the number the reader wanted.
+
+**The gradient stops are derived, not chosen.** Both ends are blends of the shipped xterm index —
+lighter toward white at top-left, darker toward black at bottom-right — so the card cannot drift
+off-palette. The popout panels are a translucent dark wash rather than a solid fill, which keeps
+the numbers white on BOTH the blue and the orange card: one panel treatment instead of two that
+have to be kept in sync.
+
+**Give every plan a `why_short`.** The card shows it in preference to `why`. An automatic
+sentence-trim keeps the FIRST sentences, and on `CALL-0002` that ended at *"...and up close said
+otherwise"* — the bullish counterpoint — dropping the resolution that followed, so the card argued
+the **opposite** of the plan it was rendering. No truncation rule can know which sentence is
+load-bearing, so the summary is written by hand and leads with the conclusion. Panel sub-lines are
+measured and ellipsised so they cannot run past their own panel into the next one.
 
 `card_png.py` reads the same `pending.jsonl` the terminal card does, so the two cannot disagree
 about the numbers, and it resolves each xterm-256 index through the **colour-cube arithmetic** rather than an

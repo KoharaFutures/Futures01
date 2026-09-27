@@ -150,12 +150,16 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
         if plan["call_id"] in open_ids or plan["call_id"] in done_ids:
             continue
         sym = plan["symbol"]
-        bars = [b for b in load_bars(sym, plan["bar_minutes"]) if b["ts"] > plan["created_bar_ts"]]
-        if not bars:
+        all_bars = [b for b in load_bars(sym, plan["bar_minutes"])
+                    if b["ts"] > plan["created_bar_ts"]]
+        if not all_bars:
             continue
-        if plan.get("expires_bar_ts") and bars and bars[-1]["ts"] > plan["expires_bar_ts"]:
-            future = [b for b in bars if b["ts"] <= plan["expires_bar_ts"]]
-            bars = future
+        # Expiry truncates the window a trigger may fire in. It must ALSO retire the plan,
+        # or an untriggered plan sits in the ledger reading PENDING forever - state the
+        # ledger would then be misreporting as live.
+        expiry = plan.get("expires_bar_ts")
+        bars = [b for b in all_bars if b["ts"] <= expiry] if expiry else all_bars
+        expired = bool(expiry) and all_bars[-1]["ts"] > expiry
         side = plan["side"]
         trig = plan["trigger_price"]
 
@@ -211,6 +215,34 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
             log.append(f"TRIGGERED {plan['call_id']} {sym} {side} @ {entry} "
                        f"(bar {bar['ts']}) stop {stop} risk ${pos['risk_dollars']:.2f}")
             break
+        else:
+            # No bar in the window triggered it. If the window has closed, retire the plan
+            # and journal the non-event: a setup that never triggered is a result, and a
+            # record holding only the trades that fired is a record of what I remember.
+            if expired:
+                plan["status"] = "EXPIRED"
+                plan["expired_at_utc"] = now_iso
+                changed = True
+                append_journal({
+                    "ts": now_iso, "call_id": plan["call_id"], "symbol": sym, "side": None,
+                    "entry_price": None, "initial_stop": None, "target": None,
+                    "contracts": 0, "risk_dollars": 0.0,
+                    "ladder_mult": plan.get("ladder_mult"), "rr": None,
+                    "confidence": "NO TRADE",
+                    "why": (f"pre-registered {side} never triggered. Window "
+                            f"{plan['created_bar_ts']} -> {expiry} closed with no real bar "
+                            f"{'above' if side == 'LONG' else 'below'} {trig}. "
+                            f"Original thesis: {plan['why'][:200]}"),
+                    "basis": basis, "as_of": all_bars[-1]["ts"],
+                    "pre_registered_at": plan["created_utc"],
+                    "resolution": "EXPIRED_UNTRIGGERED",
+                    "paper": "PAPER - UNVALIDATED",
+                    "outcome": {"result": "NO_FILL", "reason": "expired untriggered",
+                                "net_dollars": 0.0, "r_multiple": 0.0,
+                                "resolved_at_utc": now_iso},
+                })
+                log.append(f"EXPIRED {plan['call_id']} {sym} {side} - never triggered "
+                           f"(window closed {expiry})")
 
     if changed:
         PENDING.write_text("".join(json.dumps(p) + "\n" for p in plans))

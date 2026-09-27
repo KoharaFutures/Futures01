@@ -13,6 +13,7 @@ import collections
 import json
 import os
 import random
+import sys
 
 import pytest
 
@@ -20,8 +21,15 @@ from futures_agents.backtest.montecarlo import bootstrap_paths
 from futures_agents.config import AccountConfig, get_contract
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CACHE = os.path.join(REPO, "workspace/roundtable/backtest/BT3/code/stops_cache.json")
+BT3 = os.path.join(REPO, "workspace/roundtable/backtest/BT3/code")
+CACHE = os.path.join(BT3, "stops_cache.json")
 ARTEFACT = os.path.join(REPO, "workspace/strategy_research/scratch/geo_trades.json")
+
+# `code/` is not a package and is outside the import path, so the replay module
+# is reached by path. Kept local to this file rather than added to conftest,
+# because nothing else in `tests/` should depend on BT3's workspace.
+if BT3 not in sys.path:
+    sys.path.insert(0, BT3)
 
 
 # --------------------------------------------------------------------------
@@ -193,3 +201,89 @@ def test_integer_floor_selects_on_volatility_within_a_cell(cache):
     # The effect is large where the floor is not saturated.
     assert pct("MGC_60", "DEAD") - pct("MGC_60", "EXTREME") > 40.0
     assert pct("MNQ_60", "DEAD") - pct("MNQ_60", "EXTREME") > 40.0
+
+
+# --------------------------------------------------------------------------
+# The barrier. This is the look-ahead invariant, so it gets a synthetic case
+# rather than a check on aggregate output.
+# --------------------------------------------------------------------------
+def _row(symbol, ts, entry, stop, r, mins=0.0, vol="NORMAL"):
+    return {"symbol": symbol, "tf": 60, "ts": ts, "dir": "LONG",
+            "entry": entry, "stop": stop, "r": r, "mins": mins, "vol": vol,
+            "regime": "RANGE", "session": "RTH_MORNING", "arm": "A",
+            "base": "b", "exitm": "atr1.0", "cell": f"{symbol}_60_S1",
+            "slice": "S1", "mae": 0.0, "mfe": 0.0, "reason": "STOP",
+            "risk_points": abs(entry - stop)}
+
+
+def test_barrier_hides_same_instant_outcomes_from_same_instant_decisions():
+    """Three signals at one instant, each exiting on its own bar (`mins == 0`).
+
+    A live account that fills three simultaneous orders holds three positions,
+    so `max_concurrent_positions = 2` must refuse the third. Without the
+    barrier, each position is closed out before the next row is even assessed,
+    so the account never holds two at once and all three are taken - the engine
+    is using outcomes it could not have known. This is the 2,900-row,
+    mean-R -0.79 leak R3 found, in miniature.
+    """
+    import governor_replay as GR
+
+    ts = "2026-03-02T10:00:00-05:00"
+    rows = [_row("MES", ts, 5000.0, 4990.0, -1.0),
+            _row("MCL", ts, 70.0, 69.0, -1.0),
+            _row("MGC", ts, 2000.0, 1990.0, -1.0)]
+
+    with_barrier = GR.replay(rows, label="barrier", barrier=True)
+    without = GR.replay(rows, label="leak", barrier=False)
+
+    assert with_barrier.n_taken == 2, with_barrier.vetoes
+    assert with_barrier.vetoes.get("3_concurrent_limit") == 1, with_barrier.vetoes
+    assert without.n_taken == 3, without.vetoes
+    assert "3_concurrent_limit" not in without.vetoes, without.vetoes
+
+
+def test_barrier_hides_same_instant_losses_from_the_daily_ledger():
+    """The same leak through stage 1 rather than stage 3.
+
+    Four losses at one instant on four symbols. Under the barrier none of them
+    is realised while the group is being assessed, so `day.consecutive_losses`
+    stays 0 throughout. Without it the counter climbs inside the instant and
+    reaches `max_consecutive_losses = 3`, which returns OBSERVATION_ONLY and
+    blocks the rest of the group - a governor firing on information that does
+    not exist yet.
+    """
+    import governor_replay as GR
+
+    ts = "2026-03-02T10:00:00-05:00"
+    rows = [_row("MES", ts, 5000.0, 4990.0, -1.0),
+            _row("MCL", ts, 70.0, 69.0, -1.0),
+            _row("MGC", ts, 2000.0, 1990.0, -1.0),
+            _row("MNQ", ts, 18000.0, 17950.0, -1.0)]
+
+    without = GR.replay(rows, label="leak", barrier=False)
+    assert without.vetoes.get("1_consecutive_losses") == 1, without.vetoes
+
+    with_barrier = GR.replay(rows, label="barrier", barrier=True)
+    assert "1_consecutive_losses" not in with_barrier.vetoes, with_barrier.vetoes
+
+
+def test_absorbing_boundary_in_both_eligibility_arms():
+    """The structural headline: the account dies before it can fail.
+
+    Past these drawdowns `risk_budget` falls under `min_dollar_risk` and stage 7
+    refuses everything before `contracts_for` runs, while `has_failed` stays
+    False. The honest arm (`is_live_eligible=False`, x0.5) dies *shallower*.
+    """
+    import governor_replay as GR
+
+    neutral = GR.absorbing_boundary(eligibility_mult=1.0)
+    honest = GR.absorbing_boundary(eligibility_mult=0.5)
+
+    assert neutral["drawdown_at_which_the_account_dies"] == 2800.0
+    assert honest["drawdown_at_which_the_account_dies"] == 2334.0
+    # Both strictly inside the $5,000 failure allowance, so the failure
+    # threshold is unreachable from above the boundary.
+    for d in (neutral, honest):
+        assert d["budget_there"] < d["min_dollar_risk"]
+        assert d["dollars_of_headroom_left_unused"] > 2000.0
+        assert d["pct_of_max_total_drawdown"] < 60.0

@@ -41,6 +41,7 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `backtest/<bt>/code/*` | **that backtester** | read, and run |
 | `backtest/BT4/*`, `BT5/*`, `BT6/*` | **BT4 / BT5 / BT6** | read |
 | `tests/test_bt<n>_*.py` (repo tests) | **that backtester** | read, and run |
+| `tests/test_ef<n>_*.py` (repo tests) | **that edge-finder** | read, and run |
 | `msgs/NN_from_to_topic.md` | **whoever created it**, once | read only, forever |
 
 ## Read is universal. Write is exclusive. Asking is how you cross the line.

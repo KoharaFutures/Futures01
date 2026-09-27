@@ -325,12 +325,12 @@ class SessionWindowEngine(BacktestEngine):
                 "(align_bucket puts the daily bucket at 18:00 ET). Use a finer "
                 "base series, or pass allow_interior=True and accept that the "
                 "flat is then priced at the bar's adverse extreme.")
-        if c.bars_on_boundary == 0 and c.bars_in_window == 0:
+        if c.bars_on_boundary == 0 and c.bars_in_window == 0 and not c.bars_interior:
             raise SessionGridError(
-                f"{self.frame.symbol}: no base bar ends at 16:00 ET and none "
-                "starts inside [16:00, 18:00) ET, so the rule can never fire on "
-                "this series. A rule that cannot fire is not a rule - it is an "
-                "unmeasured regime wearing a rule's name.")
+                f"{self.frame.symbol}: no base bar ends at 16:00 ET, none starts "
+                "inside [16:00, 18:00) ET and none contains 16:00, so the rule "
+                "can never fire on this series. A rule that cannot fire is not a "
+                "rule - it is an unmeasured regime wearing a rule's name.")
 
     # ---- component 2: the entry veto ------------------------------------
     def _open_position(self, strategy: Strategy, sig, i: int,
@@ -352,10 +352,15 @@ class SessionWindowEngine(BacktestEngine):
             if classify_bar(sig_bar.ts, sig_bar.minutes) is BarWindow.IN_WINDOW:
                 self.counters.entries_vetoed_signal_in_window += 1
                 return None
-        if i - int(sig.bar_index) > self.stale_fill_base_bars:
-            # Not a veto - the rule permits it. Counted because a Friday-16:00
-            # signal filling at Sunday 18:00 is a 50-hour-stale entry and
-            # downstream expectancy should know how many there are.
+        # Staleness is measured in wall-clock minutes, not in bar indices. A
+        # first cut compared ``i - sig.bar_index`` and reported zero stale fills
+        # on the very case it exists for: a Friday-16:00 signal filling at
+        # Sunday 18:00 is one index apart and fifty hours apart.
+        sig_bar = self.frame.base.bars[int(sig.bar_index)]
+        lag = (to_et(bar.ts) - to_et(sig_bar.ts)).total_seconds() / 60.0
+        if lag > (self.stale_fill_base_bars + 1) * self.base_minutes:
+            # Not a veto - the rule permits it. Counted because downstream
+            # expectancy should know how many entries are this stale.
             self.counters.stale_fills += 1
         return super()._open_position(strategy, sig, i, bar)
 
@@ -473,31 +478,56 @@ def assert_hooks_reachable() -> None:
 # The invariant, asserted on realised trades
 # --------------------------------------------------------------------------
 
-def violations(trades: Iterable[Trade]) -> List[dict]:
+def flat_exit_keys(engine: "SessionWindowEngine") -> set:
+    """``{(strategy_id, exit_index)}`` for flats the rule filled at a bar's OPEN.
+
+    Needed because ``Trade`` records ``exit_ts = bar.ts``, the bar's *open* time
+    (`engine.py:505`), and says nothing about *where in the bar* the fill
+    happened. A flat filled at the open of the 16:00 bar is stamped 16:00 and is
+    compliant - the position ceased to exist at the deadline instant. A trade
+    that merely *ended up* on that bar (target hit at 16:40, say) is stamped
+    16:00 too and is a genuine violation. The two are distinguishable only from
+    the engine's own record of what it filled, which is what this returns.
+    """
+    return {(e.strategy_id, e.exit_index) for e in engine.counters.flat_events
+            if e.bar_class is BarWindow.IN_WINDOW}
+
+
+def violations(trades: Iterable[Trade], *,
+               flat_exits: Optional[set] = None) -> List[dict]:
     """Every way a realised trade can break the session window.
 
     Three separate tests, because they fail for different reasons:
 
     * ``ENTRY_IN_WINDOW`` - a position was opened between 16:00 and 18:00 ET.
+      The endpoint is included: 16:00 itself is forbidden for an entry.
     * ``EXIT_IN_WINDOW`` - a position was still alive inside the window.
-    * ``SPANS_WINDOW`` - entry before 16:00, exit at/after 18:00 on a later
-      wall-clock day, so the position was held straight through.
+    * ``SPANS_WINDOW`` - entry before 16:00, exit after it, so the position was
+      held straight through. Walks every ET day the trade touches, so a
+      multi-day hold trips on the first deadline it crosses.
 
-    Timestamps are bar **open** times (``Trade.entry_ts``/``exit_ts`` are set
-    from ``bar.ts``, ``engine.py:372,505``), which is the right stamp to test:
-    a trade exiting on the 15:00-16:00 bar is stamped 15:00 and is legal, and a
-    trade exiting on the 16:00-17:00 bar is stamped 16:00 and is not.
+    ``flat_exits`` is the carve-out and the **default is no carve-out**: with
+    ``None`` this is the strict audit, usable on trades from any engine. Pass
+    :func:`flat_exit_keys` to exempt the flats the rule itself filled at a bar's
+    open, which are stamped at the deadline instant and are compliant. The
+    exemption is keyed on the engine's own record of the fill, never inferred
+    from the trade, so it cannot launder a violation: an exit inside the window
+    that the rule did not fill is still reported.
     """
+    exempt = flat_exits or set()
     out: List[dict] = []
     for t in trades:
-        ent, ex = to_et(t.entry_ts), to_et(t.exit_ts) if t.exit_ts else None
+        ent = to_et(t.entry_ts)
+        ex = to_et(t.exit_ts) if t.exit_ts else None
         if in_forbidden_window(ent):
             out.append({"kind": "ENTRY_IN_WINDOW", "strategy_id": t.strategy_id,
                         "entry_ts": ent.isoformat(),
                         "exit_ts": ex.isoformat() if ex else None})
-        if ex is not None and in_forbidden_window(ex):
+        if ex is not None and in_forbidden_window(ex) \
+                and (t.strategy_id, t.exit_index) not in exempt:
             out.append({"kind": "EXIT_IN_WINDOW", "strategy_id": t.strategy_id,
-                        "entry_ts": ent.isoformat(), "exit_ts": ex.isoformat()})
+                        "entry_ts": ent.isoformat(), "exit_ts": ex.isoformat(),
+                        "exit_reason": t.exit_reason.value})
         if ex is not None and _spans_window(ent, ex):
             out.append({"kind": "SPANS_WINDOW", "strategy_id": t.strategy_id,
                         "entry_ts": ent.isoformat(), "exit_ts": ex.isoformat()})

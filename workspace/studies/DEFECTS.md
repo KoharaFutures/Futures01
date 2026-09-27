@@ -776,6 +776,43 @@ align_bucket(ts, 10080) = 2026-03-17 18:00:00-04:00
 repository is a lagged-autocorrelation test on one series**, which is why `mtf_not_conflicted`
 passes 99%+ there. See ADJ-14 for what this does and does not do to rule 2.
 
+### Blast radius, and triage — measured by BT4, 2026-09-27
+
+| store | at 1440m |
+|---|---|
+| `workspace/chrono/ledgers/` | **23,309 strategies, 130,070 trades, 295 month-buckets** — 3 of 6 ledgers, and the chronology study's entire long-span arm |
+| the 21-study programme | **17 of 22 payloads** carry a 1440m arm |
+| `g_multi_timeframe` (rule 2's source) | 569 of 1,818 floored rows = **31.3%** |
+| `bigscan` / `focus` | 94 of 4,957 / 95 of 3,564 |
+
+BT4 also corrected its own first count from "6 of 21" to 17 of 22 — the `x_*` studies name daily
+arms in four different shapes and one key pattern missed them all. **An error in the
+under-reporting direction, which for a contamination count is the dangerous one.**
+
+**Triage: this is a mislabelling defect, not a leakage defect.** The confirm pointer leads the
+primary on **0** bars, equals it on 0, and `confirm.end_ts > base.end_ts` on 0, all three symbols.
+The mislabelled `end_ts` errs **conservatively**, so **no 1440m expectancy is optimistic because of
+this**. That is what makes rule 2 survivable: a degenerate treatment arm biases toward the null.
+
+**A second channel nobody had sized.** `_default_regime_tf` falls through to `timeframes[-1]`, so
+`regime_tf = 7200` at the daily frame and every 1440m strategy reads a **2–4 session stale regime**
+through `volatility_normal`, a base filter on 12 of 13 templates. The regime label differs on
+17.5–20.3% of bars and `volatility_normal`'s **pass/veto decision flips on 9.58–10.38%** — while its
+aggregate pass rate moves only 0.36–0.43 points. **A timing error, not a distribution error, which
+is exactly why no study noticed it.**
+
+**And the fix is not small.** BT4 argues against calling it additive: grouping calendar days by
+`minutes//1440` gives **3.44** daily bars per bucket, because 5 calendar days is 3.57 sessions —
+a subtler mislabelling replacing the current one. ISO-week gives 4.81, which is what the calling
+code says it meant. Either way, **fixing it does not make the daily MTF row measurable**: a 187-bar
+daily cell would sit above ~39 weekly bars, where the study's own caveat already calls 55 "too few
+for a 200-period average". Corrected, those cells move from *misconfigured* to *warm-up starved*.
+
+**Exposure is narrow even though the mechanism is general.** All of 1440/2880/4320/7200/10080/43200/
+525600 collapse to one bucketing, but there is **1** library call site, **2** live requests above
+1440 (both the same map), and **0** requests for 10080 or above. `FRAMES` exposes it only at 1440,
+now asserted in a test so a new coarse member cannot be added silently.
+
 ## D51 — `BarSeries.append` silently collapses two bars sharing a timestamp (found by R5)
 
 Raises on a duration mismatch and on out-of-order input, but on an **equal** timestamp takes

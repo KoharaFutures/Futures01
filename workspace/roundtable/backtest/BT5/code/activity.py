@@ -44,7 +44,8 @@ for p in (REPO, os.path.join(REPO, "workspace", "studies"),
         sys.path.insert(0, p)
 
 from futures_agents.indicators.candles import close_location_value  # noqa: E402
-from futures_agents.indicators.core import atr, bollinger, keltner  # noqa: E402
+from futures_agents.indicators.core import (atr, bollinger, keltner,  # noqa: E402
+                                            true_range)
 from futures_agents.indicators.volume import relative_volume  # noqa: E402
 from futures_agents.timeutil import classify_session, to_et, trading_day  # noqa: E402
 
@@ -108,6 +109,7 @@ def bar_table(series) -> List[dict]:
     lo = [b.low for b in bars]
     c = [b.close for b in bars]
     a = atr(h, lo, c, ATR_PERIOD)
+    tr = true_range(h, lo, c)
     rv = relative_volume(bars, RELVOL_LOOKBACK_DAYS)
     bu, bm, bl = bollinger(c, BB_PERIOD, BB_MULT)
     ku, _, kl = keltner(h, lo, c, KC_PERIOD, KC_MULT)
@@ -128,6 +130,11 @@ def bar_table(series) -> List[dict]:
             bb_width=bbw,
             kc_width=kcw,
             clv=close_location_value(b),
+            # The bar's OWN movement, contemporaneous, on the same true-range
+            # definition ATR is the Wilder average of - so `tr_over_close` and
+            # `atr_over_close` are directly comparable and their ratio measures
+            # how much of a bar's actual movement the 14-bar ATR tracks.
+            tr_over_close=None if (tr[i] is None or not c[i]) else tr[i] / c[i],
             abs_ret=None if i == 0 else abs(c[i] - c[i - 1]) / c[i - 1],
             # --- time-of-day handles ---
             bucket=et.hour * 60 + et.minute,

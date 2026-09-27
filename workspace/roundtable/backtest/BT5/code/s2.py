@@ -71,7 +71,8 @@ MIN_N = 10            # per stratum per strategy for that strategy to contribute
 DRAWS = 2000          # permutation draws
 SEED = 20260927
 
-STATS = ["atr_over_close", "rel_volume", "bb_width", "kc_width", "clv", "abs_ret"]
+STATS = ["atr_over_close", "tr_over_close", "rel_volume", "bb_width",
+         "kc_width", "clv", "abs_ret"]
 AXES = ["RAW", "RELVOL", "TODRANK"]
 
 

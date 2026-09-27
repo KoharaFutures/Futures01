@@ -207,6 +207,16 @@ so in one line.
 commit would bury the real history of this desk under hundreds of empty ones, and
 `check_ownership.py` gets noisier the more paths change. "Nothing moved" is not a commit.
 
+**"State changed" means POSITION or LEDGER state, not data accumulating.** Commit on a fast check
+only when a plan triggered, a position resolved, a plan expired, a new plan was pre-registered, or a
+finding was written to `NOTES.md`. A new bar and a new `feed_lag.jsonl` row are *not* state changes
+for this purpose — they accumulate locally and ride along on the next hourly full check, which
+commits unconditionally. The reason this is safe rather than a risk of loss: **bar snapshots are
+fully re-fetchable** (Yahoo serves 5 days at 5m and 15m), so a reclaimed container costs nothing
+that cannot be pulled again, whereas a journal row is unique and is written and committed the moment
+a decision is made. Bounding the loss to at most an hour of re-derivable data is the correct trade
+against burying the journal under twelve commits an hour.
+
 **Do not re-derive the read every five minutes.** Re-reading a chart twelve times an hour and
 re-deciding each time is unbounded search width with no pre-registration — it is exactly what
 `CALLOUT.md` warns makes the sibling REPLAY desk's results inadmissible ("a discretionary decision

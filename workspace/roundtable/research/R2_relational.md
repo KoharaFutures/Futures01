@@ -1402,3 +1402,176 @@ lead-lag. That boundary is real and load-bearing:
 30: 240, 60: 240, 240: 1440}` maps **timeframe to timeframe** and never symbol to symbol. The repo
 built its lead-lag machinery on the one axis it could reach, and the axis the family actually names
 has never been touched. Without §5.5 I would have spent the round re-reading `s_leadlag`.
+
+---
+
+# Round-2 amendments (appended 2026-09-27)
+
+**Appended, never inserted.** BT2 cites this file by line range —
+`R2_relational.md:145-259`, `:629-668`, `:1048-1091`, `:1185-1213`, `:1268`, `:1279-1312`, `:1310`
+(`msgs/05_BT2_R2_verify-ALGO-1.md`) — and `msgs/06_R2_BT2_re-verify-ALGO-1.md` cites those back.
+Inserting a line anywhere above would silently shift every one of them into pointing at the wrong
+paragraph, which is the failure `REGISTRY.md` exists to prevent. So round-2 corrections are appended
+here with the line they amend, and the text above is left byte-for-byte intact even where it is now
+known to be imprecise.
+
+New round-2 files: `research/R2_wall_a_spec.md` (the Wall A change as eight implementable edits),
+`research/R2_recut_contingency.md` (what changes in this catalogue either way on **R2-Q1**),
+`research/R2_REQUESTS.md`.
+
+## A1 — amends `:664-665` and `:1290`: F11's basis is MNQ **synthetic**, and only half of it transfers
+
+**Raised by BT2** (`msgs/05_BT2_R2_verify-ALGO-1.md`, closing section) and accepted.
+
+`:664-665` reads *"F11: `post_news_window` on 50 **MNQ** MOMENTUM strategies cut mean trades 112.6 →
+1.5, zero publishable"*, and `:1290` reads *"II-11 as a filter (F11, on MNQ)"*. Neither carries the
+qualifier. **Read `:664` and `:1290` as "MNQ **synthetic**" throughout**
+`[repo-verified: research/confluence/reversion_specialist.md:7 → "All figures below are MNQ
+synthetic, seed=5"]`.
+
+Partial credit where it is due: `:226` — R2-D5's own paragraph — **already** states the synthetic
+basis inline, so the imprecision is in II-11 and in the Q2 answer, not in R2-D5. BT2 read the file
+correctly; I am narrowing the scope of the correction rather than widening it.
+
+**The substantive half of BT2's point is new and is the reason this amendment matters**, and I adopt
+it: F11's one sentence has two halves with completely different transferability.
+
+| half of F11 | transfers from synthetic to real bars? | why |
+|---|---|---|
+| **trade count 112.6 → 1.5** | **Yes, unchanged.** | It is a property of the **calendar** (projected from recurrence rules, identical on any bar series) and of the **bar grid** (identical). Neither depends on the price process. |
+| **"zero publishable"** | **No — it was never a statement about real markets.** | The synthetic generator is a near-martingale with no mechanical edge baked in, so no win rate in that document is evidence about real markets. |
+
+So R2-D5's claim *"the 1.5 was determined by the calendar, not by the strategy"* is **strengthened**,
+not weakened, by the synthetic basis: the determining mechanism is exactly the one that survives the
+substitution. Conversely, nothing in F11 licenses "this family does not work", on MNQ or anywhere.
+
+## A2 — amends the R2-D5 table row for `MGC_1d`: the 358 in-session event days are **unreachable**
+
+**Found by BT2** (its choice C9, `backtest/BT2/ALGOS.md:163-176`), verified and extended here.
+
+R2-D5's table (`:172`-ish) reports `MGC_1d`: 502 HIGH events, 360 in-RTH, **358 distinct in-RTH event
+days** over ten years. Every number is correct **as a count of calendar events against a session**,
+and I presented it in a column headed the same way as the intraday rows, which invites reading it as
+*available sample for this family*. **It is not.** No news condition in the library can act on any of
+those 358 days at daily frequency.
+
+Every daily bar in `csv/raw` is stamped **00:00 ET**:
+`[measured: python3 -c "from futures_agents.timeutil import to_et; from futures_agents.data.loader
+import load_csv; import collections; collections.Counter(to_et(b.ts).strftime('%H:%M') for b in
+load_csv(p,s,1440).bars)" → MGC_1d 2511/2511 at 00:00; MES_1d 1859/1859; SPY_1d 2512/2512]`
+
+and the six HIGH rules print at 08:30 (CPI, NFP, PCE), 10:30 (EIA), 14:00 (FOMC Statement) and 14:30
+(FOMC Press Conference) `[measured: python3 -c "from futures_agents.econ_calendar import ECON_RULES,
+Impact; [(r.name, r.at) for r in ECON_RULES if r.impact.rank >= Impact.HIGH.rank]"]`. Therefore, on
+every daily bar in this repository:
+
+| condition | value | mechanism |
+|---|---|---|
+| `post_news_window` `[repo-verified: futures_agents/strategies/library.py:1345-1361]` | **identically FALSE** | window is `15 < since <= 60`; the smallest possible `since` at 00:00 ET is from the prior day's 14:30 presser = **570 min** |
+| `no_imminent_release` `[repo-verified: futures_agents/strategies/library.py:1334-1342]` | **identically TRUE** | declines only when `minutes_to_high_impact < 30`; at 00:00 ET the nearest print ahead is 08:30 = **510 min** |
+| `outside_news_blackout` `[repo-verified: futures_agents/strategies/library.py:1326-1331]` | **identically TRUE** | the blackout is `[-10, +15]`, 25 minutes wide; 00:00 ET is never inside it for any of the six print times |
+
+**So all three of the library's news conditions are degenerate on every daily series in this
+repository** — two constant-true no-ops and one constant-false total veto. Two consequences:
+
+1. **A daily strategy carrying `post_news_window` trades exactly zero times, by arithmetic, before
+   any price is consulted.** That is the same shape as **R1-Q2** — whether zero-trade strategies
+   entered the 2,975,629 denominator — with a different condition and a *provable* cause rather than a
+   suspected one. Flagged to R1 in `msgs/06_R2_BT2_re-verify-ALGO-1.md` §6.1; it is their
+   denominator question, not mine.
+2. **II-11's expressible arm is 60-minute-or-finer only, and on this data that means 60m exactly.**
+   Daily is arithmetically excluded (above); `csv/raw`'s 15m series give ~2 months and 5m ~1 month,
+   i.e. 6-8 event days `[measured: BT2, ALGOS.md:163-176]`. So the one window in which the family is
+   measurable here is 60m, and the only sample extension available is `data/archive`.
+
+## A3 — new: two defect-grade findings about the library's news conditions
+
+Both surfaced in the BT2-ALGO-1 fidelity cycle, both in my lane (the news conditions), both raised to
+the manager for `D<n>` allocation — only the manager allocates defect numbers (`REGISTRY.md`).
+
+### A3.1 `post_news_window` fills one to two bar lengths outside the window it names
+
+`[repo-verified: futures_agents/strategies/library.py:1345-1347]` the condition's description is
+*"In the reaction window after a high-impact release"* and its bound is
+`[repo-verified: futures_agents/strategies/library.py:1358-1359]` `lo(15) < since <= 60.0`. But
+`since` is computed at the bar's **open** (`Bar.ts`
+`[repo-verified: futures_agents/data/bars.py:37]`; the snapshot passes `ts=bar.ts`
+`[repo-verified: futures_agents/features.py:1023]`), the signal is decided at the bar's **close**
+(`price=bar.close`, same line), and the entry fills at the **next** bar's open
+`[repo-verified: futures_agents/backtest/engine.py:290-292, :355 → entry = spec.round_to_tick(bar.open
++ sign * slip)]`.
+
+On a 60-minute frame an 08:30 print admits `ts ∈ (08:45, 09:30]`, which on a `:00` grid is `ts = 09:00`
+alone, closing 10:00 and filling **10:00 — ninety minutes after the print.** Generalised across grids
+the realised entry sits 60–120 minutes after the print while the condition claims 15–60.
+**The misalignment is one to two bar lengths, scales with the timeframe, and is undocumented.**
+
+Same family as D39 (library ORB is a state, not an event, and silently widens): a condition whose name
+and docstring describe a window it does not implement. Found by BT2 (its choice C6); the `offset_min`
+parameter in `backtest/BT2/code/event_clock.py` is the instrument that quantifies it.
+
+### A3.2 `outside_news_blackout`'s reachability is a function of the bar grid, and on MGC at 60m it is the identity filter
+
+The blackout is 25 minutes wide (`[-10, +15]`,
+`[repo-verified: futures_agents/config.py:410-411]`) and is tested at the bar's **open**. Five of the
+six HIGH rules print at `:30` and one at `:00` (FOMC Statement, 14:00) `[measured: as A2]`. So:
+
+> On a `:00`-aligned grid at any timeframe ≥ 30m, a `:30` print's blackout spans `:20`–`:45` and
+> **contains no bar open at all**; a `:00` print's spans `13:50`–`14:15` and does contain the `14:00`
+> open.
+
+That is a complete explanation of BT2's measured table
+`[measured: BT2, ALGOS.md:254-261]`: bars removed by `outside_news_blackout` at 60m on `csv/raw` =
+MGC **0** of 1,093, MNQ 7 of 1,310 (exactly the 7 FOMC Statements), MCL 9 of 1,320.
+
+**On MGC at 60m `outside_news_blackout` is the identity filter — it cannot decline on any bar**,
+because gold's in-session HIGH calendar is entirely `:30` prints. It follows that a filtered and an
+unfiltered arm are the same strategy bar for bar, so any comparison between them measures **nothing**
+and must not be reported as a null. It also re-explains F11's second line (`outside_news_blackout`
+retained 99.99% of trades) as a property of the bar grid rather than of the filter — the same kind of
+finding as R2-D5 itself, one level down.
+
+## A4 — amends the reading of R2-D5's 7 / 32 / 49: these are three hypotheses, not three instances of one
+
+The census stands exactly as published and BT2 reproduced all of it independently, on each contract's
+own `ContractSpec` session `[measured: BT2, ALGOS.md:203-207 → MNQ 7, MGC 32, MCL 49, with the
+per-rule split "NFP 11, CPI 11, PCE 10" and "EIA 49, FOMC statement 8" reproduced item for item]`.
+What needs stating is what the three numbers are *of*, because R2-D5's sentence *"the family has
+sample on MGC and MCL and was tested on MNQ"* does not say it and a reader can fairly infer the wrong
+thing:
+
+- **MGC's 32** are NFP / CPI / PCE — market-wide **macro** prints, in-session only because gold's pit
+  opens at 08:20 `[repo-verified: futures_agents/config.py:157]`.
+- **MCL's 49** are dominated by **EIA**, a crude-specific physical inventory release — a different
+  kind of event with different size, persistence and cause.
+- **MNQ's 7** are FOMC Statements and Press Conferences.
+
+So a result on one says nothing about another, and **a consistent sign across contracts is not
+corroboration** — the D14/D41 non-corroboration hazard arriving through the calendar rather than
+through price.
+
+**And the overlap is not zero, which is the part I had not measured.**
+`[measured: python3 -c "... per-symbol in-RTH HIGH event days over each csv/raw *_1h span with that
+contract's own spec, then pairwise set intersections ..." →]`
+
+| pair | shared in-session event **days** | note |
+|---|---|---|
+| MNQ ∩ MGC | **1** (2025-12-10) | same day, **different events** (MGC 08:30 print, MNQ 14:00 statement) |
+| **MNQ ∩ MCL** | **7 of MNQ's 7** | **the same FOMC Statement prints, the same instants** — MNQ's entire sample is a strict subset of MCL's |
+| MGC ∩ MCL | 7 | same days, different events |
+| MNQ ∩ MES | **7 of 7** | identical: same session, same calendar. D14/D41's "one complex" holds on the calendar axis too |
+
+**Operational consequence: MNQ cannot serve as an independent reference arm against MCL** — 100% of
+its events are inside MCL's sample, so the contrast would be a subset against its superset. The
+**MNQ vs MGC** contrast is the near-clean one (one shared day, different events on it) and it is the
+one that carries R2-D5's argument. Recorded as a correction to a claim in
+`backtest/BT2/ALGOS.md:211-214` in `msgs/06_R2_BT2_re-verify-ALGO-1.md` §4.
+
+## A5 — status of the Class II expressibility conclusion after round 2
+
+Unchanged. Round 2 produced no new family verdict and no measurement that moves one. Wall A is still
+**6 families from on-disk data, 9 after one zero-code-change vendor fetch**; Wall B is still
+**structural, and its real yield is 3 not 5**. The round-2 work turned the Wall A finding into an
+implementable spec (`research/R2_wall_a_spec.md`) and the II-11 finding into running code (BT2's
+ALGO-1, verdict **FAITHFUL**, `msgs/06_R2_BT2_re-verify-ALGO-1.md`). Nothing was fitted, nothing was
+ranked, no expectancy and no z-score was computed in either round.

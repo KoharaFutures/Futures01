@@ -89,7 +89,7 @@ day starts.
 
 ## What I asked
 
-`msgs/02_BT3_R3_verify-ALGO-1.md` — eight numbered questions to R3, of which Q1 (population
+`msgs/04_BT3_R3_verify-ALGO-1.md` — eight numbered questions to R3, of which Q1 (population
 unit) and Q3 (exposure keyed by symbol or by strategy) are the two that decide whether the
 pooled reading means anything. `VERIFY.md` carries the same list.
 

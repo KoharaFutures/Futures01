@@ -150,15 +150,24 @@ symbol AND timeframe.**
 I checked the thing the ruling depends on — whether the two stores are even the same series,
 since `csv/raw` was supplied as a zip and the archive was pulled from Yahoo. They are:
 
-| symbol | archive 60m | csv/raw 60m | overlap | closes identical | archive-only bars |
-|---|---|---|---|---|---|
-| MGC | 11,297 | 5,000 | 4,987 | **4,987 / 4,987** | 6,310 |
-| MNQ | 11,291 | 5,000 | 4,988 | **4,988 / 4,988** | 6,303 |
-| MES | 11,287 | 5,000 | 4,988 | **4,988 / 4,988** | 6,299 |
-| MCL | 10,934 | 5,000 | 4,987 | **4,987 / 4,987** | 5,947 |
+| symbol | archive 60m | csv/raw 60m | overlap | closes **bit-exact** | max abs close diff | archive-only bars |
+|---|---|---|---|---|---|---|
+| MGC | 11,297 | 5,000 | 4,987 | 1,063 / 4,987 | 3.437e-07 | 6,310 |
+| MNQ | 11,291 | 5,000 | 4,988 | **4,988 / 4,988** | 0.0 | 6,303 |
+| MES | 11,287 | 5,000 | 4,988 | **4,988 / 4,988** | 0.0 | 6,299 |
+| MCL | 10,934 | 5,000 | 4,987 | 221 / 4,987 | 4.824e-08 | 5,947 |
 
-`max |close difference|` is **0.0000** on all four. Volume differs on 2 of 4,987 bars for MGC and
-nowhere else. So `csv/raw` is a 5,000-bar window of the same series the archive holds more of —
+**Corrected 2026-09-27, by BT2-REQ-4.** An earlier version of this table claimed every
+overlapping close was bit-identical and that `max |close difference|` was 0.0000 on all four.
+Both were artefacts of how I measured: an identity test at tolerance `1e-6` counted 3.4e-07 as
+identical, and `:.4f` formatting printed it as `0.0000`. **MNQ and MES are bit-exact; MGC and MCL
+are not** — they differ by 3.4e-07 and 4.8e-08, which is float32 round-trip noise, three to five
+millionths of a tick, immaterial to any fill but **fatal to an exact-equality assertion**. Volume
+differs on 2 of ~4,987 bars for **all four** contracts, not for MGC alone; I had only printed
+MGC's. The ruling below is unchanged — the series are the same series — but compare with a
+tolerance, never with `==`.
+
+So `csv/raw` is a 5,000-bar window of the same series the archive holds more of —
 not a second vendor's version of it — and the archive extends the span by ~6,000 bars per symbol
 **before** everything the programme has ever searched. That is the only genuine answer this
 project has to its nested-window problem, where 30 ⊂ 90 ⊂ 180 ⊂ 274 days all end on the same bar.

@@ -196,7 +196,7 @@ class PreflightRow:
     #: the gate admits an in-session bar off an out-of-session print. Whether
     #: that should count is a modelling choice, not an implementation detail, so
     #: it is reported rather than silently included.
-    admissible_from_out_of_session_print: int
+    admissible_from_out_of_session_print: Optional[int]
 
 
 def _gate_passes(gate: Condition, snap, tf: int) -> bool:
@@ -237,17 +237,21 @@ def preflight(symbol: str, tf: int, gates: Dict[str, Condition], *,
                 hits.append(i)
         days = {to_et(bars[i].ts).date() for i in hits}
         # Which side of the session the anchoring print was on. Only meaningful
-        # for a gate anchored on a past print; for the avoidance gate it counts
-        # the same thing about whichever print is nearest behind.
-        out_of_session = 0
-        for i in hits:
-            r = clock.read_bar(bars[i].ts)
-            if r.prev_name is None:
-                continue
-            # Recover the print's own timestamp from the reading.
-            when = to_et(bars[i].ts) - timedelta(minutes=r.since_prev)
-            if not is_rth(when, spec.rth_open, spec.rth_close):
-                out_of_session += 1
+        # for a gate that is anchored on a past print: for an avoidance gate the
+        # nearest print behind is usually days old and out of session, so the
+        # count would be true and meaningless. ``None`` beats a number nobody can
+        # interpret.
+        out_of_session: Optional[int] = None
+        if "_after_" in gate.name:
+            out_of_session = 0
+            for i in hits:
+                r = clock.read_bar(bars[i].ts)
+                if r.prev_name is None:
+                    continue
+                # Recover the print's own timestamp from the reading.
+                when = to_et(bars[i].ts) - timedelta(minutes=r.since_prev)
+                if not is_rth(when, spec.rth_open, spec.rth_close):
+                    out_of_session += 1
         out.append(PreflightRow(
             symbol=symbol.upper(), tf=int(tf), store=store, bars=len(bars),
             first_ts=to_et(bars[0].ts).isoformat(),

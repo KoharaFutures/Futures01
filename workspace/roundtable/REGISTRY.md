@@ -64,9 +64,27 @@ TO:    <agent id, or "manager", or "all">
 TASK:  <the MAIN-nn/Sn or burst you were working when this arose, or "round-1">
 ```
 
-Filename stays `NN_<from>_<to>_<topic>.md`, zero-padded and monotonic; if you race someone for a
-number, take the next one. **A message with no `RE:` line is malformed** — `check_refs.py`
-fails the commit on it.
+### Filenames: per-sender sequence, because the shared counter collided
+
+The original rule was `NN_<from>_<to>_<topic>.md` with a shared monotonic counter and "if you race
+someone for a number, take the next one." **That does not work under parallelism and it failed
+within the hour:** seven agents ran at once, none could see another's unwritten file, and
+`msgs/` ended up with two `03`s, two `04`s and three `05`s. So "see `msgs/04`" is ambiguous — the
+exact failure this registry exists to prevent, reproduced in the registry's own mechanism.
+
+**New rule: the sequence is yours, not shared.**
+
+```
+<FROM>-<nn>_<to>_<topic>.md        e.g.  BT2-01_R2_verify-ALGO-1.md
+```
+
+`<nn>` counts only your own messages, so no two agents can collide by construction — the same
+principle that makes id prefixes work. Existing duplicate-numbered files are **not renamed**
+(messages are write-once and are already cited), so when referring to one, give the full filename,
+never the bare number.
+
+**A message with no `RE:` line is malformed** — `check_refs.py` fails the commit on it, and it
+also now warns on any duplicate leading number among the legacy files.
 
 ## Say the id, not the description
 

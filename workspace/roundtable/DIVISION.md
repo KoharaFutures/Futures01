@@ -1,7 +1,55 @@
 # DIVISION — round 1
 
 **Owner:** manager. **Written:** 2026-09-26 21:12 ET. **Round:** 1 of n.
+**Amended:** 2026-09-26 23:10 ET (round 2) — see the amendment block immediately below.
 **Read `workspace/roundtable/BRIEF.md` in full first.** This file assumes it.
+
+---
+
+## AMENDMENT (round 2, 2026-09-26 23:10 ET) — read before §1, §5 or §6
+
+Round 1 ran and **two of three tracks independently reported that the classes in §1 are mis-cut**
+(`R2-Q1`; discovery's `I-12` note). That is a pattern, not two boundary disputes, and it is ruled in
+`manager/ADJUDICATIONS.md` ADJ-0 through ADJ-2. Three amendments follow, applied in place below.
+
+**A1 — §1 is a mechanism taxonomy. It is no longer the routing table.** §1 was written to do two
+jobs at once — *what must this strategy observe?* and *who audits it?* — and where those answers
+disagreed, the taxonomy assigned the disagreement to nobody. Both mis-cuts are that:
+
+- `II-10` / `II-11` observe only the bar's timestamp (mechanism says "not Class II"), but the
+  calendar is R2's surface (routing says "R2"). Filed under Class II, the two reachable families sat
+  behind seventeen blocked ones and the class read as a wall.
+- `I-12` has an expressibility question that is Class I's (R1 answered it) and a **confound**
+  question about Class III's settled findings. The second had no owner in any class.
+
+**From here, ownership is carried by `manager/BOARD.md`** (`PIPELINE.md` §2). §1 below is unchanged
+as a description of mechanism and must not be read as an assignment. **Cost, stated:** the merged
+catalogue no longer has one label that tells a reader whom to ask. That is a real loss and it is
+accepted; the alternative cost was paid twice in round 1 and was invisible until two researchers
+went looking.
+
+**A2 — "the clock" is added as `Axis C`, an orthogonal axis and not a fourth class.** See §1 below.
+`R2-Q1` proposed a fourth class holding `II-10`, `II-11`, `III-12`; that is refused (it renumbers
+live citations, splits R3's operating layer, and forces an exclusive choice on `II-11`, whose clock
+half needs arithmetic and whose event half needs a surprise term that does not exist here). **Nothing
+is renumbered and nothing changes owner.** Full reasoning and the stated cost: ADJ-1.
+
+**A3 — `I-12` is not split, and gets a cross-class pointer instead.** Discovery proposed splitting it
+on the ground that three of its six schemes "need no sub-bar data". **That premise was refuted by R1
+and withdrawn by discovery**: what is constructible here is a *minute-snapped approximation* to a
+volume or dollar bar, not a volume or dollar bar. A split would encode a withdrawn claim. See ADJ-2;
+the question now lives in `MAIN-01`.
+
+**A4 — §6's pre-registrations were tested and several were refuted. Do not cite §6 as if it stood.**
+`R1-Z`, R2's scorecard and `R3-Q2` carry the dispositions. In summary: R1's INEXPRESSIBLE-DATA count
+was **9**, not ≥10, and its strict EXPRESSIBLE set was **0**, below my floor of ≤3; market profile is
+the family whose blindness is **cheapest** to remove, not the least testable. R2's path-cited repo
+claims were **89**, not "fewer than ~15". R3-D5 holds **6 strict items plus 2 artefact replays**, not
+≤2. **The common cause of all three errors is one inference** — that ~2,975,629 evaluations imply a
+*wide* search, when the volume is in the rule-set dimension and the exit catalogue is eleven fixed
+literals with one `StrategyFilters` identity. Ruled as a standing rule in ADJ-5 and on
+`manager/BOARD.md` as **R-11: any claim of the form "this has already been tested" must name the
+dimension that was varied.**
 
 Three researchers, three tracks, no overlap by construction. Everything you need to start is
 in this file plus `BRIEF.md`. You do not need to see the prompt that produced either.
@@ -45,9 +93,35 @@ question: **what must the strategy observe in order to exist at all?**
 - **Class III — the position's own path.** It needs only this contract's OHLCV, and its edge (or
   its destruction) lives in the decision rule applied to the position over time.
 
+### Axis C — the clock. An orthogonal tag, added round 2 (ADJ-1), not a fourth class
+
+The three classes answer *what must the strategy observe*. **Axis C answers a different question
+that cross-cuts all three: is the data requirement satisfiable by arithmetic on the bar's own
+timestamp?** A family carries a class and, if it qualifies, the Axis-C tag as well. This is the only
+"class" of requirement in the whole map that needs no acquisition and no new observable, which is
+why it is worth marking — and it is a tag rather than a container because a family can have one half
+on the axis and one half off it.
+
+| member | keeps class | keeps owner | which half is on the axis |
+|---|---|---|---|
+| `II-10` seasonality | II | R2 | all except expiry-week and roll-window (blocked on a second expiry) |
+| `II-11` scheduled events | II | R2 | **the clock half only.** The event/surprise half is not on the axis and is not satisfiable by arithmetic — the surprise term does not exist as a data object here |
+| `III-12` time-based exits | III | R3 | time stops, session-close and week-end flattening, hold-period targeting |
+| `time` condition group (4, all FILTER) | — | R2 via `MGR-T7` | the library's existing Axis-C surface |
+| `news` condition group (3, all FILTER) | — | R1 audited it; R2 holds the calendar | R1 established it is structurally a `time` group — the only quantity read is minutes to/since a projected timestamp |
+
+**One exclusion, ruled explicitly because it is the near miss that would otherwise be assumed in:
+`I-12`'s volume/dollar/range schemes are NOT on Axis C.** A volume-bar boundary is a statement about
+cumulative volume crossing a threshold *inside* a minute, not about the minute's timestamp.
+
+**The honest cost of making this a tag instead of a class: a tag has no owner.** A fourth class would
+have forced someone to deliver "what is reachable by arithmetic alone". `manager/BOARD.md` carries
+that as `MGR-T7` instead; if `MGR-T7` never runs, this amendment bought nothing.
+
 This list is a **floor, not a ceiling.** If you find a family that belongs to your class and is
 not here, add it and say you added it. If you think a family is in the wrong class, do not
-silently move it — write it in `OPEN_QUESTIONS.md` and I will adjudicate.
+silently move it — write it in `OPEN_QUESTIONS.md` and I will adjudicate. **Round 1 proves this
+channel works: two of the three tracks used it and both were substantially right.**
 
 ### Class I — participant and auction information → **Track R1**
 
@@ -64,7 +138,7 @@ silently move it — write it in `OPEN_QUESTIONS.md` and I will adjudicate.
 | I-9 | Volume profile: POC / VAH / VAL / HVN / LVN, composite vs session profile, naked POC |
 | I-10 | VWAP as an institutional benchmark; TWAP; anchored VWAP; execution-algo footprints |
 | I-11 | Liquidity mapping and stop-run harvesting (session / PDH / PDL / ONH / ONL); relative-liquidity models |
-| I-12 | Alternative bar sampling: tick, volume, range, dollar, imbalance and run bars |
+| I-12 | Alternative bar sampling: tick, volume, range, dollar, imbalance and run bars. **Cross-class pointer (A3/ADJ-2):** stays here, one family, one id. R1's expressibility verdict is delivered (`INEXPRESSIBLE-ARCHITECTURE`, missing primitive "a bar-identity that is not an integer minute count", nine layers). The separate question — **is the wall-clock sampling choice a confound in findings this repo treats as settled?** — is a question about Class III's results and is carried by `MAIN-01`, not by this row. **Not on Axis C.** |
 | I-13 | Cumulative-delta divergence; footprint shape (P / b distributions) |
 | I-14 | Block and large-print detection; time-and-sales filtering |
 | I-15 | Opening auction and settlement-window behaviour; MOC-imbalance analogues |
@@ -345,10 +419,28 @@ These are decided. If you disagree, write it in `OPEN_QUESTIONS.md`; do not act 
    below is the table; cite it and move on.
 9. **The settled findings.** The eight rules in `BRIEF.md` §"The eight rules" are not in scope for
    re-argument by anyone. Contradicting one requires evidence, not a paragraph.
+10. **(Round 2)** Class reassignment stays reserved to the manager, and **the adjudications are now
+    a separate file**: `manager/ADJUDICATIONS.md`, one block per ruling, each stating what the
+    decision costs. Ten rulings are recorded there as of 2026-09-26 23:10 ET, covering both mis-cuts,
+    `R1-Q1`, `R1-Q2`, `R3-Q2`, all four `BT1`/`BT3` requests and all four `R1` requests. **Do not
+    re-raise a question settled there**; if you think a ruling is wrong, cite its ADJ id and the path
+    you read it at, in a `msgs/` file.
 
 ---
 
 ## 6. Pre-registered expectations
+
+> **ROUND-2 NOTE — these have been tested and several are refuted. See amendment A4 at the top of
+> this file before citing anything below.** Headline: R1's INEXPRESSIBLE-DATA count was **9** (I said
+> ≥10) and its strict EXPRESSIBLE set was **0** (I said ≤3, so the result is *below* my floor);
+> market profile is the family whose blindness is **cheapest to remove**, not the least testable;
+> R2's path-cited repo claims were **89** (I said fewer than ~15 would mean under-delivery); R3-D5
+> holds **6 strict items plus 2 artefact replays** (I said ≤2). What survived: R1's proxy-vs-"does not
+> work" discipline, the opening-type/day-type split (half), R2's spread-and-carry emptiness for
+> `II-1`/`II-2`, R2's seasonality kill, R2 being the most likely track to be mis-cut, R3's
+> pyramiding verdict, and R3's central "most of the operating layer is a variance transform" — with
+> the correction that the survivor set is **larger** than my three, because the whole Channel-2 block
+> (11 axes) is non-cancelling and is almost entirely unreachable here.
 
 I am writing these down **before** reading any of your output so that later we can tell whether
 this roundtable learned something or merely confirmed me. If you refute one of these, say so

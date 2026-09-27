@@ -31,6 +31,7 @@ if str(REPO_ROOT) not in sys.path:
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from futures_agents.config import get_contract                        # noqa: E402
 from futures_agents.data.bars import BarSeries                          # noqa: E402
 from futures_agents.econ_calendar import Impact                         # noqa: E402
 from futures_agents.features import (NEWS_BLACKOUT_AFTER_MIN,           # noqa: E402
@@ -428,14 +429,24 @@ def test_the_two_stores_are_the_same_series_on_the_overlap(symbol):
     ruling records is that ``csv/raw`` stamps are ``+00:00`` and
     ``data/archive`` stamps are ``-04:00``, so a naive string match compares bars
     four hours apart.
+
+    One correction to the ruling's table, recorded because a later test asserting
+    exact equality would fail on it: the closes are **not bit-identical**.
+    ``[measured: max |close difference| over the 60m overlap -> MGC 3.44e-07,
+    MCL 4.82e-08, MNQ 0.0, MES 0.0]`` - float32 round-trip noise, 3-5 millionths
+    of one tick, immaterial to any fill. The ruling's "0.0000" is exact to four
+    decimal places and not to the bit. Volume differs on 2 of ~4,987 bars for
+    **all four** contracts, not only MGC.
     """
+    spec = get_contract(symbol)
     csv_bars = {b.ts.astimezone(UTC): b for b in algo1.load_series(symbol, TF).bars}
     arc_bars = {b.ts.astimezone(UTC): b
                 for b in algo1.load_series(symbol, TF, store="archive").bars}
     common = sorted(set(csv_bars) & set(arc_bars))
     assert len(common) > 4900, f"{symbol}: only {len(common)} overlapping bars"
     worst = max(abs(csv_bars[t].close - arc_bars[t].close) for t in common)
-    assert worst == 0.0, f"{symbol}: closes differ by up to {worst}"
+    assert worst < spec.tick_size * 1e-3, \
+        f"{symbol}: closes differ by up to {worst} ({worst / spec.tick_size:.1e} ticks)"
     # And the archive must genuinely extend the span BEFORE csv/raw starts,
     # which is the only reason to prefer it.
     assert min(arc_bars) < min(csv_bars)
@@ -491,3 +502,25 @@ def test_an_hourly_grid_admits_at_most_one_bar_per_print():
         assert len(fired) <= len(prints), symbol
         # and at most one admitted bar per calendar day per print
         assert len({bars[i].ts for i in fired}) == len(fired)
+
+
+def test_hourly_bars_open_on_the_hour_except_on_shortened_sessions():
+    """The exception that makes the avoidance arm's count 9 rather than 8 on MCL.
+
+    The "every HIGH rule prints at :00 or :30 and hourly bars open at :00"
+    arithmetic - which is why a [-10, +15] blackout around an 08:30 print contains
+    no bar open - is true for 4,992 of 5,000 bars. The other 8 open at **:30**,
+    on shortened sessions, and those are exactly the bars a :30 print can land on.
+    ``[measured: 2025-12-24T10:30 MCL is blocked by avoid_event because the EIA
+    print lands on the bar's own open]``
+
+    Worth pinning because it is the difference between "the filter cannot ever
+    decline" (false) and "the filter declines only on half-days and FOMC days"
+    (true).
+    """
+    for store, off_expected in (("csv", 8), ("archive", 20)):
+        for symbol in ("MGC", "MCL", "MNQ"):
+            bars = algo1.load_series(symbol, TF, store=store).bars
+            off = [b for b in bars if b.ts.minute != 0]
+            assert len(off) == off_expected, f"{store} {symbol}: {len(off)}"
+            assert {b.ts.minute for b in off} == {30}

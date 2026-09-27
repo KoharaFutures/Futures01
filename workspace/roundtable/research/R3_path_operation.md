@@ -280,14 +280,15 @@ Three of those four are SIGNALs, so 50 of the 53 SIGNAL conditions return the de
 CONDITIONS; graded=[n for n,c in sorted(CONDITIONS.items()) if
 re.search('strength', inspect.getsource(c.fn).split('def ',1)[-1])]; print(len(graded),
 graded)" → 4 ['candle_decisive_close', 'candle_engulfing', 'candle_reversal',
-'inside_bar_compression']]`
+'inside_bar_compression'] — **this census is wrong, the true count is 5; see the CORRECTION
+at the end of this file**]`
 `[measured: grep -c "strength" futures_agents/strategies/library.py → 7, every occurrence
 between library.py:1400 and :1460, i.e. inside the candlestick block]`
 
 Consequences, in order of weight:
 
-1. **`StrategySignal.strength` is exactly 1.0 for any strategy whose signals avoid the three
-   graded candlesticks** — and `x_confluence` already found candlesticks unevaluable, "4 of 5
+1. **`StrategySignal.strength` is exactly 1.0 for any strategy whose signals avoid the four
+   graded candlestick SIGNALs** — and `x_confluence` already found candlesticks unevaluable, "4 of 5
    appear in under 20 floor-clearing strategies" `[repo-verified: DEFECTS.md:213]`. So in
    practice the conviction score is a constant across the whole ~2.98M-evaluation programme.
 2. **Every `Evidence.weight` in this repo is 1.0**, which means the decision layer's
@@ -296,7 +297,7 @@ Consequences, in order of weight:
    already existed — has `Cov(strength, R) = 0` by construction.** See Part B-3(b)(1); I
    wrote that section claiming `Trade.strength` was the cheapest high-value build on my track,
    then measured this and corrected it in place rather than leaving the claim standing.
-4. The missing primitive is therefore **not a field but a rewrite**: 50 of 53 SIGNAL
+4. The missing primitive is therefore **not a field but a rewrite**: 49 of 53 SIGNAL
    conditions would have to report how emphatically they fired — how far past the band, how
    steep the slope, how far above average volume. The field to carry it already exists and the
    feature columns already hold the inputs `[repo-verified: features.py:221-286]`. Nobody
@@ -518,18 +519,20 @@ sub-cases are real and each has a different verdict here:
    **Named missing primitive: `Trade.strength` — one field, one assignment.**
 
    **SELF-CORRECTION, and it is the more interesting result.** I wrote the above, then checked
-   whether the score actually varies — and it barely does. **Only 4 of the 79 conditions ever
-   grade their own strength, all four in the `candlestick` group, and only 3 of those are
-   SIGNALs. 50 of the 53 SIGNAL conditions return `ConditionResult.yes(...)` with the default
-   `strength=1.0`** `[repo-verified: base.py:80-83 — the default; base.py:74 — the field
+   whether the score actually varies — and it barely does. **Only 5 of the 79 conditions ever
+   grade their own strength, all five in the `candlestick` group, and only 4 of those are
+   SIGNALs. 49 of the 53 SIGNAL conditions return `ConditionResult.yes(...)` with the default
+   `strength=1.0`, and ~74 of 79 return it overall** `[repo-verified: base.py:80-83 — the default; base.py:74 — the field
    default]`
    `[measured: python3 -c "import inspect,re; from futures_agents.strategies.library import
    CONDITIONS; graded=[n for n,c in sorted(CONDITIONS.items()) if re.search('strength',
    inspect.getsource(c.fn).split('def ',1)[-1])]; print(len(graded), graded)"
-   → 4 ['candle_decisive_close', 'candle_engulfing', 'candle_reversal',
-   'inside_bar_compression']; 50 of 53 SIGNAL conditions ungraded]`
+   → 5 ['candle_close_strength', 'candle_decisive_close', 'candle_engulfing',
+   'candle_reversal', 'inside_bar_compression']; 49 of 53 SIGNAL conditions ungraded — this
+   census first returned 4; see the CORRECTION at the end of this file]`
    `[measured: grep -c "strength" futures_agents/strategies/library.py → 7 lines, all at
-   library.py:1400-1460, all in the candlestick block]`
+   library.py:1400-1460, all in the candlestick block; the 5th graded condition passes its
+   grade positionally and so does not appear in that grep]`
 
    Since `strength = strength_sum / n_signals` `[repo-verified: base.py:766]` and
    `strength_sum` adds `max(0.0, min(1.0, res.strength))` per signal
@@ -544,7 +547,7 @@ sub-cases are real and each has a different verdict here:
    **So `Trade.strength` is still worth 2 lines, but for diagnosis rather than for sizing:
    it would record a constant, and recording a constant is how you *prove* the conviction
    channel is empty rather than assuming it.** The real missing primitive for conviction
-   sizing is one layer deeper and much more expensive: **50 of 53 SIGNAL conditions would have
+   sizing is one layer deeper and much more expensive: **49 of 53 SIGNAL conditions would have
    to be rewritten to grade their own firing** (how far past the band, how steep the slope, how
    far above the average volume) — the information exists in the feature columns, the
    `ConditionResult.strength` field exists to carry it, and nobody filled it in. Channel 4b's
@@ -1239,15 +1242,17 @@ all `[measured: grep -n "strength" futures_agents/backtest/engine.py → no matc
 `Trade.evidence`)** — but see the correction below, which is the real finding.
 
 **The secondary model has no features to learn from.** I checked whether the discarded
-conviction score actually varies. It does not: **only 4 of the 79 conditions ever grade their
-own strength — all four in the `candlestick` group, 3 of them SIGNALs — so 50 of 53 SIGNAL
+conviction score actually varies. It does not: **only **5** of the 79 conditions ever grade their
+own strength — all five in the `candlestick` group, 4 of them SIGNALs — so 49 of 53 SIGNAL
 conditions return the default `strength=1.0`**
-`[measured: python3 -c "<inspect.getsource census over CONDITIONS>" → 4 graded:
-candle_decisive_close, candle_engulfing, candle_reversal, inside_bar_compression]`
+`[measured: python3 -c "<inspect.getsource census over CONDITIONS>" → 5 graded:
+candle_close_strength, candle_decisive_close, candle_engulfing, candle_reversal,
+inside_bar_compression — see the CORRECTION at the end of this file for why my first census
+returned 4]`
 `[repo-verified: base.py:80-83 — `ConditionResult.yes(..., strength: float = 1.0)`]`. So
 `strength` is a constant, and every `Evidence.weight` is 1.0
 `[repo-verified: base.py:691]`. **The binding primitive for III-17 is not `Trade.strength`;
-it is that 50 of 53 SIGNAL conditions do not report *how emphatically* they fired, even though
+it is that 49 of 53 SIGNAL conditions do not report *how emphatically* they fired, even though
 `ConditionResult.strength` exists to carry it and the feature columns contain the
 information.** That is a ~50-condition rewrite. Meta-labelling here is not one field away.
 Note also that a `ConditionKind.FILTER` is *not* a meta-label: filters are evaluated **before**
@@ -1455,7 +1460,7 @@ B-3. **Nothing already settled is re-argued** — settled items get a citation a
 | Kelly / fractional Kelly | "maximise growth" | **4a — variance only**, and against `E[R] ≤ 0` the optimum is `f* ≤ 0` | **No.** Nothing in the repo computes it. |
 | Volatility targeting | "constant risk per trade" | **4a — variance only**, and **already mandatory** (Part B-2) | Universal, therefore never controlled. |
 | Risk parity | "equal risk contribution" | **4a** | **No.** |
-| **Conviction-weighted sizing** | "bigger on the A+ setup" | **4b — CAN change expectancy** iff `Cov(strength, R) ≠ 0` | **No, and it currently has no input.** The score is computed at `base.py:766`, discarded before `Trade`, **and is a constant 1.0** because 50 of 53 SIGNAL conditions never grade their firing `[measured]`. So `Cov(strength, R) = 0` by construction today. |
+| **Conviction-weighted sizing** | "bigger on the A+ setup" | **4b — CAN change expectancy** iff `Cov(strength, R) ≠ 0` | **No, and it currently has no input.** The score is computed at `base.py:766`, discarded before `Trade`, **and is a constant 1.0** because 49 of 53 SIGNAL conditions never grade their firing `[measured]`. So `Cov(strength, R) = 0` by construction today. |
 | **Equity-curve / streak sizing** | "cut size in a losing streak" | **4b — CAN change expectancy** iff the R series is autocorrelated | **No**, and the repo's ruin machinery *assumes* it cannot (i.i.d. bootstrap, `mode="block"` unreachable from `risk_of_ruin`). |
 | Regime-conditional sizing | "size up where it works" | **4b**, formally — but it is a selection rule | Indirectly settled **negative**: selecting last period's best underperforms trading everything (`BRIEF.md`). |
 | **Integer-contract floor** | usually treated as rounding | **2 — changes the trade population**, selected on stop distance ⇒ on volatility | **No.** The engine never calls `contracts_for`. |
@@ -1535,7 +1540,7 @@ Ranked by (value / lines):
 | # | change | lines | unlocks |
 |---|---|---|---|
 | 9 | `signals_skipped_in_position += 1` at `engine.py:308` | **1** | the only measurement of what the one-position-at-a-time rule costs. Prerequisite for costing III-8 and III-13 |
-| 10 | `Trade.strength` field + `strength=sig.strength` at `engine.py:498` | **2** | **Downgraded after checking — see the self-correction in Part B-3(b)(1).** The score is a constant 1.0 for ~all strategies, because only 4 of 79 conditions grade strength and 50 of 53 SIGNALs return the default `[measured]`. Worth 2 lines to *prove* the conviction channel is empty; worth nothing for sizing until the conditions are graded, which is a ~50-condition rewrite, not a field |
+| 10 | `Trade.strength` field + `strength=sig.strength` at `engine.py:498` | **2** | **Downgraded after checking — see the self-correction in Part B-3(b)(1).** The score is a constant 1.0 for ~all strategies, because only 5 of 79 conditions grade strength and 49 of 53 SIGNALs return the default `[measured]`. Worth 2 lines to *prove* the conviction channel is empty; worth nothing for sizing until the conditions are graded, which is a ~50-condition rewrite, not a field |
 | 11 | slippage on the three `bar.close` exits (`engine.py:467, 473, 476`) | **3** | corrects A-7; makes time-stop and session-close results honest. Affects the largest measured exit effect in the repo (D12) |
 | 12 | `news=` passed to `slippage_price` at `engine.py:353, 416` | **2** | A-6; the `econ_calendar` flag already exists |
 | 13 | `ExitReason.TRAIL` emitted when the exit stop differs from `initial_stop` and breakeven | **4** | makes A-1/item-1 interpretable |
@@ -1702,8 +1707,8 @@ absent is the ability to manage the position once it is open:
 
 One further item belongs in this answer because it is neither data nor architecture but
 **unwritten code**: `ConditionResult.strength` exists, is averaged into every signal, and is
-populated by only 4 of the 79 conditions (A-12). So the repo's information set is also smaller
-than its own schema advertises — not because the data is missing, but because 50 of 53 SIGNAL
+populated by only 5 of the 79 conditions (A-12). So the repo's information set is also smaller
+than its own schema advertises — not because the data is missing, but because 49 of 53 SIGNAL
 conditions return a hard-coded `1.0` where a graded reading was intended.
 
 And on the specific question of whether the null is *about* the operating layer: **it cannot
@@ -1861,3 +1866,210 @@ from an existing artefact with its path. **I made no write of any kind under `cs
   claim only the operational half, saying so in the entry.
 - **I did not re-derive the 79 conditions or the 19 groups** (DIVISION §5.8). Appendix A is
   cited.
+
+---
+
+# ROUND-2 APPENDIX — corrections to this file, and four new findings
+
+Appended in round 2. Everything above is round-1 text with the citation fixes described in
+CORRECTION 1 applied in place. The design work these findings feed is in
+`research/R3_pairing_design.md`; the fidelity ruling on BT3-ALGO-1 is
+`msgs/03_R3_BT3_re-verify-ALGO-1.md`. My two questions are canonically **R3-Q1** and **R3-Q2**
+per `REGISTRY.md` — a bare `Q2` or `Q3` from me above this line is malformed and resolves via
+that table.
+
+## CORRECTION 1 — the strength census: 4 was wrong, 5 is right, and only 4 of the 5 can reach `Strategy.strength`
+
+I reported **4** conditions grading `strength`. The manager measured **5**. The manager is right.
+Every citation above is corrected; this records why I was wrong, because the root cause is a
+measurement method that quietly excluded a case rather than a transcription slip.
+
+My census was
+
+```
+graded = [n for n,c in sorted(CONDITIONS.items())
+          if re.search('strength', inspect.getsource(c.fn).split('def ',1)[-1])]
+```
+
+`.split('def ',1)[-1]` strips the decorator, and the fifth condition is
+**`candle_close_strength`**, whose function is `_candle_clv` and which passes its grade
+**positionally and unnamed** as the fifth argument to `ConditionResult.yes`:
+
+```
+return ConditionResult.yes(LONG if clv > 0 else SHORT,
+                           f"close at {clv:+.2f} of range", round(clv, 3),
+                           abs(clv))
+```
+
+`[repo-verified: futures_agents/strategies/library.py:1447-1449]`. The literal string
+`strength` never appears in the body, and the one place it *did* appear — the condition's own
+name in the decorator — is exactly what my split discarded. A textual census for a value passed
+positionally is the wrong instrument, and mine would have missed any other condition doing the
+same.
+
+**The corrected finding, measured properly:**
+
+`[measured: from futures_agents.strategies.library import CONDITIONS → len(CONDITIONS) = 79;
+Counter(c.kind.name) = {SIGNAL: 53, FILTER: 26}; group 'candlestick' = exactly
+['candle_reversal','candle_engulfing','candle_decisive_close','candle_close_strength',
+'inside_bar_compression']; kinds = SIGNAL, SIGNAL, SIGNAL, SIGNAL, **FILTER**]`
+
+**And the correction sharpens the conclusion rather than only fixing a number.** `strength_sum`
+is accumulated **only inside the `signal_conditions` loop** `[repo-verified: base.py:686]`; the
+`filter_conditions` loop discards `res.strength` entirely `[repo-verified: base.py:670-675]`.
+`inside_bar_compression` is `kind=ConditionKind.FILTER` `[repo-verified: library.py:1452]`. So:
+
+> **5 of 79 conditions grade `strength`. Only 4 of them are SIGNALs, so only 4 can ever reach
+> `Strategy.strength = strength_sum / n_signals` `[repo-verified: base.py:766]`. The fifth is
+> computed on every bar it fires and thrown away.** 49 of 53 SIGNAL conditions return the 1.0
+> default; ~74 of 79 conditions return it overall.
+
+`Cov(strength, R) = 0` by construction still holds, and now has a second mechanism behind it:
+one of the five graded conditions is structurally unable to contribute at all. The Channel-4b
+verdict in R3-D4 and the `~50-condition rewrite` sizing in D5 item 10 are unaffected — 49 is
+still ~50.
+
+## CORRECTION 2 — B-3(c) worked the sizing floor at the wrong budget. BT3 measured it; the real figure is $240
+
+B-3(c) computed the integer-contract floor against "a $375 ceiling, `max_dollar_risk = 500`" and
+tabulated max stop distances at $375 and $500. **The account never gets that much.** At full
+equity the binding term is `base_risk_pct_of_buffer`, not the 0.75%-of-equity ceiling:
+
+```
+risk_budget = min(usable_buffer * 0.06, equity * 0.0075, max_dollar_risk)
+            = min(4000 * 0.06,       50000 * 0.0075,  500)
+            = min(240,               375,             500)   = $240
+```
+
+`[repo-verified: risk/manager.py:153-158]`, `[measured: AccountConfig().usable_buffer(50000,
+50000) → 4000.0]`. **Credit to BT3**, who derived this while scoping ALGO-1 and whose
+`OPENING_BUDGET` constant is correct. My tables at the $375 and $500 columns overstate the
+permitted stop by 56% and 108% respectively, which made the floor look *less* binding than it
+is. The direction of the error is against my own claim, and the corrected figure strengthens it:
+BT3 measures **35.4% of 21,954 stored trades deleted by `contracts_for`'s integer floor at the
+opening budget, before any path dependence** `[measured: BT3 algo1_report.json
+static_integer_floor → 7,767 / 21,954 deleted at $240]`.
+
+Two further things from BT3's replay that bear on Part B and that I am recording here because
+they are measurements my file predicted the need for but could not supply:
+
+- **The floor's bite is overwhelmingly conditional on symbol and bar size**, ranging from 2.2%
+  (MES_60) to 99.4% (MGC_240) `[measured: BT3 `static_integer_floor.by_symbol_tf`]`. This is
+  R3-D4's `Integer-contract floor` row — Channel 2, selecting on stop distance — confirmed with
+  a number for the first time.
+- **The account has an absorbing dead-but-not-failed state at a drawdown from peak of \$2,800**,
+  where the permitted budget falls to \$21.60 against `min_dollar_risk = 25` and stage 7 vetoes
+  every proposal *before* `contracts_for` is reached `[repo-verified: risk/manager.py:325-329]`,
+  `[measured: budget scan over drawdown 0..4000 in \$10 steps → crossing between \$2,790 and
+  \$2,800]`. Equity can then only move via already-open positions, `peak_equity` never falls, and
+  `has_failed` stays False because equity (~\$47,200) is above `failure_equity` (\$45,000). **So
+  the \$5,000 max-drawdown failure threshold is unreachable for this population; `min_dollar_risk`
+  kills the account first.** Derived in `msgs/03_R3_BT3_re-verify-ALGO-1.md`. It does not touch
+  any finding above, because R3-B-1 establishes that nothing under `futures_agents/backtest/`
+  imports anything from `futures_agents/risk/` — but it is the sharpest illustration of why
+  B-1 matters.
+
+## CORRECTION 3 — D5 item 6 (`StopKind.FIXED_TICKS`) is not a zero-new-code item
+
+I billed it Tier 1, "one field". The field is one field, but the *comparison* is not free:
+`FIXED_TICKS` changes `stop_price`, which changes `risk_points`, which changes **the R unit
+itself**. The two arms of a `FIXED_TICKS` pair do not share a denominator, so differencing R
+between them differences two different quantities. It needs a re-based statistic — both arms'
+dollar outcome divided by the **control** rule set's `risk_points`, computable from
+`Trade.entry_price` and `Trade.initial_stop` `[repo-verified: engine.py:502-512]` but a
+post-processing step, not a configuration change. Specified in `R3_pairing_design.md` §5.4.
+It is the only one of the eight items with this property.
+
+## A-13 (NEW) `dataclasses.replace` inherits the cached `_id`, silently merging both arms of a pair
+
+Full statement and measurements in `research/R3_pairing_design.md` §2; filed for a defect number
+as `R3-REQ-1`. In one paragraph: `Strategy._id` is a real dataclass field
+`[repo-verified: base.py:585]` memoised by `strategy_id` via `object.__setattr__`
+`[repo-verified: base.py:622]`; `generate_strategies` populates it before returning, because its
+dedupe is `seen.setdefault(st.strategy_id, st)` `[repo-verified: combinator.py:719]`; so
+`replace(s, exit=...)` **without `_id=None`** yields a strategy claiming `s`'s id
+`[measured: replace(S[0], exit=replace(S[0].exit, trail_atr_mult=2.0)).strategy_id ==
+S[0].strategy_id → True]`. `run_many` keys `results` `[engine.py:277-281]`, `open_pos` and
+`pending` `[engine.py:282-283]` and the skip guard `[engine.py:304-309]` all by that id, so the
+two arms collapse into one row whose trades are a path-dependent interleaving of both exit
+models. **The measured difference between arms is exactly zero — a false null, indistinguishable
+from the axis doing nothing.** Third instance of the identity family after `ExitModel.label` and
+D43, and **not fixed by D43**, which repaired what goes into the hash while this defeats the hash
+by not recomputing it.
+
+## A-14 (NEW) The unit of pairing on this engine is the rule set, never the trade
+
+`engine.py:304-309` skips a positioned strategy, so any axis that changes holding duration
+changes which later bars the arm is flat for. Two arms of a gate-identical pair therefore agree
+on trade 1 and **fork at the first trade whose duration differs**. Measured on the only paired
+re-emission that exists on disk — the geo study's 22 rule sets × 2 exits × 8 cells × 3 slices =
+258 pairs — the arms share a **median 61.8% of their entry timestamps**, only 17 of 258 reach
+90%, and the median trade-count ratio is 1.332 `[measured: entry-timestamp Jaccard over
+stops_cache.json; full table in R3_pairing_design.md §4.3]`. Pairing on the intersection is
+forbidden: it conditions on which bars both arms were flat for, which is a function of prior
+outcomes — a selection on the dependent variable. Trade-level pairing needs an exogenous-entry
+harness (`R3-REQ-2`), which is cheap precisely because `_manage` needs no `FeatureSnapshot`
+`[repo-verified: engine.py:377-378]`.
+
+A-14 also fixes exactly which `ExitModel` fields can move the entry set, which round 1 left
+implicit: `stop_kind`, `stop_mult`, `stop_pad_ticks` always; `target_kind`, `anchor_mult`,
+`min_reward_risk` only when `target_kind is not R_MULTIPLE`; **`targets_r` never** (the
+`if not targets: return None` gate at `[repo-verified: base.py:726]` is unreachable, because
+`__post_init__` forbids an empty `targets_r` `[repo-verified: base.py:229-230]` and both the
+R_MULTIPLE branch and the anchored fallback return one price per element
+`[repo-verified: base.py:333-339]`); and `scale_out`, `breakeven_at_r`, `trail_atr_mult`,
+`time_stop_bars`, `exit_at_session_close` never, because they are read only inside `_manage`
+`[repo-verified: engine.py:382-476]`.
+
+## A-15 (NEW) At the reachable generation scale the D15 confound is total, not partial
+
+D15's "93 of 8,317 rule sets exist with two different exits" invites the reading that a small
+paired subset could be salvaged. At `max_total=400` there is none:
+
+`[measured: generate_strategies(sym,[5,15,60,240],max_total=400); rule sets counted by the
+nine-part `strategy_id` hash with one slot blanked →`
+
+| symbol | strategies | rule sets with ≥2 exits | rule sets with ≥2 filter scopes |
+|---|---|---|---|
+| MGC | 314 | **0** | **0** |
+| MNQ | 314 | **0** | **0** |
+| MES | 336 | **0** | **0** |
+| MCL | 296 | **0** | **0** |
+
+`]`
+
+Every generated strategy is its own unique rule set carrying exactly one exit and one filter
+scope. The zero in the right-hand column is **A-5 restated as its consequence**: the scope
+vocabulary being inert in the generation path means not merely "scope is never varied" but "no
+two shipped strategies are ever a scope pair". The compensation is that n_pairs equals the whole
+generated population — **1,260 pairs across four symbols** — which is more than an order of
+magnitude better than the 93 D15 leaves behind.
+
+## A-16 (NEW) The trailing-stop path audited: clean on look-ahead, lagged by one bar, and A-2's consequence is a signed mixture
+
+A-11 gave the position lifecycle a clean bill on look-ahead, checked five ways. That bill could
+not cover the trailing stop, because the trail **has never executed** (A-1) and so had never
+been read by anyone. I read it, because item 4 of §7 Q2 depends on it.
+
+**Clean on look-ahead.** The trail's ATR comes from
+`a = col[self.frame.tf_index(i, pos.signal.primary_tf)]`
+`[repo-verified: engine.py:453-457]`, and `tf_index` is documented and implemented as "index of
+the newest **completed** `timeframe` bar at `base_index`" `[repo-verified: features.py:921-926]`.
+No forming-bar ATR, no future data. A-11's bill extends to this path.
+
+**Lagged by one bar, and it must be declared with any item-4 number.** The trail is computed from
+`bar.high` / `bar.low` at step 3 `[repo-verified: engine.py:458-462]`, *after* step 1 already
+ran this bar's stop check `[repo-verified: engine.py:404-422]`. So a stop the trail tightens is
+first tested on bar *i+1*. That is **conservative** — favourable to the strategy — and makes the
+engine's trail strictly coarser than a live intrabar trail, so it will systematically
+under-capture. Not a defect; a fidelity statement that changes how a null is read.
+
+**A-2's consequence is worse than "the label is wrong".** `reason = BREAKEVEN if
+pos.breakeven_moved and |pos.stop - entry| < tick_size else STOP`
+`[repo-verified: engine.py:419-421]`. Once the trail ratchets the stop away from entry that
+condition fails, so **a trail exit reports as `STOP`**. `STOP` then becomes a mixture of two
+mechanisms with **opposite signs** — an initial-stop hit near −1R, and a trail hit that has
+locked in a gain. Every exit study in this repo reads the exit-reason histogram and its
+per-reason mean R, and that mean moves with the mixing weight even when nothing real has
+changed. **So D5 item 13's four-line `ExitReason.TRAIL` fix is a hard prerequisite for item 4,
+not a nicety**: without it an item-4 result is not weak, it is unattributable.

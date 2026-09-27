@@ -395,6 +395,130 @@ def test_h2_entry_veto_tests_the_fill_instant_not_the_signal_instant():
     assert veto[-1] is None
 
 
+#: The nine holiday-eve dates on which a 23:00 ET bar exists and the market is
+#: then shut for the whole of the next cycle. Relayed from EF3 via the
+#: coordinator, as the exact set on which a calendar-date-grouped session rule
+#: misses a cycle boundary and carries a position across a 16:00 deadline.
+HOLIDAY_EVES = (
+    date(2024, 11, 27), date(2025, 1, 19), date(2025, 2, 16), date(2025, 11, 26),
+    date(2026, 1, 18), date(2026, 2, 15), date(2026, 4, 2), date(2026, 6, 18),
+    date(2026, 7, 2),
+)
+
+
+@pytest.mark.parametrize("symbol", SYMBOLS)
+def test_h2_holiday_eve_2300_bar_ends_its_cycle(symbol):
+    """The rare boundary a calendar-date grouping misses, asserted directly.
+
+    A 23:00 ET bar on a holiday eve belongs to the cycle that *would* flat at
+    16:00 the next day - and that next day never trades. Grouping bars by ET
+    calendar date puts the 23:00 bar in the same group as that morning's 09:00
+    bar, so it is not the group's "session end" and a position opened at 18:00 is
+    carried past the missing deadline into the session after the holiday.
+
+    ``cycle_key`` cannot make that mistake: the 23:00 bar's key is *tomorrow* and
+    the next printed bar's key is a later day, so the keys differ and the flat
+    fires. **No holiday table is consulted.** That is deliberate - see
+    ``test_h2_holiday_flat_needs_no_holiday_table`` for why a holiday table would
+    be the wrong dependency here.
+    """
+    bars = ARCHIVE.load(symbol, 60).bars
+    flags = flat_flags(bars)
+    checked = 0
+    for eve in HOLIDAY_EVES:
+        hits = [i for i, b in enumerate(bars)
+                if to_et(b.ts).date() == eve and to_et(b.ts).hour == 23]
+        if not hits:
+            continue                     # the vendor has no 23:00 bar that day
+        i = hits[0]
+        checked += 1
+        assert flags[i] is True, (
+            f"{symbol}: {eve} 23:00 ET is not flagged as a cycle end")
+        assert SESSION_WINDOW.cycle_key(bars[i].ts) == eve + timedelta(days=1)
+        assert i + 1 < len(bars)
+        assert SESSION_WINDOW.cycle_key(bars[i + 1].ts) != \
+            SESSION_WINDOW.cycle_key(bars[i].ts)
+    assert checked >= 6, f"{symbol}: only {checked} holiday eves exercised"
+
+
+@pytest.mark.parametrize("symbol", SYMBOLS)
+def test_h2_no_trade_spans_a_holiday_eve_boundary(symbol):
+    """The same boundary, at trade level, with the saturating fixture.
+
+    The fixture holds a position across essentially every cycle end, so unlike a
+    strategy probe it cannot miss a rare boundary by sampling. Asserted on the
+    realised trades, and the count of trades that actually *end* on a holiday-eve
+    evening is asserted non-zero so the check cannot pass by never firing.
+    """
+    bars = ARCHIVE.load(symbol, 60).bars
+    frame = SymbolFrame(BarSeries(symbol, 60, bars), (60,), get_contract(symbol))
+    eng = SessionWindowEngine(frame, CostModel(spec=get_contract(symbol)))
+    res = eng.run(fixture_strategy(symbol, name=f"EF7-holiday-{symbol}"))
+    assert trade_violations(res.trades, base_minutes=60) == []
+
+    flags = flat_flags(bars)
+    # The last bar of each holiday-eve cycle - the bar at which a position that
+    # exists must be closed and beyond which it must not be carried.
+    boundaries = []
+    for eve in HOLIDAY_EVES:
+        idx = [i for i, b in enumerate(bars)
+               if to_et(b.ts).date() == eve and to_et(b.ts).hour == 23
+               and flags[i] is True]
+        boundaries.extend(idx)
+    assert len(boundaries) >= 6, f"{symbol}: only {len(boundaries)} boundaries found"
+
+    checked = 0
+    for i in boundaries:
+        live = [t for t in res.trades if t.entry_index <= i <= t.exit_index]
+        if not live:
+            continue          # no position was open across that boundary
+        checked += 1
+        for t in live:
+            # Whatever closed it, it must close ON that bar, not after it. The
+            # reason may legitimately be STOP - a stop hit inside the evening bar
+            # happens before the close and outranks the flat by design.
+            assert t.exit_index == i, (
+                f"{symbol}: trade entered {t.entry_ts} carried past the "
+                f"holiday-eve boundary at {to_et(bars[i].ts)} to {t.exit_ts}")
+    assert checked >= 4, f"{symbol}: only {checked} boundaries had a live position"
+
+
+def test_h2_holiday_flat_needs_no_holiday_table():
+    """Why the rule reads the data rather than ``MARKET_HOLIDAYS_2025_2027``.
+
+    A holiday table answers "is the next calendar day a holiday", and that is not
+    the question. Several CME holidays are *shortened* sessions, not closures: the
+    cycle exists, the market trades into it, and the specification permits holding
+    there. Forcing a flat at 23:00 the previous evening because a table says
+    "holiday" would be **stricter than the rule** - it would close a position the
+    rule allows - and it would also be silent about a closure the table does not
+    list, such as an unscheduled halt or a vendor gap.
+
+    The successor-cycle-key test has neither failure mode: it fires exactly when
+    the data contains no further bar in this cycle, whatever the reason. Asserted
+    here on the two cases that distinguish the designs.
+    """
+    w = SESSION_WINDOW
+    # Case 1: the next bar is on the holiday itself, inside the SAME cycle. The
+    # rule must NOT flat - a shortened session is still this cycle.
+    eve_2300 = et(2025, 1, 19, 23, 0)
+    hol_0000 = et(2025, 1, 20, 0, 0)
+    assert w.cycle_key(eve_2300) == w.cycle_key(hol_0000) == date(2025, 1, 20)
+    assert flat_flags([_bar(eve_2300, 100, 101, 99, 100),
+                       _bar(hol_0000, 100, 101, 99, 100)])[0] is False
+
+    # Case 2: the next bar is after the holiday, in a LATER cycle. Flat.
+    after = et(2025, 1, 21, 0, 0)
+    assert w.cycle_key(after) != w.cycle_key(eve_2300)
+    assert flat_flags([_bar(eve_2300, 100, 101, 99, 100),
+                       _bar(after, 100, 101, 99, 100)])[0] is True
+
+    # And the holiday table itself cannot tell those two apart: it says
+    # "2025-01-20 is a holiday" in both.
+    from futures_agents.timeutil import is_market_holiday
+    assert is_market_holiday(date(2025, 1, 20))
+
+
 # ==========================================================================
 # EF7-H3 - the engine
 # ==========================================================================

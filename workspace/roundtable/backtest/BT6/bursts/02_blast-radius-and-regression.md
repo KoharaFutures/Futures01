@@ -237,7 +237,12 @@ on 16–40% of them. Filed as `BT6-REQ-3`.
 
 - `futures_agents/` **unpatched**, per dispatch. `BT6-REQ-1` proposes the guard
   with this radius attached.
-- `tests/test_bt6_vwap_daily.py`: 14 pass, 3 xfail, 0.36s. Full suite re-run
-  before finishing.
+- `tests/test_bt6_vwap_daily.py`: **14 pass, 3 xfail, 0.29s.**
+  `[measured: python3 -m pytest -q tests → **1020 passed, 7 xfailed** in 463s,
+  0 failed]`. Baseline before my file was 917 passed / 0 xfailed; the rest of the
+  growth is other agents' files landing concurrently. **My 17 tests broke none of
+  the others**, which is the condition the dispatch set.
+- `check_ownership.py` → `ownership clean`. `check_refs.py` → `references clean —
+  35 checked, every one resolvable`.
 - Fidelity question to R6: `msgs/BT6-01_R6_verify-ALGO-1.md`. Until R6 answers,
   `BT6-ALGO-1` is `ASKED` and nothing above is a verified number.

@@ -201,7 +201,19 @@ side of the break — but anyone computing a *return* from archive MGC daily mus
 
 ## 4. Where I stopped
 
-Blast radius (§4 of this burst's dispatch) and the regression test are below/next in this file's
-companion sections; the fidelity question to R6 is `msgs/BT6-01_R6_verify-ALGO-1.md`.
-`futures_agents/` **unpatched** this burst, per dispatch: a warm-up guard on `vwap_bands` changes
-every frame at every timeframe. Proposed as `BT6-REQ-1` with the radius measured.
+Blast radius and the regression test are burst 02 (`02_blast-radius-and-regression.md`); the
+fidelity question to R6 is `msgs/BT6-01_R6_verify-ALGO-1.md`. `futures_agents/` **unpatched** this
+burst, per dispatch: a warm-up guard on `vwap_bands` changes every frame at every timeframe.
+Proposed as `BT6-REQ-1` with the radius measured.
+
+## 5. Controls and search size, stated because every number must carry them
+
+- **Search size: 1.** A single pre-registered reproduction of a finding fixed in writing before I
+  measured. No variant tried, nothing selected on outcome. `toolkit.free_t` for one hypothesis is
+  **1.177**, not 5.46 — and it does not apply here, because no statistic is computed.
+- **No placebo is owed and none is reported.** Not one number in this burst is an expectancy, a
+  *t*, a *z* or a P&L. Every number is a band width, a firing count, a direction agreement or a
+  trade count that is zero. There is no effect size for a control to bracket. The single backtest
+  run carries its own control in the same run — see burst 02 §3.1.
+- **No `T.ab`** (`D28`); no comparative claim is made. **`_id=None`** on every `Strategy` and every
+  `replace` (`D48`). **`csv/` untouched**; `data/archive/` read-only.

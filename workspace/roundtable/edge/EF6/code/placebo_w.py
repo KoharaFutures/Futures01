@@ -133,30 +133,73 @@ def _legal(real: SignalSchedule, smask: Sequence[bool]) -> SignalSchedule:
 
 def schedule_random_legal(real: SignalSchedule,
                           pool: Dict[Direction, Sequence[int]],
-                          smask: Sequence[bool], rng: random.Random
-                          ) -> Tuple[SignalSchedule, dict]:
-    """Count-matched random bars, matched on **legal** signals from the **legal** pool.
+                          smask: Sequence[bool], rng: random.Random,
+                          *, n_realised: Optional[int] = None,
+                          hold_bars: int = 0) -> Tuple[SignalSchedule, dict]:
+    """Count-matched random bars, on **legal** signals from the **legal** pool.
 
     Matched per direction, because stop placement (``STRUCTURE``, ``VWAP_BAND``)
     and anchored targets are not symmetric - a bar can be a legal long entry and
     an illegal short one, which is why ``placebo.scan`` builds two probes.
+
+    **``n_realised`` and ``hold_bars`` fix a second count-matching fault, and it
+    is in the original design rather than in the window.** ``placebo.py`` matches
+    on RAW signals on the argument that "after the engine's own culling the
+    realised counts land in the same place". Measured on a real top 10 - MGC 60m,
+    10 bases - they do not: the base realised **110-158** trades and its
+    count-matched placebo realised **307-366**, a **2.0x to 3.3x overshoot**.
+    The reason is clustering. A real signal fires in bursts, and the engine
+    refuses a new signal while positioned, so most of a burst is culled; the
+    placebo's entries are scattered, overlap nothing, and almost all survive.
+
+    A placebo with 3x the sample is not a fair control: its standard error is
+    sqrt(3) smaller, so it wins any comparison scored on *t* and loses any
+    comparison scored on trade count, for reasons that have nothing to do with
+    the signal.
+
+    The fix is one pass, not a calibration loop: draw exactly ``n_realised``
+    entries and enforce a minimum separation of ``hold_bars`` between them, so
+    the engine's own culling has almost nothing left to remove and realised
+    lands on the target by construction. ``hold_bars`` should be the base's
+    median realised holding period in base bars.
     """
     legal_real = _legal(real, smask)
     want = Counter(legal_real.values())
+    target = len(legal_real) if n_realised is None else int(n_realised)
+    if target != len(legal_real) and len(legal_real):
+        scale = target / len(legal_real)
+        want = Counter({d: max(0, int(round(c * scale))) for d, c in want.items()})
+        # keep the total exactly on target after rounding
+        drift = target - sum(want.values())
+        if drift and want:
+            d0 = max(want, key=lambda d: want[d])
+            want[d0] = max(0, want[d0] + drift)
     out: SignalSchedule = {}
-    taken: set = set()
+    taken: List[int] = []
     short_by = 0
+    sep = max(0, int(hold_bars))
+
+    def ok(i: int) -> bool:
+        return all(abs(i - j) > sep for j in taken)
+
     for d in (Direction.LONG, Direction.SHORT):
         k = want.get(d, 0)
         if k <= 0:
             continue
-        cand = [i for i in pool.get(d, ()) if smask[i] and i not in taken]
-        if len(cand) < k:
-            short_by += k - len(cand)
-        for i in rng.sample(cand, min(k, len(cand))):
+        cand = [i for i in pool.get(d, ()) if smask[i]]
+        rng.shuffle(cand)
+        placed = 0
+        for i in cand:
+            if placed >= k:
+                break
+            if i in out or not ok(i):
+                continue
             out[i] = d
-            taken.add(i)
+            taken.append(i)
+            placed += 1
+        short_by += k - placed
     diag = {"n_real": len(real), "n_real_legal": len(legal_real),
+            "target_realised": target, "min_separation_bars": sep,
             "n_scheduled": len(out), "pool_short_by": short_by,
             "legal_pool_long": sum(1 for i in pool.get(Direction.LONG, ()) if smask[i]),
             "legal_pool_short": sum(1 for i in pool.get(Direction.SHORT, ()) if smask[i])}
@@ -248,8 +291,17 @@ def make_placebo(base: Strategy, kind: str, schedule: SignalSchedule,
 
 def build_cohort(frame, bases: Sequence[Strategy], realised: Dict[str, int], *,
                  seed: int = 0, kinds: Sequence[str] = KINDS,
-                 start: int = 0, end: Optional[int] = None
+                 start: int = 0, end: Optional[int] = None,
+                 hold_bars: Optional[Dict[str, int]] = None,
+                 match_on: str = "realised"
                  ) -> Tuple[List[Strategy], Dict[str, PlaceboMeta], dict]:
+    """``match_on="realised"`` (default) matches the base's REALISED trade count
+    with a minimum separation of ``hold_bars[base_id]``; ``"raw"`` reproduces
+    ``placebo.py``'s raw-signal match, which overshoots 2-3x on a clustered
+    signal (see :func:`schedule_random_legal`). ``realised`` and ``hold_bars``
+    come from the base's own run, so the control is built against what the base
+    actually did rather than against what it proposed.
+    """
     """One placebo per (base, kind), every schedule legal under the window rule."""
     bars = frame.base.bars
     base_min = int(frame.base.minutes)
@@ -265,7 +317,8 @@ def build_cohort(frame, bases: Sequence[Strategy], realised: Dict[str, int], *,
 
     out: List[Strategy] = []
     meta: Dict[str, PlaceboMeta] = {}
-    diag = {"kinds": list(kinds), "n_bases": len(bases), "base_minutes": base_min,
+    diag = {"kinds": list(kinds), "match_on": match_on,
+            "n_bases": len(bases), "base_minutes": base_min,
             "signal_eligible_bars": sum(smask), "n_bars": len(bars),
             "dropped_base_too_few_legal": 0, "id_collisions": 0,
             "per_kind": {k: {"built": 0, "count_matched": 0, "short": 0} for k in kinds},
@@ -284,7 +337,11 @@ def build_cohort(frame, bases: Sequence[Strategy], realised: Dict[str, int], *,
         pl = pools.get(s.strategy_id, {})
         for kind in kinds:
             if kind == "placebo_random_legal":
-                sched, d = schedule_random_legal(real, pl, smask, rng)
+                nr = (int(realised.get(s.strategy_id, 0)) or None
+                      if match_on == "realised" else None)
+                hb = (hold_bars or {}).get(s.strategy_id, 0) if match_on == "realised" else 0
+                sched, d = schedule_random_legal(real, pl, smask, rng,
+                                                 n_realised=nr, hold_bars=hb)
             elif kind == "placebo_session_shuffle":
                 sched, d = schedule_session_shuffle(real, bars, smask, rng,
                                                     slot_index=slot_index)
@@ -314,9 +371,9 @@ def build_cohort(frame, bases: Sequence[Strategy], realised: Dict[str, int], *,
                 base_realised=int(realised.get(s.strategy_id, 0)), pool="legal")
             out.append(p)
             diag["per_kind"][kind]["built"] += 1
-            diag["per_kind"][kind]["count_matched"] += int(
-                len(sched) == len(legal_real))
-            diag["per_kind"][kind]["short"] += max(0, len(legal_real) - len(sched))
+            tgt = int(d.get("target_realised", len(legal_real)))
+            diag["per_kind"][kind]["count_matched"] += int(len(sched) == tgt)
+            diag["per_kind"][kind]["short"] += max(0, tgt - len(sched))
 
     v = diag.pop("shuffle_degeneracy_if_used")
     diag["mean_shuffle_degeneracy_if_direction_shuffle_were_used"] = (

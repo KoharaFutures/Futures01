@@ -47,9 +47,11 @@ holding through the overnight Globex session and the next RTH open is permitted.
 | 240m | ~3,000 | 718 days |
 | 1440m | 4,008 (MGC) | 5,835 days |
 
-`t ≈ SR × sqrt(years)`. **57 days = 0.156 years, sqrt = 0.395.** So on the scalp timeframes,
-clearing even `free_t = 1.177` — the floor for a *single pre-registered* hypothesis — needs a
-sustained annualised Sharpe of **2.98**, and clearing a search-width threshold is arithmetically
+`t ≈ SR × sqrt(years)`. **[Corrected 2026-09-27, ADJ-15: the span is 57.90 days = 0.1585 years,
+sqrt = 0.3981, and the Sharpe needed is 2.96, not the 57 days / 2.98 this brief first said.
+Verified against `data/archive/MGC_5m.jsonl`. These figures are canonical and belong on every row,
+not once in a preamble.]** So on the scalp timeframes, clearing even `free_t = 1.177` — the floor
+for a *single pre-registered* hypothesis — needs a sustained annualised Sharpe of **2.96**, and clearing a search-width threshold is arithmetically
 out of reach. **Report the scalp top 10 with that bound attached to every row.** A ranked list
 whose power is this low is a description of the sample, not a forecast, and must be labelled as one.
 

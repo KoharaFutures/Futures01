@@ -663,3 +663,26 @@ All `[measured: head -1 csv/raw/*.csv | sort -u]` and `[repo-verified]`:
    roundtable exists to name. Second: the module docstring says the brief named *thirty-eight*
    variables and the dict now holds **thirty-nine** — a small unexplained drift, recorded here,
    assigned to nobody, worth one line if any of you happens to resolve it.
+
+---
+
+# Round-3 amendment — two things §1 does not describe, recorded here so nobody looks for them in it
+
+**2026-09-27 04:05 ET, manager.** `DIVISION.md` §1 has been a **mechanism taxonomy only** since ADJ-0,
+and `manager/BOARD.md` assigns work. Two additions that matter for reading this file correctly:
+
+1. **There is now a second programme and §1 does not cover it.** Seven agents (EF1–EF7) work an
+   **account-owner request** under `edge/EDGE_BRIEF.md` — top 10 per symbol for swing and for scalp
+   inside an 18:00 ET → 16:00 ET session rule. It is **not** a `MAIN-<nn>`, it has no class in §1, and
+   it is deliberately not decomposed by me. Its facts, gate and inherited rules are **`BOARD.md` §8**.
+   Do not look for it here, and do not file its cells against the 53 family ids: the session rule is a
+   capability the shipped engine does not have (`engine.py:470-473` fires at the *contract's* RTH close,
+   and `allow_overnight` is `True` at no call site anywhere), so the programme's first object is a
+   harness, not a family.
+2. **The audit vocabulary is canonical in `BRIEF.md`, not here and not in `ADJUDICATIONS.md`.**
+   `CLEAN` / `PROXY` / `DEGRADED` / `VOID` / `DEAD` / `MISNAMED` / `MISFILED`, with `VOID` stated per
+   (symbol, timeframe, **frame**) plus any deciding scope flag and carrying a `REACHED` / `FORWARD`
+   line (`R-14`). `ADJ-8`'s four-term set is **retired** and mapped in ADJ-13a. The reason it moved:
+   twelve agents read `BRIEF.md` and only some read the board's rulings, and a fixed vocabulary living
+   where only some agents look is the failure `REGISTRY.md` exists to prevent — R4 had to write a
+   translation table to make its 31 verdicts collate, which is the measured cost of having had two.

@@ -358,11 +358,16 @@ def main() -> int:
               f"  (bars per bucket {ri['bars_per_7200_bucket']}, "
               f"label minutes={ri['minutes_label_on_the_7200_copy']})")
         print(f"  pointer lag idx(1440)-idx(7200): {r['pointer_lag_1440_minus_7200']}")
+        print(f"  primary pointer is the identity: {r['primary_pointer_is_the_identity']}")
+        print(f"  confirm pointer rebuilt from daily+clock alone: "
+              f"{r['confirm_pointer_rebuilt_from_the_daily_series_and_the_clock']}")
         print(f"  confirm snapshot == an earlier value of the primary: "
               f"{r['confirm_tf_snapshot_is_a_historical_value_of_the_primary']}")
         print(f"  fires: {r['condition_fires_at_1440m']}")
         print(f"  REDUCTION to one series + one lag: "
               f"{r['reduction_match_vs_one_series_reference']}")
+        print(f"  REDUCTION reading no second series at all: "
+              f"{r['reduction_match_no_second_series_read']}")
         print(f"  mtf_aligned == mtf_strongly_aligned: {r['aligned_equals_strongly_aligned']}")
         print(f"  mtf_not_conflicted pass: {r['not_conflicted_pass_pct']}%")
         print(f"  trend labels: {r['trend_label_census']}")

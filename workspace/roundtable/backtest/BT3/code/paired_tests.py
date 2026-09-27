@@ -33,18 +33,63 @@ REPORT = os.path.join(ROOT,
                       "workspace/roundtable/backtest/BT3/code/algo1_report.json")
 
 
+def z_from_p(p: float) -> float:
+    """The two-sided normal deviate with the same tail mass as ``p``.
+
+    **This is the operation my first report omitted, and the omission was the
+    error.** The deflation rule is stated in t-units: searching ``n`` variants
+    buys about ``sqrt(2*ln n)`` free ones. So a result is judged by comparing
+    **its own statistic** to that threshold. Comparing a *p-value* to a t-value
+    is not that operation and is not a comparison of anything - 0.029 is not
+    "less than 2.039" in any meaningful sense. Every table in ALGOS.md now
+    carries this z beside the p.
+
+    Bisection on ``erfc`` because the deterministic core is dependency-free.
+    """
+    if p <= 0.0:
+        return float("inf")
+    if p >= 1.0:
+        return 0.0
+    lo, hi = 0.0, 40.0
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if math.erfc(mid / math.sqrt(2.0)) > p:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def pmf(k: int, n: int, p: float = 0.5) -> float:
+    return math.comb(n, k) * p ** k * (1.0 - p) ** (n - k)
+
+
+def mid_p(k: int, n: int) -> float:
+    """Exact two-sided p less half the observed point mass.
+
+    The standard correction for the conservatism a discrete test carries. It is
+    reported because discreteness was the first thing I had to rule out as an
+    excuse for my own error - and it pushes the *other* way: mid-p is smaller
+    than the exact p, so the z is larger, so discreteness cannot rescue a
+    comparison that fails on the exact p.
+    """
+    if n == 0:
+        return 1.0
+    return max(0.0, binom_two_sided(k, n) - 0.5 * pmf(k, n))
+
+
 def binom_two_sided(k: int, n: int, p: float = 0.5) -> float:
     """Exact two-sided binomial p-value by the method of small likelihoods."""
     if n == 0:
         return 1.0
 
-    def pmf(i: int) -> float:
+    def _pt(i: int) -> float:
         return math.comb(n, i) * p ** i * (1.0 - p) ** (n - i)
 
-    obs = pmf(k)
+    obs = _pt(k)
     # Sum every outcome no more likely than the observed one. Exact, and it is
     # the definition that does not assume symmetry.
-    return min(1.0, sum(pmf(i) for i in range(n + 1) if pmf(i) <= obs * (1 + 1e-12)))
+    return min(1.0, sum(_pt(i) for i in range(n + 1) if _pt(i) <= obs * (1 + 1e-12)))
 
 
 def mcnemar(a: list, b: list) -> dict:
@@ -56,7 +101,10 @@ def mcnemar(a: list, b: list) -> dict:
     return {"test": "McNemar exact (paired binomial on discordant seeds)",
             "n_pairs": len(a), "a_only": b10, "b_only": b01,
             "n_discordant": n_disc,
-            "p_two_sided": binom_two_sided(b10, n_disc) if n_disc else 1.0}
+            "p_two_sided": binom_two_sided(b10, n_disc) if n_disc else 1.0,
+            "mid_p": mid_p(b10, n_disc) if n_disc else 1.0,
+            "z": z_from_p(binom_two_sided(b10, n_disc)) if n_disc else 0.0,
+            "z_mid_p": z_from_p(mid_p(b10, n_disc)) if n_disc else 0.0}
 
 
 def sign_test(a: list, b: list) -> dict:
@@ -68,7 +116,10 @@ def sign_test(a: list, b: list) -> dict:
             "n_pairs": len(a), "a_greater": pos, "b_greater": neg,
             "ties": len(a) - n,
             "median_diff": (sorted(x - y for x, y in zip(a, b))[len(a) // 2]),
-            "p_two_sided": binom_two_sided(pos, n) if n else 1.0}
+            "p_two_sided": binom_two_sided(pos, n) if n else 1.0,
+            "mid_p": mid_p(pos, n) if n else 1.0,
+            "z": z_from_p(binom_two_sided(pos, n)) if n else 0.0,
+            "z_mid_p": z_from_p(mid_p(pos, n)) if n else 0.0}
 
 
 def main() -> None:
@@ -77,11 +128,17 @@ def main() -> None:
     real = pr["vol_aware_barrier"]
     out = {}
 
-    for name, other in (("placebo_ensemble", "neutral vs placebo (R permuted)"),
-                        ("vol_pinned_control", "neutral vs volatility pinned"),
-                        ("barrier_off_leak", "neutral vs barrier removed"),
-                        ("honest_arm_live_eligible_False",
-                         "neutral vs honest (is_live_eligible=False)")):
+    for name, other in (
+            ("vol_pinned_control", "neutral vs volatility pinned"),
+            ("honest_arm_live_eligible_False",
+             "neutral vs honest (is_live_eligible=False)"),
+            ("barrier_off_leak", "neutral vs barrier removed"),
+            ("placebo_global",
+             "neutral vs placebo GLOBAL (ordering control, not signal-layer)"),
+            ("placebo_by_symbol_tf_reason",
+             "neutral vs placebo stratified (symbol, tf, reason)"),
+            ("placebo_by_strategy_reason",
+             "neutral vs placebo stratified (strategy, reason)")):
         o = pr[name]
         out[name] = {
             "comparison": other,
@@ -96,29 +153,37 @@ def main() -> None:
 
     dest = os.path.join(ROOT,
                         "workspace/roundtable/backtest/BT3/code/paired_tests.json")
-    json.dump(out, open(dest, "w"), indent=1)
 
-    #: **Search size: 8.** Four arm comparisons x two statistics each, and that
-    #: is every test run in this burst - nothing was tried and discarded.
-    #: `sqrt(2*ln 8)` = 2.039 free t-units, against the programme-wide 5.46.
-    #: Stated up front because PIPELINE §4 obligation 2 requires it with any
-    #: number, and because a p-value of 0.029 against 1.893 free units is not a
-    #: finding, while 7e-10 is.
-    print(f"search size: 8 tests (4 comparisons x 2 statistics); free_t = "
-          f"{math.sqrt(2 * math.log(8)):.3f}; programme-wide free_t = 5.46\n")
+    #: **Search size is the number of tests, and it is now 12** - six arm
+    #: comparisons x two statistics - so `free_t = sqrt(2*ln 12) = 2.229`. It
+    #: went up because I added two stratified placebos rather than defend the
+    #: one I had; raising my own threshold was the cost of doing that honestly,
+    #: and it does not rescue the comparison that failed, which is the point.
+    n_tests = 2 * len(out)
+    free_t = math.sqrt(2.0 * math.log(n_tests))
+    print(f"search size: {n_tests} tests ({len(out)} comparisons x 2 "
+          f"statistics); free_t = sqrt(2*ln {n_tests}) = {free_t:.3f}; "
+          f"programme-wide free_t = 5.46")
+    print("CLEARS means |z| > free_t. z is the two-sided normal deviate with "
+          "the same tail mass as the exact p.\n")
     for k, v in out.items():
         print(f"{v['comparison']}")
-        a = v["absorbing"]
-        print(f"   absorbing: real {v['absorbing_rate_real']}% vs "
-              f"{v['absorbing_rate_other']}%  |  {a['n_discordant']} discordant "
-              f"({a['a_only']} real-only, {a['b_only']} other-only)  "
-              f"McNemar exact p = {a['p_two_sided']:.3g}")
-        t = v["taken"]
-        print(f"   taken:     median {v['taken_median_real']}% vs "
-              f"{v['taken_median_other']}%  |  real greater in {t['a_greater']}, "
-              f"other in {t['b_greater']}, {t['ties']} ties  "
-              f"sign test p = {t['p_two_sided']:.3g}  "
-              f"(median per-seed diff {t['median_diff']:+d} trades)")
+        for lab, t, extra in (
+                ("deaths", v["absorbing"],
+                 f"{v['absorbing_rate_real']}% vs {v['absorbing_rate_other']}%"),
+                ("taken ", v["taken"],
+                 f"median {v['taken_median_real']}% vs "
+                 f"{v['taken_median_other']}%, "
+                 f"per-seed diff {v['taken']['median_diff']:+d}")):
+            verdict = "CLEARS  " if abs(t["z"]) > free_t else "does not"
+            print(f"   {lab}  {extra:<44s} p={t['p_two_sided']:.4g} "
+                  f"|z|={t['z']:.3f} (mid-p |z|={t['z_mid_p']:.3f})  "
+                  f"{verdict} free_t={free_t:.3f}")
+        v["free_t"] = free_t
+        v["n_tests"] = n_tests
+        v["absorbing"]["clears"] = abs(v["absorbing"]["z"]) > free_t
+        v["taken"]["clears"] = abs(v["taken"]["z"]) > free_t
+    json.dump(out, open(dest, "w"), indent=1)
     print(f"\nwrote {dest}")
 
 

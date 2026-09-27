@@ -62,6 +62,10 @@ RELVOL_LOOKBACK_DAYS = 20
 BB_PERIOD, BB_MULT = 20, 2.0
 KC_PERIOD, KC_MULT = 20, 1.5
 
+#: The two exits of the generating study, both StopKind.ATR
+#: [repo-verified: workspace/newstrats/run_geometry.py:53-63].
+STOP_MULT = {"atr1.0": 1.0, "atr1.5": 1.5}
+
 
 # --------------------------------------------------------------------------
 # Cells
@@ -214,6 +218,21 @@ def join(trades_path: str = TRADES, *, window: int = ATR_PERIOD
         rec["sig_win_vol"] = trailing_mean_volume(rows, ei - 1, window)
         rec["entry_vol"] = ent["volume"]
         rec["entry_bucket"] = ent["bucket"]
+        # The *modelled* invalidation distance. Both exits are StopKind.ATR
+        # [repo-verified: workspace/newstrats/run_geometry.py:53-63], so the stop
+        # the signal proposed sits `stop_mult x atr(signal bar)` away. This is
+        # not the realised risk: the fill gaps and slips away from the signal bar
+        # and the engine honours the original stop level rather than re-deriving
+        # it [repo-verified: futures_agents/backtest/engine.py:354-361], so
+        # |entry - stop| differs and is NOT recoverable from this dump
+        # [cite: backtest/BT3/ALGOS.md choice 9, which re-ran the generating
+        # study to recover it]. Labelled `modelled` everywhere it is used.
+        mult = STOP_MULT[t["exitm"]]
+        rec["stop_mult"] = mult
+        rec["sig_stop_dist_modelled"] = (None if sig["atr"] is None
+                                         else mult * sig["atr"])
+        rec["sig_stop_pct_modelled"] = (None if sig["atr_over_close"] is None
+                                        else mult * sig["atr_over_close"])
         out.append(rec)
     return out, bars, cov
 

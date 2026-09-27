@@ -29,7 +29,18 @@ from typing import Dict, List, Optional, Sequence
 
 REPO = "/home/user/Futures01"
 OUT = os.path.join(REPO, "workspace", "roundtable", "edge", "EF2", "data")
-SQRT_YEARS = math.sqrt(718 / 365.25)
+sys.path.insert(0, os.path.join(REPO, "workspace", "roundtable", "edge", "EF6", "code"))
+
+#: EF6's module, adopted per EF6-01 ("do not derive a threshold by hand and do not
+#: quote 5.46"). One implementation across EF2-EF5 means a cross-cell comparison is
+#: a cell comparison and not a convention comparison. I verified it against my own
+#: arithmetic first: at n = 5,152 it returns free_t 4.1345 and required annualised
+#: Sharpe 2.947 against my 4.135 / 2.95 [measured].
+from deflation import threshold as _ef6_threshold                  # noqa: E402
+
+#: EF6's measured span for the 60m/240m cells, adopted over my 718.
+SPAN_DAYS = 718.83
+SQRT_YEARS = 1.4029
 
 MIN_TRADES = 30
 MAX_PLACEBO_P = 0.05
@@ -37,7 +48,21 @@ N_CONTROL_OBS = 40          # 20 seeds x 2 kinds; empirical p floor = 0.025
 
 
 def free_t(n: int) -> float:
-    return math.sqrt(2.0 * math.log(max(2, n)))
+    return float(_ef6_threshold(max(1, n), SPAN_DAYS)["free_t"])
+
+
+def required_sharpe(n: int) -> float:
+    return float(_ef6_threshold(max(1, n), SPAN_DAYS)["required_annual_sharpe"])
+
+
+#: EF6-01's search-budget arithmetic, n_max = exp(SR^2 * Y / 2), on the swing span.
+#: This is the number that decides whether a ranked list of 5,000 arms can mean
+#: anything at all, and it is quoted on the deliverable rather than buried:
+#:   true annual Sharpe 1.0 -> max answerable search width  2
+#:                      1.5 ->                              9
+#:                      2.0 ->                             51
+#:                      3.0 ->                          7,022
+MAX_ANSWERABLE_WIDTH = {1.0: 2, 1.5: 9, 2.0: 51, 3.0: 7022}
 
 
 #: Cycles in which EF1's 16:00 flat cannot fire, per cell (EF2 burst 06). Carried
@@ -114,7 +139,7 @@ def row_view(rec: dict, symbol: str, n_screened: int,
         "control_observations": (control or {}).get("n_obs"),
         "search_size": n_screened,
         "threshold_free_t": round(ft, 3),
-        "sharpe_threshold_implies": round(ft / SQRT_YEARS, 2),
+        "sharpe_threshold_implies": required_sharpe(n_screened),
         "clears_threshold": bool(abs(t) >= ft),
         "forward_selected": (forward or {}).get("selected"),
         "forward_expectancy_r": (forward or {}).get("oos_expectancy_r"),

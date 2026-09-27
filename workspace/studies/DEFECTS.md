@@ -651,3 +651,150 @@ worker 2 had to run its RTH arm in a separate process.
 
 Fixed the same way as `ExitModel`: `identity` built from `dataclasses.fields`, `label` kept
 readable and extended to show the previously invisible scope. Two regression tests added; 748 pass.
+
+---
+
+# D44–D58 — allocated by the manager in rounds 2 and 3, written 2026-09-27
+
+Provenance is marked on each: **[verified here]** means I read the code and reproduced the
+behaviour myself; **[agent-measured]** means an agent measured it and I am recording its figures.
+
+## D44 — `bootstrap_paths(mode="block")` is not circular (found by BT3)
+
+`montecarlo.py:103-107`. Index 0 appears at **0.122×** its due frequency and the tail at 1.123×,
+while `mode="iid"` is flat within [0.988, 1.011]. There is no wrap-around, so early bars are
+systematically under-sampled. Any block-bootstrap confidence interval computed here is biased
+toward the middle of the series. **[agent-measured]** BT3 flagged the bias rather than reporting
+through it, and gated its own `MGR-T8` numbers behind the fix.
+
+## D45 — `StopKind.VWAP_BAND` collapses to `FIXED_TICKS` (found by R1, answering R3-Q1)
+
+σ is **exactly 0 on the first bar of every CME trading day**, with no warm-up guard, so at
+`stop_mult=1` the distance falls below `min_stop_ticks` on **6.0% (MNQ) to 33.7% (MCL)** of 1h bars
+where a `1.0×ATR` stop is below it on 0.0%. The stop kind is not a rescaled ATR — corr(σ, ATR) is
+0.413–0.634 — it is a distinct mechanism that degenerates. **[agent-measured]**
+
+## D46 — CLASS: documented inputs the code does not read (4 instances)
+
+A docstring or module header names a field the arithmetic never touches. Instances: `estimated`
+produced and read by nothing; `detect_imbalances` documented as reading delta while computing
+volume; `Condition.warmup_bars` declared and never consumed; and `metrics.py:31`'s "*Bars per year*"
+comment above a `TRADING_DAYS_PER_YEAR` that `:214-215` never uses — the annualisation is computed
+from trade timestamps and is **clock-robust**, so this instance makes a task *cheaper*.
+
+## D47 — CLASS: `openinterest` is structurally dead, and so are the daily `news` conditions
+
+Both `openinterest` conditions gate on a column absent from every CSV — the header is
+`open_time,open,high,low,close,volume`. Asymmetric harm: the SIGNAL yields zero trades, while the
+FILTER `oi_expanding`, never passing, **vetoes every entry**. Per-symbol: MGC's profile excludes the
+affected groups, MNQ's includes both. Third instance: all three `news` conditions are degenerate on
+every daily series (bars stamped 00:00 ET, so `minutes_since` is never in (15,60]) — **blast radius
+zero**, because the combinator can emit no carrier for them. **[verified here]**
+
+## D48 — `dataclasses.replace` inherits the memoised `_id` (found by R3 and the manager)
+
+`_id: Optional[str] = None` is a dataclass *field* (`base.py:585`) that `strategy_id` memoises into
+(`:611-623`), and `replace()` copies fields. So once the id has been read once, every later
+`replace` carries the stale one. **[verified here]** — changing an exit from targets
+`(1.5, 3.0, 5.0)` to `(3.0,)` left `strategy_id` byte-identical at `MGC-60m-510cb40223fb`.
+
+`run_many` keys results, open positions, pending orders and the skip guard all by that id, so a pair
+built without `_id=None` collapses into one row and **the between-arm difference measures exactly
+zero** — indistinguishable from "this axis does nothing", which is the shape of this programme's own
+settled findings. **Scope: no published result is affected.** All nine existing `replace` call sites
+on a `Strategy` pass `_id=None` explicitly. A forward hazard with no guard, not a retraction.
+
+## D49 — `StopKind.RANGE` is `StopKind.ATR` (found by R1)
+
+`RANGE` falls through to `dist = stop_mult * atr` when `snap.opening_range is None`, and the
+fall-through is **byte-identical** to the ATR branch (neither adds `pad`). That is **5000 of 5000
+MGC 1h bars**, 99.8% MNQ/MES, 65.8% MCL, because `or_minutes = 30` is hard-coded against a
+per-symbol `rth_open` that is off the hourly grid. With D45 this gives `x_exits`' settled "no stable
+best stop width" its first *measured, artefactual* candidate explanation. **[agent-measured]**
+
+## D50 — `align_bucket` ignores `minutes` above 1440, so the daily frame confirms against itself
+
+`data/bars.py:144-149` — the `if minutes >= 1440` branch never reads `minutes`. **[verified here]**:
+
+```
+align_bucket(ts,  1440) = 2026-03-17 18:00:00-04:00
+align_bucket(ts,  7200) = 2026-03-17 18:00:00-04:00
+align_bucket(ts, 10080) = 2026-03-17 18:00:00-04:00
+```
+
+`FRAMES[1440] = [1440, 7200]`, so the "weekly" confirming timeframe **is the daily series**, lagged
+2–4 bars, OHLCV bit-identical 2510/2510 MGC. **Every daily multi-timeframe statement in this
+repository is a lagged-autocorrelation test on one series**, which is why `mtf_not_conflicted`
+passes 99%+ there. See ADJ-14 for what this does and does not do to rule 2.
+
+## D51 — `BarSeries.append` silently collapses two bars sharing a timestamp (found by R5)
+
+Raises on a duration mismatch and on out-of-order input, but on an **equal** timestamp takes
+`# Same bucket: replace` → `self._bars[-1] = b; return` (`bars.py:203-207`) and never enforces
+contiguity. **[verified here]** The intent is legitimate (finalising a developing bar); the
+consequence is that two constructed boundaries landing in one minute collapse into one bar with no
+warning and no counter. **Fifth false-null mechanism** after D38, D42, D44 and D48. Anyone building
+a non-wall-clock series must compute the collision-free floor and assert the appended length equals
+the intended length.
+
+## D52 — at daily frequency the `vwap` group is a bar-shape group (found by R6)
+
+Band-1 half-width **< 1 tick on 2511/2511 MGC and 1859/1859 MES daily bars** (7.5–8.9% at 60m,
+19.8–21.8% at 240m). `vwap_band1_bounce` fires **0/0**; `above_vwap` collapses to `sign(CLV)` and
+matches `candle_close_strength` on **1092/1092** co-firings. `vwap` is VWAP's **required** group, so
+every daily VWAP strategy is a bar-shape strategy wearing a VWAP name. **Numbered separately from
+D45 rather than appended**: same root cause, different consumer, different harm, different fix.
+**[agent-measured]**, BT6 verifying independently.
+
+## D53 — CLASS: a condition accepts a timeframe and reads a different one (6 instances)
+
+Instance 6 is `StrategyFilters.require_alignment` calling `snap.alignment()` with **no argument**
+(`base.py:433-434`) — the only instance outside `library.py`. The class exists because the harm
+**splits**: the *inertness* half is forward-only, invisible wherever `primary_tf = min(frame)`,
+which every published harness enforces; the *frame-dependence* half bites now — a 13-point regime
+swing, a 37-point `mtf_not_conflicted` swing, and 240m base filters read off the daily series.
+
+## D54 — a required group with no SIGNAL member is silently dropped (found by R4, R1-verified)
+
+`combinator.py:361-369`. `volume` has **0 of 3 SIGNALs**, so MOMENTUM and BREAKOUT declare it
+required and it is **never enforced** — 24 of 40 generated MNQ MOMENTUM strategies carry no volume
+condition at all. R1 accepted this against its own interest: it deletes the mitigating clause from
+R1's own `D-M2`.
+
+## D55 — `strategy_id` carries no partner provenance (found by R2)
+
+Two partner-bound frames collide on one key and the second **silently overwrites** in
+`performance_db`. **Fourth instance of the D43 identity-hash family** — the manager's earlier triage
+filed it under D48's family and was wrong. **Zero current blast radius**; numbered before it bites,
+because Wall A would make it live.
+
+## D56 — the news-proximity clock misreports in both directions (2 instances, found by R2/BT2)
+
+Forward: on a 60m frame an 08:30 print admits the 09:00 bar and **fills at 10:00**, 90 minutes
+after the print, while `post_news_window` claims 15–60 — and the offset scales with timeframe.
+Backward: projection looks back **2 days against 45 forward** (`features.py:952-959`), so
+`minutes_since_high_impact` reads `inf` on 52–56 bars per series. Kin is D39, not D46.
+
+## D57 — `outside_news_blackout` is the identity filter on a `:00` grid (found by BT2/R2)
+
+A 25-minute window, and five of six HIGH rules print at `:30`, while 4,992 of 5,000 hourly bars open
+at `:00`. So the window contains no bar open: **MGC 0 of 1,093 eligible bars removed.** An A/B on it
+is a strategy against itself and the null is guaranteed. This retires the published "retained 99.99%
+of trades" as a property of the bar grid rather than of the filter. **[agent-measured]**
+
+## D58 — CLASS: duplicate predicates that `GLOBAL_EXCLUSIVE` does not cover (2 instances)
+
+(1) A reachable **cross-group** CLV triple, co-firing 92–93% and **co-occurring in generated
+strategies** — a live false confluence, bearing on rule 1's "two signals and one filter". (2) Two
+provable **same-group** duplicates, identical in 23/23 and 8/8 cells — denominator inflation with
+D48's exact-zero signature. Neither is in `GLOBAL_EXCLUSIVE`.
+
+---
+
+## The pattern worth more than any single number
+
+**Six register entries are now one mechanism: a defect whose signature is a null.** D38, D42, D44,
+D48, D51 and D57 all produce "no effect" or "no difference" as their failure mode, which is
+indistinguishable from this programme's own central finding. That is why a null here requires a
+firing-rate check on its own conditions before it may be reported as absence, and why a look-ahead
+power control does not license the inference (retracted 2026-09-27).

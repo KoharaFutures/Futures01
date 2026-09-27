@@ -353,14 +353,26 @@ def roll(led: Ledger, *, lookback_days: int, trade_days: int = 30,
         }
 
     obs = one(rv)
-    nulls = []
+    nulls, unulls = [], []
     for _ in range(nperm):
         p = led.permute(rng, block_days=trade_days)
         x = one(p)
         if x["topk_trades"]:
             nulls.append(x["topk_exp_r"])
+        if x["universe_trades"]:
+            unulls.append(x["universe_exp_r"])
     nm = float(np.mean(nulls)) if nulls else float("nan")
     ns = float(np.std(nulls)) if nulls else float("nan")
+    # The universe arm needs its own null, because when the top-k IS the whole
+    # qualifying universe the two z's are the same number measuring a DIFFERENT
+    # thing. The permutation preserves every trade count, so `qual` is identical
+    # under it - therefore a non-zero z on the universe arm is not a ranking
+    # effect at all. It says that strategies which cleared the trade floor
+    # earned more per trade than a reassignment of R within their own (exit
+    # geometry x time block) pool would give, i.e. an ACTIVITY effect. Reporting
+    # that as "the top 10 works" would be wrong.
+    unm = float(np.mean(unulls)) if unulls else float("nan")
+    uns = float(np.std(unulls)) if unulls else float("nan")
 
     sel = obs["sel"]
     js = [len(sel[i] & sel[i + 1]) / max(len(sel[i] | sel[i + 1]), 1)
@@ -386,6 +398,11 @@ def roll(led: Ledger, *, lookback_days: int, trade_days: int = 30,
         "selection_edge_vs_universe_r": _r4(obs["topk_exp_r"] - obs["universe_exp_r"]),
         "selection_edge_vs_randomk_r": _r4(obs["topk_exp_r"] - obs["randomk_exp_r"]),
         "null_exp_r": _r4(nm), "null_sd": _r4(ns),
+        "universe_null_exp_r": _r4(unm), "universe_null_sd": _r4(uns),
+        "universe_z_vs_null": (
+            round((obs["universe_exp_r"] - unm) / uns, 2)
+            if uns and uns > 1e-12 and obs["universe_exp_r"] == obs["universe_exp_r"]
+            else None),
         "z_vs_null": (round((obs["topk_exp_r"] - nm) / ns, 2)
                       if ns and ns > 1e-12 and obs["topk_exp_r"] == obs["topk_exp_r"]
                       else None),
@@ -417,6 +434,9 @@ def roll_report(res: dict) -> str:
         f"oos trades {res['oos_trades']}",
         f"  top-{res['top_k']}  {t}R      universe {u}R      random-k {rk}R"
         f"      null {res['null_exp_r']}R (sd {res['null_sd']})   z={z}",
+        f"  universe vs its own null: {res['universe_exp_r']}R vs "
+        f"{res['universe_null_exp_r']}R (sd {res['universe_null_sd']})   "
+        f"z={res['universe_z_vs_null']}   <- an ACTIVITY effect, not a ranking one",
         f"  selection edge vs universe {res['selection_edge_vs_universe_r']}R   "
         f"vs random-k {res['selection_edge_vs_randomk_r']}R",
         f"  rank-window qualifiers mean {res['mean_rank_window_qualifiers']}   "

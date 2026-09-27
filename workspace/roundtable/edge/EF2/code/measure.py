@@ -126,20 +126,47 @@ def metrics(rs: Sequence[float], gross: Optional[Sequence[float]] = None,
 
 
 def trade_rows(trades) -> dict:
-    """Pull the per-trade series the metrics need out of engine Trade objects."""
+    """Pull the per-trade series the metrics need out of engine ``Trade`` objects.
+
+    Uses the engine's OWN ``minutes_held``
+    [repo-verified: engine.py:512, (to_et(bar.ts) - to_et(pos.entry_ts)) in
+    minutes] rather than recomputing from ``entry_ts``/``exit_ts``, which are both
+    bar-OPEN stamps and would need the same conversion done again by hand.
+    """
     net = [t.net_r for t in trades]
     gross = [t.gross_r for t in trades]
-    dur, mae, mfe = [], [], []
-    for t in trades:
-        try:
-            dur.append((to_et(t.exit_ts) - to_et(t.entry_ts)).total_seconds() / 60.0)
-        except Exception:
-            pass
-        for attr, box in (("mae_r", mae), ("mfe_r", mfe)):
-            v = getattr(t, attr, None)
-            if v is not None:
-                box.append(v)
+    dur = [t.minutes_held for t in trades if t.minutes_held is not None]
+    mae = [t.mae_r for t in trades]
+    mfe = [t.mfe_r for t in trades]
     return {"net": net, "gross": gross, "dur": dur, "mae": mae, "mfe": mfe}
+
+
+#: The slices the task brief asks for. ``Trade`` already carries every one
+#: [repo-verified: engine.py:148-152 — regime, volatility, session, time_bucket,
+#: day_of_week], so this is a group-by rather than a second measurement.
+SLICE_FIELDS = ("session", "regime", "volatility", "time_bucket", "day_of_week",
+                "exit_reason", "direction")
+
+
+def slices(trades) -> dict:
+    """Expectancy in R, trade count and win rate per slice, per field.
+
+    Reported, never ranked on. A slice with a high expectancy over 6 trades is
+    the sample-size trap the whole exercise is about, so every slice carries its
+    own n and nothing selects on one.
+    """
+    out: Dict[str, Dict[str, dict]] = {}
+    for f in SLICE_FIELDS:
+        buckets: Dict[str, List[float]] = defaultdict(list)
+        for t in trades:
+            v = getattr(t, f, None)
+            if v is None:
+                continue
+            buckets[getattr(v, "value", str(v))].append(t.net_r)
+        out[f] = {k: {"trades": len(v), "expectancy_r": st.mean(v),
+                      "win_rate": sum(1 for x in v if x > 0) / len(v)}
+                  for k, v in sorted(buckets.items()) if v}
+    return out
 
 
 # ------------------------------------------------------------------- engines
@@ -269,6 +296,7 @@ def run_cell(sym: str, cell: str, arms: Dict[str, object], kind: str,
                     break
         m["fold_expectancy_r"] = {str(k): st.mean(v) for k, v in sorted(per_fold.items())}
         m["fold_trades"] = {str(k): len(v) for k, v in sorted(per_fold.items())}
+        m["slices"] = slices(r.trades) if r.trades else {}
         rows[ak] = {**meta, **m}
     counters = getattr(eng, "counters", None)
     return {"cell": f"{sym}:{cell}", "engine": kind, "seconds": round(el, 1),

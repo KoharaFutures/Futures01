@@ -1,0 +1,426 @@
+{
+ "symbol": "MNQ",
+ "setting": "swing",
+ "base_tf": 60,
+ "substrate": "data/archive",
+ "criterion": "durability",
+ "lookback_days": 180,
+ "trade_days": 30,
+ "floor": 20,
+ "top_k": 10,
+ "n_strategies": 145,
+ "folds_total": 23,
+ "folds_traded": 17,
+ "oos_trades": 2406,
+ "topk_exp_r": 0.0169,
+ "universe_exp_r": 0.0169,
+ "randomk_exp_r": 0.0169,
+ "selection_edge_vs_universe_r": 0.0,
+ "selection_edge_vs_randomk_r": 0.0,
+ "null_exp_r": -0.0012,
+ "null_sd": 0.0077,
+ "universe_null_exp_r": -0.0012,
+ "universe_null_sd": 0.0077,
+ "universe_z_vs_null": 2.35,
+ "z_vs_null": 2.35,
+ "folds_where_topk_is_the_whole_universe": "17 of 17",
+ "mean_rank_window_qualifiers": 8.9,
+ "folds_profitable": "8 of 17",
+ "folds_beating_universe": "0 of 17",
+ "consecutive_jaccard": 0.9102,
+ "union_selected": 12,
+ "top1_changed": "4 of 16",
+ "deflation": {
+  "n_screened": 330,
+  "preregistered": false,
+  "span_days": 718.88,
+  "span_years": 1.9682,
+  "sqrt_years": 1.4029,
+  "free_t": 3.4056,
+  "prereg_floor_t": 1.1774,
+  "threshold_t": 3.4056,
+  "required_annual_sharpe": 2.428,
+  "required_annual_sharpe_prereg": 0.839,
+  "t_at_sharpe_1": 1.403,
+  "t_at_sharpe_2": 2.806,
+  "t_at_sharpe_3": 4.209,
+  "answerable_at_sharpe_2": false,
+  "answerable_prereg_at_sharpe_2": true
+ },
+ "folds": [
+  {
+   "span": [
+    "2025-04-06T18:00:00-04:00",
+    "2025-05-06T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-10-08T18:00:00-04:00",
+    "2025-04-06T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 10,
+   "qualifiers_score_window": 1,
+   "selected": 10,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0316,
+   "in_sample_exp_r": 0.0621,
+   "oos_trades": 152,
+   "oos_exp_r": -0.0811,
+   "universe_trades": 152,
+   "universe_exp_r": -0.0811,
+   "randomk_exp_r": -0.0811,
+   "top1": "MNQ-60m-ddef4491fb82"
+  },
+  {
+   "span": [
+    "2025-05-06T18:00:00-04:00",
+    "2025-06-05T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-11-07T17:00:00-05:00",
+    "2025-05-06T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 3,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0196,
+   "in_sample_exp_r": 0.0299,
+   "oos_trades": 169,
+   "oos_exp_r": -0.0614,
+   "universe_trades": 169,
+   "universe_exp_r": -0.0614,
+   "randomk_exp_r": -0.0614,
+   "top1": "MNQ-60m-ddef4491fb82"
+  },
+  {
+   "span": [
+    "2025-06-05T18:00:00-04:00",
+    "2025-07-05T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-12-07T17:00:00-05:00",
+    "2025-06-05T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 10,
+   "qualifiers_score_window": 2,
+   "selected": 10,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0023,
+   "in_sample_exp_r": -0.0195,
+   "oos_trades": 148,
+   "oos_exp_r": -0.1146,
+   "universe_trades": 148,
+   "universe_exp_r": -0.1146,
+   "randomk_exp_r": -0.1146,
+   "top1": "MNQ-60m-ddef4491fb82"
+  },
+  {
+   "span": [
+    "2025-07-05T18:00:00-04:00",
+    "2025-08-04T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-01-06T17:00:00-05:00",
+    "2025-07-05T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 2,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0009,
+   "in_sample_exp_r": 0.0006,
+   "oos_trades": 136,
+   "oos_exp_r": -0.3868,
+   "universe_trades": 136,
+   "universe_exp_r": -0.3868,
+   "randomk_exp_r": -0.3868,
+   "top1": "MNQ-60m-00e00d9d237f"
+  },
+  {
+   "span": [
+    "2025-08-04T18:00:00-04:00",
+    "2025-09-03T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-02-05T17:00:00-05:00",
+    "2025-08-04T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 2,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0304,
+   "in_sample_exp_r": -0.0753,
+   "oos_trades": 145,
+   "oos_exp_r": 0.0865,
+   "universe_trades": 145,
+   "universe_exp_r": 0.0865,
+   "randomk_exp_r": 0.0865,
+   "top1": "MNQ-60m-00e00d9d237f"
+  },
+  {
+   "span": [
+    "2025-09-03T18:00:00-04:00",
+    "2025-10-03T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-03-07T17:00:00-05:00",
+    "2025-09-03T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 3,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0195,
+   "in_sample_exp_r": -0.0344,
+   "oos_trades": 172,
+   "oos_exp_r": -0.0786,
+   "universe_trades": 172,
+   "universe_exp_r": -0.0786,
+   "randomk_exp_r": -0.0786,
+   "top1": "MNQ-60m-00e00d9d237f"
+  },
+  {
+   "span": [
+    "2025-10-03T18:00:00-04:00",
+    "2025-11-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-04-06T18:00:00-04:00",
+    "2025-10-03T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 3,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0418,
+   "in_sample_exp_r": -0.0943,
+   "oos_trades": 161,
+   "oos_exp_r": 0.3742,
+   "universe_trades": 161,
+   "universe_exp_r": 0.3742,
+   "randomk_exp_r": 0.3742,
+   "top1": "MNQ-60m-83794203b04b"
+  },
+  {
+   "span": [
+    "2025-11-02T18:00:00-05:00",
+    "2025-12-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-05-06T19:00:00-04:00",
+    "2025-11-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 9,
+   "qualifiers_score_window": 2,
+   "selected": 9,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0022,
+   "in_sample_exp_r": 0.0191,
+   "oos_trades": 140,
+   "oos_exp_r": 0.1974,
+   "universe_trades": 140,
+   "universe_exp_r": 0.1974,
+   "randomk_exp_r": 0.1974,
+   "top1": "MNQ-60m-00e00d9d237f"
+  },
+  {
+   "span": [
+    "2025-12-02T18:00:00-05:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-06-05T19:00:00-04:00",
+    "2025-12-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 8,
+   "qualifiers_score_window": 2,
+   "selected": 8,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0026,
+   "in_sample_exp_r": 0.0122,
+   "oos_trades": 104,
+   "oos_exp_r": -0.1298,
+   "universe_trades": 104,
+   "universe_exp_r": -0.1298,
+   "randomk_exp_r": -0.1298,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-01-01T18:00:00-05:00",
+    "2026-01-31T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-07-05T19:00:00-04:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 8,
+   "qualifiers_score_window": 2,
+   "selected": 8,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0072,
+   "in_sample_exp_r": 0.0235,
+   "oos_trades": 144,
+   "oos_exp_r": -0.146,
+   "universe_trades": 144,
+   "universe_exp_r": -0.146,
+   "randomk_exp_r": -0.146,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-01-31T18:00:00-05:00",
+    "2026-03-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-08-04T19:00:00-04:00",
+    "2026-01-31T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 8,
+   "qualifiers_score_window": 2,
+   "selected": 8,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0196,
+   "in_sample_exp_r": 0.073,
+   "oos_trades": 140,
+   "oos_exp_r": -0.1024,
+   "universe_trades": 140,
+   "universe_exp_r": -0.1024,
+   "randomk_exp_r": -0.1024,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-03-02T18:00:00-05:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-09-03T19:00:00-04:00",
+    "2026-03-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 8,
+   "qualifiers_score_window": 2,
+   "selected": 8,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0027,
+   "in_sample_exp_r": 0.0135,
+   "oos_trades": 152,
+   "oos_exp_r": -0.0317,
+   "universe_trades": 152,
+   "universe_exp_r": -0.0317,
+   "randomk_exp_r": -0.0317,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-04-02T18:00:00-04:00",
+    "2026-05-02T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-10-04T18:00:00-04:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 10,
+   "qualifiers_score_window": 1,
+   "selected": 10,
+   "topk_is_whole_universe": true,
+   "in_sample_key": 0.0029,
+   "in_sample_exp_r": 0.0036,
+   "oos_trades": 118,
+   "oos_exp_r": 0.2414,
+   "universe_trades": 118,
+   "universe_exp_r": 0.2414,
+   "randomk_exp_r": 0.2414,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-05-02T18:00:00-04:00",
+    "2026-06-01T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-11-03T17:00:00-05:00",
+    "2026-05-02T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 10,
+   "qualifiers_score_window": 2,
+   "selected": 10,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0136,
+   "in_sample_exp_r": -0.0467,
+   "oos_trades": 150,
+   "oos_exp_r": 0.067,
+   "universe_trades": 150,
+   "universe_exp_r": 0.067,
+   "randomk_exp_r": 0.067,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-06-01T18:00:00-04:00",
+    "2026-07-01T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-12-03T17:00:00-05:00",
+    "2026-06-01T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 10,
+   "qualifiers_score_window": 2,
+   "selected": 10,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0196,
+   "in_sample_exp_r": -0.0585,
+   "oos_trades": 173,
+   "oos_exp_r": 0.1103,
+   "universe_trades": 173,
+   "universe_exp_r": 0.1103,
+   "randomk_exp_r": 0.1103,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-07-01T18:00:00-04:00",
+    "2026-07-31T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2026-01-02T17:00:00-05:00",
+    "2026-07-01T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 7,
+   "qualifiers_score_window": 2,
+   "selected": 7,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0146,
+   "in_sample_exp_r": -0.0462,
+   "oos_trades": 123,
+   "oos_exp_r": 0.113,
+   "universe_trades": 123,
+   "universe_exp_r": 0.113,
+   "randomk_exp_r": 0.113,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  },
+  {
+   "span": [
+    "2026-07-31T18:00:00-04:00",
+    "2026-08-30T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2026-02-01T17:00:00-05:00",
+    "2026-07-31T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 8,
+   "qualifiers_score_window": 1,
+   "selected": 8,
+   "topk_is_whole_universe": true,
+   "in_sample_key": -0.0037,
+   "in_sample_exp_r": -0.0175,
+   "oos_trades": 79,
+   "oos_exp_r": 0.3572,
+   "universe_trades": 79,
+   "universe_exp_r": 0.3572,
+   "randomk_exp_r": 0.3572,
+   "top1": "MNQ-60m-c0f17e1b8d25"
+  }
+ ]
+}

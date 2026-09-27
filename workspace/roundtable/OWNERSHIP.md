@@ -29,6 +29,8 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `discovery2/*` | **DISC2** | read |
 | `discovery/claims/<who>-*.md` | **whoever created it**, once | read |
 | `lib/*` | **parent** | read, and import |
+| `workspace/studies/DEFECTS.md` | **parent** writes; **manager** allocates the ids | read |
+| `workspace/studies/*`, `workspace/chrono/*` | **parent** | read |
 | `research/<agent>/SCOPE.md` | **that researcher** | read |
 | `research/<agent>/findings.md` | **that researcher** | read |
 | `research/<agent>/REQUESTS.md` | **that researcher** | read |
@@ -160,3 +162,23 @@ use them, but always flagged.
 **So: if it is durable, it belongs in your own lane.** `workspace/roundtable/edge/EF1/`,
 `backtest/BT4/`, `research/R4_*` — those are yours alone and nothing else writes them. Treat a role
 directory as scratch that another agent may clobber between your writing it and anyone reading it.
+
+## The one file where allocation and authorship differ
+
+`workspace/studies/DEFECTS.md` is the programme-wide register. **The manager allocates every
+`D<n>`; the parent writes the entry.** Nowhere else in this tree does one agent decide an id and
+another write the text, and the split is deliberate:
+
+- **Only the manager allocates**, because a `D<n>` is a scarce shared name and two agents reaching
+  for "the next free number" is precisely how the question-numbering collided (see `REGISTRY.md`).
+  Board rule `R-9` follows from this: an agent wanting a number **describes the defect** and does
+  not name a number.
+- **Only the parent writes**, because the register is read by every agent and by every future
+  session, and because an entry needs its mechanism verified rather than relayed. Entries carry a
+  provenance mark: `[verified here]` where the parent read the code and reproduced the behaviour,
+  `[agent-measured]` where an agent's figures are being recorded.
+
+This file was unmapped until 2026-09-27 and only surfaced when the audit's scan was widened from
+`workspace/roundtable/` to all of `workspace/` — the same widening that exposed the shared role
+directories. An unmapped file in a tree whose whole premise is one-writer-per-file is a gap in the
+premise, not a detail.

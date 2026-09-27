@@ -71,9 +71,17 @@ def make_placebo(base: Strategy, *, n_bars: int, n_signals: int,
     fire = set(rng.sample(range(n_bars), k))
     direction = {i: (Direction.LONG if rng.random() < long_share else Direction.SHORT)
                  for i in fire}
+    # The condition NAME must be unique per (base arm, seed), not per seed. ``strategy_id``
+    # hashes ``sorted(c.label for c in conditions)`` (base.py:606-623) and ``Condition.label``
+    # is the name (base.py:154-155) - so a placebo named only after its seed collides across
+    # every base arm sharing the same filter set. ``assert_unique`` caught exactly this:
+    # 400-540 collisions per cell on the first run. Without the guard each cell's placebo
+    # distribution would silently have collapsed to ~20 shared results and every real-vs-placebo
+    # comparison would have been against the wrong control, with no symptom. D48, in a new place.
+    tag = f"{base.strategy_id.rsplit('-', 1)[-1]}_s{seed}"
     cond = Condition(
-        name=f"placebo_s{seed}", group="placebo",
-        fn=_RandomBars(fire, direction, f"seed={seed}"),
+        name=f"placebo_{tag}", group="placebo",
+        fn=_RandomBars(fire, direction, tag),
         kind=ConditionKind.SIGNAL,
         description=f"count-matched random bars, {k} of {n_bars}", warmup_bars=0)
     kept = tuple(c for c in base.conditions if c.kind is ConditionKind.FILTER)

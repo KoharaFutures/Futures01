@@ -104,7 +104,7 @@ from futures_agents.backtest.engine import (BacktestEngine, ExitReason, Trade,
 from futures_agents.data.bars import Bar
 from futures_agents.features import SymbolFrame
 from futures_agents.strategies.base import Strategy
-from futures_agents.timeutil import is_rth, to_et
+from futures_agents.timeutil import is_rth, to_et, trading_day
 
 __all__ = [
     "FLAT_ET_MINUTE", "REOPEN_ET_MINUTE", "BarWindow", "SessionGridError",
@@ -230,22 +230,49 @@ def session_end_indices(bars: Sequence[Bar]) -> Dict[int, str]:
     ``test_session_end_map_is_a_function_of_timestamps_only`` pins it down by
     perturbing every price and asserting the map does not move.
 
-    Returns ``{bar_index: ET date iso}`` - a dict so the engine's per-bar test is
-    a hash lookup rather than a scan.
+    **The key is the CME trading day, not the ET calendar date, and that
+    distinction is a defect EF1 shipped and EF3 caught.** A first cut grouped by
+    ET calendar date. It missed the case where the *holiday itself* has no bars
+    at all: a position entered 2024-11-27 18:00 (Thanksgiving eve) had no bar on
+    2024-11-28 to be flattened on, because the archive has none, and ran to
+    Black Friday 12:30 - a hold across Thanksgiving's 16:00 that the ET-date map
+    could not see because no ET date 2024-11-28 existed in it. ``trading_day``
+    rolls at 18:00 ET (`futures_agents/timeutil.py:trading_day`), which is
+    exactly the session boundary this rule is built on, so the 18:00-23:00 bars
+    of Thanksgiving eve belong to Thanksgiving's trading day and the flat lands
+    on the last of them. The ET-date criterion found 10 dates per symbol at 60m;
+    the trading-day criterion finds 19, and its set is a strict superset.
+
+    Within a trading day that has no deadline bar, **every** bar is before that
+    day's 16:00 - a bar at or after 16:00 and before 18:00 would classify
+    ``IN_WINDOW``, and a bar at 18:00 belongs to the next trading day. So the
+    forced flat is simply the trading day's **last** bar; no further filter is
+    needed, and inventing one would be a place for an off-by-one to hide.
+
+    Returns ``{bar_index: trading-day iso}`` - a dict so the engine's per-bar
+    test is a hash lookup rather than a scan.
     """
-    by_date: Dict[object, List[int]] = {}
+    if not bars:
+        return {}
+    by_day: Dict[object, List[int]] = {}
     kinds = classify_series(bars)
     for i, b in enumerate(bars):
-        by_date.setdefault(to_et(b.ts).date(), []).append(i)
+        by_day.setdefault(trading_day(b.ts), []).append(i)
+    # The series' **last** trading day is truncated by the end of the data, not
+    # by an exchange holiday, so it is excluded. Including it would close the
+    # final open position as a flat the rule never actually reached, and - worse
+    # - the flag would move with every prefix length, turning an artefact of
+    # where the data stops into an apparent look-ahead. A position still open at
+    # the end is closed as END_OF_DATA, which is what it is.
+    truncated = trading_day(bars[-1].ts)
     out: Dict[int, str] = {}
-    for day, idxs in by_date.items():
-        if any(kinds[i] in (BarWindow.ON_BOUNDARY, BarWindow.IN_WINDOW)
-               for i in idxs):
+    for day, idxs in by_day.items():
+        if day == truncated:
+            continue
+        if any(kinds[i] in (BarWindow.ON_BOUNDARY, BarWindow.IN_WINDOW,
+                            BarWindow.INTERIOR) for i in idxs):
             continue                      # the normal rule has a bar to act on
-        pre = [i for i in idxs
-               if et_minute_of_day(bars[i].ts) < FLAT_ET_MINUTE]
-        if pre:
-            out[pre[-1]] = day.isoformat()
+        out[idxs[-1]] = day.isoformat()
     return out
 
 

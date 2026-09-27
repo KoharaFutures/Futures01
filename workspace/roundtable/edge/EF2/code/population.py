@@ -120,27 +120,56 @@ def build(symbol: str, cell: str, rs: Tuple[str, Tuple[str, ...],
 
 
 # ------------------------------------------------------------------ VOID gate
-def void_sets() -> Dict[str, Dict[int, set]]:
-    """cell key -> bound timeframe -> set of VOID condition names."""
+#
+# CORRECTED 2026-09-27 after EF6-01. The first version applied ONE VOID set to
+# both ``rth_only`` arms, and the set was built from ``fires_both`` = RTH AND
+# swing-admissible. That is the right denominator for the ``rth_only=True`` arm and
+# the WRONG one for ``rth_only=False``: a condition that fires only outside RTH is
+# dead under the default filter and alive without it. EF6 measured exactly this -
+# ``session_extreme_sweep`` "is ALIVE, not dead … this programme needs
+# rth_only=False, and it then fires 33-480 times at 5m-60m" - and my gate was
+# deleting its carriers from BOTH arms, i.e. removing the very strategies the
+# programme's own session rule exists to make measurable.
+#
+# So the gate is now ARM-AWARE:
+#   rth_only=True  -> usable denominator is RTH AND swing-admissible
+#   rth_only=False -> usable denominator is swing-admissible only
+# A SIGNAL additionally needs at least one LONG/SHORT fire, which
+# ``Strategy.evaluate`` requires [repo-verified: base.py:678-679]; that check is
+# arm-independent, so a condition with zero directional fires stays VOID in both.
+
+
+def void_sets() -> Dict[str, Dict[bool, Dict[int, set]]]:
+    """cell key -> rth_only arm -> bound timeframe -> set of VOID condition names."""
     with open(os.path.join(OUT, "census.json")) as fh:
         cen = json.load(fh)
-    out: Dict[str, Dict[int, set]] = {}
+    out: Dict[str, Dict[bool, Dict[int, set]]] = {}
     for sym in SYMBOLS:
         for cell, (tfs, ptf, confirm) in CELL_SPEC.items():
             fk = f"{sym}:f" + "_".join(str(t) for t in tfs)
             rows = cen["frames"][fk]["rows"]
-            per_tf: Dict[int, set] = defaultdict(set)
+            per_arm: Dict[bool, Dict[int, set]] = {
+                True: defaultdict(set), False: defaultdict(set)}
             for r in rows:
-                if r["verdict"] != "LIVE":
-                    per_tf[r["bound_tf"]].add(r["condition"])
-            out[f"{sym}:{cell}"] = dict(per_tf)
+                directional = r["dir_LONG"] + r["dir_SHORT"]
+                is_signal = r["kind"] == "SIGNAL"
+                for rth in (True, False):
+                    usable = r["fires_both"] if rth else r["fires_swing"]
+                    if is_signal:
+                        usable = min(usable, directional)
+                    if usable == 0:
+                        per_arm[rth][r["bound_tf"]].add(r["condition"])
+            out[f"{sym}:{cell}"] = {k: dict(v) for k, v in per_arm.items()}
     return out
 
 
 def void_reason(st: Strategy, cell_key: str,
-                voids: Dict[str, Dict[int, set]]) -> List[str]:
+                voids: Dict[str, Dict[bool, Dict[int, set]]],
+                rth_only: Optional[bool] = None) -> List[str]:
     """Every (condition, bound tf) in this strategy that cannot fire here."""
-    per_tf = voids[cell_key]
+    if rth_only is None:
+        rth_only = bool(st.filters.rth_only)
+    per_tf = voids[cell_key][bool(rth_only)]
     bad = []
     for c in st.conditions:
         tf = c.timeframe or st.primary_tf
@@ -170,7 +199,7 @@ def assemble(max_total: int = MAX_TOTAL, seed: int = SEED) -> dict:
                     if st is None:
                         build_fail[sym] += 1
                         continue
-                    bad = void_reason(st, ck, voids)
+                    bad = void_reason(st, ck, voids, rth_only=rth)
                     arm_key = f"{ck}|rth{int(rth)}|{st.strategy_id}"
                     rec = {
                         "arm_key": arm_key, "cell": ck, "symbol": sym,
@@ -273,10 +302,23 @@ def summarise(res: dict) -> str:
             L.append(f"| `{cell}` | {k} | {r} | "
                      f"{r/max(1,k+r)*100:.1f}% | {g}/13 |")
         L.append("")
+        L.append("")
+        L.append("| cell | rth arm | kept | removed VOID | removal rate |")
+        L.append("|---|---|---|---|---|")
+        for cell in CELL_SPEC:
+            ck = f"{sym}:{cell}"
+            for rth in (True, False):
+                k = sum(1 for x in idx.values()
+                        if x["cell"] == ck and x["rth_only"] is rth)
+                rr = sum(1 for x in rem
+                         if x["cell"] == ck and x["rth_only"] is rth)
+                L.append(f"| `{cell}` | {'T' if rth else 'F'} | {k} | {rr} | "
+                         f"{rr/max(1,k+rr)*100:.1f}% |")
+        L.append("")
         cause = Counter()
         for r in rem:
             for b in r["void"]:
-                cause[b.split("@")[0]] += 1
+                cause[f"{b.split('@')[0]} (rth={'T' if r['rth_only'] else 'F'})"] += 1
         L.append("VOID causes by condition (arm count, a strategy may carry two):")
         for name, c in cause.most_common():
             L.append(f"- `{name}`: {c}")

@@ -198,24 +198,37 @@ def gate_placebo(base_trades, placebo_trades, *, n_perm: int = 5000) -> dict:
     w = welch(a_r, b_r)
     mdd = min_detectable_difference(a_r, b_r)
     diff = perm.get("observed_diff")
+    p = perm.get("p_two_sided")
+    low_power = mdd is not None and diff is not None and abs(diff) < mdd
     if diff is None:
         verdict, ok = "NO TEST", False
-    elif mdd is not None and abs(diff) < mdd:
-        verdict, ok = "UNDERPOWERED", False
-    elif diff > 0 and (perm["p_two_sided"] or 1.0) <= 0.05:
-        verdict, ok = "BEATS", True
     elif diff <= 0:
         verdict, ok = "LOSES", False
+    elif (p or 1.0) <= 0.05:
+        # A significant separation is reported as one even when the normal
+        # approximation says this comparison had < 80% power for an effect that
+        # size - burying a significant result under an UNDERPOWERED label is as
+        # dishonest as ignoring the power. The flag rides along instead.
+        verdict, ok = ("BEATS (LOW POWER)" if low_power else "BEATS"), True
+    elif low_power:
+        verdict, ok = "UNDERPOWERED", False
     else:
         verdict, ok = "NOT SEPARATED", False
     return {"gate": "G2 PLACEBO", "verdict": verdict, "pass": ok,
+            "low_power": bool(low_power),
             "permutation": perm, "welch": w,
             "min_detectable_diff_R_at_80pct_power": mdd,
             "count_match": {"base_trades": len(a_r), "placebo_trades": len(b_r),
                             "ratio": round(len(b_r) / max(1, len(a_r)), 3)},
             "reason": ("the observed edge is smaller than the smallest "
-                       "difference this comparison could detect"
-                       if verdict == "UNDERPOWERED" else "")}
+                       "difference this comparison could detect, and the "
+                       "permutation test did not separate them"
+                       if verdict == "UNDERPOWERED" else
+                       "the placebo matched or beat the row"
+                       if verdict == "LOSES" else
+                       "separated at p<=0.05 but below the 80%-power "
+                       "detectable difference - treat as provisional"
+                       if verdict == "BEATS (LOW POWER)" else "")}
 
 
 def gate_threshold(t_observed: float, n_screened: int, symbol: str,

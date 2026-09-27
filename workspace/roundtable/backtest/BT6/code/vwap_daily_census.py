@@ -114,11 +114,13 @@ def load_jsonl(path: str, symbol: str, minutes: int) -> BarSeries:
                 continue
             d = json.loads(line)
             ts = d.get("ts") or d.get("open_time") or d.get("timestamp")
+            # The archive writes short keys (`o`,`h`,`l`,`c`,`v`); accept both.
+            g = lambda *k: next(d[x] for x in k if x in d)
             series.append(Bar(
                 ts=_parse_iso(ts),
-                open=float(d["open"]), high=float(d["high"]),
-                low=float(d["low"]), close=float(d["close"]),
-                volume=float(d.get("volume") or 0.0), minutes=minutes,
+                open=float(g("open", "o")), high=float(g("high", "h")),
+                low=float(g("low", "l")), close=float(g("close", "c")),
+                volume=float(g("volume", "v") or 0.0), minutes=minutes,
             ))
     return series
 
@@ -204,6 +206,7 @@ def mechanism_census(symbol: str, series: BarSeries) -> Dict[str, object]:
     line, up1 = vb["vwap"], vb["upper_1"]
 
     tab = Counter()                      # (first_of_day, sub_tick) -> count
+    zero = Counter()                     # first_of_day -> exactly-zero count
     since: List[int] = []                # bars since anchor, per bar
     by_since: Dict[int, List[float]] = {}
     cur = None
@@ -219,6 +222,8 @@ def mechanism_census(symbol: str, series: BarSeries) -> Dict[str, object]:
             continue
         hw = up1[i] - line[i]
         tab[(k == 0, hw < tick)] += 1
+        if hw == 0.0:
+            zero[k == 0] += 1
         by_since.setdefault(min(k, 12), []).append(hw / tick)
 
     n_days = len(set(trading_day(b.ts) for b in bars))
@@ -232,6 +237,8 @@ def mechanism_census(symbol: str, series: BarSeries) -> Dict[str, object]:
         "distinct_trading_days": n_days,
         "first_of_day_bars": sum(1 for k in since if k == 0),
         "not_first_of_day_bars": sum(1 for k in since if k != 0),
+        "exactly_zero_and_first": zero[True],
+        "exactly_zero_and_later": zero[False],
         "first_and_subtick": tab[(True, True)],
         "first_and_not_subtick": tab[(True, False)],
         "later_and_subtick": tab[(False, True)],
@@ -266,15 +273,15 @@ def condition_census(symbol: str, series: BarSeries, tf: int) -> Dict[str, objec
         for n in names:
             r = CONDITIONS[n].fn(snap, tf)
             res[n] = r
-            if r.passed:
+            if r.triggered:
                 fires[n] += 1
                 dirs[n][r.direction.name] += 1
         av, ccs = res["above_vwap"], res["candle_close_strength"]
-        if av.passed and ccs.passed:
+        if av.triggered and ccs.triggered:
             agree["co_fired"] += 1
             agree["same_direction"] += int(av.direction == ccs.direction)
         dcb = res["delta_confirms_bar"]
-        if av.passed and dcb.passed:
+        if av.triggered and dcb.triggered:
             agree["co_fired_delta"] += 1
             agree["same_direction_delta"] += int(av.direction == dcb.direction)
 

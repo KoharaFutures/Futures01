@@ -441,3 +441,41 @@ upgrade, and it must be tested paired rather than swapped in.
 
 This does not reduce the task; it sharpens what the answer can be about. Any swing row must say
 which of the two it is: a longer hold on an RTH entry, or an overnight entry bought at D24's price.
+
+---
+
+# Rule 2 restated, per ADJ-14 (2026-09-27)
+
+Rule 2 read: **"Multi-timeframe agreement is not a virtue."** Two findings landed on it from
+opposite directions and the ruling is that they do not conflict. R6 removed the *dead-detector*
+explanation — `mtf_aligned` fires 1153/2511 on MGC and 976/1859 on MES at 1440m, so it is alive, and
+`D-MTF1` reaches no published row because all three harnesses trade the lowest timeframe of their
+frame. D50 supplies a *different* explanation: a live detector reading a **degenerate confirming
+series**. A detector reading a series against a lagged copy of itself fires plenty; it simply is not
+measuring agreement.
+
+**What survives.** The 60m evidence, intact — D50 aliases only requests ≥ 1440, the two MTF signals
+differ on 248–314 bars at 60m, and the comparison is within-population on the same bars, so D8's
+structural immunity applies. And rule 2's **second** sentence survives as written: on a
+two-timeframe frame "majority" and "unanimous" are the same *statement*, which is D17, an
+arithmetic fact. Note the published claim and the rule diverge here — the report's "no detectable
+difference" is INVALID, while the rule derived from it is right.
+
+**Narrower than stated, three ways.**
+1. The **1440m arm is not evidence about multi-timeframe agreement at all**, and its magnitude is
+   unmeasured.
+2. The **240m arm tested one signal, not two** — `mtf_strongly_aligned` and `mtf_aligned` are
+   identical on 1348/1348 and 1347/1347 bars there.
+3. The rule **must not be applied to `mtf_not_conflicted`**, whose veto runs 62.6% → 79.6% → 99.1%
+   by *frame*, not by strategy.
+
+**Do not cite rule 2 for any of these.** Unanimity-versus-majority as an *empirical* result. Any
+daily-row claim. `mtf_aligned` being a dead detector. **Omitting an alignment arm from the edge
+programme** — its frames are new, so that is rule `R-11`: a claim that something "has already been
+tested" must name the dimension that was varied. And "multi-timeframe agreement does not work."
+
+**The sentence to carry instead** is R1's: *an open question here, not a settled negative.*
+
+z = −4.09 stands, nothing is retracted, and rule 2 stays on the list. Rules 1, 3, 4, 5, 6, 7 and 8
+are untouched — and rule 5 is explicitly **not** narrowed by association, because the session
+window makes 15:00–16:00 ET newly load-bearing.

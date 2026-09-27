@@ -58,6 +58,19 @@
   }
  ],
  "tier_a_alpha": 0.05,
+ "tier_a2": {
+  "id": "EF2-HYP-A2",
+  "claim": "Which (strategy group, primary timeframe) pairs have positive expectancy in R in the swing setting, per symbol, pooling every arm in the pair.",
+  "unit_of_analysis": "(group, primary_tf) pair, all arms pooled, trade-weighted",
+  "n_per_symbol": 26,
+  "threshold_t": 2.553,
+  "required_annual_sharpe": 1.82,
+  "why": "This is the one form of the deliverable whose width the span can settle. It is also the form the prior corpus actually reported - scan_reports/2026-09-24 Part B is a per-symbol GROUP table, not a strategy table - so it is directly comparable to the published claim, and that claim ('MCL: MOMENTUM at 60m and 240m; MGC: VWAP, TREND, MOMENTUM, MULTI_TIMEFRAME at 60m only') becomes a testable prediction rather than a summary.",
+  "pooling_rule": "trade-weighted mean of net R over every arm in the pair, because an equal-weighted mean over arms lets a 3-trade arm count as much as a 300-trade one. Both are computed; the trade-weighted one is the registered statistic and the equal-weighted one is reported beside it as a sensitivity.",
+  "control": "the same pooling applied to the pair's own placebo cohort, so a group's expectancy is read against a group-sized control and not against a single row's",
+  "caveats": "(1) 5 of the 52 (group, cell) combinations have ZERO surviving arms - MULTI_TIMEFRAME in three of four cells and VOLUME_PROFILE in both 240m cells, identically on both symbols - so the table has holes that are structural, and a hole is reported as VOID rather than as a zero. (2) MULTI_TIMEFRAME at 240m is unaskable on MCL under this programme at all: the only frame that would make its signals live needs a timeframe above 240m, and MCL_1440m.jsonl holds one row.",
+  "pre_registered_prediction": "two-sided and deliberately un-directed on which groups win, EXCEPT for one directional test inherited from the published corpus: MCL MOMENTUM at 60m and 240m is predicted positive (prior: 66 observations, 97% positive, beat its control on both arms). That single directional call is the only place EF2 borrows a prior, and DISC2's counter applies - a borrowed idea's honest n is not 1 either."
+ },
  "controls": {
   "module": "workspace/roundtable/edge/EF6/code/placebo_w.py",
   "kinds": [
@@ -156,10 +169,10 @@
  ],
  "sizes": {
   "MGC": {
-   "arms": 5092,
+   "arms": 5152,
    "candidates_before_void_gate": 7776,
    "rule_sets": 972,
-   "free_t": 4.132,
+   "free_t": 4.135,
    "sharpe_needed": 2.95,
    "free_t_on_pre_gate_denominator": 4.233
   },

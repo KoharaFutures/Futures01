@@ -461,11 +461,15 @@ def run() -> dict:
 
     for axis in AXES:
         labels = label_bars(bars, axis, N_STRATA)
+        gof = _gof(labels)
         block = "cell" if axis == "RAW" else "bucket"
         ent = dict(
             layer1=layer1(bars, labels),
-            per_strategy=per_strategy(joined, _gof(labels)),
-            pooled=pooled(joined, _gof(labels)),
+            per_strategy=per_strategy(joined, gof),
+            pooled=pooled(joined, gof),
+            by_symbol_tf=by_symbol_tf(joined, gof),
+            cancellation=cancellation(joined, gof),
+            by_stop_distance=by_stop_distance(joined, gof),
             permutation=permutation_test(joined, bars, labels, block),
             block=block)
         qual = [r for r in ent["per_strategy"]["rows"] if r.get("qualifies")]
@@ -476,7 +480,109 @@ def run() -> dict:
             ent["permutation_bucket_blocked"] = permutation_test(
                 joined, bars, labels, "bucket")
         rep["axes"][axis] = ent
+
+    # Sensitivity. Every row here is counted in ALGOS.md's search accounting.
+    sens = []
+    for axis in AXES:
+        for k, min_n in ((2, MIN_N), (5, MIN_N), (N_STRATA, 20), (N_STRATA, 5)):
+            labels = label_bars(bars, axis, k)
+            block = "cell" if axis == "RAW" else "bucket"
+            pt = permutation_test(joined, bars, labels, block, draws=500,
+                                 k=k, min_n=min_n)
+            sens.append(dict(axis=axis, n_strata=k, min_n=min_n, draws=500,
+                             qualifying=pt["qualifying"],
+                             observed=pt["d_mean_r"]["observed"],
+                             p_two_sided=pt["d_mean_r"]["p_two_sided"],
+                             null_median=pt["d_mean_r"]["null_median"],
+                             z_vs_null=pt["d_mean_r"].get("z_vs_null")))
+    rep["sensitivity"] = sens
+    rep["search_size"] = dict(
+        primary_tests=len(AXES) * 3 + 3,       # 3 axes x 3 statistics + RAW's
+                                               # second null x 3 statistics
+        sensitivity_tests=len(sens),
+        total=len(AXES) * 3 + 3 + len(sens),
+        free_t=math.sqrt(2 * math.log(max(2, len(AXES) * 3 + 3 + len(sens)))))
     return rep
+
+
+def by_symbol_tf(joined, gof, k: int = N_STRATA, min_n: int = MIN_N) -> List[dict]:
+    """The per-strategy contrast, conditioned on (symbol, tf).
+
+    Pooling across cells is the second of this repository's three measured
+    pooling levels, so the 176-strategy median is also cut eight ways. 22
+    strategies per (symbol, tf).
+    """
+    out = []
+    for sym in A.SYMBOLS:
+        for tf in A.TFS:
+            sub = [t for t in joined if t["symbol"] == sym and t["tf"] == tf]
+            ps = per_strategy(sub, gof, k, min_n)
+            q = [r for r in ps["rows"] if r.get("qualifies")]
+            out.append(dict(symbol=sym, tf=tf, strategies=ps["strategies"],
+                            qualifying=len(q),
+                            median_d_mean_r=ps["d_mean_r"].get("median"),
+                            median_d_win=ps["d_win"].get("median"),
+                            median_d_payoff=ps["d_payoff"].get("median"),
+                            n_positive=ps["d_mean_r"].get("n_positive")))
+    return out
+
+
+def cancellation(joined, gof, k: int = N_STRATA, min_n: int = MIN_N) -> dict:
+    """Rule 3's win-rate/payoff cancellation, inside each activity stratum.
+
+    `BRIEF.md` rule 3: moving a stop wider raises payoff ~89% and drops win rate
+    ~14 points for no expectancy gain. If activity is a live confound in that
+    measurement, the cancellation should not hold equally in a thin stratum and
+    a busy one. Descriptive: per-stratum medians across strategies of win rate,
+    payoff and mean R. No separate significance test is attached - the
+    stratum contrast is already tested in `permutation_test`, and adding a
+    second test here would buy multiplicity for nothing.
+    """
+    ps = per_strategy(joined, gof, k, min_n)
+    q = [r for r in ps["rows"] if r.get("qualifies")]
+    out = {}
+    for side in ("low", "high"):
+        out[side] = dict(
+            median_win=st.median([r[f"win_{side}"] for r in q]),
+            median_payoff=st.median([r[f"payoff_{side}"] for r in q
+                                     if r[f"payoff_{side}"]]),
+            median_mean_r=st.median([r[f"mean_r_{side}"] for r in q]))
+    out["strategies"] = len(q)
+    return out
+
+
+def by_stop_distance(joined, gof, k: int = N_STRATA, min_n: int = 8) -> List[dict]:
+    """Win rate and mean R by **modelled** invalidation distance, within stratum.
+
+    R5's third S2 question. The dump records no stop distance
+    [cite: backtest/BT3/ALGOS.md choice 9], so this uses the modelled distance
+    `stop_mult x atr(signal bar) / close`, which is recoverable exactly, and not
+    the realised `|entry - stop|`, which is not. Bucketed per (symbol, tf) so the
+    terciles are not a symbol-price artefact.
+    """
+    cuts = {}
+    for sym in A.SYMBOLS:
+        for tf in A.TFS:
+            vals = [t["sig_stop_pct_modelled"] for t in joined
+                    if t["symbol"] == sym and t["tf"] == tf
+                    and t["sig_stop_pct_modelled"] is not None]
+            cuts[(sym, tf)] = _terciles(vals, k) if len(vals) >= k * 10 else []
+    cross = defaultdict(list)
+    for t in joined:
+        g = gof(t)
+        if g is None or t["sig_stop_pct_modelled"] is None:
+            continue
+        d = _stratum(t["sig_stop_pct_modelled"], cuts[(t["symbol"], t["tf"])])
+        if d is None:
+            continue
+        cross[(g, d)].append(t)
+    out = []
+    for (g, d), rs in sorted(cross.items()):
+        if len(rs) < min_n:
+            continue
+        s = _arm_stats(rs)
+        out.append(dict(activity_stratum=g, distance_stratum=d, **s))
+    return out
 
 
 def _by_symtf(bars):

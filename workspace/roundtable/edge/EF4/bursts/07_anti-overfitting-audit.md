@@ -121,3 +121,36 @@ finding about every backtest in this repository**, because the engine fills entr
 `bar.open` after computing the signal on the previous close. That 2 ticks is not slippage and
 is not in the cost model; it is the price of acting on a closed bar, and whether it is
 *biased* against the signal is measured in `code/audit_adverse_selection.py`.
+
+## 6. D48 caught two real collisions in EF4's own code, in two different places
+
+The arm-id uniqueness assertion is not decoration. It fired twice on work that looked correct:
+
+**(a) In the direction control.** `code/selection_direction.py` drew a random-40 comparison group
+from the same universe as the top 10 and the two overlapped: *1 collision*. Without the
+assertion one arm would have appeared in both the treatment and the control group and their
+difference would have been computed against itself.
+
+**(b) In the placebo construction, and this one would have invalidated every control in the
+study.** `Strategy.strategy_id` hashes `"|".join(sorted(c.label for c in self.conditions))`
+`[repo-verified: base.py:606-623]` and `Condition.label` is just the condition's name
+`[repo-verified: base.py:154-155]`. My first placebo named its condition `placebo_s{seed}` — so
+**every base arm sharing a filter set collided with every other at the same seed: 400–540
+collisions per cell.**
+
+```
+AssertionError: placebo MGC 30m: 460 arm-id collisions, e.g. ['MGC-30m-b79bbe6ada89', ...]
+AssertionError: placebo MCL 30m: 540 arm-id collisions
+```
+
+Each cell's ~700 placebo arms would have collapsed to ~20 distinct `BacktestResult`s shared
+across all 35 real arms, and every "real vs placebo" comparison would have been made against a
+control belonging to a different strategy — **with no symptom whatsoever**, because the
+collapsed results still contain plausible trades and plausible expectancies. Fixed by keying the
+placebo condition name on `(base arm id, seed)`.
+
+**This is the D48 mechanism in a place the D48 audit did not look.** The programme's scope
+correction checked nine `dataclasses.replace` call sites on a `Strategy` and found all nine
+passing `_id=None` — mine did too. **Passing `_id=None` is necessary and not sufficient:** a
+fresh id is still a *colliding* id when two different strategies hash to the same condition
+labels. The guard that catches it is the uniqueness assertion at emission, not the `_id=None`.

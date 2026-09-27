@@ -130,6 +130,72 @@ TIER_A: List[dict] = [
 TIER_A_ALPHA = 0.05
 
 
+# --------------------------------------------------------- Tier A2 (NEW)
+#
+# ADDED 2026-09-27, before any expectancy was measured, in response to EF6-01's
+# search-budget arithmetic: n_max = exp(SR^2 * Y / 2). On the swing span the widest
+# search this data can settle at a true Sharpe of 1.5 is NINE candidates, and at
+# 2.0 it is fifty-one. My Tier B screen is 5,152 / 5,584 arms, so a strategy-level
+# top 10 is answerable only if the true edge has Sharpe near 3.
+#
+# The fix is not to screen less - the deflation cost is paid on what was screened -
+# but to ALSO pre-register a question whose natural width is small enough to be
+# settled. Aggregating the same trades to (group x primary timeframe) does that
+# without a second search:
+#
+#   n =   4  (2 tfs x 2 rth arms)                 free_t 1.665  needs Sharpe 1.19
+#   n =   6  (Tier A, 6 hypotheses)               free_t 1.893  needs Sharpe 1.35
+#   n =   8  (4 cells x 2 rth arms)               free_t 2.039  needs Sharpe 1.45
+#   n =  26  (13 groups x 2 primary tfs)          free_t 2.553  needs Sharpe 1.82
+#   n =  52  (13 groups x 2 tfs x 2 rth arms)     free_t 2.811  needs Sharpe 2.00
+#   n = 104  (13 groups x 4 cells x 2 rth arms)   free_t 3.048  needs Sharpe 2.17
+#   n = 5152 (the strategy-level screen)          free_t 4.135  needs Sharpe 2.95
+#
+# 26 is the cut I am pre-registering: a Sharpe of 1.82 is a high but ordinary
+# number for a real futures edge, where 2.95 is not.
+TIER_A2 = dict(
+    id="EF2-HYP-A2",
+    claim=("Which (strategy group, primary timeframe) pairs have positive "
+           "expectancy in R in the swing setting, per symbol, pooling every arm "
+           "in the pair."),
+    unit_of_analysis="(group, primary_tf) pair, all arms pooled, trade-weighted",
+    n_per_symbol=26,
+    threshold_t=2.553,
+    required_annual_sharpe=1.82,
+    why=("This is the one form of the deliverable whose width the span can "
+         "settle. It is also the form the prior corpus actually reported - "
+         "scan_reports/2026-09-24 Part B is a per-symbol GROUP table, not a "
+         "strategy table - so it is directly comparable to the published claim, "
+         "and that claim ('MCL: MOMENTUM at 60m and 240m; MGC: VWAP, TREND, "
+         "MOMENTUM, MULTI_TIMEFRAME at 60m only') becomes a testable prediction "
+         "rather than a summary."),
+    pooling_rule=("trade-weighted mean of net R over every arm in the pair, "
+                  "because an equal-weighted mean over arms lets a 3-trade arm "
+                  "count as much as a 300-trade one. Both are computed; the "
+                  "trade-weighted one is the registered statistic and the "
+                  "equal-weighted one is reported beside it as a sensitivity."),
+    control=("the same pooling applied to the pair's own placebo cohort, so a "
+             "group's expectancy is read against a group-sized control and not "
+             "against a single row's"),
+    caveats=("(1) 5 of the 52 (group, cell) combinations have ZERO surviving arms "
+             "- MULTI_TIMEFRAME in three of four cells and VOLUME_PROFILE in both "
+             "240m cells, identically on both symbols - so the table has holes "
+             "that are structural, and a hole is reported as VOID rather than as "
+             "a zero. (2) MULTI_TIMEFRAME at 240m is unaskable on MCL under this "
+             "programme at all: the only frame that would make its signals live "
+             "needs a timeframe above 240m, and MCL_1440m.jsonl holds one row."),
+    pre_registered_prediction=("two-sided and deliberately un-directed on which "
+                              "groups win, EXCEPT for one directional test "
+                              "inherited from the published corpus: MCL MOMENTUM "
+                              "at 60m and 240m is predicted positive (prior: 66 "
+                              "observations, 97% positive, beat its control on "
+                              "both arms). That single directional call is the "
+                              "only place EF2 borrows a prior, and DISC2's "
+                              "counter applies - a borrowed idea's honest n is "
+                              "not 1 either."),
+)
+
+
 # --------------------------------------------------------------- controls
 #
 # AMENDED 2026-09-27, BEFORE any expectancy was measured, after reading
@@ -370,7 +436,7 @@ def sizes() -> dict:
 
 if __name__ == "__main__":
     doc = dict(span_days=SPAN_DAYS, sqrt_years=SQRT_YEARS,
-               tier_a=TIER_A, tier_a_alpha=TIER_A_ALPHA,
+               tier_a=TIER_A, tier_a_alpha=TIER_A_ALPHA, tier_a2=TIER_A2,
                controls=CONTROLS, forward=FORWARD, floor=FLOOR,
                overfitting_checks=OVERFITTING_CHECKS, sizes=sizes())
     with open(os.path.join(OUT, "plan.json"), "w") as fh:

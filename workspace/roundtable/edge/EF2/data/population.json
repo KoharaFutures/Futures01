@@ -55,11 +55,11 @@
   "MCL": 973
  },
  "population": {
-  "MGC": 5092,
+  "MGC": 5152,
   "MCL": 5584
  },
  "removed_by_void": {
-  "MGC": 2684,
+  "MGC": 2624,
   "MCL": 2200
  },
  "build_failures": {
@@ -86,6 +86,99 @@
  },
  "index": {
   "MGC": {
+   "MGC:f60__p60|rth0|MGC-60m-7d763054fb3c": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-7d763054fb3c",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-7d763054fb3c",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 2,
+    "signals": [
+     "break_of_structure",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-217857ab2016": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-217857ab2016",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-217857ab2016",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 2,
+    "signals": [
+     "break_of_structure@4h",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-e20e94ff0579": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-e20e94ff0579",
     "cell": "MGC:f240__p240",
@@ -263,6 +356,103 @@
      [
       "volatility_compressed",
       "volume_not_thin"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-80479fdd5e37": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-80479fdd5e37",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-80479fdd5e37",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_no_imminent_release",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "no_imminent_release"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-681c6a29a95a": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-681c6a29a95a",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-681c6a29a95a",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_no_imminent_release",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure@4h",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "no_imminent_release"
      ],
      5
     ],
@@ -458,6 +648,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-4ad83220afe9": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4ad83220afe9",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-4ad83220afe9",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_outside_news_blackout",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-3617803669e7": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-3617803669e7",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-3617803669e7",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_outside_news_blackout",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure@4h",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-c13b0622dce9": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-c13b0622dce9",
     "cell": "MGC:f240__p240",
@@ -648,6 +935,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-ee7d683fc65f": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-ee7d683fc65f",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-ee7d683fc65f",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volatility_expanding",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volatility_expanding"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volatility_expanding"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-4e4d8f173c2c": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-4e4d8f173c2c",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-4e4d8f173c2c",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volatility_expanding",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure@4h",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volatility_expanding"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volatility_expanding"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-3b556eb1b6df": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-3b556eb1b6df",
     "cell": "MGC:f240__p240",
@@ -833,6 +1217,103 @@
       "volatility_compressed",
       "volume_not_thin",
       "volatility_expanding"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-a6627facf7bb": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a6627facf7bb",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-a6627facf7bb",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volume_surge",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volume_surge"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volume_surge"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-660ec7af7f66": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-660ec7af7f66",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-660ec7af7f66",
+    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volume_surge",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "break_of_structure@4h",
+     "cvd_directional",
+     "session_extreme_sweep",
+     "slope_directional"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volume_surge"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "break_of_structure",
+      "cvd_directional",
+      "session_extreme_sweep",
+      "slope_directional"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volume_surge"
      ],
      5
     ],
@@ -4836,6 +5317,99 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-d6a78665adf6": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-d6a78665adf6",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-d6a78665adf6",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 2,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-d7f53c8c7847": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-d7f53c8c7847",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-d7f53c8c7847",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 2,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme@4h",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin"
+     ],
+     0
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-ff03f81227cc": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-ff03f81227cc",
     "cell": "MGC:f240__p240",
@@ -5013,6 +5587,103 @@
      [
       "volatility_compressed",
       "volume_not_thin"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-12d6a4419564": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-12d6a4419564",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-12d6a4419564",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_no_imminent_release",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "no_imminent_release"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-ee9433706291": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ee9433706291",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-ee9433706291",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_no_imminent_release",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme@4h",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "no_imminent_release"
      ],
      0
     ],
@@ -5208,6 +5879,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-da9d68c9f32a": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-da9d68c9f32a",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-da9d68c9f32a",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_outside_news_blackout",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "outside_news_blackout"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-d67d903f7b5d": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-d67d903f7b5d",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-d67d903f7b5d",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_outside_news_blackout",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme@4h",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "outside_news_blackout"
+     ],
+     0
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-76a3d3cfe40f": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-76a3d3cfe40f",
     "cell": "MGC:f240__p240",
@@ -5398,6 +6166,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-3f65bfe710b9": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-3f65bfe710b9",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-3f65bfe710b9",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volatility_expanding",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volatility_expanding"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volatility_expanding"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-244902c7a380": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-244902c7a380",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-244902c7a380",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volatility_expanding",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme@4h",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volatility_expanding"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volatility_expanding"
+     ],
+     0
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-e4a194d5eb6d": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-e4a194d5eb6d",
     "cell": "MGC:f240__p240",
@@ -5583,6 +6448,103 @@
       "volatility_compressed",
       "volume_not_thin",
       "volatility_expanding"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-fc5fed11f464": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-fc5fed11f464",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-fc5fed11f464",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volume_surge",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volume_surge"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volume_surge"
+     ],
+     0
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-6ab60ec19e0b": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-6ab60ec19e0b",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-6ab60ec19e0b",
+    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volume_surge",
+    "group": "BREAKOUT",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 0,
+    "stop_kind": "ATR",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.5,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "price_above_ema200",
+     "range_position_extreme@4h",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_compressed",
+     "volume_not_thin",
+     "volume_surge"
+    ],
+    "rule_set": [
+     "BREAKOUT",
+     [
+      "delta_divergence",
+      "price_above_ema200",
+      "range_position_extreme",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_compressed",
+      "volume_not_thin",
+      "volume_surge"
      ],
      0
     ],
@@ -103502,6 +104464,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-95a1302e2d62": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-95a1302e2d62",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-95a1302e2d62",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-7053aaf1adca": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-7053aaf1adca",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-7053aaf1adca",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     6
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-fdad930aae5e": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-fdad930aae5e",
     "cell": "MGC:f240__p240",
@@ -103687,6 +104746,107 @@
       "volatility_normal",
       "volume_not_thin",
       "opening_drive_window"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-278cc3c20aad": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-278cc3c20aad",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-278cc3c20aad",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-5f059934df66": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-5f059934df66",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-5f059934df66",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
      ],
      6
     ],
@@ -103890,6 +105050,107 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-a6682e48b047": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a6682e48b047",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-a6682e48b047",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-86301649ee6b": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-86301649ee6b",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-86301649ee6b",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     6
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-35493717820d": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-35493717820d",
     "cell": "MGC:f240__p240",
@@ -104083,6 +105344,107 @@
       "volume_not_thin",
       "opening_drive_window",
       "outside_news_blackout"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-3866f693f625": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-3866f693f625",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-3866f693f625",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     6
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-ed3ceccee6ec": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ed3ceccee6ec",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-ed3ceccee6ec",
+    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 6,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "above_vwap",
+     "delta_confirms_bar",
+     "rsi_extreme_reversal",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "above_vwap",
+      "delta_confirms_bar",
+      "rsi_extreme_reversal",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
      ],
      6
     ],
@@ -110654,6 +112016,806 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-293097cab836": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-293097cab836",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-293097cab836",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-bf57d82d4f1f": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-bf57d82d4f1f",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-bf57d82d4f1f",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-b2c952900d3f": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-b2c952900d3f",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-b2c952900d3f",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-1af283073248": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-1af283073248",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-1af283073248",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-c48a8b219fb8": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-c48a8b219fb8",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-c48a8b219fb8",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-f2792d8eea81": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-f2792d8eea81",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-f2792d8eea81",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-2f648bb9c2b8": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-2f648bb9c2b8",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-2f648bb9c2b8",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-ec9176aaba6e": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ec9176aaba6e",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-ec9176aaba6e",
+    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "VWAP_BAND",
+    "target_kind": "R_MULTIPLE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_confirms_bar",
+     "price_above_ema200",
+     "session_extreme_sweep",
+     "value_area_edge"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_confirms_bar",
+      "price_above_ema200",
+      "session_extreme_sweep",
+      "value_area_edge"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-35a39adbc9bf": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-35a39adbc9bf",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-35a39adbc9bf",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-b1855f4fe6d7": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-b1855f4fe6d7",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-b1855f4fe6d7",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-4df6b3e5b3b4": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4df6b3e5b3b4",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-4df6b3e5b3b4",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-8d0ebe507408": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-8d0ebe507408",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-8d0ebe507408",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-8292c9b32510": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-8292c9b32510",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-8292c9b32510",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-44243dcd60ca": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-44243dcd60ca",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-44243dcd60ca",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-b19567cc4e5d": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-b19567cc4e5d",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-b19567cc4e5d",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     11
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-208178ad7e1b": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-208178ad7e1b",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-208178ad7e1b",
+    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 11,
+    "stop_kind": "STRUCTURE",
+    "target_kind": "ANCHOR_STRUCTURE",
+    "stop_mult": 1.0,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "delta_divergence",
+     "ema_fast_above_slow",
+     "lvn_rejection",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "delta_divergence",
+      "ema_fast_above_slow",
+      "lvn_rejection",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     11
+    ],
+    "void": []
+   },
    "MGC:f60__p60|rth1|MGC-60m-883f0615edb5": {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-883f0615edb5",
     "cell": "MGC:f60__p60",
@@ -114635,6 +116797,406 @@
       "relative_volume_high"
      ],
      0
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-afb0548be580": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-afb0548be580",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-afb0548be580",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-30076f313d8d": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-30076f313d8d",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-30076f313d8d",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-6373378e7fa5": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-6373378e7fa5",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-6373378e7fa5",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-7afac83f8620": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-7afac83f8620",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-7afac83f8620",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_no_imminent_release",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "no_imminent_release"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-5c208cfc29dd": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-5c208cfc29dd",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-5c208cfc29dd",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-988504ccba6e": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-988504ccba6e",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-988504ccba6e",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_outside_news_blackout",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "outside_news_blackout"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-a63f24e712bd": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a63f24e712bd",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-a63f24e712bd",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     7
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-f672cf4db23f": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-f672cf4db23f",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-f672cf4db23f",
+    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_relative_volume_high",
+    "group": "OPENING_RANGE",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 7,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "session_extreme_sweep",
+     "stoch_extreme",
+     "value_area_breakout",
+     "vwap_reclaim"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "opening_drive_window",
+     "relative_volume_high"
+    ],
+    "rule_set": [
+     "OPENING_RANGE",
+     [
+      "session_extreme_sweep",
+      "stoch_extreme",
+      "value_area_breakout",
+      "vwap_reclaim"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "opening_drive_window",
+      "relative_volume_high"
+     ],
+     7
     ],
     "void": []
    },
@@ -148986,6 +151548,103 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-be0e279b1e76": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-be0e279b1e76",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-be0e279b1e76",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-6ca2c55d8d24": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-6ca2c55d8d24",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-6ca2c55d8d24",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 3,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-0a05b64f6734": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-0a05b64f6734",
     "cell": "MGC:f240__p240",
@@ -149171,6 +151830,107 @@
       "volatility_normal",
       "volume_not_thin",
       "avoid_lunch"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-be9930fd65dd": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-be9930fd65dd",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-be9930fd65dd",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "no_imminent_release"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-930e9810f220": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-930e9810f220",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-930e9810f220",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "no_imminent_release"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "no_imminent_release"
      ],
      5
     ],
@@ -149374,6 +152134,107 @@
     ],
     "void": []
    },
+   "MGC:f60__p60|rth0|MGC-60m-4ada0a3b9b37": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4ada0a3b9b37",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-4ada0a3b9b37",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_recent_imbalance",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "no_recent_imbalance"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "no_recent_imbalance"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-ae4ac8d50fa0": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ae4ac8d50fa0",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-ae4ac8d50fa0",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_recent_imbalance",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "no_recent_imbalance"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "no_recent_imbalance"
+     ],
+     5
+    ],
+    "void": []
+   },
    "MGC:f240__p240|rth1|MGC-240m-132a6ffd0926": {
     "arm_key": "MGC:f240__p240|rth1|MGC-240m-132a6ffd0926",
     "cell": "MGC:f240__p240",
@@ -149567,6 +152428,107 @@
       "volume_not_thin",
       "avoid_lunch",
       "no_recent_imbalance"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60__p60|rth0|MGC-60m-f35ab86ccc88": {
+    "arm_key": "MGC:f60__p60|rth0|MGC-60m-f35ab86ccc88",
+    "cell": "MGC:f60__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-f35ab86ccc88",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [],
+    "frame_tfs": [
+     60
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "outside_news_blackout"
+     ],
+     5
+    ],
+    "void": []
+   },
+   "MGC:f60_240__p60|rth0|MGC-60m-371c53f5fd0a": {
+    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-371c53f5fd0a",
+    "cell": "MGC:f60_240__p60",
+    "symbol": "MGC",
+    "strategy_id": "MGC-60m-371c53f5fd0a",
+    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
+    "group": "REVERSAL",
+    "primary_tf": 60,
+    "confirm_tfs": [
+     240
+    ],
+    "frame_tfs": [
+     60,
+     240
+    ],
+    "rth_only": false,
+    "exit_index": 5,
+    "stop_kind": "ATR",
+    "target_kind": "ANCHOR_ATR",
+    "stop_mult": 0.75,
+    "n_signals": 4,
+    "n_filters": 4,
+    "signals": [
+     "bollinger_mean_pull",
+     "delta_confirms_bar",
+     "macd_hist_direction",
+     "session_extreme_sweep"
+    ],
+    "filters": [
+     "volatility_normal",
+     "volume_not_thin",
+     "avoid_lunch",
+     "outside_news_blackout"
+    ],
+    "rule_set": [
+     "REVERSAL",
+     [
+      "bollinger_mean_pull",
+      "delta_confirms_bar",
+      "macd_hist_direction",
+      "session_extreme_sweep"
+     ],
+     [
+      "volatility_normal",
+      "volume_not_thin",
+      "avoid_lunch",
+      "outside_news_blackout"
      ],
      5
     ],
@@ -515670,53 +518632,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-7d763054fb3c",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-7d763054fb3c",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 2,
-    "signals": [
-     "break_of_structure",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-ad9b23aee77f",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -515732,56 +518647,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 2,
-    "signals": [
-     "break_of_structure@4h",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-217857ab2016",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-217857ab2016",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -515866,55 +518731,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-80479fdd5e37",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-80479fdd5e37",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_no_imminent_release",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-0b0c70955b5a",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -515930,58 +518746,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure@4h",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-681c6a29a95a",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-681c6a29a95a",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_no_imminent_release",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -516114,7 +518878,6 @@
      5
     ],
     "void": [
-     "session_extreme_sweep@60m",
      "oi_expanding@60m"
     ]
    },
@@ -516220,7 +518983,6 @@
      5
     ],
     "void": [
-     "session_extreme_sweep@60m",
      "oi_expanding@60m"
     ]
    },
@@ -516472,55 +519234,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4ad83220afe9",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-4ad83220afe9",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_outside_news_blackout",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-d8d8e0c515df",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -516573,58 +519286,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-3617803669e7",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-3617803669e7",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_outside_news_blackout",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure@4h",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-99e5ac49f418",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -516637,55 +519298,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volatility_expanding"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volatility_expanding"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-ee7d683fc65f",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-ee7d683fc65f",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volatility_expanding",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -516775,58 +519387,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-4e4d8f173c2c",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-4e4d8f173c2c",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volatility_expanding",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure@4h",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volatility_expanding"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volatility_expanding"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-0e57ea9f145c",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -516839,55 +519399,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volume_surge"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volume_surge"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a6627facf7bb",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-a6627facf7bb",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volume_surge",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -516940,58 +519451,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "break_of_structure@4h",
-     "cvd_directional",
-     "session_extreme_sweep",
-     "slope_directional"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volume_surge"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "break_of_structure",
-      "cvd_directional",
-      "session_extreme_sweep",
-      "slope_directional"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volume_surge"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-660ec7af7f66",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-660ec7af7f66",
-    "name": "breakout_break_of_structure_cvd_directional_session_extreme_sweep_slope_directional__f_volume_surge",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -520292,53 +522751,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-d6a78665adf6",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-d6a78665adf6",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 2,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-9434bf25f2b3",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -520354,56 +522766,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 2,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme@4h",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-d7f53c8c7847",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-d7f53c8c7847",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -520488,55 +522850,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-12d6a4419564",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-12d6a4419564",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_no_imminent_release",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "no_imminent_release"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-e94b1afdf76b",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -520552,58 +522865,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme@4h",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "no_imminent_release"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ee9433706291",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-ee9433706291",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_no_imminent_release",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -520736,7 +522997,6 @@
      0
     ],
     "void": [
-     "session_extreme_sweep@60m",
      "oi_expanding@60m"
     ]
    },
@@ -520842,7 +523102,6 @@
      0
     ],
     "void": [
-     "session_extreme_sweep@60m",
      "oi_expanding@60m"
     ]
    },
@@ -521094,55 +523353,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-da9d68c9f32a",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-da9d68c9f32a",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_outside_news_blackout",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "outside_news_blackout"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-2b702e3d757a",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -521195,58 +523405,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-d67d903f7b5d",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-d67d903f7b5d",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_outside_news_blackout",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme@4h",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "outside_news_blackout"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-4160d5661a9e",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -521259,55 +523417,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volatility_expanding"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volatility_expanding"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-3f65bfe710b9",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-3f65bfe710b9",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volatility_expanding",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -521397,58 +523506,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-244902c7a380",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-244902c7a380",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volatility_expanding",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme@4h",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volatility_expanding"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volatility_expanding"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-7abdc7a29231",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -521461,55 +523518,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volume_surge"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volume_surge"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-fc5fed11f464",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-fc5fed11f464",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volume_surge",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -521562,58 +523570,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 0,
-    "stop_kind": "ATR",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.5,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "price_above_ema200",
-     "range_position_extreme@4h",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_compressed",
-     "volume_not_thin",
-     "volume_surge"
-    ],
-    "rule_set": [
-     "BREAKOUT",
-     [
-      "delta_divergence",
-      "price_above_ema200",
-      "range_position_extreme",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_compressed",
-      "volume_not_thin",
-      "volume_surge"
-     ],
-     0
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-6ab60ec19e0b",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-6ab60ec19e0b",
-    "name": "breakout_delta_divergence_price_above_ema200_range_position_extreme_session_extreme_sweep__f_volume_surge",
-    "group": "BREAKOUT",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 0,
     "stop_kind": "ATR",
     "target_kind": "R_MULTIPLE",
@@ -586860,55 +588816,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-95a1302e2d62",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-95a1302e2d62",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-54dac1e02bf6",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -586961,58 +588868,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-7053aaf1adca",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-7053aaf1adca",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-396322d824e1",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -587025,57 +588880,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-278cc3c20aad",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-278cc3c20aad",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 6,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -587169,60 +588973,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-5f059934df66",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-5f059934df66",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-0aac90c6034f",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -587235,57 +588985,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a6682e48b047",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-a6682e48b047",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 6,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -587379,60 +589078,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-86301649ee6b",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-86301649ee6b",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-f766dd37b977",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -587445,57 +589090,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-3866f693f625",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-3866f693f625",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 6,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -587550,60 +589144,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 6,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "above_vwap",
-     "delta_confirms_bar",
-     "rsi_extreme_reversal",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "above_vwap",
-      "delta_confirms_bar",
-      "rsi_extreme_reversal",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     6
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ed3ceccee6ec",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-ed3ceccee6ec",
-    "name": "opening_range_above_vwap_delta_confirms_bar_rsi_extreme_reversal_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 6,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -594252,55 +595792,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-293097cab836",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-293097cab836",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-f9615faf3934",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -594316,58 +595807,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-bf57d82d4f1f",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-bf57d82d4f1f",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -594654,57 +596093,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-b2c952900d3f",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-b2c952900d3f",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-e56870c9214f",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -594720,60 +596108,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-1af283073248",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-1af283073248",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -595070,57 +596404,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-c48a8b219fb8",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-c48a8b219fb8",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-3e0b1ddf0450",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -595136,60 +596419,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-f2792d8eea81",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-f2792d8eea81",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -595486,57 +596715,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-2f648bb9c2b8",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-2f648bb9c2b8",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-84bcb291e4a0",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -595552,60 +596730,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "VWAP_BAND",
-    "target_kind": "R_MULTIPLE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_confirms_bar",
-     "price_above_ema200",
-     "session_extreme_sweep",
-     "value_area_edge"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_confirms_bar",
-      "price_above_ema200",
-      "session_extreme_sweep",
-      "value_area_edge"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ec9176aaba6e",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-ec9176aaba6e",
-    "name": "opening_range_delta_confirms_bar_price_above_ema200_session_extreme_sweep_value_area_edge__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "VWAP_BAND",
     "target_kind": "R_MULTIPLE",
@@ -595900,55 +597024,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-35a39adbc9bf",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-35a39adbc9bf",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-fcd6280eb95f",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -595964,58 +597039,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-b1855f4fe6d7",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-b1855f4fe6d7",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -596302,57 +597325,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4df6b3e5b3b4",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-4df6b3e5b3b4",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-15a9b82760d0",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -596368,60 +597340,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-8d0ebe507408",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-8d0ebe507408",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -596718,57 +597636,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-8292c9b32510",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-8292c9b32510",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-c0a6fe1601a4",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -596784,60 +597651,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-44243dcd60ca",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-44243dcd60ca",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -597134,57 +597947,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-b19567cc4e5d",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-b19567cc4e5d",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-f6f543d82494",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -597200,60 +597962,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 11,
-    "stop_kind": "STRUCTURE",
-    "target_kind": "ANCHOR_STRUCTURE",
-    "stop_mult": 1.0,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "delta_divergence",
-     "ema_fast_above_slow",
-     "lvn_rejection",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "delta_divergence",
-      "ema_fast_above_slow",
-      "lvn_rejection",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     11
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-208178ad7e1b",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-208178ad7e1b",
-    "name": "opening_range_delta_divergence_ema_fast_above_slow_lvn_rejection_session_extreme_sweep__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 11,
     "stop_kind": "STRUCTURE",
     "target_kind": "ANCHOR_STRUCTURE",
@@ -604892,55 +605600,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-afb0548be580",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-afb0548be580",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-dd50bc5eb93a",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -604956,58 +605615,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-30076f313d8d",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-30076f313d8d",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 7,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -605294,57 +605901,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-6373378e7fa5",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-6373378e7fa5",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-b466dadfe65e",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -605360,60 +605916,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "no_imminent_release"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-7afac83f8620",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-7afac83f8620",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_no_imminent_release",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 7,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -605710,57 +606212,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-5c208cfc29dd",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-5c208cfc29dd",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-039049969faf",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -605776,60 +606227,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "outside_news_blackout"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-988504ccba6e",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-988504ccba6e",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_outside_news_blackout",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 7,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -606126,57 +606523,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-a63f24e712bd",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-a63f24e712bd",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-8dea022827f8",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -606192,60 +606538,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 7,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "session_extreme_sweep",
-     "stoch_extreme",
-     "value_area_breakout",
-     "vwap_reclaim"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "opening_drive_window",
-     "relative_volume_high"
-    ],
-    "rule_set": [
-     "OPENING_RANGE",
-     [
-      "session_extreme_sweep",
-      "stoch_extreme",
-      "value_area_breakout",
-      "vwap_reclaim"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "opening_drive_window",
-      "relative_volume_high"
-     ],
-     7
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-f672cf4db23f",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-f672cf4db23f",
-    "name": "opening_range_session_extreme_sweep_stoch_extreme_value_area_breakout_vwap_reclaim__f_relative_volume_high",
-    "group": "OPENING_RANGE",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 7,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -618432,55 +618724,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-be0e279b1e76",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-be0e279b1e76",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60_240__p60|rth1|MGC-60m-becf037e46e4",
     "cell": "MGC:f60_240__p60",
     "symbol": "MGC",
@@ -618533,58 +618776,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-6ca2c55d8d24",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-6ca2c55d8d24",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 3,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-f1fed1236bd2",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -618597,57 +618788,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-be9930fd65dd",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-be9930fd65dd",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -618741,60 +618881,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-930e9810f220",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-930e9810f220",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_imminent_release",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "no_imminent_release"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "no_imminent_release"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-c5c7f716b6d6",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -618807,57 +618893,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "no_recent_imbalance"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "no_recent_imbalance"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-4ada0a3b9b37",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-4ada0a3b9b37",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_recent_imbalance",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -618951,60 +618986,6 @@
     ]
    },
    {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-ae4ac8d50fa0",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-ae4ac8d50fa0",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_no_recent_imbalance",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "no_recent_imbalance"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "no_recent_imbalance"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
     "arm_key": "MGC:f60__p60|rth1|MGC-60m-9175998cb4c8",
     "cell": "MGC:f60__p60",
     "symbol": "MGC",
@@ -619017,57 +618998,6 @@
      60
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60__p60|rth0|MGC-60m-f35ab86ccc88",
-    "cell": "MGC:f60__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-f35ab86ccc88",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [],
-    "frame_tfs": [
-     60
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",
@@ -619122,60 +619052,6 @@
      240
     ],
     "rth_only": true,
-    "exit_index": 5,
-    "stop_kind": "ATR",
-    "target_kind": "ANCHOR_ATR",
-    "stop_mult": 0.75,
-    "n_signals": 4,
-    "n_filters": 4,
-    "signals": [
-     "bollinger_mean_pull",
-     "delta_confirms_bar",
-     "macd_hist_direction",
-     "session_extreme_sweep"
-    ],
-    "filters": [
-     "volatility_normal",
-     "volume_not_thin",
-     "avoid_lunch",
-     "outside_news_blackout"
-    ],
-    "rule_set": [
-     "REVERSAL",
-     [
-      "bollinger_mean_pull",
-      "delta_confirms_bar",
-      "macd_hist_direction",
-      "session_extreme_sweep"
-     ],
-     [
-      "volatility_normal",
-      "volume_not_thin",
-      "avoid_lunch",
-      "outside_news_blackout"
-     ],
-     5
-    ],
-    "void": [
-     "session_extreme_sweep@60m"
-    ]
-   },
-   {
-    "arm_key": "MGC:f60_240__p60|rth0|MGC-60m-371c53f5fd0a",
-    "cell": "MGC:f60_240__p60",
-    "symbol": "MGC",
-    "strategy_id": "MGC-60m-371c53f5fd0a",
-    "name": "reversal_bollinger_mean_pull_delta_confirms_bar_macd_hist_direction_session_extreme_sweep__f_outside_news_blackout",
-    "group": "REVERSAL",
-    "primary_tf": 60,
-    "confirm_tfs": [
-     240
-    ],
-    "frame_tfs": [
-     60,
-     240
-    ],
-    "rth_only": false,
     "exit_index": 5,
     "stop_kind": "ATR",
     "target_kind": "ANCHOR_ATR",

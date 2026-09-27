@@ -1,0 +1,98 @@
+[
+  {
+    "symbol": "MES",
+    "timeframe": 60,
+    "direction": "LONG",
+    "bars": 11287,
+    "span": [
+      "2024-10-06T19:00:00-04:00",
+      "2026-09-25T16:00:00-04:00"
+    ],
+    "trades": 507,
+    "violations": 0,
+    "violations_strict_no_carveout": 0,
+    "violation_detail": [],
+    "exit_reasons": {
+      "SESSION_CLOSE": 507
+    },
+    "closed_by_the_rule": 507,
+    "counters": {
+      "entries_vetoed_in_window": 493,
+      "entries_vetoed_signal_in_window": 0,
+      "flats_on_boundary": 488,
+      "flats_in_window": 0,
+      "flats_forced_session_end": 19,
+      "flats_total": 507,
+      "flats_gapped_through_stop": 0,
+      "bars_on_boundary": 488,
+      "bars_in_window": 493,
+      "bars_interior": 0,
+      "bars_session_end": 19,
+      "stale_fills": 117
+    },
+    "hold_minutes": {
+      "median": 1260.0,
+      "max": 1260.0,
+      "cap_22h_minus_one_bar": 1260,
+      "trades_over_cap": 0,
+      "over_cap_detail": []
+    },
+    "control_shipped_engine": {
+      "trades": 1,
+      "violations": 2,
+      "violation_kinds": {
+        "EXIT_IN_WINDOW": 1,
+        "SPANS_WINDOW": 1
+      },
+      "max_hold_minutes": 1035120.0
+    }
+  },
+  {
+    "symbol": "MES",
+    "timeframe": 60,
+    "direction": "SHORT",
+    "bars": 11287,
+    "span": [
+      "2024-10-06T19:00:00-04:00",
+      "2026-09-25T16:00:00-04:00"
+    ],
+    "trades": 507,
+    "violations": 0,
+    "violations_strict_no_carveout": 0,
+    "violation_detail": [],
+    "exit_reasons": {
+      "SESSION_CLOSE": 507
+    },
+    "closed_by_the_rule": 507,
+    "counters": {
+      "entries_vetoed_in_window": 493,
+      "entries_vetoed_signal_in_window": 0,
+      "flats_on_boundary": 488,
+      "flats_in_window": 0,
+      "flats_forced_session_end": 19,
+      "flats_total": 507,
+      "flats_gapped_through_stop": 0,
+      "bars_on_boundary": 488,
+      "bars_in_window": 493,
+      "bars_interior": 0,
+      "bars_session_end": 19,
+      "stale_fills": 117
+    },
+    "hold_minutes": {
+      "median": 1260.0,
+      "max": 1260.0,
+      "cap_22h_minus_one_bar": 1260,
+      "trades_over_cap": 0,
+      "over_cap_detail": []
+    },
+    "control_shipped_engine": {
+      "trades": 1,
+      "violations": 2,
+      "violation_kinds": {
+        "EXIT_IN_WINDOW": 1,
+        "SPANS_WINDOW": 1
+      },
+      "max_hold_minutes": 1035120.0
+    }
+  }
+]

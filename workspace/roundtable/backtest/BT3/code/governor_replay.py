@@ -202,6 +202,38 @@ def parse_ts(s: str) -> datetime:
     return datetime.fromisoformat(s)
 
 
+def permute_r(rows: Sequence[dict], seed: int,
+              strata: Optional[Sequence[str]] = None) -> List[float]:
+    """Count-matched permutation of R, optionally within strata.
+
+    ``strata=None`` permutes globally, which destroys the time-ordering of
+    outcomes *and* R's association with the exit reason, the holding duration
+    and the symbol. Those last three are exit-geometry and contract facts rather
+    than entry facts, so the global arm is a control on "does the sequence
+    matter at all" and **not** a signal-layer placebo.
+
+    Passing a stratifier holds those associations fixed - a STOP's R can only
+    land on another STOP of the same symbol and timeframe - so what is destroyed
+    is only which trade in the stratum got which outcome, in time. That is the
+    quantity a path-dependent governor reads, and it is the arm that can support
+    a claim about entry-dependence.
+    """
+    out = [float(r["r"]) for r in rows]
+    if strata is None:
+        random.Random(seed).shuffle(out)
+        return out
+    idx: Dict[tuple, List[int]] = collections.defaultdict(list)
+    for i, r in enumerate(rows):
+        idx[tuple(str(r[k]) for k in strata)].append(i)
+    rng = random.Random(seed)
+    for _key, positions in sorted(idx.items()):
+        vals = [out[i] for i in positions]
+        rng.shuffle(vals)
+        for i, v in zip(positions, vals):
+            out[i] = v
+    return out
+
+
 # --------------------------------------------------------------------------
 # One replay
 # --------------------------------------------------------------------------
@@ -806,13 +838,31 @@ def main() -> None:
     # It is run over the *same seed ensemble* as the primary arm, because a
     # single placebo run against a 200-seed distribution is not a control - the
     # ordering spread is larger than most effects here.
-    placebos = []
-    for s in range(1, N_ORDER_SEEDS + 1):
-        srt = sort_stream(rows, seed=s)
-        perm = [float(r["r"]) for r in srt]
-        random.Random(90000 + s).shuffle(perm)
-        placebos.append(replay(srt, label=f"PLACEBO seed={s}",
-                               live_eligible=True, r_override=perm))
+    #
+    # **Three placebos, not one, because the obvious one is too strong.** A
+    # global permutation of R does not replace "the signal layer": it also
+    # destroys R's association with the exit reason (STOP mean -0.870 vs TARGET
+    # +1.478), with the holding duration (mins == 0 -> -0.792, > 1440 -> +0.348)
+    # and with the symbol (whose dollar risk per contract varies 3x, $98.5 to
+    # $289) `[measured]`. Those are exit-geometry and contract facts, not entry
+    # facts, so a real-vs-global-placebo difference cannot be attributed to the
+    # entry. The stratified arms permute R *within* strata that hold those
+    # associations fixed, so the only thing they destroy is **which trade in the
+    # stratum got which outcome, in time** - which is the only thing a
+    # path-dependent governor can read.
+    placebos = {}
+    for name, strata in (("global", None),
+                         ("by_symbol_tf_reason",
+                          ("symbol", "tf", "reason")),
+                         ("by_strategy_reason",
+                          ("symbol", "tf", "arm", "exitm", "reason"))):
+        runs_p = []
+        for s in range(1, N_ORDER_SEEDS + 1):
+            srt = sort_stream(rows, seed=s)
+            runs_p.append(replay(srt, label=f"PLACEBO[{name}] seed={s}",
+                                 live_eligible=True,
+                                 r_override=permute_r(srt, 90000 + s, strata)))
+        placebos[name] = runs_p
     rng = random.Random(20260927)
     perm = [float(r["r"]) for r in pooled]
     rng.shuffle(perm)
@@ -903,8 +953,15 @@ def main() -> None:
                                       order_leak),
         "honest_arm_live_eligible_False": pack_dist(
             "live_eligible=False (THE FINDING'S ARM)", order_honest),
-        "placebo_ensemble": pack_dist("PLACEBO (R permuted), same 200 seeds",
-                                      placebos),
+        "placebo_global": pack_dist(
+            "PLACEBO global R permutation (control on ordering, NOT a "
+            "signal-layer placebo)", placebos["global"]),
+        "placebo_by_symbol_tf_reason": pack_dist(
+            "PLACEBO stratified by (symbol, tf, reason)",
+            placebos["by_symbol_tf_reason"]),
+        "placebo_by_strategy_reason": pack_dist(
+            "PLACEBO stratified by (symbol, tf, arm, exitm, reason)",
+            placebos["by_strategy_reason"]),
         "seeds": [pack(v) for v in order_runs],
     }
     report["placebo"] = pack(placebo)
@@ -962,7 +1019,8 @@ def main() -> None:
     print(f"stage 6: {report['stage6']}\n")
 
     for k in ("honest_arm_live_eligible_False", "vol_aware_barrier",
-              "vol_pinned_control", "barrier_off_leak", "placebo_ensemble"):
+              "vol_pinned_control", "barrier_off_leak", "placebo_global",
+              "placebo_by_symbol_tf_reason", "placebo_by_strategy_reason"):
         d = report["primary"][k]
         print(f"PRIMARY {d['arm']:<34s} taken% median={d['taken_pct_median']:6.3f} "
               f"[p05 {d['taken_pct_p05']:.3f}, p95 {d['taken_pct_p95']:.3f}]  "

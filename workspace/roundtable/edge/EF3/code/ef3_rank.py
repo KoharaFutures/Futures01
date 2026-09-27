@@ -107,13 +107,41 @@ def paired_sign_and_t(diffs: Sequence[float]) -> dict:
             "wins": pos, "sign_z": round(z, 3)}
 
 
+def slicing_bias(s1: dict) -> dict:
+    """How much the ledger-slice approximation differs from a true windowed run.
+
+    Measured on stage 1's random subsample rather than inherited from
+    RANKING_FINDINGS' -0.004R audit, because that audit was on a different
+    substrate, a different session rule and a different population.
+    """
+    v = s1.get("slicing_verification") or {}
+    ds, dn = [], []
+    for sid, d in v.items():
+        for win, tk, sk, nk in (("IS", "true_IS", "sliced_IS_exp", "sliced_IS_n"),
+                                ("OOS", "true_OOS", "sliced_OOS_exp", "sliced_OOS_n")):
+            t = d[tk]
+            if t.get("trades", 0) >= 5 and d[nk] >= 5:
+                ds.append((d[sk] - t["expectancy_r"], win))
+                dn.append((d[nk] - t["trades"], win))
+    out = {"n_checked": len(v)}
+    for win in ("IS", "OOS"):
+        e = [x for x, w in ds if w == win]
+        c = [x for x, w in dn if w == win]
+        out[win] = {
+            "pairs": len(e),
+            "mean_exp_r_sliced_minus_true": round(sum(e) / len(e), 5) if e else None,
+            "max_abs_exp_diff": round(max(abs(x) for x in e), 5) if e else None,
+            "mean_trade_count_diff": round(sum(c) / len(c), 3) if c else None,
+        }
+    return out
+
+
 def analyse(sym: str, tag: str = "gap") -> dict:
     s1 = json.loads((OUT / f"stage1_{sym}_{tag}.json").read_text())
-    LR = json.loads((OUT / f"ledger_real_{sym}_{tag}.json").read_text())
     LP = json.loads((OUT / f"ledger_placebo_{sym}_{tag}.json").read_text())
-    n_bars = LR["bars"]
-    cut = LR["is_cut"]
-    real = LR["ledger"]
+    n_bars = s1["bars"]
+    cut = s1["is_cut"]
+    real = s1["ledger"]
     plac = LP["ledger"]
     meta = LP["meta"]
     pop_n = s1["population"]
@@ -130,15 +158,16 @@ def analyse(sym: str, tag: str = "gap") -> dict:
             "n_scheduled": m["n_scheduled"], "n_real_signals": m["n_real_signals"],
         }
 
-    # --- candidates: gates G1 + G2 on the TRUE windowed IS run (stage 1)
-    cands = []
-    for sid, r in s1["rows"].items():
-        if r["IS"].get("trades", 0) < MIN_IS_TRADES:
-            continue
-        if (r["IS"].get("expectancy_r") or -1) <= 0:
-            continue
-        cands.append(sid)
-    cands.sort(key=lambda sid: -s1["rows"][sid]["IS"]["expectancy_r"])
+    # --- window metrics for every live row, from the one full-span ledger
+    W = {sid: {"IS": wmetrics(rows, 0, cut), "OOS": wmetrics(rows, cut, n_bars),
+               "FULL": wmetrics(rows, 0, n_bars)}
+         for sid, rows in real.items()}
+
+    # --- candidates: gates G1 + G2 on IS
+    cands = [sid for sid in W
+             if W[sid]["IS"].get("trades", 0) >= MIN_IS_TRADES
+             and (W[sid]["IS"].get("expectancy_r") or -1) > 0]
+    cands.sort(key=lambda sid: -W[sid]["IS"]["expectancy_r"])
 
     def row_for(sid: str, rank: int) -> dict:
         r = s1["rows"][sid]
@@ -151,10 +180,8 @@ def analyse(sym: str, tag: str = "gap") -> dict:
             "stop_kind": r["stop_kind"], "stop_mult": r["stop_mult"],
             "target_kind": r["target_kind"], "n_signals": r["n_signals"],
             "signals": r["signals"], "filters": r["filters"],
-            "IS": r["IS"], "OOS": r["OOS"], "FULL": r["FULL"],
-            "IS_sliced": wmetrics(rows, 0, cut),
-            "OOS_sliced": wmetrics(rows, cut, n_bars),
-            "IS_sliced_strict": wmetrics(rows, 0, cut, strict=True),
+            "IS": W[sid]["IS"], "OOS": W[sid]["OOS"], "FULL": W[sid]["FULL"],
+            "IS_strict": wmetrics(rows, 0, cut, strict=True),
             "by_session_FULL": slice_by(rows, 0, n_bars, 9),
             "by_regime_FULL": slice_by(rows, 0, n_bars, 10),
             "by_volatility_FULL": slice_by(rows, 0, n_bars, 11),
@@ -171,10 +198,10 @@ def analyse(sym: str, tag: str = "gap") -> dict:
               for k in ("placebo_random", "placebo_shuffle")]
         d["G3_beats_both_honest_placebos"] = (
             all(x is not None for x in hp)
-            and all(r["IS"]["expectancy_r"] > x for x in hp))
-        d["G4_oos"] = (r["OOS"].get("trades", 0) >= MIN_OOS_TRADES
-                       and (r["OOS"].get("expectancy_r") or -1) > 0)
-        d["t_clears_free_t"] = ((r["FULL"].get("t_stat") or 0) >= ft)
+            and all(W[sid]["IS"]["expectancy_r"] > x for x in hp))
+        d["G4_oos"] = (W[sid]["OOS"].get("trades", 0) >= MIN_OOS_TRADES
+                       and (W[sid]["OOS"].get("expectancy_r") or -1) > 0)
+        d["t_clears_free_t"] = ((W[sid]["FULL"].get("t_stat") or 0) >= ft)
         return d
 
     top = [row_for(sid, i + 1) for i, sid in enumerate(cands[:40])]
@@ -182,7 +209,7 @@ def analyse(sym: str, tag: str = "gap") -> dict:
     # --- placebos ranked BESIDE the reals, the RANKING_FINDINGS measurement
     pool = []
     for sid in cands:
-        pool.append(("real", sid, s1["rows"][sid]["IS"]["expectancy_r"]))
+        pool.append(("real", sid, W[sid]["IS"]["expectancy_r"]))
     for bid, kinds in pl_by_base.items():
         for kind, v in kinds.items():
             if v["IS"].get("trades", 0) >= MIN_IS_TRADES and v["IS"].get("expectancy_r") is not None:
@@ -204,7 +231,7 @@ def analyse(sym: str, tag: str = "gap") -> dict:
                 v = pl_by_base.get(sid, {}).get(kind)
                 if not v or v[win].get("trades", 0) < 5:
                     continue
-                rr = s1["rows"][sid][win].get("expectancy_r")
+                rr = W[sid][win].get("expectancy_r")
                 if rr is None:
                     continue
                 ds.append(rr - v[win]["expectancy_r"])
@@ -251,12 +278,13 @@ def analyse(sym: str, tag: str = "gap") -> dict:
         "free_t": round(ft, 3), "span_years": round(SPAN_YEARS, 3),
         "sharpe_needed_for_free_t": round(ft / math.sqrt(SPAN_YEARS), 3),
         "is_cut_bar": cut, "bars": n_bars,
-        "engine_counters": LR["counters"], "forced_flats": LR["forced_flats"],
+        "engine_counters": s1["engine_counters"], "forced_flats": s1["forced_flats"],
         "violations_stage1": s1["violations"],
         "census_falsification": s1["census_falsification"],
         "zero_trade_live_full": s1["zero_trade_live_full"],
         "n_candidates_after_G1_G2": len(cands),
         "placebo_diag": LP["diag"],
+        "slicing_verification": slicing_bias(s1),
         "placebo_ranking": {
             "n_honest_pool": n_tot, "n_placebos_in_pool": n_pl,
             "placebo_share": round(n_pl / n_tot, 3) if n_tot else None,

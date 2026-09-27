@@ -50,26 +50,29 @@ from substrate import CELLS, SYMBOLS, frame_for                    # noqa: E402
 
 OUT = os.path.join(REPO, "workspace", "roundtable", "edge", "EF2", "data")
 
+#: EF6 owns the control/window surface, so EF2 uses EF6's mask rather than its
+#: own. My first version computed the signal bar's end on a CONTIGUOUS grid
+#: (16:00 + 60m = 17:00, inside the forbidden window) and called the 16:00 bar
+#: inadmissible. EF6's asks what the NEXT BAR IN THE SERIES actually is, and the
+#: 17:00 bar mostly does not exist, so the fill lands at the 18:00 open and is
+#: legal. EF6's is the engine-faithful one - run_many fills pending entries at the
+#: open of the next bar it ITERATES [repo-verified: engine.py:295-300], not at a
+#: hypothetical grid position. Disagreement was 482 MGC / 468 MCL bars, all stamped
+#: 16:00; see EF2/bursts/05.
+sys.path.insert(0, os.path.join(REPO, "workspace", "roundtable", "edge", "EF6", "code"))
+from window import signal_mask as _ef6_signal_mask                 # noqa: E402
+
 BREAK_START = 16 * 60      # 16:00 ET, minute of day
 BREAK_END = 18 * 60        # 18:00 ET
 
 
 def entry_admissible(ts, minutes: int) -> bool:
-    """May a position be OPENED on the close of this bar, under 18:00->16:00?
-
-    The rule: a position may exist only inside 18:00 ET -> 16:00 ET next day,
-    and nothing may be held across 16:00-18:00. A bar's close is when the
-    engine sees the signal; the entry fills at the NEXT bar's open
-    [repo-verified: engine.py:295-300, pending filled at bar open]. So the
-    admissible test is on the bar AFTER the signal bar, which for a contiguous
-    grid is the signal bar's own end stamp.
-
-    Returns False when the signal bar's end falls in [16:00, 18:00), because
-    the fill would then happen at or inside the break.
-    """
+    """DEPRECATED - EF2's own first-cut mask, kept only so burst 04's stop-fidelity
+    denominator stays reproducible. It is STRICTER than the rule: it rejects the
+    16:00-stamped bar, whose fill actually lands legally at the 18:00 open.
+    Superseded by EF6's ``window.signal_mask``; do not use it for a new number."""
     et = to_et(ts)
-    end = et.hour * 60 + et.minute + minutes
-    end %= 1440
+    end = (et.hour * 60 + et.minute + minutes) % 1440
     return not (BREAK_START <= end < BREAK_END)
 
 
@@ -91,6 +94,7 @@ def census_cell(symbol: str, frame_key: str, timeframes: Tuple[int, ...],
     n_swing = 0
     n_both = 0
 
+    smask = _ef6_signal_mask(bars, base_min)
     reset_condition_errors()
     for i in range(0, len(bars), step):
         snap = fr.snapshot(i)
@@ -99,7 +103,7 @@ def census_cell(symbol: str, frame_key: str, timeframes: Tuple[int, ...],
         bar = bars[i]
         n_bars += 1
         rth = bool(snap.is_rth)
-        swing = entry_admissible(bar.ts, base_min)
+        swing = bool(smask[i])
         n_rth += rth
         n_swing += swing
         n_both += (rth and swing)

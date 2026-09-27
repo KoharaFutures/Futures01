@@ -23,17 +23,19 @@
         "2026-09-25T16:00:00-04:00"
       ],
       "strategies": 184,
-      "seconds": 92.1,
+      "seconds": 177.5,
       "grid": {
         "entries_vetoed_in_window": 0,
         "entries_vetoed_signal_in_window": 0,
         "flats_on_boundary": 420,
         "flats_in_window": 0,
+        "flats_forced_session_end": 0,
         "flats_total": 420,
         "flats_gapped_through_stop": 0,
         "bars_on_boundary": 489,
         "bars_in_window": 495,
         "bars_interior": 0,
+        "bars_session_end": 9,
         "stale_fills": 0
       },
       "arm_a_as_shipped": {
@@ -124,18 +126,20 @@
         "2026-09-25T16:00:00-04:00"
       ],
       "strategies": 167,
-      "seconds": 127.9,
+      "seconds": 162.1,
       "grid": {
         "entries_vetoed_in_window": 0,
         "entries_vetoed_signal_in_window": 0,
-        "flats_on_boundary": 1283,
+        "flats_on_boundary": 1285,
         "flats_in_window": 0,
-        "flats_total": 1283,
+        "flats_forced_session_end": 18,
+        "flats_total": 1303,
         "flats_gapped_through_stop": 0,
         "bars_on_boundary": 470,
         "bars_in_window": 474,
         "bars_interior": 0,
-        "stale_fills": 7
+        "bars_session_end": 27,
+        "stale_fills": 14
       },
       "arm_a_as_shipped": {
         "trades": 2626,
@@ -174,101 +178,38 @@
         }
       },
       "arm_c_session_window": {
-        "trades": 2179,
-        "mean_net_r": -0.14447,
-        "sum_net_r": -314.81,
-        "violations": 18,
-        "violations_strict_no_carveout": 18,
-        "violation_kinds": {
-          "SPANS_WINDOW": 18
-        },
-        "violation_detail": [
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-18af6361b4a6",
-            "entry_ts": "2026-01-09T12:00:00-05:00",
-            "exit_ts": "2026-01-12T03:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-8cf55f4deb30",
-            "entry_ts": "2026-01-09T12:00:00-05:00",
-            "exit_ts": "2026-01-12T03:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-775917ee2bf2",
-            "entry_ts": "2026-01-09T12:00:00-05:00",
-            "exit_ts": "2026-01-12T03:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-f09be09e9c20",
-            "entry_ts": "2024-12-24T12:30:00-05:00",
-            "exit_ts": "2024-12-26T13:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-f09be09e9c20",
-            "entry_ts": "2025-07-04T10:00:00-04:00",
-            "exit_ts": "2025-07-07T05:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-f09be09e9c20",
-            "entry_ts": "2025-11-28T12:30:00-05:00",
-            "exit_ts": "2025-12-01T08:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-f09be09e9c20",
-            "entry_ts": "2026-01-09T12:00:00-05:00",
-            "exit_ts": "2026-01-12T03:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-f09be09e9c20",
-            "entry_ts": "2026-02-27T03:00:00-05:00",
-            "exit_ts": "2026-03-02T03:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-bbc4a02c3b65",
-            "entry_ts": "2024-12-24T12:30:00-05:00",
-            "exit_ts": "2024-12-26T13:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MCL-240m-bbc4a02c3b65",
-            "entry_ts": "2025-07-04T10:00:00-04:00",
-            "exit_ts": "2025-07-07T05:00:00-04:00"
-          }
-        ],
+        "trades": 2186,
+        "mean_net_r": -0.14793,
+        "sum_net_r": -323.375,
+        "violations": 0,
+        "violations_strict_no_carveout": 0,
+        "violation_kinds": {},
+        "violation_detail": [],
         "exit_reasons": {
           "BREAKEVEN": 58,
-          "SESSION_CLOSE": 1283,
-          "STOP": 789,
-          "TARGET": 49
+          "SESSION_CLOSE": 1303,
+          "STOP": 780,
+          "TARGET": 45
         },
-        "positions_closed_by_the_rule": 1283,
-        "share_of_trades_closed_by_the_rule": 0.5888,
+        "positions_closed_by_the_rule": 1303,
+        "share_of_trades_closed_by_the_rule": 0.5961,
         "median_minutes_held": 120.0,
-        "max_minutes_held": 4320.0
+        "max_minutes_held": 1260.0
       },
       "truncation_vs_arm_b": {
-        "paired_flats": 1160,
+        "paired_flats": 1177,
         "flats_where_arm_b_exited_on_the_same_bar": 0,
         "extra_base_bars_arm_b_survived": {
           "min": 1,
-          "median": 12.0,
-          "mean": 19.859,
+          "median": 12,
+          "mean": 19.67,
           "max": 416
         },
         "arm_b_exit_reason_for_those_positions": {
           "BREAKEVEN": 326,
           "END_OF_DATA": 7,
-          "STOP": 604,
-          "TARGET": 217,
+          "STOP": 617,
+          "TARGET": 221,
           "TIME": 6
         }
       }
@@ -288,18 +229,20 @@
         "2026-09-25T16:00:00-04:00"
       ],
       "strategies": 190,
-      "seconds": 107.3,
+      "seconds": 175.5,
       "grid": {
         "entries_vetoed_in_window": 683,
         "entries_vetoed_signal_in_window": 0,
         "flats_on_boundary": 823,
         "flats_in_window": 0,
-        "flats_total": 823,
+        "flats_forced_session_end": 9,
+        "flats_total": 832,
         "flats_gapped_through_stop": 0,
         "bars_on_boundary": 488,
         "bars_in_window": 493,
         "bars_interior": 0,
-        "stale_fills": 0
+        "bars_session_end": 10,
+        "stale_fills": 9
       },
       "arm_a_as_shipped": {
         "trades": 1292,
@@ -340,94 +283,37 @@
         }
       },
       "arm_c_session_window": {
-        "trades": 1368,
-        "mean_net_r": -0.05552,
-        "sum_net_r": -75.947,
-        "violations": 9,
-        "violations_strict_no_carveout": 9,
-        "violation_kinds": {
-          "SPANS_WINDOW": 9
-        },
-        "violation_detail": [
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-2155c96a4cc6",
-            "entry_ts": "2025-07-03T10:30:00-04:00",
-            "exit_ts": "2025-07-04T03:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-a181b1349a0b",
-            "entry_ts": "2025-07-03T10:30:00-04:00",
-            "exit_ts": "2025-07-04T03:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-dfefb0d87e26",
-            "entry_ts": "2025-07-03T10:30:00-04:00",
-            "exit_ts": "2025-07-04T03:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-99890d309217",
-            "entry_ts": "2024-12-24T10:30:00-05:00",
-            "exit_ts": "2024-12-26T15:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-99890d309217",
-            "entry_ts": "2025-07-03T12:30:00-04:00",
-            "exit_ts": "2025-07-04T00:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-40fb83356074",
-            "entry_ts": "2024-12-24T10:30:00-05:00",
-            "exit_ts": "2024-12-26T15:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-40fb83356074",
-            "entry_ts": "2025-07-03T12:30:00-04:00",
-            "exit_ts": "2025-07-04T00:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-aafa8d416a0d",
-            "entry_ts": "2024-12-24T10:30:00-05:00",
-            "exit_ts": "2024-12-26T15:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MES-240m-aafa8d416a0d",
-            "entry_ts": "2025-07-03T12:30:00-04:00",
-            "exit_ts": "2025-07-04T00:00:00-04:00"
-          }
-        ],
+        "trades": 1380,
+        "mean_net_r": -0.06064,
+        "sum_net_r": -83.683,
+        "violations": 0,
+        "violations_strict_no_carveout": 0,
+        "violation_kinds": {},
+        "violation_detail": [],
         "exit_reasons": {
           "BREAKEVEN": 13,
-          "SESSION_CLOSE": 823,
-          "STOP": 520,
+          "SESSION_CLOSE": 832,
+          "STOP": 523,
           "TARGET": 12
         },
-        "positions_closed_by_the_rule": 823,
-        "share_of_trades_closed_by_the_rule": 0.6016,
+        "positions_closed_by_the_rule": 832,
+        "share_of_trades_closed_by_the_rule": 0.6029,
         "median_minutes_held": 180.0,
-        "max_minutes_held": 3150.0
+        "max_minutes_held": 300.0
       },
       "truncation_vs_arm_b": {
-        "paired_flats": 577,
+        "paired_flats": 583,
         "flats_where_arm_b_exited_on_the_same_bar": 0,
         "extra_base_bars_arm_b_survived": {
           "min": 1,
           "median": 18,
-          "mean": 25.347,
+          "mean": 25.111,
           "max": 155
         },
         "arm_b_exit_reason_for_those_positions": {
           "BREAKEVEN": 171,
           "END_OF_DATA": 3,
-          "STOP": 257,
+          "STOP": 263,
           "TARGET": 142,
           "TIME": 4
         }
@@ -448,18 +334,20 @@
         "2026-09-25T16:00:00-04:00"
       ],
       "strategies": 185,
-      "seconds": 97.8,
+      "seconds": 184.4,
       "grid": {
         "entries_vetoed_in_window": 424,
         "entries_vetoed_signal_in_window": 0,
         "flats_on_boundary": 842,
         "flats_in_window": 0,
-        "flats_total": 842,
+        "flats_forced_session_end": 8,
+        "flats_total": 850,
         "flats_gapped_through_stop": 0,
         "bars_on_boundary": 488,
         "bars_in_window": 497,
         "bars_interior": 0,
-        "stale_fills": 0
+        "bars_session_end": 10,
+        "stale_fills": 6
       },
       "arm_a_as_shipped": {
         "trades": 1403,
@@ -498,76 +386,37 @@
         }
       },
       "arm_c_session_window": {
-        "trades": 979,
-        "mean_net_r": 0.00643,
-        "sum_net_r": 6.298,
-        "violations": 6,
-        "violations_strict_no_carveout": 6,
-        "violation_kinds": {
-          "SPANS_WINDOW": 6
-        },
-        "violation_detail": [
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-479d290297cb",
-            "entry_ts": "2024-12-24T12:30:00-05:00",
-            "exit_ts": "2024-12-26T15:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-479d290297cb",
-            "entry_ts": "2025-06-19T12:00:00-04:00",
-            "exit_ts": "2025-06-20T08:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-479d290297cb",
-            "entry_ts": "2025-07-03T12:30:00-04:00",
-            "exit_ts": "2025-07-07T14:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-14dca176dcc1",
-            "entry_ts": "2024-12-24T12:30:00-05:00",
-            "exit_ts": "2024-12-26T15:00:00-05:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-14dca176dcc1",
-            "entry_ts": "2025-06-19T12:00:00-04:00",
-            "exit_ts": "2025-06-20T08:00:00-04:00"
-          },
-          {
-            "kind": "SPANS_WINDOW",
-            "strategy_id": "MNQ-240m-14dca176dcc1",
-            "entry_ts": "2025-07-03T12:30:00-04:00",
-            "exit_ts": "2025-07-07T14:00:00-04:00"
-          }
-        ],
+        "trades": 985,
+        "mean_net_r": 0.00682,
+        "sum_net_r": 6.722,
+        "violations": 0,
+        "violations_strict_no_carveout": 0,
+        "violation_kinds": {},
+        "violation_detail": [],
         "exit_reasons": {
           "BREAKEVEN": 3,
-          "SESSION_CLOSE": 842,
-          "STOP": 106,
+          "SESSION_CLOSE": 850,
+          "STOP": 104,
           "TARGET": 28
         },
-        "positions_closed_by_the_rule": 842,
-        "share_of_trades_closed_by_the_rule": 0.8601,
+        "positions_closed_by_the_rule": 850,
+        "share_of_trades_closed_by_the_rule": 0.8629,
         "median_minutes_held": 180.0,
-        "max_minutes_held": 5850.0
+        "max_minutes_held": 900.0
       },
       "truncation_vs_arm_b": {
-        "paired_flats": 523,
+        "paired_flats": 525,
         "flats_where_arm_b_exited_on_the_same_bar": 0,
         "extra_base_bars_arm_b_survived": {
           "min": 1,
           "median": 43,
-          "mean": 79.608,
+          "mean": 79.423,
           "max": 353
         },
         "arm_b_exit_reason_for_those_positions": {
           "BREAKEVEN": 159,
           "END_OF_DATA": 3,
-          "STOP": 199,
+          "STOP": 201,
           "TARGET": 127,
           "TIME": 35
         }

@@ -1,0 +1,1449 @@
+{
+ "prefilter": {
+  "n_strategies": 465,
+  "n_void": 0,
+  "pct_void": 0.0,
+  "n_thin": 0,
+  "n_alive": 465,
+  "void_causes": {},
+  "void_by_group": {},
+  "void_by_primary_tf": {
+   "60": "0/465"
+  }
+ },
+ "placebo_diag": {
+  "kinds": [
+   "placebo_random_legal",
+   "placebo_session_shuffle"
+  ],
+  "match_on": "realised",
+  "n_bases": 10,
+  "base_minutes": 60,
+  "signal_eligible_bars": 10801,
+  "n_bars": 11297,
+  "dropped_base_too_few_legal": 0,
+  "id_collisions": 0,
+  "per_kind": {
+   "placebo_random_legal": {
+    "built": 10,
+    "count_matched": 0,
+    "short": 3148
+   },
+   "placebo_session_shuffle": {
+    "built": 10,
+    "count_matched": 3,
+    "short": 14
+   }
+  },
+  "mean_shuffle_degeneracy_if_direction_shuffle_were_used": 0.5957,
+  "n_placebos": 20
+ },
+ "roll": {
+  "symbol": "MGC",
+  "setting": "swing",
+  "base_tf": 60,
+  "substrate": "data/archive",
+  "criterion": "durability",
+  "lookback_days": 180,
+  "trade_days": 30,
+  "floor": 20,
+  "top_k": 10,
+  "n_strategies": 205,
+  "folds_total": 23,
+  "folds_traded": 17,
+  "oos_trades": 1165,
+  "topk_exp_r": 0.0275,
+  "universe_exp_r": 0.0302,
+  "randomk_exp_r": -0.0029,
+  "selection_edge_vs_universe_r": -0.0027,
+  "selection_edge_vs_randomk_r": 0.0305,
+  "null_exp_r": 0.0211,
+  "null_sd": 0.0256,
+  "universe_null_exp_r": 0.0354,
+  "universe_null_sd": 0.0167,
+  "universe_z_vs_null": -0.31,
+  "z_vs_null": 0.25,
+  "folds_where_topk_is_the_whole_universe": "0 of 17",
+  "mean_rank_window_qualifiers": 16.2,
+  "folds_profitable": "10 of 17",
+  "folds_beating_universe": "9 of 17",
+  "consecutive_jaccard": 0.6292,
+  "union_selected": 21,
+  "top1_changed": "9 of 16",
+  "deflation": {
+   "n_screened": 465,
+   "preregistered": false,
+   "span_days": 718.88,
+   "span_years": 1.9682,
+   "sqrt_years": 1.4029,
+   "free_t": 3.5049,
+   "prereg_floor_t": 1.1774,
+   "threshold_t": 3.5049,
+   "required_annual_sharpe": 2.498,
+   "required_annual_sharpe_prereg": 0.839,
+   "t_at_sharpe_1": 1.403,
+   "t_at_sharpe_2": 2.806,
+   "t_at_sharpe_3": 4.209,
+   "answerable_at_sharpe_2": false,
+   "answerable_prereg_at_sharpe_2": true
+  },
+  "folds": [
+   {
+    "span": [
+     "2025-04-06T18:00:00-04:00",
+     "2025-05-06T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2024-10-08T18:00:00-04:00",
+     "2025-04-06T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 12,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0038,
+    "in_sample_exp_r": 0.0082,
+    "oos_trades": 72,
+    "oos_exp_r": 0.012,
+    "universe_trades": 79,
+    "universe_exp_r": -0.0293,
+    "randomk_exp_r": -0.0912,
+    "top1": "MGC-60m-0a83f75261df"
+   },
+   {
+    "span": [
+     "2025-05-06T18:00:00-04:00",
+     "2025-06-05T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2024-11-07T17:00:00-05:00",
+     "2025-05-06T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 12,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": -0.0024,
+    "in_sample_exp_r": -0.009,
+    "oos_trades": 98,
+    "oos_exp_r": -0.2084,
+    "universe_trades": 121,
+    "universe_exp_r": -0.2254,
+    "randomk_exp_r": -0.2386,
+    "top1": "MGC-60m-0a83f75261df"
+   },
+   {
+    "span": [
+     "2025-06-05T18:00:00-04:00",
+     "2025-07-05T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2024-12-07T17:00:00-05:00",
+     "2025-06-05T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 14,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": -0.0035,
+    "in_sample_exp_r": -0.0108,
+    "oos_trades": 56,
+    "oos_exp_r": -0.1251,
+    "universe_trades": 105,
+    "universe_exp_r": -0.1473,
+    "randomk_exp_r": -0.1776,
+    "top1": "MGC-60m-3d2aca39b143"
+   },
+   {
+    "span": [
+     "2025-07-05T18:00:00-04:00",
+     "2025-08-04T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-01-06T17:00:00-05:00",
+     "2025-07-05T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 13,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": -0.0036,
+    "in_sample_exp_r": -0.0094,
+    "oos_trades": 99,
+    "oos_exp_r": -0.1676,
+    "universe_trades": 118,
+    "universe_exp_r": -0.1675,
+    "randomk_exp_r": -0.1447,
+    "top1": "MGC-60m-3d2aca39b143"
+   },
+   {
+    "span": [
+     "2025-08-04T18:00:00-04:00",
+     "2025-09-03T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-02-05T17:00:00-05:00",
+     "2025-08-04T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 13,
+    "qualifiers_score_window": 1,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": -0.0401,
+    "in_sample_exp_r": -0.1152,
+    "oos_trades": 63,
+    "oos_exp_r": 0.1678,
+    "universe_trades": 99,
+    "universe_exp_r": 0.1647,
+    "randomk_exp_r": 0.1409,
+    "top1": "MGC-60m-cb08d68c17c6"
+   },
+   {
+    "span": [
+     "2025-09-03T18:00:00-04:00",
+     "2025-10-03T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-03-07T17:00:00-05:00",
+     "2025-09-03T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 16,
+    "qualifiers_score_window": 1,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0037,
+    "in_sample_exp_r": 0.0098,
+    "oos_trades": 81,
+    "oos_exp_r": -0.0362,
+    "universe_trades": 151,
+    "universe_exp_r": -0.024,
+    "randomk_exp_r": -0.0908,
+    "top1": "MGC-60m-3d2aca39b143"
+   },
+   {
+    "span": [
+     "2025-10-03T18:00:00-04:00",
+     "2025-11-02T18:00:00-05:00"
+    ],
+    "rank_span": [
+     "2025-04-06T18:00:00-04:00",
+     "2025-10-03T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 18,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0123,
+    "in_sample_exp_r": 0.0341,
+    "oos_trades": 76,
+    "oos_exp_r": 0.1264,
+    "universe_trades": 160,
+    "universe_exp_r": 0.154,
+    "randomk_exp_r": 0.1595,
+    "top1": "MGC-60m-3d2aca39b143"
+   },
+   {
+    "span": [
+     "2025-11-02T18:00:00-05:00",
+     "2025-12-02T18:00:00-05:00"
+    ],
+    "rank_span": [
+     "2025-05-06T19:00:00-04:00",
+     "2025-11-02T18:00:00-05:00"
+    ],
+    "qualifiers_rank_window": 17,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0192,
+    "in_sample_exp_r": 0.0537,
+    "oos_trades": 56,
+    "oos_exp_r": -0.0954,
+    "universe_trades": 104,
+    "universe_exp_r": -0.1411,
+    "randomk_exp_r": -0.0341,
+    "top1": "MGC-60m-3d2aca39b143"
+   },
+   {
+    "span": [
+     "2025-12-02T18:00:00-05:00",
+     "2026-01-01T18:00:00-05:00"
+    ],
+    "rank_span": [
+     "2025-06-05T19:00:00-04:00",
+     "2025-12-02T18:00:00-05:00"
+    ],
+    "qualifiers_rank_window": 18,
+    "qualifiers_score_window": 2,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0324,
+    "in_sample_exp_r": 0.0897,
+    "oos_trades": 87,
+    "oos_exp_r": 0.1153,
+    "universe_trades": 135,
+    "universe_exp_r": 0.1917,
+    "randomk_exp_r": 0.2383,
+    "top1": "MGC-60m-cb08d68c17c6"
+   },
+   {
+    "span": [
+     "2026-01-01T18:00:00-05:00",
+     "2026-01-31T18:00:00-05:00"
+    ],
+    "rank_span": [
+     "2025-07-05T19:00:00-04:00",
+     "2026-01-01T18:00:00-05:00"
+    ],
+    "qualifiers_rank_window": 21,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0519,
+    "in_sample_exp_r": 0.1411,
+    "oos_trades": 93,
+    "oos_exp_r": 0.1155,
+    "universe_trades": 174,
+    "universe_exp_r": 0.136,
+    "randomk_exp_r": 0.1102,
+    "top1": "MGC-60m-cb08d68c17c6"
+   },
+   {
+    "span": [
+     "2026-01-31T18:00:00-05:00",
+     "2026-03-02T18:00:00-05:00"
+    ],
+    "rank_span": [
+     "2025-08-04T19:00:00-04:00",
+     "2026-01-31T18:00:00-05:00"
+    ],
+    "qualifiers_rank_window": 21,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0714,
+    "in_sample_exp_r": 0.1962,
+    "oos_trades": 26,
+    "oos_exp_r": 0.0881,
+    "universe_trades": 60,
+    "universe_exp_r": -0.1297,
+    "randomk_exp_r": -0.1863,
+    "top1": "MGC-60m-6e1e3959979e"
+   },
+   {
+    "span": [
+     "2026-03-02T18:00:00-05:00",
+     "2026-04-02T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-09-03T19:00:00-04:00",
+     "2026-03-02T18:00:00-05:00"
+    ],
+    "qualifiers_rank_window": 20,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0461,
+    "in_sample_exp_r": 0.128,
+    "oos_trades": 36,
+    "oos_exp_r": 0.5781,
+    "universe_trades": 67,
+    "universe_exp_r": 0.5789,
+    "randomk_exp_r": 0.4789,
+    "top1": "MGC-60m-0a83f75261df"
+   },
+   {
+    "span": [
+     "2026-04-02T18:00:00-04:00",
+     "2026-05-02T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-10-04T18:00:00-04:00",
+     "2026-04-02T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 18,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.076,
+    "in_sample_exp_r": 0.2278,
+    "oos_trades": 34,
+    "oos_exp_r": -0.2152,
+    "universe_trades": 60,
+    "universe_exp_r": -0.1052,
+    "randomk_exp_r": -0.2507,
+    "top1": "MGC-60m-0a83f75261df"
+   },
+   {
+    "span": [
+     "2026-05-02T18:00:00-04:00",
+     "2026-06-01T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-11-03T17:00:00-05:00",
+     "2026-05-02T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 18,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0628,
+    "in_sample_exp_r": 0.2063,
+    "oos_trades": 62,
+    "oos_exp_r": 0.0112,
+    "universe_trades": 134,
+    "universe_exp_r": -0.0997,
+    "randomk_exp_r": -0.0607,
+    "top1": "MGC-60m-6e1e3959979e"
+   },
+   {
+    "span": [
+     "2026-06-01T18:00:00-04:00",
+     "2026-07-01T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2025-12-03T17:00:00-05:00",
+     "2026-06-01T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 18,
+    "qualifiers_score_window": 1,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0722,
+    "in_sample_exp_r": 0.237,
+    "oos_trades": 63,
+    "oos_exp_r": 0.5417,
+    "universe_trades": 137,
+    "universe_exp_r": 0.3875,
+    "randomk_exp_r": 0.4918,
+    "top1": "MGC-60m-6e1e3959979e"
+   },
+   {
+    "span": [
+     "2026-07-01T18:00:00-04:00",
+     "2026-07-31T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2026-01-02T17:00:00-05:00",
+     "2026-07-01T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 14,
+    "qualifiers_score_window": 0,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0777,
+    "in_sample_exp_r": 0.2513,
+    "oos_trades": 46,
+    "oos_exp_r": -0.2883,
+    "universe_trades": 81,
+    "universe_exp_r": -0.2371,
+    "randomk_exp_r": -0.2027,
+    "top1": "MGC-60m-06e80b21dfc4"
+   },
+   {
+    "span": [
+     "2026-07-31T18:00:00-04:00",
+     "2026-08-30T18:00:00-04:00"
+    ],
+    "rank_span": [
+     "2026-02-01T17:00:00-05:00",
+     "2026-07-31T18:00:00-04:00"
+    ],
+    "qualifiers_rank_window": 13,
+    "qualifiers_score_window": 2,
+    "selected": 10,
+    "topk_is_whole_universe": false,
+    "in_sample_key": 0.0453,
+    "in_sample_exp_r": 0.1712,
+    "oos_trades": 117,
+    "oos_exp_r": 0.0446,
+    "universe_trades": 173,
+    "universe_exp_r": 0.0378,
+    "randomk_exp_r": 0.0229,
+    "top1": "MGC-60m-be289c30cdcb"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "#1 MGC-60m-3d2aca39b143",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 111,
+      "n_b": 111,
+      "n_blocks": 186,
+      "n_perm": 5000,
+      "mean_a": 0.1453,
+      "mean_b": -0.0826,
+      "observed_diff": 0.2279,
+      "p_two_sided": 0.0254
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.283,
+     "count_match": {
+      "base_trades": 111,
+      "placebo_trades": 111,
+      "ratio": 1.0
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.9651,
+     "deflated_t": -1.5398,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.401,
+     "reason": "t=1.9651 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 1,
+   "strategy_id": "MGC-60m-3d2aca39b143",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 111,
+   "expectancy_r": 0.1453,
+   "win_rate": 0.5946
+  },
+  {
+   "id": "#2 MGC-60m-6af25c1a8689",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 110,
+      "n_b": 110,
+      "n_blocks": 188,
+      "n_perm": 5000,
+      "mean_a": 0.1428,
+      "mean_b": -0.0852,
+      "observed_diff": 0.228,
+      "p_two_sided": 0.028
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.2901,
+     "count_match": {
+      "base_trades": 110,
+      "placebo_trades": 110,
+      "ratio": 1.0
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.9147,
+     "deflated_t": -1.5902,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.365,
+     "reason": "t=1.9147 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 2,
+   "strategy_id": "MGC-60m-6af25c1a8689",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 110,
+   "expectancy_r": 0.1428,
+   "win_rate": 0.5909
+  },
+  {
+   "id": "#3 MGC-60m-c2ff48ff738b",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 110,
+      "n_b": 108,
+      "n_blocks": 187,
+      "n_perm": 5000,
+      "mean_a": 0.1428,
+      "mean_b": -0.0112,
+      "observed_diff": 0.1539,
+      "p_two_sided": 0.1224
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.2835,
+     "count_match": {
+      "base_trades": 110,
+      "placebo_trades": 108,
+      "ratio": 0.982
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.9147,
+     "deflated_t": -1.5902,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.365,
+     "reason": "t=1.9147 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 3,
+   "strategy_id": "MGC-60m-c2ff48ff738b",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 110,
+   "expectancy_r": 0.1428,
+   "win_rate": 0.5909
+  },
+  {
+   "id": "#4 MGC-60m-6e1e3959979e",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 158,
+      "n_b": 152,
+      "n_blocks": 247,
+      "n_perm": 5000,
+      "mean_a": 0.1121,
+      "mean_b": 0.0715,
+      "observed_diff": 0.0406,
+      "p_two_sided": 0.6509
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.2469,
+     "count_match": {
+      "base_trades": 158,
+      "placebo_trades": 152,
+      "ratio": 0.962
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.7144,
+     "deflated_t": -1.7905,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.222,
+     "reason": "t=1.7144 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 4,
+   "strategy_id": "MGC-60m-6e1e3959979e",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 158,
+   "expectancy_r": 0.1121,
+   "win_rate": 0.5443
+  },
+  {
+   "id": "#5 MGC-60m-06e80b21dfc4",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 157,
+      "n_b": 153,
+      "n_blocks": 242,
+      "n_perm": 5000,
+      "mean_a": 0.1101,
+      "mean_b": 0.0643,
+      "observed_diff": 0.0458,
+      "p_two_sided": 0.5989
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.2536,
+     "count_match": {
+      "base_trades": 157,
+      "placebo_trades": 153,
+      "ratio": 0.975
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.6742,
+     "deflated_t": -1.8307,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.193,
+     "reason": "t=1.6742 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 5,
+   "strategy_id": "MGC-60m-06e80b21dfc4",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 157,
+   "expectancy_r": 0.1101,
+   "win_rate": 0.5414
+  },
+  {
+   "id": "#6 MGC-60m-75030f1efeea",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 157,
+      "n_b": 156,
+      "n_blocks": 242,
+      "n_perm": 5000,
+      "mean_a": 0.1101,
+      "mean_b": -0.0984,
+      "observed_diff": 0.2085,
+      "p_two_sided": 0.023
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.246,
+     "count_match": {
+      "base_trades": 157,
+      "placebo_trades": 156,
+      "ratio": 0.994
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.6742,
+     "deflated_t": -1.8307,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.193,
+     "reason": "t=1.6742 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 6,
+   "strategy_id": "MGC-60m-75030f1efeea",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 157,
+   "expectancy_r": 0.1101,
+   "win_rate": 0.5414
+  },
+  {
+   "id": "#7 MGC-60m-cb08d68c17c6",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 1823,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 90,
+      "n_b": 89,
+      "n_blocks": 154,
+      "n_perm": 5000,
+      "mean_a": 0.0883,
+      "mean_b": -0.0069,
+      "observed_diff": 0.0952,
+      "p_two_sided": 0.3999
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.3061,
+     "count_match": {
+      "base_trades": 90,
+      "placebo_trades": 89,
+      "ratio": 0.989
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.503,
+     "deflated_t": -2.0019,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 1.071,
+     "reason": "t=1.503 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 7,
+   "strategy_id": "MGC-60m-cb08d68c17c6",
+   "group": "VOLUME_PROFILE",
+   "trades": 90,
+   "expectancy_r": 0.0883,
+   "win_rate": 0.5556
+  },
+  {
+   "id": "#8 MGC-60m-b15e6b112bf9",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 4547,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 84,
+      "n_b": 84,
+      "n_blocks": 149,
+      "n_perm": 5000,
+      "mean_a": 0.094,
+      "mean_b": -0.1548,
+      "observed_diff": 0.2488,
+      "p_two_sided": 0.0146
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.3095,
+     "count_match": {
+      "base_trades": 84,
+      "placebo_trades": 84,
+      "ratio": 1.0
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.1594,
+     "deflated_t": -2.3455,
+     "clears": false,
+     "clears_prereg_floor": false,
+     "implied_annual_sharpe": 0.826,
+     "reason": "t=1.1594 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 8,
+   "strategy_id": "MGC-60m-b15e6b112bf9",
+   "group": "MULTI_TIMEFRAME",
+   "trades": 84,
+   "expectancy_r": 0.094,
+   "win_rate": 0.5714
+  },
+  {
+   "id": "#9 MGC-60m-be289c30cdcb",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 1823,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 134,
+      "n_b": 126,
+      "n_blocks": 159,
+      "n_perm": 5000,
+      "mean_a": 0.082,
+      "mean_b": -0.113,
+      "observed_diff": 0.195,
+      "p_two_sided": 0.1674
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.4227,
+     "count_match": {
+      "base_trades": 134,
+      "placebo_trades": 126,
+      "ratio": 0.94
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 0.7598,
+     "deflated_t": -2.7451,
+     "clears": false,
+     "clears_prereg_floor": false,
+     "implied_annual_sharpe": 0.542,
+     "reason": "t=0.7598 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 9,
+   "strategy_id": "MGC-60m-be289c30cdcb",
+   "group": "TREND",
+   "trades": 134,
+   "expectancy_r": 0.082,
+   "win_rate": 0.5
+  },
+  {
+   "id": "#10 MGC-60m-a4c4bee42afe",
+   "gates_run": [
+    "G1 FIRING",
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "gates_missing": [],
+   "killed_by": [
+    "G2 PLACEBO",
+    "G3 THRESHOLD",
+    "G4 FORWARD"
+   ],
+   "verdict": "NOT A RESULT",
+   "gates": [
+    {
+     "gate": "G1 FIRING",
+     "verdict": "ALIVE",
+     "pass": true,
+     "void_conditions": [],
+     "thin_conditions": [],
+     "direction_void": [],
+     "unmeasured_conditions": [],
+     "min_fires": 3903,
+     "reason": ""
+    },
+    {
+     "gate": "G2 PLACEBO",
+     "verdict": "UNDERPOWERED",
+     "pass": false,
+     "permutation": {
+      "test": "cycle_block_permutation (two-sided, blocks = 18:00->16:00 cycles)",
+      "n_a": 180,
+      "n_b": 177,
+      "n_blocks": 275,
+      "n_perm": 5000,
+      "mean_a": 0.0565,
+      "mean_b": 0.0182,
+      "observed_diff": 0.0383,
+      "p_two_sided": 0.7862
+     },
+     "min_detectable_diff_R_at_80pct_power": 0.3405,
+     "count_match": {
+      "base_trades": 180,
+      "placebo_trades": 177,
+      "ratio": 0.983
+     },
+     "reason": "the observed edge is smaller than the smallest difference this comparison could detect"
+    },
+    {
+     "gate": "G3 THRESHOLD",
+     "verdict": "BELOW",
+     "pass": false,
+     "n_screened": 465,
+     "preregistered": false,
+     "span_days": 718.83,
+     "span_years": 1.968,
+     "sqrt_years": 1.4029,
+     "free_t": 3.5049,
+     "prereg_floor_t": 1.1774,
+     "threshold_t": 3.5049,
+     "required_annual_sharpe": 2.498,
+     "required_annual_sharpe_prereg": 0.839,
+     "t_at_sharpe_1": 1.403,
+     "t_at_sharpe_2": 2.806,
+     "t_at_sharpe_3": 4.209,
+     "answerable_at_sharpe_2": false,
+     "answerable_prereg_at_sharpe_2": true,
+     "t_observed": 1.2098,
+     "deflated_t": -2.2951,
+     "clears": false,
+     "clears_prereg_floor": true,
+     "implied_annual_sharpe": 0.862,
+     "reason": "t=1.2098 vs free_t(465)=3.5049 on 718.83d; clearing it needs an annualised Sharpe of 2.498"
+    },
+    {
+     "gate": "G4 FORWARD",
+     "verdict": "FAILS",
+     "pass": false,
+     "reasons": [
+      "top-k 0.0275R <= universe 0.0302R - selecting was worse than not selecting"
+     ],
+     "topk_exp_r": 0.0275,
+     "universe_exp_r": 0.0302,
+     "randomk_exp_r": -0.0029,
+     "z_vs_null": 0.25,
+     "folds_traded": 17,
+     "folds_where_topk_is_the_whole_universe": "0 of 17"
+    }
+   ],
+   "rank": 10,
+   "strategy_id": "MGC-60m-a4c4bee42afe",
+   "group": "VOLUME_PROFILE",
+   "trades": 180,
+   "expectancy_r": 0.0565,
+   "win_rate": 0.55
+  }
+ ]
+}

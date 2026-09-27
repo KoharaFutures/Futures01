@@ -421,3 +421,177 @@ hypotheses were already `EF2-H1..H6`, so that was a live collision of exactly th
 exists to prevent. Renamed to **`EF2-HYP-1` … `EF2-HYP-6`** across every EF2 file; no stale
 `EF2-H<digit>` remains `[measured: grep -rn "EF2-H[0-9]" over EF2/** → no matches]`. Raised as
 `msgs/EF2-03_manager_id-collision-EF2-H1-and-no-local-engine.md`, since `REGISTRY.md` is not mine.
+
+
+## F12 — EF6's placebo faults, re-measured on MCL (which EF6 did not cover), plus a power result
+
+Detail: `bursts/08`. EF6's burst 03 measured three faults in `workspace/newstrats/placebo.py` under the
+window rule, on **MGC and MNQ**. MCL is mine and nothing transfers.
+
+| cell / arm | bases with >=2 raw signals | pool legal share | **expected legal gap** | **mean dir-shuffle degeneracy** |
+|---|---|---|---|---|
+| `MCL:f60__p60` rth=T | **0** | — | — | — |
+| `MCL:f60__p60` rth=F | 3 | 0.975 | −0.12 | 0.520 |
+| `MCL:f60_240__p240` rth=T | 15 | **1.000** | **+0.00** | 0.683 |
+| `MCL:f60_240__p240` rth=F | 18 | 0.957 | **−0.81** | 0.649 |
+| `MGC:f60__p60` rth=T / rth=F | **0 / 0** | — | — | — |
+| `MGC:f60_240__p240` rth=T | 4 | **1.000** | **+0.00** | 0.546 |
+| `MGC:f60_240__p240` rth=F | 4 | 0.962 | **−3.07** | 0.541 |
+
+**(a) Fault 1 is inert under `rth_only=True` on both my symbols and live under `rth_only=False`.** Pool
+legal share is exactly 1.000 and the gap exactly 0.00 in both `rth=T` cells — EF6's MGC result
+replicates on MCL. Under `rth_only=False` the count-matched placebo arrives with **0.8 (MCL) to 3.1
+(MGC) fewer legal entries** than its base. That is the arm the whole programme is about, so EF6's
+`schedule_random_legal` is **required**. The sign is negative on both my symbols, i.e. the control is
+handicapped and the bias favours the real strategies — but EF6 measured the sign **reversing** on MNQ
+15m, so "it is conservative" is a per-cell fact and I will not state it generally.
+
+**(b) Fault 2 is worse on my cells than the headline.** A direction shuffle leaves **52–68%** of labels
+unchanged (mean degeneracy 0.520 / 0.649 / 0.683 / 0.541). The formula's floor is 0.5; the mean exceeds
+it because degeneracy is convex in the long share and several rule sets are strongly one-sided. A
+direction-shuffle control on an EF2 cell would be more than half identical to its treatment. Dropping it
+is not a preference.
+
+**(c) A power result.** Not one of the first 30 surviving rule sets in `MGC:f60__p60` produced 2 raw
+signals, in either arm; `MCL:f60__p60` rth=T likewise zero. **Method caveat:** the probe takes the first
+30 rule sets in sorted order and `rule_sets_for` sorts by group name, so those 30 are all BREAKOUT,
+whose base filters are `('volatility_compressed', 'volume_not_thin')` — the most restrictive set in the
+catalogue. So this is weaker than F4's unbiased measurement and F4 is the number to quote. It does
+reproduce EF6's own sample-size warning ("only 4 of 12–25 bases per cell had >=2 raw legal signals") on
+a third and fourth symbol.
+
+## F13 — I calibrated EF6's forward roll on 40 mean-zero ledgers. **It passes.**
+
+Detail: `bursts/09`. Code: `EF2/code/calibrate_roll.py`. Artefact: `EF2/data/calibrate_roll.json`.
+
+EF6's `forward.roll` prints a VERDICT line and my rows' forward column comes from it. A roll that says
+"top-k beat both universe and null" on a structureless ledger would be invisible here, because this
+programme's headline prior finding is that **selecting was worse than not selecting** — a roll biased
+the other way would look like a discovery rather than like a bug.
+
+40 synthetic ledgers in exactly the shape `measure.py` emits (real 718-day span, 300 strategies, 5–150
+trades each, 1–6 hour holds, both directions, mixed stop/target metadata so the permutation null has
+geometry blocks), R drawn **i.i.d. mean-zero**, so the true answer is "no selection edge" 40 times out
+of 40:
+
+| statistic | measured | should be |
+|---|---|---|
+| mean `z_vs_null` | **−0.078** | 0 |
+| share `z_vs_null > +1.96` | **0.000** (0 of 40) | ~0.025 |
+| share `z_vs_null < −1.96` | 0.025 (1 of 40) | ~0.025 |
+| mean `selection_edge_vs_universe_r` | **−0.0020 R** | 0 |
+| share `edge_vs_universe > 0` | **0.525** | 0.50 |
+| mean `selection_edge_vs_randomk_r` | −0.0074 R | 0 |
+| share `edge_vs_randomk > 0` | 0.475 | 0.50 |
+| **share beating BOTH universe and null** | **0.000** (0 of 40) | ≲0.025 |
+
+**Centred on zero on all four arms, permutation null not inflated, zero false verdicts in 40 draws.**
+The opposite of `T.ab`'s 3.3× inflation (D28), and worth having on record because EF6's module is now
+load-bearing for four agents and nobody had tested it against a known answer.
+
+**Two honest limits.** (i) I calibrated at **n = 300 strategies**; my real cells hold 998–1,780 arms
+each, and selection bias grows with the number ranked. EF6's defence is the `universe`/`random-k`
+comparison arms rather than a correction term — both came out at a coin flip, which is the right shape,
+but at 300. Any borderline EF2 forward result gets re-calibrated at that cell's own arm count first, and
+the n is stated. (ii) My **first single** interface draw (60 strategies, `nperm=50`, `seed=1`) returned
+`z = +2.11` with the verdict firing on mean-zero data. That is a ~3.5% event; the 40-draw rate is 0/40.
+One alarming draw is not a finding, and recording it is cheaper than someone rediscovering it and
+drawing the opposite conclusion from one observation.
+
+**Interface verified twice** — on synthetic trades and on **real** `run_cell` output (60 MGC `f60__p60`
+arms, 566 trades, `S = 60` in `forward.Ledger`). And `roll` returns two columns I would otherwise have
+had to build: `selection_edge_vs_universe_r`, the exact benchmark the prior attempt failed, and
+`folds_where_topk_is_the_whole_universe`, which catches the "the top 10 *is* the population" case the
+2026-09-24 report had to label by hand. Posted to EF6 as `msgs/EF2-04`.
+
+## F14 — The deliverable's own arithmetic: a top 10 drawn from 5,000 arms is answerable only if the true edge has Sharpe ~3
+
+`EF6-01` supplies the number that frames everything I will hand over, and I verified it against my own
+arithmetic before adopting it. Inverting `free_t = sqrt(2·ln n)` against `t = SR·sqrt(Y)` gives the
+**maximum search width that is answerable at a given true Sharpe**, `n_max = exp(SR²·Y/2)`. On the
+swing span (718.83 days, Y = 1.968):
+
+| assumed **true** annual Sharpe | max answerable search width, SWING |
+|---|---|
+| 1.0 | **2** |
+| 1.5 | **9** |
+| 2.0 | **51** |
+| 3.0 | 7,022 |
+
+**My screen is 5,152 MGC arms and 5,584 MCL arms.** So:
+
+> **A top 10 selected from this population can only be a defensible claim if the underlying edge has an
+> annualised Sharpe near 3.** At a plausible true Sharpe of 1.5 the widest search this span can settle
+> is **nine** candidates. That is a property of 1.97 years of data, not of the market.
+
+Adopted from EF6 rather than re-derived: `EF2/code/rank.py` now imports
+`EF6/code/deflation.threshold`, so one implementation serves EF2–EF5 and a cross-cell comparison is not
+a convention comparison. Verified first: at n = 5,152 EF6's module returns `free_t = 4.1345` and
+required annualised Sharpe **2.947** against my own 4.135 / 2.95.
+
+**What I am doing about it, rather than around it.** The deliverable is a top 10 per symbol and I will
+produce one, with `free_t = 4.13 / 4.15` and "needs Sharpe 2.95 / 2.96" on **every row** — the brief's
+guardrail 2, and the only honest way to hand over a ranked list on this span. But the tier that can
+actually carry a live-eligible result is Tier A:
+
+| tier | n | threshold t | required annual Sharpe | answerable? |
+|---|---|---|---|---|
+| Tier B screen, MGC | 5,152 | 4.135 | **2.95** | only if true SR ≈ 3 |
+| Tier B screen, MCL | 5,584 | 4.154 | **2.96** | only if true SR ≈ 3 |
+| Tier B, fire-discounted | 1,773 / 1,757 | 3.868 / 3.866 | 2.76 / 2.76 | no better in substance |
+| **Tier A, 6 pre-registered hypotheses (`EF2-HYP-1..6`)** | 6 | `free_t` 1.893, and I hold them to **Bonferroni 2.39** | **1.35 at free_t, 1.70 at Bonferroni** | **yes, at an ordinary Sharpe** |
+| (the code's floor, one pre-registered hypothesis) | 1 | 1.177 | 0.839 | — |
+
+I am holding Tier A to **2.39** rather than to `free_t(6) = 1.893` — stricter than the deflation
+arithmetic requires — because six hypotheses fixed in one document is a search of width six and
+Bonferroni is the more conservative of the two accounts of it. Both numbers are reported.
+
+**The consequence I will state plainly on the hand-over:** if the top 10 does not clear 4.13, the
+correct reading is *not* "these are the ten best strategies". It is "these ten ranked highest in a
+search whose width this span cannot settle, and here is each one's placebo, its threshold and its
+forward behaviour." The prior attempt's failure — trading last period's top 10 returned −0.0155R
+against a −0.0104R null and **underperformed trading the whole qualifying universe** — is what that
+reading protects against, and EF6's `roll` reports `selection_edge_vs_universe_r` directly so the
+comparison is on every list rather than in a footnote.
+
+## F15 — Two defects in my OWN VOID gate, found by cross-checking, fixed before measuring
+
+Detail: `bursts/10`.
+
+**Defect A — the gate was arm-blind.** `census.py` scored usable fires as `fires_both` = RTH **and**
+swing-admissible, which is right for `rth_only=True` and wrong for `rth_only=False`. So the
+`rth_only=False` arm was losing carriers of conditions that fire only outside RTH — **the arm the
+programme exists to open, losing the conditions the programme makes newly measurable**, silently, with
+a result indistinguishable from "those strategies don't work". Found because EF6-01 stated
+`session_extreme_sweep` is ALIVE and my census said VOID; both true, of different arms.
+**Fixed:** `void_sets()` is now keyed `cell -> rth arm -> bound_tf`, `rth_only=True` uses `fires_both`
+and `rth_only=False` uses `fires_swing`, and the per-arm split is a reported column so an arm-blind gate
+is visible rather than assumed. MGC 5,092 → **5,152** arms.
+
+**Defect B — the census used my own superseded mask.** Burst 05 established EF6's `window.signal_mask`
+as the engine-faithful test and corrected the *prose*; I did not propagate it into `census.py`, which is
+how a correction becomes a second defect. It bites precisely on conditions firing near a session close:
+
+| cell | `session_extreme_sweep` fires | in RTH | swing-admissible (my strict mask) |
+|---|---|---|---|
+| MGC 60m | 200 | **0** | 72 |
+| MCL 60m | 107 | **0** | **0** |
+| MGC 240m | 1,891 | 1,414 | 1,701 |
+| MCL 240m | 1,705 | 1,600 | 1,601 |
+
+MCL's 107 fires are all on stamps my strict mask rejected — mechanically right, since MCL's RTH closes
+14:30 so `session_high` stops accumulating there `[repo-verified: features.py:880-895]` and the
+15:00/16:00 bars are the first that can exceed it, which are exactly the stamps the two masks disagree
+about. **Fixed:** `census.py` imports `EF6/code/window.signal_mask`; `entry_admissible` is retained
+marked `DEPRECATED` only so burst 04's stop-fidelity denominator stays reproducible, and that
+denominator is stated on the table. Census re-run in full.
+
+**Neither fix changes the threshold** (4.132 → 4.135). Both change whether the thing being reported was
+ever measured. That is the whole reason the firing census runs before the population is built, and it
+applies to my own gate as much as to the library's conditions.
+
+**Third-party confirmation of the 240m half.** `session_extreme_sweep` at 240m: 1,891 MGC / 1,705 MCL
+fires, 1,414 / 1,600 inside RTH; EF6 measured 1,652–2,134 at 240m across four symbols. So R1's D-L4
+("structurally dead inside every strategy the combinator can build") is **true at 60m under
+`rth_only=True` and false at 240m** — the per-(symbol, timeframe) point the `VOID` vocabulary was
+invented for, landing on its own author's example.

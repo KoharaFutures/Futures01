@@ -21,6 +21,16 @@ import sys
 ROOT = "workspace/roundtable/"
 
 # Most specific pattern wins, so order matters: the first match is the owner.
+# The programme-wide register. The manager ALLOCATES every D<n>; the parent WRITES the
+# entries. That split is deliberate and is the only place in this tree where allocation
+# and authorship differ - see OWNERSHIP.md.
+PROGRAMME_FILES = (
+    ("workspace/studies/DEFECTS.md", "parent"),
+    ("workspace/studies/*.md", "parent"),
+    ("workspace/studies/out/*", "parent"),
+    ("workspace/chrono/*", "parent"),
+)
+
 SHARED_ROLE_DIRS = (
     "workspace/developer/*",
     "workspace/manager/*",
@@ -84,6 +94,9 @@ def owner(path: str) -> str | None:
     """The sole writer of ``path``, or None if the tree does not assign one."""
     for pattern, who in RULES:
         if fnmatch.fnmatch(path, pattern):
+            return who
+    for pat, who in PROGRAMME_FILES:
+        if fnmatch.fnmatch(path, pat):
             return who
     for pat in SHARED_ROLE_DIRS:
         if fnmatch.fnmatch(path, pat):

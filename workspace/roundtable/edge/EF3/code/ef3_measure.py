@@ -123,7 +123,23 @@ def frame_for(sym: str):
     return build_symbol_frame(base, [60, 240], get_contract(sym)), base
 
 
-def run_stage1(sym: str, max_total: int = 4000, gap: bool = True) -> dict:
+def ledger_of(res) -> dict:
+    """Compact per-trade ledger: every window is a slice of one run."""
+    return {sid: [[t.entry_index, t.exit_index, round(t.net_r, 6),
+                   round(t.gross_r, 6), 1 if t.direction.value == "LONG" else 0,
+                   t.exit_reason.value, round(t.mfe_r, 4), round(t.mae_r, 4),
+                   round((to_et(t.exit_ts) - to_et(t.entry_ts)).total_seconds() / 3600, 3),
+                   t.session, t.regime, t.volatility, t.time_bucket]
+                 for t in r.trades]
+            for sid, r in res.items()}
+
+
+def run_stage1(sym: str, max_total: int = 4000, gap: bool = True,
+               verify_n: int = 300) -> dict:
+    """ONE full-span run for the live population, plus two small true-window runs
+    on a random subsample so the ledger-slicing approximation is MEASURED rather
+    than inherited from RANKING_FINDINGS' -0.004R audit."""
+    import random
     fr, base = frame_for(sym)
     n = len(base.bars)
     cut = int(n * IS_FRAC)
@@ -135,52 +151,67 @@ def run_stage1(sym: str, max_total: int = 4000, gap: bool = True) -> dict:
 
     eng = SessionEngine(fr, enforce_session_gap=gap)
     t0 = time.time()
-    res_full = eng.run_many(live)
+    res_full = eng.run_many(live, progress=lambda a, b: print(f"   {sym} bar {a}/{b} {time.time()-t0:.0f}s", flush=True) if a % 4000 == 0 else None)
     print(f"  full-span run {time.time()-t0:.0f}s", flush=True)
-    v = violations([t for r in res_full.values() for t in r.trades],
-                   flat_exits=flat_exit_keys(eng))
-    eng2 = SessionEngine(fr, enforce_session_gap=gap)
-    res_is = eng2.run_many(live, end=cut)
-    print(f"  IS run done", flush=True)
-    eng3 = SessionEngine(fr, enforce_session_gap=gap)
-    res_oos = eng3.run_many(live, start=cut)
-    print(f"  OOS run done", flush=True)
+    allt = [t for r in res_full.values() for t in r.trades]
+    v = violations(allt, flat_exits=flat_exit_keys(eng))
 
-    # census falsification: do the removed ones really take no trades?
+    # census falsification: do the census-removed strategies really never trade?
     engD = SessionEngine(fr, enforce_session_gap=gap)
-    sample = deadS[:400]
+    sample = deadS[:300]
     res_dead = engD.run_many(sample)
     dead_trades = sum(len(r.trades) for r in res_dead.values())
+    print(f"  census falsification: {len(sample)} removed strategies -> {dead_trades} trades",
+          flush=True)
+
+    # slicing-bias measurement on a random subsample
+    rng = random.Random(f"verify:{sym}")
+    sub = rng.sample(live, min(verify_n, len(live)))
+    eIS = SessionEngine(fr, enforce_session_gap=gap)
+    rIS = eIS.run_many(sub, end=cut)
+    eOO = SessionEngine(fr, enforce_session_gap=gap)
+    rOO = eOO.run_many(sub, start=cut)
+    print("  true-window verification runs done", flush=True)
+
+    led = ledger_of(res_full)
+    verify = {}
+    for s in sub:
+        sid = s.strategy_id
+        rows = led.get(sid, [])
+        verify[sid] = {
+            "true_IS": metrics(rIS[sid].trades), "true_OOS": metrics(rOO[sid].trades),
+            "sliced_IS_n": sum(1 for t in rows if t[0] < cut),
+            "sliced_IS_exp": (round(sum(t[2] for t in rows if t[0] < cut)
+                                    / max(1, sum(1 for t in rows if t[0] < cut)), 5)),
+            "sliced_OOS_n": sum(1 for t in rows if t[0] >= cut),
+            "sliced_OOS_exp": (round(sum(t[2] for t in rows if t[0] >= cut)
+                                     / max(1, sum(1 for t in rows if t[0] >= cut)), 5)),
+        }
 
     rows = {}
     for s in live:
         sid = s.strategy_id
         rows[sid] = {
             "strategy_id": sid, "name": s.name, "group": s.group,
-            "primary_tf": s.primary_tf,
-            "confirm_tfs": list(s.confirm_tfs),
+            "primary_tf": s.primary_tf, "confirm_tfs": list(s.confirm_tfs),
             "rth_only": s.filters.rth_only,
             "stop_kind": s.exit.stop_kind.value, "stop_mult": s.exit.stop_mult,
             "target_kind": s.exit.target_kind.value,
             "n_signals": len(s.signal_conditions),
             "signals": sorted(c.label for c in s.signal_conditions),
             "filters": sorted(c.label for c in s.filter_conditions),
-            "IS": metrics(res_is[sid].trades),
-            "OOS": metrics(res_oos[sid].trades),
-            "FULL": metrics(res_full[sid].trades),
             "signals_generated_full": res_full[sid].signals_generated,
         }
     return {
         "symbol": sym, "bars": n, "is_cut": cut,
         "span_et": [to_et(base.bars[0].ts).isoformat(), to_et(base.bars[-1].ts).isoformat()],
         "population": len(pop["pop"]), "live": len(live), "census_dead": len(deadS),
-        "enforce_session_gap": gap,
-        "violations": len(v),
-        "engine_counters": eng.counters.to_dict(),
-        "forced_flats": eng.forced_flats,
+        "enforce_session_gap": gap, "violations": len(v),
+        "engine_counters": eng.counters.to_dict(), "forced_flats": eng.forced_flats,
         "census_falsification": {"sampled_dead": len(sample), "trades": dead_trades},
-        "zero_trade_live_full": sum(1 for r in rows.values() if r["FULL"]["trades"] == 0),
-        "rows": rows,
+        "zero_trade_live_full": sum(1 for r in res_full.values() if not r.trades),
+        "slicing_verification": verify,
+        "rows": rows, "ledger": led,
     }
 
 

@@ -433,3 +433,32 @@ measurement may run, the number is not reportable until the one-line fix lands.
 into one design task plus six runs, so some of the six will not run within this programme's budget. I am
 pre-registering that as acceptable: **an untested item with a stated reason beats a tested item that is
 confounded**, and D15 exists because this repo produced a confounded exit comparison once already.
+
+---
+
+# Round 3 — what is closed, what is open, and the one question I am refusing to answer
+
+**2026-09-27 04:05 ET.** Twelve agents live. Rulings are in `manager/ADJUDICATIONS.md` ADJ-12…ADJ-16;
+this section is the index, not the argument.
+
+## Closed this turn
+
+| question | closed by | one line |
+|---|---|---|
+| `R1-REQ-5` — a shared verdict term for "cannot fire" | **ADJ-13a** | **`VOID` adopted**, and amended three ways: per (symbol, timeframe, **frame**) plus any deciding scope flag, and carrying a **`REACHED` / `FORWARD` reachability line** (`R-14`) |
+| R4's gap — no term for "arithmetic honest, **group** wrong" | **ADJ-13b** | **`MISFILED` added.** Different file from `MISNAMED` (`CONDITION_GROUPS`/`TEMPLATES`, not a docstring) and different harm: group membership is the *selection mechanism*, so a template requiring `momentum` can be satisfied by a mean-reversion predicate |
+| two audit vocabularies coexisting | **ADJ-13a** | **One vocabulary.** `BRIEF.md`'s is canonical; `ADJ-8`'s `HONEST-DERIVED` / `HONEST-DERIVED-BUT-BROKEN` are **retired**, readable and mapped. R6's report-level set is orthogonal and **not merged** |
+| **`BRIEF.md` rule 2's scope** | **ADJ-14** | **Narrowed in three places, retracted in none.** The 60m evidence survives; rule 2's *second* sentence survives as written although `B13`'s version of it is INVALID; five prohibitions attached; one restatement written; and the narrowing is made **quantifiable** by `MGR-T20` rather than left as a caveat |
+| `R1-REQ-6` — what is a second reading of 35 already-audited conditions worth | **ADJ-16b** | **One audit, not two.** R4 declared it read R1's verdicts first, so 30-of-31 agreement is corroboration of a reading; the independent weight is banked as one stricter verdict, two live contradictions, one self-withdrawn contradiction and eleven new findings |
+| R5's four routing questions | **ADJ-16c** | `MAIN-01` **`CLOSED-EMPTY / SUBSTRATE-1M`**; `BOARD.md` §2's substrate note corrected (it was a 60-minute statement, false at 1 minute); `S2` re-filed into `MGR-T13`; the 1m overlap extends `MGR-T6` |
+| all twelve `RECEIVED` requests | **ADJ-16** | nine `D<n>` issued (`D50`–`D58`), four folded into `D46`/`D47`/`D53`/`D56`, four declined. **One of my own triage guesses was wrong** — `R2-REQ-1` is the `D43` family, not `D48`'s |
+| `R-12` | **ADJ-16d** | **RETIRED.** `check_refs.py`'s grammar now resolves `MGR-T<n>`, `ADJ-<n>`, `R-<n>`, `D-L1`, `X-<n>`, `M<n>` and `EF<n>-H<n>`, verified rather than taken on report |
+
+## Open, with the measurement that settles each one named
+
+| question | owed by | why it cannot be answered from a read |
+|---|---|---|
+| How much of z = −4.09 came from the daily row? | **BT4**, `MGR-T20` | rule 2 is narrowed-but-unquantified until this lands, which is a worse place than either end. ADJ-14 §5 pre-registers the prediction |
+| Do EF1's 33 violations reflect a harness bug or a real-world early close? | **EF1 + EF3**, `MGR-T19` | two implementations of one rule measured 43 and 0 on the same 400 strategies. Neither yields on authority |
+| Does the 22-hour cap make the 1440m cell inexpressible? | EF6 + the daily arm's holder | **I am refusing to answer this one on purpose.** It is arithmetic on facts two agents already hold, and it decides whether a daily swing row means anything — which makes it exactly the kind of question a coordinator answering it would bias. ADJ-15c |
+| Whose `D53` — do agents cite the class or keep citing `D-R1` / `D-V3` / `D-MTF3`? | everyone | pre-registration 4, against myself |

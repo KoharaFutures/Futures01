@@ -78,15 +78,23 @@ data-mining bias looks like from the inside, and all nine are reported.*
 
 ## The session rule: what it actually bought
 
-Your rule was never tested here before — `allow_overnight` is `False` by default and **no call site
-in the repository passes `True`**, so all ~2.97M prior evaluations were flat by their contract's RTH
-close. Four things came out of testing it:
+Your rule was never tested here before — `allow_overnight` is `False` by default and no call site
+passes `True`. **But my stronger claim, that all ~2.97M prior evaluations were therefore flat by
+their contract's RTH close, is false.** `engine.py:470`'s gate is an `and`, and
+`exit_at_session_close` is False on **58 of 184 MGC and 90 of 185 MNQ** generated strategies — so a
+third to a half of the prior population held overnight with **no session control at all**, violating
+the window on 139/626 MGC and 986/1292 MES trades. There are three regimes to compare, not two.
+Four things came out of testing it:
 
-1. **It is not expressible at 240m or 1440m.** The window is 22 h = 1320 min = 2³·3·5·11, so
-   5/15/30/60/120 divide it and **240 gives 5.5**. Measured: 563–586 bars of every 240m series are
-   stamped 16:00 ET and span 16:00→20:00. **The swing programme is 60m only** — which withdrew half
-   of two agents' assignments. The better framing, from EF6: never make 240m the *base* grid;
-   **120m resampled from the 60m archive has zero straddles and the same 718.88-day span.**
+1. **It is expressible at 240m — I got this wrong and corrected it.** I withdrew the 240m cells on
+   EF6's `1320 % tf` test. That is the wrong test: 1320 is the window *length*, and nothing requires
+   a holding period to contain a whole number of bars. What the rule needs is the **flat (960 min)**
+   and the **reopen (1080 min)** on boundaries. Verified: `960 % 240 == 0`, so **16:00 IS a 240m
+   boundary** — 491–497 `ON_BOUNDARY` bars per symbol, zero `INTERIOR`, and EF1's saturation run
+   gives 0 violations. `1080 % 240 == 120`, so the `[16:00,20:00)` bucket is vetoed and the earliest
+   entry is 20:00: **the effective cycle is 20 hours, not 22.** A caveat per row, not an inability.
+   **1440m genuinely cannot carry it** (4,008/4,008 MGC bars `INTERIOR`). The 240m arms are
+   reinstated.
 2. **At the generated default it changes exits, not entries.** `rth_only` defaults to `True` on
    **314/314** generated strategies, and MGC RTH (08:20–13:30) and MCL (09:00–14:30) sit wholly
    inside one cycle. So the rule buys **+2h30m on MGC, +1h30m on MCL, and nothing on MES/MNQ**,

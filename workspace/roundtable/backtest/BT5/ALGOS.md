@@ -212,12 +212,20 @@ signal, so its nominal p is optimistic. The permutation test is primary.
 that the dump holds none of `entry/stop/risk_points/pnl`.
 
 **12. The per-bar statistics are recomputed, and the recomputation is proved.** `bar_table` calls
-`atr(h,l,c,14)`, `relative_volume(bars,20)`, `bollinger(c,20,2.0)`, `keltner(h,l,c,20,1.5)` and
-`close_location_value(bar)` — the library's own functions at `features.py`'s own parameters
+`atr(h,l,c,14)`, `true_range(h,l,c)`, `relative_volume(bars,20)`, `bollinger(c,20,2.0)`,
+`keltner(h,l,c,20,1.5)` and `close_location_value(bar)` — the library's own functions at
+`features.py`'s own parameters
 `[repo-verified: futures_agents/features.py:235, :242, :259, :271]`. Recomputing instead of reading
 the frame is a shortcut, so `checks.py::check_indicators_match_the_frame_the_study_used` asserts
 that `atr` and `rel_volume` are **identical, element by element, to `build_symbol_frame`'s
 columns** over all 1,626 bars of MCL 60m S1.
+
+`true_range` was added *after* the first run, for one reason worth recording: the bar-level footprint
+was first measured against close-to-close return, which is **not** the quantity ATR is the Wilder
+average of. Comparing ATR to `true_range` instead makes "how much of a bar's own movement does ATR
+track" an exact statement rather than an approximate one. Re-running with the extra column reproduced
+every permutation p **bit-identically**, because the stratum labels depend on `volume` alone — which is
+also a determinism check across two separate process runs.
 
 **13. The `mins == 0` set is kept.** 2,900 of 21,954 rows are same-bar exits with mean R −0.79
 `[repo-verified: backtest/BT3/ALGOS.md:166-170]`. They are real trades of the generating study and
@@ -333,12 +341,21 @@ instance of the mechanism, not a nuisance: it is exactly what equal weighting ac
 bars does to a trailing statistic. Within a clock bucket that contamination is gone and ATR tracks
 activity more closely, which is why `TODRANK`'s ATR ratio is the larger one.
 
-**The CLV asymmetry, which I did not expect and am reporting because it is a signed bias in a proxy.**
-Median close-location value is systematically **positive in the LOW-activity stratum** (+0.000 to
-+0.281) and near zero or negative in the HIGH stratum (−0.038 to +0.125), on 6 of 8 cells under
-`TODRANK` and 6 of 8 under `RAW`. `close_location_value` is what the delta proxy is built from, so
-**the proxy reads thin bars as buying pressure.** Not a zero-range artefact: CLV is `None` on only
-0.02–0.25% of bars per stratum `[measured]`.
+**The CLV asymmetry — and I overstated it in my own first draft of this table, so here is the
+corrected version.** Median close-location value is **non-negative in the LOW-activity stratum in all
+8 cells** (+0.000 to +0.281) while the HIGH stratum runs −0.038 to +0.125. But the per-cell
+**ordering** LOW > HIGH holds in only **5 of 8 cells on `TODRANK` and 4 of 8 on `RAW`** — so this is a
+**suggestive asymmetry, not a consistent one**, and it is the one column of this table whose sign does
+*not* agree across cells. It has a visible timeframe pattern (LOW > HIGH in 3 of 4 cells at 240m, 1 of
+4 at 60m) that 8 cells cannot separate from noise.
+
+It matters enough to state anyway, because `close_location_value` is what the delta proxy is built
+from, so a signed relationship with activity would be a signed bias in a proxy. Two checks before
+anyone builds on it: CLV is `None` on only 0.02–0.25% of bars per stratum, so it is not a zero-range
+artefact; and **tick discretisation is present but small** — the share of bars whose CLV is exactly
+−1, 0 or +1 is 5.2% in MCL 60m's LOW stratum against 3.0% in its HIGH stratum (0.4% vs 0.6% on MNQ)
+`[measured]`, which is why MCL's LOW-stratum median lands exactly on 0.000. Enough to notice, not
+enough to explain the spread.
 
 ### 2. Layer 2, unit = strategy: the footprint does not reach expectancy
 
@@ -378,9 +395,11 @@ recording — on *this* statistic the pooling inflation BT3 measured at 24× doe
 a stratum mean is not a path-dependent quantity. That is a property of the statistic, not a licence.
 
 **Conditioned on (symbol, tf), the per-strategy median is a mixture.** On `TODRANK` the 8 cells run
-from **−0.169 R** (MGC 240m, 5 qualifying) to **+0.154 R** (MES 240m, 14 qualifying), 4 positive and 4
-negative. So even the 176-strategy median hides a sign-inconsistent spread, which is BT3's
-pooling-across-cells warning appearing again on a different statistic.
+from **−0.169 R** (MGC 240m, 5 qualifying) to **+0.154 R** (MES 240m, 14 qualifying) — **5 positive, 3
+negative**, and the three largest magnitudes (−0.169, −0.143, +0.154) all sit on 240m cells with 5–14
+qualifying strategies each. So even the 176-strategy median hides a sign-inconsistent spread dominated
+by the thinnest cells, which is BT3's pooling-across-cells warning appearing again on a different
+statistic.
 
 ### 3. Rule 3's cancellation still cancels inside every activity stratum
 
@@ -439,3 +458,44 @@ overturns the result, but I measured only their sum. (ii) The ATR figures are a 
 statistic and are therefore partly a volatility-clustering measurement; the true-range, CLV and
 volume columns are contemporaneous and carry the same signs, which is why the conclusion does not rest
 on ATR alone.
+
+---
+
+## Would S2's answer have changed if `MAIN-01`'s construction half had not been killed?
+
+**No, and the reason is that S2 and the construction half do not share a substrate.**
+
+`MAIN-01` closed `CLOSED-EMPTY / SUBSTRATE-1M` on a **1-minute** fact: 9,069 unique minutes / ~6.6 CME
+trading days of futures 1m data across both stores `[repo-verified: manager/BOARD.md:66-76;
+research/R5_SCOPE.md:89-129]`. **`BT5-ALGO-1` reads no 1-minute data at all.** It reads
+`csv/raw/*_1h.csv` and the 240m series resampled from them — the 274-session / 322-calendar-day grid
+every published `scan_reports/` result was measured on — and a trade dump generated from exactly that
+grid. Nothing in the algorithm would change if the 1-minute substrate were a hundred times larger, and
+nothing in it was available to be killed by the substrate. That is precisely the property R5 built S2
+for: "it constructs no bars, so constraint 1 cannot kill it"
+`[repo-verified: research/R5_SCOPE.md:359-360]`.
+
+**One thing does change, in the other direction: my result narrows what a surviving S3 could have
+found.** R5's kill table sets `K4` as "S2 finds **no** activity footprint **and** S3 finds no per-bar
+statistic or return-distribution difference beyond S1b's envelope", and calls that the strongest close
+because it closes the question rather than the method `[repo-verified: research/R5_SCOPE.md:535]`.
+
+`K4`'s first conjunct is **half true in a way the criterion cannot express.** S2 finds a large
+footprint on the **statistics** (true range 2.1–3.3× against ATR 1.14–1.75×, all 8 cells) and **no
+footprint on expectancy** (+0.018 R, p = 0.58). Those are the two halves of `K4` landing on opposite
+sides, inside the one sub-task. And since a volume clock's stated first-order effect is to equalise
+activity per bar, a clock that removed a 2:1 divergence between a bar's movement and the ATR that
+normalises it would almost certainly have produced per-bar statistics that differ — so **`K4`'s second
+conjunct was unlikely to hold and `K4` could not have fired.** `MAIN-01`'s null would have had to rest
+on S2's trade-level half alone, which is where it now rests.
+
+I am marking that last paragraph as **inference, not measurement**: I have constructed no volume bars
+and measured no clock comparison. It is a prediction about S3 derived from S2's numbers, and it is
+recorded so that if S3 is ever run the prediction can be checked rather than quietly forgotten.
+
+**The consequence for the ledger.** ADJ-16c's reason `SUBSTRATE-1M` stands untouched — S2 says nothing
+about the 1-minute substrate. What S2 adds is that the **question** `MAIN-01` asked now has a partial
+answer that does not depend on the method that was killed: *the mechanism is real at the timeframes
+the findings live on, and it does not reach the findings.* `AVENUES.md`'s revisit rule turns on the
+stated reason, so this is an addition to the record rather than a change to it — and only discovery
+writes `AVENUES.md`.

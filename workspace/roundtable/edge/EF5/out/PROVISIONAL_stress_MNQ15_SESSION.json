@@ -1,0 +1,231 @@
+{
+ "PROVISIONAL": "EF1 unvalidated; not publishable",
+ "cell": "MNQ 15m SESSION",
+ "cycles": 41,
+ "span_years": 0.1585,
+ "n_real_rows": 47,
+ "mean_pairwise_trade_jaccard": 0.0753,
+ "effective_n_rows": 10.53,
+ "full": {
+  "paired": {
+   "n_pairs": 47,
+   "reals_above": 43,
+   "mean_diff_r": 0.22322,
+   "sign_z": 5.689
+  },
+  "ranking": {
+   "best_placebo_rank": 7,
+   "n_reals": 47,
+   "n_placebos": 94,
+   "null": {
+    "n_total": 141,
+    "n_placebo": 94,
+    "expected_best_rank": 1.49,
+    "p_best_placebo_rank_1": 0.6667,
+    "p_best_placebo_in_top5": 0.9965,
+    "p_best_placebo_in_top10": 1.0
+   },
+   "top1_kind": "real"
+  }
+ },
+ "in_sample_60pct": {
+  "cycles": 24,
+  "paired": {
+   "n_pairs": 43,
+   "reals_above": 32,
+   "mean_diff_r": 0.1384,
+   "sign_z": 3.202
+  },
+  "ranking": {
+   "best_placebo_rank": 3,
+   "n_reals": 43,
+   "n_placebos": 91,
+   "null": {
+    "n_total": 134,
+    "n_placebo": 91,
+    "expected_best_rank": 1.47,
+    "p_best_placebo_rank_1": 0.6791,
+    "p_best_placebo_in_top5": 0.9971,
+    "p_best_placebo_in_top10": 1.0
+   },
+   "top1_kind": "real"
+  }
+ },
+ "oos_40pct": {
+  "cycles": 17,
+  "paired": {
+   "n_pairs": 46,
+   "reals_above": 44,
+   "mean_diff_r": 0.27382,
+   "sign_z": 6.193
+  },
+  "ranking": {
+   "best_placebo_rank": 8,
+   "n_reals": 46,
+   "n_placebos": 90,
+   "null": {
+    "n_total": 136,
+    "n_placebo": 90,
+    "expected_best_rank": 1.51,
+    "p_best_placebo_rank_1": 0.6618,
+    "p_best_placebo_in_top5": 0.9962,
+    "p_best_placebo_in_top10": 1.0
+   },
+   "top1_kind": "real"
+  }
+ },
+ "interleaved_thirds": [
+  {
+   "third": 0,
+   "paired": {
+    "n_pairs": 46,
+    "reals_above": 42,
+    "mean_diff_r": 0.42968,
+    "sign_z": 5.603
+   },
+   "ranking": {
+    "best_placebo_rank": 1,
+    "n_reals": 46,
+    "n_placebos": 93,
+    "null": {
+     "n_total": 139,
+     "n_placebo": 93,
+     "expected_best_rank": 1.49,
+     "p_best_placebo_rank_1": 0.6691,
+     "p_best_placebo_in_top5": 0.9966,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "placebo_shuffle"
+   }
+  },
+  {
+   "third": 1,
+   "paired": {
+    "n_pairs": 45,
+    "reals_above": 28,
+    "mean_diff_r": 0.10377,
+    "sign_z": 1.64
+   },
+   "ranking": {
+    "best_placebo_rank": 1,
+    "n_reals": 45,
+    "n_placebos": 92,
+    "null": {
+     "n_total": 137,
+     "n_placebo": 92,
+     "expected_best_rank": 1.48,
+     "p_best_placebo_rank_1": 0.6715,
+     "p_best_placebo_in_top5": 0.9967,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "placebo_shuffle"
+   }
+  },
+  {
+   "third": 2,
+   "paired": {
+    "n_pairs": 39,
+    "reals_above": 24,
+    "mean_diff_r": 0.05733,
+    "sign_z": 1.441
+   },
+   "ranking": {
+    "best_placebo_rank": 5,
+    "n_reals": 39,
+    "n_placebos": 87,
+    "null": {
+     "n_total": 126,
+     "n_placebo": 87,
+     "expected_best_rank": 1.44,
+     "p_best_placebo_rank_1": 0.6905,
+     "p_best_placebo_in_top5": 0.9976,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "real"
+   }
+  }
+ ],
+ "contiguous_thirds": [
+  {
+   "third": 0,
+   "paired": {
+    "n_pairs": 41,
+    "reals_above": 35,
+    "mean_diff_r": 0.26115,
+    "sign_z": 4.529
+   },
+   "ranking": {
+    "best_placebo_rank": 2,
+    "n_reals": 41,
+    "n_placebos": 88,
+    "null": {
+     "n_total": 129,
+     "n_placebo": 88,
+     "expected_best_rank": 1.46,
+     "p_best_placebo_rank_1": 0.6822,
+     "p_best_placebo_in_top5": 0.9973,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "real"
+   }
+  },
+  {
+   "third": 1,
+   "paired": {
+    "n_pairs": 40,
+    "reals_above": 14,
+    "mean_diff_r": -0.0765,
+    "sign_z": -1.897
+   },
+   "ranking": {
+    "best_placebo_rank": 1,
+    "n_reals": 40,
+    "n_placebos": 89,
+    "null": {
+     "n_total": 129,
+     "n_placebo": 89,
+     "expected_best_rank": 1.44,
+     "p_best_placebo_rank_1": 0.6899,
+     "p_best_placebo_in_top5": 0.9976,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "placebo_random"
+   }
+  },
+  {
+   "third": 2,
+   "paired": {
+    "n_pairs": 46,
+    "reals_above": 43,
+    "mean_diff_r": 0.35746,
+    "sign_z": 5.898
+   },
+   "ranking": {
+    "best_placebo_rank": 6,
+    "n_reals": 46,
+    "n_placebos": 92,
+    "null": {
+     "n_total": 138,
+     "n_placebo": 92,
+     "expected_best_rank": 1.49,
+     "p_best_placebo_rank_1": 0.6667,
+     "p_best_placebo_in_top5": 0.9965,
+     "p_best_placebo_in_top10": 1.0
+    },
+    "top1_kind": "real"
+   }
+  }
+ ],
+ "multiple_testing": {
+  "arm_cells_searched": 12,
+  "free_t_12": 2.229,
+  "note": "any t on this span implies SR_ann = t / 0.3981"
+ },
+ "select_in_sample_read_out_of_sample": {
+  "n_selected_with_oos_sample": 10,
+  "selected_mean_exp_r_oos": 0.2202,
+  "whole_universe_mean_exp_r_oos": 0.298,
+  "placebo_mean_exp_r_oos": 0.01127,
+  "reading": "selected < whole universe reproduces the programme's 'selecting is worse than not selecting' finding"
+ }
+}

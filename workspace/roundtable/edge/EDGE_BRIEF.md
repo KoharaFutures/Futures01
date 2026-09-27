@@ -178,3 +178,71 @@ deliverable, not a shortfall. The `SESSION` arm is better populated than `RTH` i
 is the first measured argument for the session rule adding something — but note D24 prices the
 `rth_only=False` route at 2–4× sample for a loss of expectancy, so more rows is not the same as
 better rows.
+
+---
+
+# CORRECTION: 240m IS expressible. I withdrew those cells on the wrong test (EF1, 2026-09-27)
+
+**EF6 had the right method and the wrong divisor, and I propagated it into this brief, into
+`RESULTS.md`, and into two agents' assignments.** Verified against the code:
+
+The rule does not require the *window length* to divide by the timeframe. It requires **the flat
+(16:00 = 960 min) and the reopen (18:00 = 1080 min) to fall on bar boundaries.** `1320` is how long
+a holding period may be, and nothing requires a holding period to contain a whole number of bars.
+
+`align_bucket` puts multi-hour buckets on a midnight grid, so 240m buckets fall at 00:00, 04:00,
+08:00, 12:00, **16:00**, 20:00. Measured:
+
+```
+960 % 240  == 0     -> 16:00 IS a 240m boundary   (491-497 ON_BOUNDARY bars/symbol, ZERO INTERIOR)
+1080 % 240 == 120   -> 18:00 is not; the 16:00 bucket spans 16:00->20:00
+```
+
+So **the flat lands exactly, and what 240m actually loses is two hours of entry window**: the
+`[16:00, 20:00)` bucket is `IN_WINDOW` and vetoed, so the earliest entry is 20:00 and the effective
+cycle is **20 hours, not 22**. That is a caveat belonging on every 240m row — **not an inability.**
+EF1's saturation run at 240m: 506–507 trades, **0 violations**.
+
+**1440m genuinely cannot carry it** (4,008 of 4,008 MGC bars `INTERIOR`), and there EF1 and EF6 agree.
+
+**Consequence: the 240m arms of the swing cells are reinstated, with the 20-hour caveat.** EF2's and
+EF3's 240m work was withdrawn by me in error; both recorded it as withdrawn-with-reason rather than
+deleting it, so it is recoverable.
+
+# CORRECTION: "every prior evaluation was flat by its contract's RTH close" is false
+
+This brief said so and it is falsified by the shipped default. `engine.py:470`'s gate is an **`and`**
+— `exit_at_session_close and not allow_overnight` — and `exit_at_session_close` is **False on 58 of
+184 MGC and 90 of 185 MNQ** generated strategies `[measured here]`. So roughly a third to a half of
+the prior population **held overnight with no session control at all.**
+
+EF1 measured the consequence: the unconstrained arm violates the window on 139/626 MGC, 595/2626
+MCL, 986/1292 MES and 860/1403 MNQ trades. **Do not treat the shipped engine as a clean intraday
+baseline.** The session rule is newer than "flat at RTH close" *and* newer than "no control", and the
+comparison needs all three arms named.
+
+# CORRECTION: the flat defect was holiday-only, not coarse-timeframe-only
+
+I recorded EF2/EF3/EF4's convergence as scoping the defect to coarse timeframes. Wrong inference:
+**EF3 measured 43 of the identical violations at 60m**, where `1320/60 = 22` exactly. EF4's clean
+41-of-41 at 5m/15m/30m is because those series span 57 days and 41 sessions **and none of them is a
+holiday** — not because fine grids are safe. The defect is the rule needing a bar that exists at the
+deadline, and on a holiday eve or a shortened session no such bar exists at any timeframe.
+
+# The number that belongs on every swing row
+
+EF1 measured what the rule actually closes, exactly rather than by counterfactual — the
+`ON_BOUNDARY` branch runs the inherited `_manage` first, so every flat is a position that had **not**
+hit its stop, target or time stop:
+
+| symbol | trades | closed by the rule | share |
+|---|---|---|---|
+| MGC | 554 | 420 | **75.8%** |
+| MCL | 2,186 | 1,303 | 59.6% |
+| MES | 1,380 | 832 | 60.3% |
+| MNQ | 985 | 850 | **86.3%** |
+
+MNQ's exit census is `SESSION_CLOSE 850, STOP 104, TARGET 28, BREAKEVEN 3`. **At that rate the
+stop-and-target geometry barely acts, so a top 10 built here ranks entry signals scored on a clock
+exit rather than strategies** — and an "exits make no difference" result would be that fact, not a
+finding.

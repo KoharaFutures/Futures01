@@ -70,9 +70,14 @@ from typing import Dict, List, Optional, Sequence
 HERE = os.path.dirname(os.path.abspath(__file__))
 EF1 = os.path.join(os.path.dirname(os.path.dirname(HERE)), "EF1", "code")
 NEWSTRATS = "/home/user/Futures01/workspace"
-for p in (HERE, EF1, NEWSTRATS, "/home/user/Futures01"):
+# EF5's own code dir FIRST and everything else APPENDED. EF1/code also contains a
+# module named ``measure.py``; inserting EF1 at position 0 after HERE would put it
+# AHEAD of HERE and a bare ``import measure`` elsewhere in EF5 would silently bind
+# EF1's module. Same shape as every other silent-substitution hazard in this repo.
+sys.path.insert(0, HERE)
+for p in (EF1, NEWSTRATS, "/home/user/Futures01"):
     if p not in sys.path:
-        sys.path.insert(0, p)
+        sys.path.append(p)
 
 from ef5_data import (CELL_FRAMES, PRIMARY_TFS, REPO, SYMBOLS,   # noqa: E402
                       build_frame, in_session, session_id)

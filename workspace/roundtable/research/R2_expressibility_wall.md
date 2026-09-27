@@ -179,7 +179,7 @@ the dangerous ones.
 |---|---|---|
 | **II-1** calendar spread | **NONE.** The tempting one is the spliced grain series (D40) — `MZC/MZS/MZW` roll between contract months inside one CSV, so a roll *is* visible in this data. **Invalid:** a splice is a discontinuity in one series, not two simultaneously observable expiries. You can see that a roll happened; you can never see the spread, because the two legs never coexist on the same bar. | no proxy |
 | **II-2** carry / roll yield | **NONE valid.** The tempting one is the `MCL`-vs-`CL` pair in `data/archive/` — both energy, different series. **Invalid:** those are the same expiry at two contract sizes, not two points on the curve; their spread is a size/vendor artefact (BRIEF: 0.95c mean, 4c worst across 109 hourly bars), not a carry signal. | no proxy |
-| **II-3** basis / index arb | **YES, and the data is on disk.** `SPY_1d` vs `MES_1d` and `QQQ_1d` vs `MNQ_1d` `[measured: per-file span scan, §6]` overlap 2019-05-03 → 2026-09-18 ≈ 1,850 aligned daily bars. Valid as a *rich/cheap* signal; **invalid** as index arb proper (SPY is an ETF with its own NAV premium and creation/redemption mechanics; the futures fair value needs financing and dividends, neither present). Needs Wall A. | proxy: ETF-vs-futures ratio |
+| **II-3** basis / index arb | **YES, and the data is on disk.** `[measured: exact timestamp intersection, §6]` `SPY_1d` × `MES_1d` = **1,855** aligned daily bars and `QQQ_1d` × `MNQ_1d` = **1,855**, 2019-05-03 → 2026-09-18. At hourly the same pairs align only **~1,800 of 5,000** bars, so this family should be run daily. Valid as a *rich/cheap* signal; **invalid** as index arb proper (SPY is an ETF with its own NAV premium and creation/redemption mechanics; the futures fair value needs financing and dividends, neither present). Needs Wall A. | proxy: ETF-vs-futures ratio |
 | **II-4** crack / crush / ratio | **NONE on disk.** No RB, HO, ZM, ZL or SI series exists `[measured: ls csv/raw data/archive]`. Wheat-corn (`MZW`/`MZC`) is the only inter-commodity pair present and is excluded by D40. **But the vendor reaches all of them with zero code change** (§4). | proxy after a fetch, not before |
 | **II-5** inter-market | **YES.** `MGC_1d` vs `MES_1d` (gold vs equity) and `MGC_1h` vs `MCL_1h` on disk. **Invalid** for the canonical rates-vs-equity and dollar-vs-metals versions: no ZN, no DX, no FX series exists. | partial proxy |
 | **II-6** statarb / cointegration | **YES for the signal.** Any of the pairs above. **Invalid** as a market-neutral pairs *trade* without Wall B: a one-legged "ratio is stretched, buy the cheap leg" is a directional bet with a relational filter, not a spread, and its risk is the leg's own risk. Say so or the backtest reports a spread's Sharpe on an outright's variance. | proxy: one-legged, and label it |
@@ -203,3 +203,42 @@ expressible **today**. 3 become proxy-able after a zero-code-change vendor fetch
 II-19). 8 have **no valid proxy at any price** (II-1, II-2, II-12, II-13, II-14, II-15, II-17,
 II-18) — and for 4 of those the tempting proxy is not merely weak but **circular or
 zero-by-construction**, which is the more useful thing to have written down.
+
+---
+
+## 6. Exactly how much aligned partner data is already on disk — measured
+
+The Wall-A argument rests on the claim that the partner data exists. Measured, by exact
+intersection of bar timestamps rather than by span arithmetic:
+
+`[measured: python3 -c "import csv, datetime; def days(p): ... ; A&B per pair" ->]`
+
+| pair | A | B | **exactly aligned bars** | window |
+|---|---|---|---|---|
+| `MGC_1d` × `SPY_1d` | 2511 | 2512 | **2,507** | 2016-09-26 → 2026-09-18 |
+| `MGC_1d` × `MES_1d` | 2511 | 1859 | **1,859** | 2019-05-03 → 2026-09-21 |
+| `MES_1d` × `SPY_1d` | 1859 | 2512 | **1,855** | 2019-05-03 → 2026-09-18 |
+| `MNQ_1d` × `QQQ_1d` | 1859 | 2512 | **1,855** | 2019-05-03 → 2026-09-18 |
+| `MES_1h` × `MGC_1h` | 5000 | 5000 | **4,986** | ~11 months |
+| `MGC_1h` × `MCL_1h` | 5000 | 5000 | **4,636** | ~11 months |
+| `MES_1h` × `SPY_1h` | 5000 | 5000 | **1,805** | ~11 months |
+| `MNQ_1h` × `QQQ_1h` | 5000 | 5000 | **1,794** | ~11 months |
+
+**Three things follow, and one of them corrects my own earlier phrasing.**
+
+1. The longest aligned pair in the repository is **`MGC_1d` × `SPY_1d` at 2,507 daily bars** — ten
+   years, gold against the equity market. Not the futures-vs-ETF basis pair I reached for first.
+2. **The futures × ETF hourly overlap is only ~1,800 bars, not ~5,000** — 36% of the futures series.
+   The ETF trades a fraction of the futures' 23-hour day
+   `[repo-verified: futures_agents/config.py:239-252 vs :45-46]`. So a naive inner join silently
+   discards two-thirds of the futures bars, and a naive *outer* join with forward-fill invents ETF
+   prices for hours the ETF was closed. **This is precisely why edit A3 (backwards-only partner
+   alignment, `-1` where no partner bar has closed) is the causality-critical part of the change and
+   not a detail.** A partner slot must be allowed to be *empty*, and the condition must decline
+   rather than guess — the same discipline `workspace/newstrats/leadlag.py:42-43` already applies on
+   the timeframe axis ("must be present in the SymbolFrame or the condition declines rather than
+   guessing").
+3. Futures × futures aligns almost perfectly (4,986 of 5,000 for `MES`×`MGC`), so the intra-futures
+   relational families (II-5, II-8, II-9) lose almost no sample. The ETF-bearing ones (II-3) pay for
+   the session mismatch, and they should pay it at **daily**, where the alignment is ~100%, rather
+   than hourly.

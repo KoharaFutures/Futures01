@@ -293,6 +293,25 @@ location in range) are printed every time with the tally, so a 2-1 can never be 
 a non-unanimous reading prints the rule-1 reminder that disagreement is a reason *not* to trade.
 Nothing in the panel is backtested.
 
+## A directional statement is ALWAYS rendered with its background colour
+
+Standing requirement from the account owner, 2026-09-27: **whenever this desk states a BUY/LONG or a
+SELL/SHORT, render it through the alerts module so it carries the background colour** — never as
+plain text.
+
+```python
+from futures_agents.alerts import alert, Priority
+print(alert(Priority.LONG,  headline, body))   # BLUE background   (48;5;27, white text)
+print(alert(Priority.SHORT, headline, body))   # ORANGE background (48;5;208, black text)
+print(alert(Priority.NO_TRADE, headline, body))# GREY background   (48;5;250)
+```
+
+This applies to a **pre-registered** direction too, not only a filled one: `CALL-0002` is a SHORT and
+renders orange even though nothing has filled. The body then carries `PRE-REGISTERED, NOT FILLED`
+alongside `PAPER — UNVALIDATED`, so the colour states the direction and the text states the status.
+Do not downgrade a directional plan to grey merely because it has not triggered — grey means
+**NO TRADE**, and using it for a live short would say the opposite of what is meant.
+
 ## The one-line report
 
 When nothing changed, the whole report is one line, in this shape:

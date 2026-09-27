@@ -1,0 +1,128 @@
+{
+  "max_total": 400,
+  "population": "generated default",
+  "seed": 20260922,
+  "symbols": {
+    "MCL": {
+      "A_trades": 3480,
+      "C_flat_exits": 1868,
+      "C_flat_exits_past_contract_rth_close": 1850,
+      "C_trades": 3343,
+      "C_violations": 0,
+      "C_window_stats": {
+        "end_of_data_exits": 0,
+        "entries_flat_same_bar": 291,
+        "entries_vetoed": 0,
+        "flat_before_deadline": 18,
+        "flat_exits": 1868,
+        "flat_on_forbidden_bar": 0,
+        "flat_on_late_bar": 0,
+        "flat_slippage_points": 50.24237
+      },
+      "cost_only_mean_net_r_delta": -0.026219,
+      "kinds": {
+        "earlier_exit": 1041,
+        "later_exit": 737,
+        "only_in_A": 166,
+        "only_in_C": 29,
+        "same_bar_diff_price": 94,
+        "same_bar_same_price": 1442
+      },
+      "later_exit_max_extra_minutes": 60,
+      "later_exit_median_extra_minutes": 60,
+      "rth_close": "14:30",
+      "strategies": 167,
+      "symbol": "MCL"
+    },
+    "MES": {
+      "A_trades": 2644,
+      "C_flat_exits": 1349,
+      "C_flat_exits_past_contract_rth_close": 0,
+      "C_trades": 2554,
+      "C_violations": 0,
+      "C_window_stats": {
+        "end_of_data_exits": 0,
+        "entries_flat_same_bar": 258,
+        "entries_vetoed": 1053,
+        "flat_before_deadline": 30,
+        "flat_exits": 1349,
+        "flat_on_forbidden_bar": 0,
+        "flat_on_late_bar": 0,
+        "flat_slippage_points": 557.176192
+      },
+      "cost_only_mean_net_r_delta": -0.019704,
+      "kinds": {
+        "earlier_exit": 1197,
+        "only_in_A": 328,
+        "only_in_C": 238,
+        "same_bar_diff_price": 25,
+        "same_bar_same_price": 1094
+      },
+      "later_exit_max_extra_minutes": null,
+      "later_exit_median_extra_minutes": null,
+      "rth_close": "16:00",
+      "strategies": 190,
+      "symbol": "MES"
+    },
+    "MGC": {
+      "A_trades": 1913,
+      "C_flat_exits": 1483,
+      "C_flat_exits_past_contract_rth_close": 1483,
+      "C_trades": 2143,
+      "C_violations": 0,
+      "C_window_stats": {
+        "end_of_data_exits": 0,
+        "entries_flat_same_bar": 0,
+        "entries_vetoed": 0,
+        "flat_before_deadline": 0,
+        "flat_exits": 1483,
+        "flat_on_forbidden_bar": 0,
+        "flat_on_late_bar": 0,
+        "flat_slippage_points": 399.550006
+      },
+      "cost_only_mean_net_r_delta": null,
+      "kinds": {
+        "earlier_exit": 1243,
+        "later_exit": 17,
+        "only_in_A": 16,
+        "only_in_C": 246,
+        "same_bar_same_price": 637
+      },
+      "later_exit_max_extra_minutes": 120,
+      "later_exit_median_extra_minutes": 120,
+      "rth_close": "13:30",
+      "strategies": 184,
+      "symbol": "MGC"
+    },
+    "MNQ": {
+      "A_trades": 1650,
+      "C_flat_exits": 884,
+      "C_flat_exits_past_contract_rth_close": 0,
+      "C_trades": 1536,
+      "C_violations": 0,
+      "C_window_stats": {
+        "end_of_data_exits": 0,
+        "entries_flat_same_bar": 118,
+        "entries_vetoed": 405,
+        "flat_before_deadline": 20,
+        "flat_exits": 884,
+        "flat_on_forbidden_bar": 0,
+        "flat_on_late_bar": 0,
+        "flat_slippage_points": 368.697489
+      },
+      "cost_only_mean_net_r_delta": -0.002971,
+      "kinds": {
+        "earlier_exit": 712,
+        "only_in_A": 170,
+        "only_in_C": 56,
+        "same_bar_diff_price": 138,
+        "same_bar_same_price": 630
+      },
+      "later_exit_max_extra_minutes": null,
+      "later_exit_median_extra_minutes": null,
+      "rth_close": "16:00",
+      "strategies": 185,
+      "symbol": "MNQ"
+    }
+  }
+}

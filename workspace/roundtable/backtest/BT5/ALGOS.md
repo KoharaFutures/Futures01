@@ -265,3 +265,177 @@ slicing code, the join is exact by construction, and the timezone trap `BRIEF.md
 bite: the comparison is between `datetime` objects, which compare by instant, never between
 offset-stripped strings.
 
+---
+
+## Result — `ASKED`, not `FAITHFUL`. Read every number with that attached.
+
+`[measured: python3 workspace/roundtable/backtest/BT5/code/s2.py → code/s2_report.json]`
+
+**Search size and deflation, stated up front** (PIPELINE §4 obligation 2). **24 tests**: 3 axes × 3
+statistics, plus RAW's second (bucket-blocked) null × 3, plus 12 sensitivity runs (k ∈ {2,3,5},
+`min_n` ∈ {5,10,20}). `free_t = sqrt(2·ln 24) = ` **2.521**. The programme-wide figure is 5.46 and the
+largest *t* ever found here is 3.923. **The largest |z vs null| anywhere in this algorithm is 1.90.**
+Nothing clears anything.
+
+### 0. The premise of the mechanism is NOT a 1-minute-only fact
+
+`MAIN-01`'s "~30× range of activity per bar" was measured at 1 minute on `data/MGC_1m.csv`, an Oanda
+CFD whose volume column is a tick count `[repo-verified: research/R5_SCOPE.md:126-129]`. I measured
+the same dispersion on the grid the published findings actually live on — the frozen `csv/raw` 60m
+files and the 240m series resampled from them, which is the series the generating study used:
+
+| symbol | tf | bars | `volume == 0` | p10 | p50 | p90 | **p90/p10** |
+|---|---|---|---|---|---|---|---|
+| MCL | 60 | 4,963 | 196 (3.95%) | 631 | 4,091 | 17,626 | **27.9×** |
+| MCL | 240 | 1,375 | 12 (0.87%) | 2,621 | 15,757 | 65,860 | **25.1×** |
+| MES | 60 | 4,983 | 184 (3.69%) | 5,496 | 20,235 | 161,826 | **29.4×** |
+| MES | 240 | 1,343 | 0 | 26,753 | 66,229 | 596,859 | **22.3×** |
+| MGC | 60 | 4,981 | 177 (3.55%) | 5,684 | 12,662 | 33,302 | **5.9×** |
+| MGC | 240 | 1,343 | 1 (0.07%) | 14,438 | 49,718 | 123,369 | **8.5×** |
+| MNQ | 60 | 4,985 | 183 (3.67%) | 14,677 | 46,654 | 261,527 | **17.8×** |
+| MNQ | 240 | 1,343 | 0 | 58,179 | 166,077 | 972,074 | **16.7×** |
+
+**Two facts nobody had written down.** (i) Per-bar activity dispersion at 60m and 240m is 5.9–29.4×,
+i.e. **the same order as the 1-minute figure `MAIN-01` was built on**. Aggregating to an hour does not
+average the inequality away, because the intraday profile at hourly resolution still spans
+overnight-thin to open-heavy. So "the confound is a sub-hourly artefact" is not available as a
+reading. (ii) **3.55–3.95% of `csv/raw` hourly bars have `volume == 0`** — two orders of magnitude
+above the 0.1% R5 measured at 1 minute on the archive `[repo-verified: research/R5_SCOPE.md:130-133]`
+— and **593 of the 21,954 trades were decided on a zero-volume signal bar**.
+
+### 1. Layer 1, unit = bar: the footprint exists, and it is large
+
+Median per-bar statistic in the HIGH-activity stratum divided by the LOW-activity stratum, per
+(symbol, tf). `TODRANK` is the **fully time-of-day-residualised** axis (TV distance between the two
+strata's time-of-day composition: 0.019).
+
+| axis | true range / close | **ATR-14 / close** | ratio TR:ATR | rel. volume | Bollinger width | Keltner width |
+|---|---|---|---|---|---|---|
+| `RAW` (carries time of day) | 2.47 – 3.26× | 1.14 – 1.45× | **1.98 – 2.70** | 1.34 – 2.17× | 1.06 – 1.47× | 1.09 – 1.40× |
+| `TODRANK` (residualised) | 2.09 – 2.92× | 1.20 – 1.75× | **1.44 – 1.88** | 1.85 – 2.67× | 1.35 – 1.82× | 1.13 – 1.65× |
+
+Ranges are across all 8 (symbol, tf) cells, and **every cell has the same sign on every column.**
+
+**The one-line reading, which is `MAIN-01`'s mechanism measured with zero approximation error:** a
+high-activity bar moves **2.1 – 3.3× as far as a low-activity bar**, while the **ATR the stop and
+every target in this repository is denominated in is only 1.14 – 1.75× wider**. ATR tracks roughly
+**half** of the movement difference it exists to normalise, in all 8 cells, on both axes. That is what
+"per-bar statistics weight unequal-activity bars equally" cashes out to numerically.
+
+**It survives residualisation, at about two-thirds of its raw size** (TR:ATR gap 1.44–1.88 against
+1.98–2.70). So this is not the pre-answered time-of-day statement: it is present between bars that
+fall in the *same* ET clock bucket.
+
+**Why the ATR ratio *rises* after residualising while the true-range ratio falls.** Under `RAW` the
+LOW stratum is overnight bars, and a 14-bar trailing ATR on an overnight bar inherits the preceding
+RTH bars' ranges — so its ATR is not low even though its own range is. That contamination is itself an
+instance of the mechanism, not a nuisance: it is exactly what equal weighting across unequal-activity
+bars does to a trailing statistic. Within a clock bucket that contamination is gone and ATR tracks
+activity more closely, which is why `TODRANK`'s ATR ratio is the larger one.
+
+**The CLV asymmetry, which I did not expect and am reporting because it is a signed bias in a proxy.**
+Median close-location value is systematically **positive in the LOW-activity stratum** (+0.000 to
++0.281) and near zero or negative in the HIGH stratum (−0.038 to +0.125), on 6 of 8 cells under
+`TODRANK` and 6 of 8 under `RAW`. `close_location_value` is what the delta proxy is built from, so
+**the proxy reads thin bars as buying pressure.** Not a zero-range artefact: CLV is `None` on only
+0.02–0.25% of bars per stratum `[measured]`.
+
+### 2. Layer 2, unit = strategy: the footprint does not reach expectancy
+
+Median across qualifying strategies of the within-strategy **HIGH − LOW** contrast. Null = bar-level
+stratum-label permutation blocked within (cell, ET clock bucket), 2,000 draws, seed 20260927, pool
+fixed to the observed qualifiers.
+
+| axis | strategies | **Δ mean R** | p | z vs null | Δ win rate | p | Δ payoff | p |
+|---|---|---|---|---|---|---|---|---|
+| `RAW` (null block = cell) | 116 / 176 | **+0.0527** | 0.096 | +1.64 | +0.0156 | 0.271 | +0.0461 | 0.273 |
+| `RAW` (null block = bucket) | 116 / 176 | +0.0527 | 0.055 | +1.58 | +0.0156 | 0.254 | +0.0461 | 0.094 |
+| **`RELVOL`** | 121 / 176 | **+0.0177** | **0.570** | +0.51 | −0.0029 | 0.810 | +0.0818 | 0.048 |
+| **`TODRANK`** | 119 / 176 | **+0.0179** | **0.584** | +0.58 | **0.0000** | 1.000 | +0.0437 | 0.290 |
+
+**Placebo, one explicit draw beside each result** (draw 0 of each ensemble): RAW −0.0142 R,
+RELVOL −0.0282 R, TODRANK −0.0016 R. Null 90% intervals for Δ mean R are ±0.05 R on every axis, so the
+observed +0.018 R sits near the middle of its own placebo distribution.
+
+**Secondary, exact two-sided binomial sign test** on the per-strategy contrast signs — flagged
+optimistic because the 176 are correlated variants: RAW 67+/49− p = 0.114; RELVOL 66+/55− p = 0.363;
+TODRANK 64+/55− p = 0.463.
+
+**Sensitivity, 12 runs at 500 draws, and it removes even the RAW hint:**
+
+| axis | k=2 | k=5 | k=3, min_n=20 | k=3, min_n=5 |
+|---|---|---|---|---|
+| `RAW` | +0.0201 (p 0.43) | **−0.00004 (p 1.00)** | +0.0550 (p 0.084) | +0.0494 (p 0.098) |
+| `RELVOL` | +0.0112 (p 0.63) | +0.0146 (p 0.72) | +0.0291 (p 0.375) | +0.0177 (p 0.577) |
+| `TODRANK` | +0.0322 (p 0.22) | +0.0589 (p 0.160) | +0.0068 (p 0.846) | +0.0108 (p 0.754) |
+
+`RAW` at quintiles is **−0.00004 R, p = 1.000**. A result that vanishes when the same axis is cut into
+five instead of three is noise, and saying so is what the sensitivity grid is for.
+
+**Pooled, stated separately and never as the result** (per-trade average over all 21,954): Δ mean R
+RAW +0.0485, RELVOL +0.0319, TODRANK +0.0185. Close to the per-strategy medians here, which is worth
+recording — on *this* statistic the pooling inflation BT3 measured at 24× does **not** appear, because
+a stratum mean is not a path-dependent quantity. That is a property of the statistic, not a licence.
+
+**Conditioned on (symbol, tf), the per-strategy median is a mixture.** On `TODRANK` the 8 cells run
+from **−0.169 R** (MGC 240m, 5 qualifying) to **+0.154 R** (MES 240m, 14 qualifying), 4 positive and 4
+negative. So even the 176-strategy median hides a sign-inconsistent spread, which is BT3's
+pooling-across-cells warning appearing again on a different statistic.
+
+### 3. Rule 3's cancellation still cancels inside every activity stratum
+
+Median across qualifying strategies, `TODRANK`:
+
+| stratum | win rate | payoff | mean R |
+|---|---|---|---|
+| LOW activity | 0.3947 | 1.352 | −0.0616 |
+| HIGH activity | 0.4000 | 1.384 | −0.0414 |
+
+Win rate +0.5 points, payoff +2.4%, expectancy +0.020 R — all inside the null. `BRIEF.md` rule 3 says
+win rate and payoff cancel; **they cancel in the thin stratum and in the busy stratum alike.** The
+`RELVOL` cut is the same shape (win 0.400 → 0.400, payoff 1.289 → 1.387).
+
+### 4. Distance to invalidation — **modelled** distance, and it is still flat
+
+Win rate by modelled invalidation distance tercile (`stop_mult × atr(signal bar) / close`) within each
+activity stratum, pooled per-trade (this table is descriptive; no test attached, per choice 14):
+
+| activity | dist tercile 0 | 1 | 2 |
+|---|---|---|---|
+| LOW | 0.386 | 0.407 | 0.381 |
+| MID | 0.382 | 0.392 | 0.415 |
+| HIGH | 0.397 | 0.394 | 0.391 |
+
+Win rate spans 0.381 – 0.415 across all nine buckets, i.e. **flat, and flat inside every activity
+stratum.** Mean R runs −0.109 to −0.028 R with no monotone pattern in either direction. The flat-win-
+rate-across-distance finding is not an activity artefact on this dump.
+
+---
+
+## What this does and does not answer
+
+**Does the activity footprint exist on the wall-clock grid at all? Yes, and it is large — on the
+statistics.** Per-bar activity dispersion at 60m/240m is 5.9–29.4×; a HIGH-activity bar's own true
+range is 2.1–3.3× a LOW one's while its ATR-14 is only 1.14–1.75× wider; band widths differ 1.1–1.8×;
+and CLV is signed differently between the strata. All 8 cells agree on every sign.
+
+**Does it survive time-of-day residualisation? Yes at the bar level, at about two-thirds strength.
+No at the trade level — it was never there.** Residualising takes the per-strategy expectancy contrast
+from +0.053 R (p = 0.096) to +0.018 R (p = 0.58), and the win-rate contrast to **exactly zero**.
+
+**So the honest statement of S2's answer:** the mechanism `MAIN-01` names is **real and measurable on
+the existing grid**, it is **not** a time-of-day restatement, and it **does not reach the quantity the
+settled finding is about.** The statistics the strategies read differ by a factor of two; what the
+strategies earn does not differ at all.
+
+**What this is not** (R5's caveat 1, restated as the code's own limit): this is **"no footprint of the
+named mechanism at the trade level"**, never "the clock is not a confound". Re-clocking also changes
+*which* bars exist and hence when signals fire, and stratification cannot reproduce that.
+
+**Two bounds on the bar-level half, stated rather than hidden.** (i) `TODRANK` residualises on time of
+day but not on the trading day, so the surviving footprint could be "busy days are volatile days"
+rather than "busy bars are volatile bars". Both are inside `MAIN-01`'s mechanism, so neither reading
+overturns the result, but I measured only their sum. (ii) The ATR figures are a 14-bar trailing
+statistic and are therefore partly a volatility-clustering measurement; the true-range, CLV and
+volume columns are contemporaneous and carry the same signs, which is why the conclusion does not rest
+on ATR alone.

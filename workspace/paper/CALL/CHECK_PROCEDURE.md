@@ -34,10 +34,30 @@ and the disagreement gets written into `NOTES.md`.
 pip install yfinance        # the container is recycled; this is often missing
 ```
 
-Pull MGC and MNQ at 60m/30d and 15m/5d into `workspace/paper/CALL/data/` under a **new
-fetch-timestamped filename** (`{SYM}_{N}m_fetched_{UTC}.jsonl`). Snapshots accumulate; never
-overwrite one. `resolve.py` merges every snapshot and lets the latest fetch win per timestamp,
-so a bar that was forming when first seen is replaced by its finalised version.
+**Use the script. Do not re-type the fetch.**
+
+```
+python3 workspace/paper/CALL/fetch.py
+```
+
+`fetch.py` pulls MGC and MNQ at 5m and 15m into `workspace/paper/CALL/data/` under a **new
+fetch-timestamped filename** (`{SYM}_{N}m_fetched_{UTC}.jsonl`), appends the feed lag, drops stubs,
+and reports any fetch failure rather than hiding it. Snapshots accumulate; never overwrite one.
+`resolve.py` merges every snapshot and lets the latest fetch win per timestamp, so a bar that was
+forming when first seen is replaced by its finalised version. It exists as a script because it is
+the one step the entire record rests on, and re-typing it each check is a transcription risk.
+
+At a **full** check also pull 60m/30d for the longer structure; `fetch.py` covers the fast frames.
+
+**Why its freshness test is not "is this timestamp new?".** The newest bar is usually still forming
+and its OHLCV gets revised. Keying on the timestamp alone silently drops those revisions — measured
+on the very check that introduced the fix: **both 15m frames reported `+0 new, 2 revised`**, so a
+timestamp-only test would have written nothing and lost both. Usually that self-heals, because the
+next new timestamp rewrites the whole series including the finalised bar — but **not at a session or
+weekend close**, where no successor arrives. A bar frozen mid-formation has an incomplete high and
+low, and `resolve.py` resolves stops and targets against exactly those, so a stop touched late in
+that bar would never be seen. Freshness is therefore **a new timestamp OR any changed OHLCV on a bar
+already held.**
 
 **The stub-bar guard, which is the thing that will bite (N5).** At a session reopen this vendor
 stamps a *live* timestamp on a *stale* price. Verified 2026-09-27 at 18:15 ET:

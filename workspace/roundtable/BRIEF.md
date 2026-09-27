@@ -395,3 +395,49 @@ attenuated-or-zero difference reads exactly like "the clock makes no difference.
 
 Anyone constructing a non-wall-clock series must compute the collision-free floor first and assert
 the appended length equals the intended length. It is exact arithmetic and needs no tape.
+
+---
+
+# D-candidate `R4-M3`: the daily frame confirms against itself (2026-09-27)
+
+`align_bucket` tests `if minutes >= 1440:` and returns the CME trading-day bucket **regardless of
+the actual `minutes` value** (`futures_agents/data/bars.py:145-149`). Verified:
+
+```
+align_bucket(ts,  1440) = 2026-03-17 18:00:00-04:00
+align_bucket(ts,  7200) = 2026-03-17 18:00:00-04:00      <- identical
+align_bucket(ts, 10080) = 2026-03-17 18:00:00-04:00      <- identical
+```
+
+`FRAMES[1440] = [1440, 7200]`, so the "weekly" confirming timeframe **is the daily series**, lagged
+2–4 bars by a mislabelled `end_ts`, with OHLCV bit-identical (2510/2510 MGC, 1858/1858 MNQ and MES).
+
+**So every daily multi-timeframe statement in this repository is a lagged-autocorrelation test on
+one series.** It explains why PULLBACK's base filter `mtf_not_conflicted` passes 99%+ at 1440m, and
+it bears on rule 2 — "multi-timeframe agreement is not a virtue" — which was measured in part on a
+frame that cannot disagree with itself. Rule 2 is not overturned; its evidence is now narrower than
+stated, and the manager holds the `D<n>`.
+
+# EF2-01: the overnight switch is inert for ENTRIES, which narrows the edge programme
+
+EF2 measured this in its first burst, before touching a profitability number, and it constrains the
+whole session-window programme:
+
+- **`StrategyFilters.rth_only` defaults to `True` and the generators never vary it** —
+  `[measured: 184/184 MGC and 167/167 MCL strategies at max_total=400]`, consistent with R3-A-5
+  (the scope vocabulary is inert in the generation path) and R1's 314/314.
+- **MGC RTH is 08:20–13:30 and MCL 09:00–14:30, both wholly inside one 18:00→16:00 cycle.** On MGC
+  60m the count of bars that are both RTH *and* admissible under the session rule equals the RTH
+  count exactly.
+
+**Therefore the 18:00→16:00 rule does not unlock overnight *entries* at the generated default. What
+it unlocks is holding an RTH-entered position past its contract's RTH close to 16:00 ET** — worth
+2.5 hours on MGC (13:30→16:00), 1.5 on MCL (14:30→16:00), and **nothing at all on MES/MNQ, whose RTH
+close already is 16:00**.
+
+Reaching overnight entries requires `rth_only=False`, and **D24 measured that as buying 2–4× the
+sample while *costing* expectancy in every paired test.** So it is a real arm to test, not a free
+upgrade, and it must be tested paired rather than swapped in.
+
+This does not reduce the task; it sharpens what the answer can be about. Any swing row must say
+which of the two it is: a longer hold on an RTH entry, or an overnight entry bought at D24's price.

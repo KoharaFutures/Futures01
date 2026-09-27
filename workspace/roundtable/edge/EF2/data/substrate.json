@@ -1,0 +1,266 @@
+{
+  "symbols": {
+    "MGC": {
+      "spans": {
+        "60m": {
+          "bars": 11297,
+          "first": "2024-10-06T19:00:00-04:00",
+          "last": "2026-09-25T16:00:00-04:00",
+          "calendar_days": 718,
+          "distinct_dates": 596
+        },
+        "240m": {
+          "bars": 3052,
+          "first": "2024-10-06T16:00:00-04:00",
+          "last": "2026-09-25T12:00:00-04:00",
+          "calendar_days": 718,
+          "distinct_dates": 596
+        },
+        "1440m": {
+          "bars": 4008,
+          "first": "2010-10-04T00:00:00-04:00",
+          "last": "2026-09-25T00:00:00-04:00",
+          "calendar_days": 5835,
+          "distinct_dates": 4008
+        }
+      },
+      "csv_raw_equivalence": {
+        "60m": {
+          "symbol": "MGC",
+          "minutes": 60,
+          "csv_path": "/home/user/Futures01/csv/raw/MGC_1h.csv",
+          "csv_exists": true,
+          "csv_bars": 5000,
+          "archive_bars": 11297,
+          "overlap": 4987,
+          "bit_exact_closes": 1063,
+          "max_abs_close_diff": 3.4374988899799064e-07,
+          "volume_mismatches": 2,
+          "within_tol": true,
+          "archive_only": 6310
+        },
+        "240m": {
+          "symbol": "MGC",
+          "minutes": 240,
+          "csv_path": "/home/user/Futures01/csv/raw/MGC_4h.csv",
+          "csv_exists": false
+        }
+      },
+      "session_arithmetic": {
+        "symbol": "MGC",
+        "60m": {
+          "bars": 11297,
+          "hour_stamps": {
+            "0": 490,
+            "1": 490,
+            "2": 490,
+            "3": 491,
+            "4": 491,
+            "5": 492,
+            "6": 492,
+            "7": 492,
+            "8": 492,
+            "9": 497,
+            "10": 497,
+            "11": 496,
+            "12": 496,
+            "13": 491,
+            "14": 491,
+            "15": 489,
+            "16": 489,
+            "17": 6,
+            "18": 486,
+            "19": 487,
+            "20": 488,
+            "21": 488,
+            "22": 488,
+            "23": 488
+          },
+          "bars_closing_at_1600_ET": 489,
+          "bars_spanning_the_1600_1800_break": 0,
+          "bars_wholly_inside_the_break": 495
+        },
+        "240m": {
+          "bars": 3052,
+          "hour_stamps": {
+            "0": 491,
+            "4": 492,
+            "8": 497,
+            "12": 497,
+            "16": 586,
+            "20": 489
+          },
+          "bars_closing_at_1600_ET": 497,
+          "bars_spanning_the_1600_1800_break": 586,
+          "bars_wholly_inside_the_break": 0
+        }
+      }
+    },
+    "MCL": {
+      "spans": {
+        "60m": {
+          "bars": 10934,
+          "first": "2024-10-06T19:00:00-04:00",
+          "last": "2026-09-25T16:00:00-04:00",
+          "calendar_days": 718,
+          "distinct_dates": 590
+        },
+        "240m": {
+          "bars": 2990,
+          "first": "2024-10-06T16:00:00-04:00",
+          "last": "2026-09-25T12:00:00-04:00",
+          "calendar_days": 718,
+          "distinct_dates": 590
+        },
+        "1440m": {
+          "bars": 1,
+          "first": "2026-09-25T00:00:00-04:00",
+          "last": "2026-09-25T00:00:00-04:00",
+          "calendar_days": 0,
+          "distinct_dates": 1
+        }
+      },
+      "csv_raw_equivalence": {
+        "60m": {
+          "symbol": "MCL",
+          "minutes": 60,
+          "csv_path": "/home/user/Futures01/csv/raw/MCL_1h.csv",
+          "csv_exists": true,
+          "csv_bars": 5000,
+          "archive_bars": 10934,
+          "overlap": 4987,
+          "bit_exact_closes": 221,
+          "max_abs_close_diff": 4.824218535759428e-08,
+          "volume_mismatches": 2,
+          "within_tol": true,
+          "archive_only": 5947
+        },
+        "240m": {
+          "symbol": "MCL",
+          "minutes": 240,
+          "csv_path": "/home/user/Futures01/csv/raw/MCL_4h.csv",
+          "csv_exists": false
+        }
+      },
+      "session_arithmetic": {
+        "symbol": "MCL",
+        "60m": {
+          "bars": 10934,
+          "hour_stamps": {
+            "0": 471,
+            "1": 472,
+            "2": 472,
+            "3": 488,
+            "4": 473,
+            "5": 488,
+            "6": 474,
+            "7": 474,
+            "8": 486,
+            "9": 479,
+            "10": 491,
+            "11": 478,
+            "12": 478,
+            "13": 484,
+            "14": 471,
+            "15": 470,
+            "16": 471,
+            "17": 3,
+            "18": 467,
+            "19": 468,
+            "20": 469,
+            "21": 469,
+            "22": 469,
+            "23": 469
+          },
+          "bars_closing_at_1600_ET": 470,
+          "bars_spanning_the_1600_1800_break": 0,
+          "bars_wholly_inside_the_break": 474
+        },
+        "240m": {
+          "bars": 2990,
+          "hour_stamps": {
+            "0": 488,
+            "4": 488,
+            "8": 491,
+            "12": 491,
+            "16": 563,
+            "20": 469
+          },
+          "bars_closing_at_1600_ET": 491,
+          "bars_spanning_the_1600_1800_break": 563,
+          "bars_wholly_inside_the_break": 0
+        }
+      }
+    }
+  },
+  "cells": {
+    "MGC:f60__p60": {
+      "timeframes": [
+        60
+      ],
+      "primary_tf": 60,
+      "base_minutes": 60,
+      "base_bars": 11297
+    },
+    "MGC:f240__p240": {
+      "timeframes": [
+        240
+      ],
+      "primary_tf": 240,
+      "base_minutes": 60,
+      "base_bars": 11297
+    },
+    "MGC:f60_240__p60": {
+      "timeframes": [
+        60,
+        240
+      ],
+      "primary_tf": 60,
+      "base_minutes": 60,
+      "base_bars": 11297
+    },
+    "MGC:f60_240__p240": {
+      "timeframes": [
+        60,
+        240
+      ],
+      "primary_tf": 240,
+      "base_minutes": 60,
+      "base_bars": 11297
+    },
+    "MCL:f60__p60": {
+      "timeframes": [
+        60
+      ],
+      "primary_tf": 60,
+      "base_minutes": 60,
+      "base_bars": 10934
+    },
+    "MCL:f240__p240": {
+      "timeframes": [
+        240
+      ],
+      "primary_tf": 240,
+      "base_minutes": 60,
+      "base_bars": 10934
+    },
+    "MCL:f60_240__p60": {
+      "timeframes": [
+        60,
+        240
+      ],
+      "primary_tf": 60,
+      "base_minutes": 60,
+      "base_bars": 10934
+    },
+    "MCL:f60_240__p240": {
+      "timeframes": [
+        60,
+        240
+      ],
+      "primary_tf": 240,
+      "base_minutes": 60,
+      "base_bars": 10934
+    }
+  }
+}

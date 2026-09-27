@@ -179,6 +179,22 @@ group remain visible to later rows in the group, which is correct and necessary 
 concurrency and per-symbol caps must count simultaneous positions. Only *outcomes* are hidden.
 `barrier=False` is retained as an arm so the leak can be priced rather than merely removed.
 
+**A defect in my own first implementation of this, found and fixed, because it is the exact
+shape of mistake that makes a look-ahead fix look free.** Restructuring the loop to iterate
+*timestamp groups* made `flush()` run once per group, so **`barrier=False` stopped reproducing
+the leak** — it had become a barrier too, differing only in whether same-instant exits land at
+the end of the group or the start of the next. The "removing the barrier changes nothing"
+reading I got from that run was therefore an artefact of comparing the barrier with itself.
+`barrier=False` now flushes **before every row**, which is what the pre-barrier code did, and
+two tests pin the semantics so it cannot come back:
+`tests/test_bt3_governor_replay.py::test_barrier_hides_same_instant_outcomes_from_same_instant_decisions`
+(three simultaneous signals on three symbols: with the barrier the third is refused at
+`3_concurrent_limit` because the account genuinely holds two positions; without it all three
+are taken because each is closed out before the next is assessed) and
+`::test_barrier_hides_same_instant_losses_from_the_daily_ledger` (four simultaneous losses:
+without the barrier `day.consecutive_losses` reaches 3 *inside the instant* and
+`1_consecutive_losses` fires; with it, it never does).
+
 **8. Dollars per trade.** `pnl = r × contracts × risk_points × point_value`. `net_dollars =
 net_r × risk_dollars` is exactly the engine's own conversion `[repo-verified: engine.py:507]`,
 and **cost-in-R is size-invariant** because commission and slippage are both linear in

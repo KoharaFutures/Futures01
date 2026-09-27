@@ -28,6 +28,9 @@ PRE_REGISTRY = frozenset({
     # questions cannot be held to it either. Both name their subject in prose.
     "04_BT3_R3_verify-ALGO-1.md",
     "05_BT2_R2_verify-ALGO-1.md",
+    # EF2 had no id to cite: no kind existed for a harness component when it wrote.
+    # EF1-H<n> was added in response; this message predates it.
+    "EF2-01_EF1_rth-only-makes-the-overnight-switch-inert.md",
 })
 
 # <ISSUER>-<KIND>-<n> and the kinds that legitimately have no issuer prefix
@@ -39,7 +42,7 @@ ID = re.compile(
       | DISC2?-LEAD-\d+
       | D\d+                        # programme-wide defect
       | (R[1-6]|BT[1-6]|EF[1-6]|DISC2?)-      # issuer-prefixed:
-        (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[ABM]-?\d+)
+        (Q\d+|REQ-\d+|ALGO-\d+|H\d+|D\d+[a-z]?|[ABM]-?\d+)
       | MGR-(T\d+|Q\d+|REQ-\d+)    # manager task / question / request
       | ADJ-\d+                     # manager adjudication
       | R-\d+                       # board rule

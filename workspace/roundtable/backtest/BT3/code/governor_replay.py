@@ -378,6 +378,13 @@ def replay(rows: Sequence[dict], *, label: str, live_eligible: bool = True,
         days.add(day)
 
         for j in range(k, group_end):
+            # ``barrier=False`` must flush before *every row*, not once per
+            # group. Flushing once per group would itself hide same-instant
+            # outcomes and so would silently *be* the barrier - which is the bug
+            # this comment exists to stop coming back. Per-row flushing is what
+            # the pre-barrier code did and is what reproduces the leak.
+            if not barrier:
+                flush(ts)
             row = rows[j]
             sym = row["symbol"]
             spec = get_contract(sym)

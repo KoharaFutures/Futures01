@@ -209,7 +209,7 @@ I also confirm the two emptiness mechanisms by reading, independently of R1:
 only for `timeframe=None`. That is a slightly stronger statement than R1's, which rested on the
 measured binding.
 
-## R4-M3 — **the method correction**: R1's per-timeframe deadness tests use timeframe bindings the harness never generates, and the frames it does generate hold a worse defect
+## R4-M3 — **the method correction**: R1's per-timeframe deadness tests bind conditions to timeframes the harness generates but never *runs*, and the frames it does run hold a worse defect *(heading amended — see Addendum A)*
 
 This is the one place where I am not extending R1's method but disagreeing with it.
 
@@ -971,7 +971,7 @@ Measured at the corpus's own bindings (`tfs = FRAMES[primary]`, bound at `primar
 
 `[measured: census, 23 corpus cells]`
 
-**Not one zero.** R1's D-MTF1 states that "a MULTI_TIMEFRAME strategy whose primary timeframe is the
+**Not one zero.** *(Amended — see Addendum A: the configuration IS generated, 48 carriers; it is never run. What follows overstates the correction and Addendum A is the settled version.)* R1's D-MTF1 states that "a MULTI_TIMEFRAME strategy whose primary timeframe is the
 top of its frame can never emit a signal — it is a structurally zero-trade strategy, exactly the shape
 of round 1's `openinterest` finding" `[repo-verified: R1_group_audit.md:480-486]`. **I disagree that
 this describes anything in the corpus**, for the reason in `R4-M3`: `FRAMES` always appends higher
@@ -1001,12 +1001,29 @@ only `{5, 15, 30, 60, 240, 1440}` `[repo-verified: config.py:302, scout.py:58-67
 resolves its frame as `FRAMES.get(timeframe, [timeframe])` `[repo-verified: scout.py:230-233]` — the
 fallback is a frame of one for 1m, 2m, 3m, 10m and 120m. **That particular branch is unreachable**,
 because `scout.rank`'s `suffix` dict covers only `{1440, 240, 60, 15, 5}` and raises `KeyError` first
-`[repo-verified: scout.py:219]` — note it does not even cover 30m, which *is* a `FRAMES` key. And I
-checked every `build_symbol_frame` call site in the repository: **all but three pass `FRAMES[tf]` or a
-multi-element list**, the exceptions being two lines in `backtest/BT2/code/test_algo1.py` (a unit test)
-`[measured: grep -rn "build_symbol_frame(" --include=*.py . → 40 call sites]`. So the frame-of-one
-VOID has **not** contaminated any published result. It is a live hazard with no guard, and stating it
-as VOID-per-cell is the useful form.
+`[repo-verified: scout.py:219]` — note it does not even cover 30m, which *is* a `FRAMES` key. The
+same `FRAMES.get(tf, [tf])` fallback appears a second time, in `scout.live_state`
+`[repo-verified: scout.py:348-351]`, and is unreachable for the same reason: an identical `suffix` dict
+raises first.
+
+**Corrected count, and the error was mine.** An earlier draft of this paragraph said "40 call sites,
+all but three pass `FRAMES[tf]`". Both figures were wrong: my `grep` was truncated by `head -40`, and my
+pattern matched `[tf]` *inside* `FRAMES[tf]`. The accurate measurement is **83 `build_symbol_frame` call
+sites** outside the definition, of which **five** build a frame of one:
+`backtest/BT2/code/test_algo1.py:58` (`[tf]`) and `:136` (`[TF]`), both unit tests;
+`newstrats/leadlag.py:131` (`sorted({base, tf})` with `base = 60 if tf >= 60 else tf`, so a frame of one
+at tf in {5, 15, 30, 60} — but it reads `structure_trend` directly and runs no strategy); and the two
+unreachable `scout.py` fallbacks. **Every other site passes `FRAMES[...]` or an explicit multi-element
+list**
+`[measured: grep -rn "build_symbol_frame(" --include=*.py . | grep -v "def build_symbol_frame" | wc -l
+→ 83, then inspecting the frame argument of all 83]`. So the frame-of-one VOID has **not** contaminated
+any published result. It is a live hazard with no guard, and stating it as VOID-per-cell is the useful
+form.
+
+**One aside that reinforces it:** `csv/raw` contains no `*_4h.csv`
+`[measured: ls csv/raw/ | grep -c _4h → 0]`, while both `scout.rank` and `scout.live_state` map
+`240 → "4h"` `[repo-verified: scout.py:219, 348]`. So the shipped `scout` module cannot be run at 240m
+on this data store at all — a third independent reason its frame-of-one fallback has never executed.
 
 ## R4-MT2 — `mtf_strongly_aligned` has zero independent content at 240m and 1440m, and it is provable
 
@@ -1229,7 +1246,7 @@ forming mine, so the agreements below are corroboration of a reading, not an ind
 |---|---|---|---|
 | CLEAN | CLEAN | 19 | all 8 `trend`; `rsi_directional`, `macd_directional`, `stoch_directional`; all 3 `meanreversion`; all 5 `candlestick` |
 | CLEAN (w/ DEAD-at-top caveat) | CLEAN (w/ VOID-in-frame-of-one) | 1 | `mtf_aligned` — same verdict, different cell named |
-| DEGRADED | DEGRADED | 5 | `macd_hist_direction`, `volatility_normal`, `regime_trending`, `regime_ranging`, `regime_matches_direction`, `mtf_not_conflicted` (6 listed, `regime_matches_direction` additionally VOID on one half) |
+| DEGRADED | DEGRADED | 6 | `macd_hist_direction`, `volatility_normal`, `regime_trending`, `regime_ranging`, `regime_matches_direction` (additionally VOID on one directional half at MES 240m), `mtf_not_conflicted` |
 | MISNAMED | MISNAMED | 4 | `rsi_extreme_reversal`, `stoch_extreme`, `volatility_compressed`, `volatility_expanding` |
 | **DEGRADED** | **MISNAMED + DEGRADED** | **1** | **`mtf_strongly_aligned`** — see `R4-MT3` |
 
@@ -1248,7 +1265,7 @@ own bar for MISNAMED `[repo-verified: R1_group_audit.md:24]`.
 | # | R1's claim | where | what I find |
 |---|---|---|---|
 | 1 | "any two-condition confluence that happened to draw **both** MACD conditions was counting one reading twice and calling it agreement" | `R1_group_audit.md:396-399` | **Structurally impossible.** One condition per group, and no template lists a group in both required and optional. Measured 0 co-occurrences on 4 symbols. The duplication's real cost is a **byte-identical twin rule set with a second `strategy_id`** — denominator inflation, not false confluence. `R4-MO1` |
-| 2 | "a MULTI_TIMEFRAME strategy whose primary timeframe is the top of its frame can never emit a signal — **structurally zero-trade**, exactly the shape of round 1's `openinterest` finding" | `R1_group_audit.md:480-486` | **Not a configuration the corpus builds.** `FRAMES` always appends higher timeframes and every harness filters `s.primary_tf == tf`; both signals fire in **all 23** corpus cells (201–1,791 times). The VOID configuration is a **frame of one**, 0/N in 23 of 23 cells, and it is unreachable via `scout.rank` (its `suffix` dict raises first) and absent from all 40 `build_symbol_frame` call sites. `R4-MT1` |
+| 2 | **SUPERSEDED — see Addendum A; amended from CONTRADICTION to REFINEMENT after R1's rebuttal in `msgs/14_R1_R4_re-signal-pools.md`.** "a MULTI_TIMEFRAME strategy whose primary timeframe is the top of its frame can never emit a signal — **structurally zero-trade**, exactly the shape of round 1's `openinterest` finding" | `R1_group_audit.md:480-486` | **Not a configuration the corpus builds.** `FRAMES` always appends higher timeframes and every harness filters `s.primary_tf == tf`; both signals fire in **all 23** corpus cells (201–1,791 times). The VOID configuration is a **frame of one**, 0/N in 23 of 23 cells, and it is unreachable via `scout.rank` (its `suffix` dict raises first) and absent from all 40 `build_symbol_frame` call sites. `R4-MT1` |
 | 3 | "a 4h TREND strategy in a `[5,15,60,240]` frame is gated by the **15-minute** regime" | `R1_group_audit.md:607-609` | The defect is real; **its direction in the corpus is the opposite and its scope is half.** `FRAMES` gives `regime_tf` = the strategy's own timeframe at 15m/30m/60m, **coarser** at 5m (15), **the daily series** at 240m, and the mislabelled daily copy at 1440m. A 4h TREND strategy is gated by the **daily** regime, never the 15-minute one. `R4-M3` |
 
 ## Four REFINEMENTS — R1's verdict stands, a load-bearing part of its consequence does not
@@ -1297,3 +1314,168 @@ over all 31 conditions.
 answers "does the arithmetic do what the group name claims". It does **not** answer "is the object
 worth trading", and nothing here raises or lowers the prior on any strategy. `trend` is the cleanest
 group in my surface and four of its eight members fire on 84–96% of bars.
+
+---
+
+# Addendum A — R1 rebutted my method objection and is half right. The resolution is a mechanism neither of us had
+
+`msgs/14_R1_R4_re-signal-pools.md` §2 answers `R4-M3`/`R4-MT1` with a measurement: "I measured it
+against the harness and **it does generate them**." I checked R1's claim before deciding, and it
+reproduces exactly on my run.
+
+## What I got wrong
+
+My sentence "R1's DEAD-at-top verdict describes a frame nobody builds" and the implication that the
+configuration is not **generated** are **wrong**. `generate_strategies(sym, [5,15,60,240], max_total=400)`
+emits strategies at **every** timeframe in the list, not only the lowest:
+
+| symbol | n | `primary_tf` distribution | MULTI_TIMEFRAME @ `primary_tf = 240` |
+|---|---|---|---|
+| MGC | 314 | {5: 54, 15: 54, 60: 136, 240: 70} | 0 |
+| MNQ | 314 | {5: 56, 15: 100, 60: 78, 240: 80} | **32** |
+| MES | 336 | {5: 44, 15: 80, 60: 104, 240: 108} | **8** |
+| MCL | 296 | {5: 38, 15: 84, 60: 126, 240: 48} | **8** |
+
+`[measured: python3, generate_strategies(sym,[5,15,60,240],max_total=400) → 48 MULTI_TIMEFRAME carriers
+at primary_tf=240, all with confirm_tfs=() and Condition.timeframe None on every condition —
+R1's figures reproduced exactly]`
+
+So the top-of-frame binding **exists in the generated population**, and R1's D-MTF1 is a statement
+about 48 counted carriers, not a theoretical corner. I withdraw the word "generates" and the
+framing that went with it.
+
+## What I still hold, and the evidence is stronger than my first statement
+
+**No harness runs them in that frame.** Every one of the **13** `generate_strategies` call sites in the
+repository filters `primary_tf == tf` and passes `FRAMES[tf]` as the timeframe list
+`[measured: grep over workspace/{chrono/ledger,bigscan/cell,studies/toolkit,newstrats/rank,
+strategy_research/w3_rank(×2),w3_audit,w3_cleanfeed,w3_rth,w2/w2rank,scratch/w4_placebo,w4_ledger,
+w4b_placebo,w4b_ledger}.py → 13 of 13 carry `primary_tf ==`, 0 exceptions]`, and
+**`FRAMES[tf][0] == tf` for all six keys** `[measured: python3 over scout.FRAMES]`. So a
+`primary_tf = 240` strategy is always run against `FRAMES[240] = [240, 1440]`, in which 240 is **not**
+the top — `agreeing_timeframes(from_tf=240)` sees `{240, 1440}`, `voting = 2`, and both signals are
+alive. My 23-cell census confirms it: `mtf_aligned` fires **201–1,791 times, zero zeros**.
+
+**And `confirm_tfs` cannot change that**, which is the piece that decides it. `confirm_tfs` does
+exactly two things: it binds `structure` SIGNALs to `confirm_tfs[0]` when the strategy has ≥3 signals,
+and it annotates conflicts non-bindingly `[repo-verified: combinator.py:618-633; base.py:747-755]`.
+The code comment is explicit that multitimeframe conditions deliberately **stay on the primary
+timeframe** — "binding them UPWARD drops the strategy's own timeframe out of its own alignment vote -
+and at the top of the frame it leaves a single voter, which is how `mtf_aligned` came to duplicate
+`structure_trend` exactly" `[repo-verified: combinator.py:621-627]`. So `voting` is decided by the
+**frame**, never by the strategy's `confirm_tfs`, and a `confirm_tfs = ()` primary-240 strategy run
+against `[240,1440]` behaves identically to a `confirm_tfs = (1440,)` one.
+
+## The mechanism, which is better than either of our original claims
+
+**`generate_strategies` is called with the frame's whole timeframe list and emits a strategy at every
+timeframe in it; the harness then discards every strategy whose primary is not the frame's base.**
+
+| symbol | frame | generated | **kept** (`primary_tf == tf`) | **discarded before any measurement** |
+|---|---|---|---|---|
+| MGC | [5,15,60] @5m | 284 | 52 | **232 = 82%** |
+| MGC | [60,240,1440] @60m | 239 | 52 | **187 = 78%** |
+| MGC | [240,1440] @240m | 167 | 82 | 85 = 51% |
+| MNQ | [5,15,60] @5m | 304 | 32 | **272 = 89%** |
+| MNQ | [240,1440] @240m | 167 | 87 | 80 = 48% |
+| MES | [5,15,60] @5m | 289 | 43 | **246 = 85%** |
+| MCL | [5,15,60] @5m | 268 | 66 | **202 = 75%** |
+| all 24 cells | — | 166–304 | 32–87 | **48%–89%** |
+
+`[measured: python3, generate_strategies(sym, FRAMES[tf], groups=ALL_GROUPS, max_total=400) then
+filtering primary_tf==tf, 4 symbols × 6 timeframes]`
+
+**R1's 48 VOID carriers live entirely inside the discarded portion.** At a three-timeframe frame
+60–89% of the generated population is thrown away by design, and at a two-timeframe frame ~50%.
+
+## So both statements are true, about different populations, and the distinction is `R1-Q2`'s
+
+| question | population | answer |
+|---|---|---|
+| Did strategies that **cannot fire** enter the *generated* count? | generated, pre-filter | **Yes — R1 is right.** 48 MTF-at-top carriers, 98 `profile`-at-240m, 239 of 1,260 = 19.0% with at least one never-firing condition |
+| Is any *measured* row — anything in `scan_reports/` — a MULTI_TIMEFRAME strategy bound to the top of its own frame? | run, post-filter | **No — I am right.** 13 of 13 call sites filter; `FRAMES[tf][0] == tf`; both signals alive in 23 of 23 corpus cells |
+
+That is exactly the generated-versus-evaluated distinction `R1-Q2` turns on and that `ADJ-4` ruled on
+by reading the figure as *evaluations*. **The discard rate above is a new input to it**: a large
+majority of each generated population never reached `run_portfolio` at all, for reasons that have
+nothing to do with whether it could trade. Neither of us can allocate a `D<n>`; it belongs in R1's
+open question rather than as a new one.
+
+**I amend my own CONTRADICTION #2 to a REFINEMENT.** R1's D-MTF1 mechanism and count are right; what
+I add is that its carriers are unmeasured by construction, and that the VOID configuration which is
+*reachable and un-discarded* is the frame of one (0/N in 23 of 23 cells).
+
+## Two housekeeping items from the same message
+
+**Vocabulary bridge to `ADJ-8`**, so the three audit files collate. My dispatch gave me
+CLEAN / PROXY / DEGRADED / DEAD / MISNAMED; `ADJ-8` fixes
+PROXY / DEGRADED / HONEST-DERIVED / HONEST-DERIVED-BUT-BROKEN. Mapping for my 31:
+
+| mine | `ADJ-8` | my conditions |
+|---|---|---|
+| CLEAN (20) | **HONEST-DERIVED** | all 8 `trend`, 3 `momentum`, 3 `meanreversion`, 5 `candlestick`, `mtf_aligned` |
+| DEGRADED (6) | **DEGRADED** | `macd_hist_direction`, `volatility_normal`, 3 `regime`, `mtf_not_conflicted` |
+| MISNAMED — wrong field or window (3) | **HONEST-DERIVED-BUT-BROKEN** | `volatility_compressed`, `volatility_expanding`, `mtf_strongly_aligned` |
+| MISNAMED — right arithmetic, **wrong group** (2) | **no `ADJ-8` term exists** | `rsi_extreme_reversal`, `stoch_extreme` |
+| PROXY (0) | PROXY | **none.** My surface contains no participant-information group |
+| VOID (5 configurations) | no term in either vocabulary before `R1-REQ-5` | see the VOID table above |
+
+**Two gaps worth the manager's attention, not new requests:** `ADJ-8` has no term for a condition
+whose arithmetic is honest and whose **group** is wrong — which is 2 of my 31 and the whole of R1's
+`momentum` verdict — and neither vocabulary had a term for "cannot fire" until `R1-REQ-5`. I use
+`R1-REQ-5`'s **VOID** and file no second request for it.
+
+**R1's request that I mark post-anchor entries: already done**, in the DECLARED ANCHOR section above —
+**all 31**, without exception, and stated before any verdict. R1's offer that my four-symbol coverage
+supersedes its two-symbol coverage for `multitimeframe` and `regime`: accepted, and the numbers are in
+those two group sections — 4 symbols × 6 corpus timeframes, plus 23 frame-of-one cells and 12
+three-binding cells.
+
+**`R4-M1`'s `D<n>`:** R1 asks whoever files it to say so. **I have filed it, as `R4-REQ-2`** — cite
+that rather than opening a duplicate.
+
+---
+
+# What a reader should take from this file
+
+1. **20 of 31 conditions are CLEAN and 3 of 7 groups are CLEAN.** `trend` (8/8) and `candlestick`
+   (5/5) are the two I attacked hardest for a naming defect and found none. R1's round-1 3-of-3 rate
+   was never going to replicate on this surface, because my seven groups contain **no**
+   participant-information group and therefore no name that could overreach the data.
+
+2. **The two MISNAMED groups are misnamed in different ways and only one is fixable by renaming.**
+   `volatility` reads the wrong *field* (`volatility_compressed` names Bollinger width and reads ATR
+   percentile — verdicts differ on 24–30% of 60m bars and 37–49% of 240m bars, and on MCL at 240m the
+   described field fires on 2.3% of bars against 41.3%). `momentum` is misnamed by *filing*: two of its
+   six members are mean-reversion conditions whose direction rule is the negation of the other four's,
+   and one is an exact duplicate of another in 23 of 23 cells.
+
+3. **The single most consequential item is not in any group — it is `align_bucket`.** For every
+   request above 1440 minutes it returns the CME trading-day start, so `FRAMES[1440]`'s "weekly"
+   timeframe **is the daily series**, bit-identical in OHLCV and lagged 2–4 sessions by a mislabelled
+   `end_ts`. Every daily multi-timeframe statement in this repository is a lagged-autocorrelation test
+   on one series, and PULLBACK's base filter passes 99.1–99.6% there as a direct consequence.
+   `R4-REQ-1`.
+
+4. **Every VOID verdict here is conditional on a named symbol and a named timeframe, and four of five
+   would have been invisible from any single cell.** `regime_matches_direction` fires 188 times on MES
+   at 240m and **all 188 are LONG** — while the same condition on MGC at the same timeframe is 43.5%
+   LONG. That is not a weak signal, it is a one-sided detector, and it exists because at the 240m row
+   the regime is read off the daily series. A SHORT-allowed MES 240m strategy carrying it cannot take
+   a short.
+
+5. **All 13 of 13 templates carry a DEGRADED or MISNAMED condition from these seven groups in a slot
+   the strategy does not choose** — 12 via `volatility_normal`, BREAKOUT via `volatility_compressed`.
+   At the 240m row, 23–27% of `volatility_normal`'s passes are the string `"NORMAL"` from a dataclass
+   field default rather than a volatility measurement.
+
+6. **Nothing here is evidence about whether any of these conditions is worth trading**, and nothing
+   here computes an expectancy, a t, a z or a P&L. A correctly named condition is not a good
+   condition: `trend` is the cleanest group in my surface and four of its eight members fire on 84–96%
+   of bars.
+
+7. **This file is one audit plus one confirmation, not two audits.** I read R1's verdicts before
+   forming mine and have said so at the top and in every comparison table. The parts that carry
+   independent weight are the ten findings R1's file does not have, the three contradictions and four
+   refinements of its stated consequences (one of which R1 then corrected back — Addendum A), and a
+   census with 47 cells against its five.

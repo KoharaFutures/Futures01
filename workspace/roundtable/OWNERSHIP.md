@@ -25,6 +25,10 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `manager/ADJUDICATIONS.md` | **manager** | read |
 | `DIVISION.md` | **manager** | read |
 | `OPEN_QUESTIONS.md` | **manager** (routes) | append via `msgs/` instead — but see the exception below |
+| `research/R4_*`, `R5_*`, `R6_*` | **R4 / R5 / R6** | read |
+| `discovery2/*` | **DISC2** | read |
+| `discovery/claims/<who>-*.md` | **whoever created it**, once | read |
+| `lib/*` | **parent** | read, and import |
 | `research/<agent>/SCOPE.md` | **that researcher** | read |
 | `research/<agent>/findings.md` | **that researcher** | read |
 | `research/<agent>/REQUESTS.md` | **that researcher** | read |
@@ -35,6 +39,7 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `backtest/<bt>/REQUESTS.md` | **that backtester** | read |
 | `backtest/<bt>/bursts/*.md` | **that backtester** | read |
 | `backtest/<bt>/code/*` | **that backtester** | read, and run |
+| `backtest/BT4/*`, `BT5/*`, `BT6/*` | **BT4 / BT5 / BT6** | read |
 | `tests/test_bt<n>_*.py` (repo tests) | **that backtester** | read, and run |
 | `msgs/NN_from_to_topic.md` | **whoever created it**, once | read only, forever |
 
@@ -105,3 +110,31 @@ So each backtester may also write `tests/test_bt<n>_*.py` — its own prefix, so
 cannot collide, and narrow enough that it cannot touch another agent's tests or the existing
 suite. Run the full suite before finishing: a new test that breaks the other 817 is worse than
 no test.
+
+## Two discovery agents, one memory — the claim protocol
+
+`AVENUES.md` exists so no avenue is explored twice. That makes it the one file two discovery
+agents would both want to write, and one-writer-per-file forbids it. Partitioning the ledger
+alone does not solve it either: two agents could still sweep the same avenue simultaneously and
+each write it up in its own half.
+
+So exploration is **claimed before it starts**, and a claim is a new file, which cannot contend:
+
+```
+discovery/claims/<DISC>-<avenue-id>.md      e.g.  discovery/claims/DISC2-X-4.md
+```
+
+The file states the avenue, the question, and the time claimed. **Before any sweep, a discovery
+agent lists `discovery/claims/` and reads both ledgers.** If a claim already exists for that
+avenue, pick another — do not negotiate, do not wait, and do not sweep it anyway because the other
+agent's angle looks different. If you genuinely believe the avenue needs a second pass from another
+direction, that is a message to the claim's owner and a note for the manager, not a second claim.
+
+**Ledgers:** DISC1 owns `discovery/AVENUES.md` and `discovery/MAIN_TASKS.md`. DISC2 owns
+`discovery2/AVENUES.md` and `discovery2/MAIN_TASKS.md`. Neither is the whole ledger, so **both must
+be read before either is written** — an agent that reads only its own half has no memory of the
+other's closures, which is the failure the ledger exists to prevent.
+
+**Main task numbering:** DISC1 allocates odd (`MAIN-01`, `MAIN-03`, …), DISC2 even (`MAIN-02`,
+`MAIN-04`, …). Disjoint by construction, so the two cannot race for a number the way the message
+counter did.

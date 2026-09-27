@@ -38,7 +38,7 @@ ID = re.compile(
       | (I|II|III|X)-\d+            # avenue: I-12, X-4
       | DISC-LEAD-\d+
       | D\d+                        # programme-wide defect
-      | (R[123]|BT[123]|DISC)-      # issuer-prefixed:
+      | (R[1-6]|BT[1-6]|DISC2?)-      # issuer-prefixed:
         (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[AB]-\d+)
       | MGR-(T\d+|Q\d+|REQ-\d+)    # manager task / question / request
       | ADJ-\d+                     # manager adjudication

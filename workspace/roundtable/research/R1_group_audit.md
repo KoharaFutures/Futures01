@@ -667,3 +667,615 @@ number of independent readings it makes.
 The three conditions' *arithmetic* faithfully reports what `classify_regime` returned, and the
 descriptions say "Regime classifier says …", which is honest. The degradation is entirely in **which
 series the classifier was run on** — invisible at the call site and not chosen by the strategy.
+
+---
+
+# Group 12 — `structure` (5 conditions) → **CLEAN**, with two state-versus-event notes
+
+| condition | kind | arithmetic | verdict |
+|---|---|---|---|
+| `structure_trend` | SIGNAL | `TFSnapshot.structure_trend == "UPTREND"` (HH/HL) → LONG `[repo-verified: library.py:486-494]` | **CLEAN** |
+| `break_of_structure` | SIGNAL | `close > last_swing_high` → LONG `[repo-verified: library.py:503-508]` | **CLEAN**, see S-1 |
+| `pullback_to_support` | SIGNAL | nearest `sr_level` within `0.5 ATR`, `kind == "SUPPORT"` and `close >= level` → LONG `[repo-verified: library.py:516-529]` | **CLEAN** |
+| `fvg_nearby` | SIGNAL | any active FVG containing the close; LONG if BULLISH `[repo-verified: library.py:537-544]` | **CLEAN** |
+| `range_position_extreme` | SIGNAL | `range_pos >= 0.92` → **LONG**, `<= 0.08` → **SHORT** `[repo-verified: library.py:554-558]` | **CLEAN**, see S-2 |
+
+**`fvg_nearby` is a textbook three-bar fair value gap** and I checked it specifically because the
+mandate names FVGs and imbalances separately: a bullish FVG is `bars[i+1].low > bars[i-1].high`, the
+gap is `(prev.high, nxt.low)`, and the docstring records that the gap is only knowable at `i+1` so
+consumers must treat `index + 1` as the visibility point
+`[repo-verified: futures_agents/indicators/structure.py:409-440]`. Fill tracking scans forward from
+`g.index + 2`, i.e. never before the gap was visible. **No look-ahead, correct definition.**
+
+### S-1 — `break_of_structure` is a state, not an event
+
+It fires on **every** bar whose close is beyond the last confirmed swing, not on the bar that crossed
+it — 31.4–37.2% of bars `[measured: census]`. The description says "Close beyond the last confirmed
+swing — continuation", which is literally what it computes, so it is not misnamed. But "break of
+structure" in the discipline names the *crossing*, and a reader comparing this condition's trade count
+to a break-event study is comparing different populations. Same shape as `prior_day_breakout` in the
+`liquidity` group (41–52%). Recorded because two of the audit's groups carry a "breakout" condition
+that is a persistence test.
+
+### S-2 — `range_position_extreme` carries an unstated directional hypothesis
+
+The description — "Price at the edge of its own 20-bar range" — makes no directional claim. The
+arithmetic assigns **LONG at the top of the range**, i.e. breakout/continuation, not fade. A reader
+who assumed "at the range extreme" meant a reversion signal would have the sign backwards. Its LONG
+share is 49.6–70.6% `[measured: census]`, the widest spread of any `structure` condition, which is
+consistent with it tracking the prevailing drift.
+
+**Required by:** **TREND, BREAKOUT, MULTI_TIMEFRAME** — tied with `trend` and `meanreversion` for the
+most-required group. Optional signal in 9 more templates. The group being clean therefore matters
+more than most: it is the only *required* group in three templates that needed no caveat.
+
+---
+
+# Group 13 — `supplydemand` (3 conditions) → **CLEAN**, with a near-unconditional filter
+
+`supply_demand_zones` is a genuine base-plus-departure algorithm, not a relabelled swing:
+departure bar `range >= 2.0 × avg_range(20)`, body `>= 0.55 × range`, base bars each
+`<= min(1.0 × avg_range, 0.35 × departure_range)`, at most 3 base bars, zone expires after 400 bars
+`[repo-verified: futures_agents/indicators/structure.py:622-690]`. Its docstring records **two**
+already-found defects — a self-referential base test that made a textbook base reject itself, and a
+`min()` term that was decoration because the departure gate already implied it. **The object matches
+the name.**
+
+| condition | kind | verdict | note |
+|---|---|---|---|
+| `zone_touch` | SIGNAL | **CLEAN** | `z.contains(close)`, LONG in a DEMAND zone. **Thin**: 1.6–3.8% of bars, i.e. 79–191 fires per 5,000 |
+| `fresh_zone_approach` | SIGNAL | **CLEAN** | untested zone only, approached from the correct side within `[−0.1, 0.75] ATR`. **Thinnest in the library**: 0.8–1.4%, 40–69 fires per 5,000 |
+| `away_from_zone` | FILTER | **DEGRADED** | passes **94.6–97.7%** of bars `[measured: census]` |
+
+### D-SD1 — `away_from_zone` passes 95–98% of the time
+
+"Not initiating on top of an untested decision level" vetoes 2.3–5.4% of bars. It is an optional
+filter in TREND only, so the blast radius is small, but a treatment arm that differs from control on
+one bar in twenty-five cannot resolve anything at these sample sizes. Note also that it returns
+`yes(FLAT)` when **no zones exist at all** `[repo-verified: library.py:1262-1265]` — "no zones
+detected" and "clear of zones" are the same verdict, which is defensible but means the filter is
+weakest exactly where the detector is least confident.
+
+### D-SD2 — the two SIGNALs are the population constraint on SUPPLY_DEMAND
+
+`supplydemand` is **required by SUPPLY_DEMAND** and `zone_touch` / `fresh_zone_approach` are its only
+SIGNALs. At 0.8–3.8% of bars, before the two base filters (`volatility_normal` ~79%,
+`volume_not_thin` ~88%) and before any optional condition, the template's own ceiling is roughly
+27–130 signals per 5,000-bar cell. Above `toolkit.FLOOR = 20`, but any SUPPLY_DEMAND result is a
+small-sample result **by construction of its required group**, and that should be stated wherever one
+is reported rather than discovered from the trade count.
+
+---
+
+# Group 14 — `time` (4 conditions) → **MISNAMED**: two of the four measure something other than what they are named for
+
+The group has the library's best *handled* edge case and two of its worst live ones.
+
+**The good part, recorded first.** `_spans_sessions(tf)` makes all four **pass** rather than veto when
+`tf >= 390` `[repo-verified: library.py:848-862, base.py:377]`, and its docstring records what
+happened before: on a daily bar `minutes_since_open` is −570 and the session is ASIA, so three of the
+four vetoed **every** bar, and because two are base filters, **daily LIQUIDITY (1068/1068) and daily
+OPENING_RANGE (972/972) took zero trades, as did 4h REVERSAL on every symbol** — "those absences were
+read as market facts for weeks." That is the exact failure mode this audit exists to find, already
+found once. Note `_SESSION_MINUTES = 390`, so **240m bars are *not* inert** and the four conditions
+are active on a 4h bar, where "where in the session" is a 4-hour-wide question.
+
+### D-T1 — `avoid_lunch` uses a fixed equity-index session table, so on MGC it skips the final 90 minutes of RTH
+
+`SESSIONS` is a hard-coded ET table with `LUNCH = 12:00–13:30`
+`[repo-verified: futures_agents/timeutil.py:106-123]`, and `classify_session(dt)` takes no contract
+`[repo-verified: timeutil.py:127-133]`. But RTH differs per contract: **MGC 08:20–13:30, MCL
+09:00–14:30, MNQ/MES 09:30–16:00** `[repo-verified: futures_agents/config.py via get_contract]`.
+
+Measured, the `minutes_since_open` values of the bars `avoid_lunch` vetoes, against each contract's
+own RTH span:
+
+| symbol | RTH span | vetoed bars' `minutes_since_open` | where that is in the session | verdict |
+|---|---|---|---|---|
+| **MGC** | 310 min | **220, 250, 280** | **the final 90 minutes** — the COMEX close | **inverted** |
+| MCL | 330 min | 180, 210, 240 | minutes 180–270 of 330, mid-to-late | approximately right |
+| MNQ | 390 min | 150, 180, 210 | minutes 150–240 of 390, the middle | correct |
+
+`[measured: python3 over csv/raw/{MGC,MCL,MNQ}_1h.csv, 437–444 vetoed bars per symbol, 100% of them inside that contract's own RTH]`
+
+**This is precisely the defect `power_hour`'s docstring records as found and fixed** — "It previously
+tested `session == 'RTH_CLOSE'`, which the shared session table fixes at 15:00-16:00 ET — an
+equity-index clock. MGC closes at 13:30 and MCL at 14:30 … 509 of 509 strategies containing it took
+zero trades on those two contracts" `[repo-verified: library.py:896-902]`. `power_hour` was rewritten
+to use `_rth_minutes(snap)`. **`avoid_lunch` was not**, and `avoid_lunch` is the one that is a **base
+filter — in REVERSAL** `[measured: TEMPLATES]`. So every REVERSAL strategy on MGC unconditionally
+excludes the last 90 minutes of gold's pit session under the heading "skip lunch".
+
+**MISNAMED**, and per-symbol: correct on MNQ and MES, approximately right on MCL, inverted on MGC.
+
+### D-T2 — `after_opening_range` passes on 54–64% of the bars it passes *outside RTH entirely*
+
+`minutes_since_open` is negative before the open and keeps increasing after the close until midnight
+ET `[repo-verified: timeutil.py:158-166]`. `after_opening_range` is just `m >= 30`
+`[repo-verified: library.py:918-920]`, with no RTH test. So it passes from 30 minutes after the open
+until 23:59 ET — through the close, the post-close, and the first six hours of the next Globex
+session.
+
+| symbol | passes | of those, **outside RTH** | ET hours in which it passes |
+|---|---|---|---|
+| MGC | 3042 / 5000 = 60.8% | **1949 = 64.1%** | 9–23 |
+| MCL | 2808 / 5000 = 56.2% | **1703 = 60.6%** | 9–23 |
+| MNQ | 2823 / 5000 = 56.5% | **1515 = 53.7%** | 10–23 |
+
+`[measured: python3 over csv/raw/{MGC,MCL,MNQ}_1h.csv, is_rth per contract]`
+
+Its description is "**At least 30 minutes into RTH**". A bar at 22:00 ET is not into RTH. The
+arithmetic is "at least 30 minutes after this *calendar day's* RTH open", which passes most of Globex
+and vetoes only 00:00–09:59 ET. **MISNAMED**, and it is a **base filter in LIQUIDITY** — so every
+LIQUIDITY strategy carries a filter whose stated purpose is "wait out the opening range" and whose
+actual effect is "trade any hour except the small hours".
+
+| condition | kind | verdict |
+|---|---|---|
+| `avoid_lunch` | FILTER | **MISNAMED** (D-T1) — base filter in REVERSAL |
+| `opening_drive_window` | FILTER | **CLEAN** — `0 <= minutes_since_open <= 90`, spec-aware, description exact |
+| `power_hour` | FILTER | **CLEAN** — uses `_rth_minutes(snap)` and `snap.is_rth`; the fixed one |
+| `after_opening_range` | FILTER | **MISNAMED** (D-T2) — base filter in LIQUIDITY |
+
+**The group is not required by any template** and contains no SIGNAL, so it can never be the subject
+of a result. It can only ever silently reshape one, which is what makes D-T1 and D-T2 worth the audit.
+
+---
+
+# Group 15 — `trend` (8 conditions) → **CLEAN**, with a selectivity note the rankings need
+
+| condition | kind | arithmetic | verdict |
+|---|---|---|---|
+| `ema_stack` | SIGNAL | `ema9 > ema21 > ema50` | **CLEAN** |
+| `ema_fast_above_slow` | SIGNAL | `ema9 − ema21`, `_deadband` 0.10 ATR | **CLEAN** |
+| `price_above_ema50` | SIGNAL | `close − ema50`, `_deadband` 0.10 ATR | **CLEAN** |
+| `price_above_ema200` | SIGNAL | `close − ema200`, `_deadband` 0.10 ATR | **CLEAN** |
+| `adx_trending` | FILTER | `adx >= 22` | **CLEAN** |
+| `di_direction` | SIGNAL | `\|+DI − −DI\| >= 4` | **CLEAN** |
+| `slope_directional` | SIGNAL | 20-bar regression slope / ATR, `\|v\| >= 0.05` | **CLEAN** |
+| `efficiency_high` | FILTER | Kaufman efficiency ratio `>= 0.35` | **CLEAN** |
+
+All eight read their own timeframe's feature columns `[repo-verified: library.py:112-210]`, every
+description matches the arithmetic, and `_deadband`'s own docstring records the defect it fixed — six
+conditions guarded with `if diff == 0`, which on float price data is never true
+`[repo-verified: library.py:73-88]`. **This group is where the audit found nothing wrong.**
+
+### D-TR1 — four of the eight fire on 86–96% of bars, which is a fact about rankings, not a defect
+
+`price_above_ema50` **95.4–96.3%**, `price_above_ema200` **94.1–94.7%**, `ema_fast_above_slow`
+**86.5–89.4%**, `ema_stack` **76.7–79.4%** `[measured: census, 5 cells]`.
+
+These are honest bias conditions — the `_deadband` docstring says so explicitly: "They are *bias*
+conditions by nature and that is fine … inside a confluence that requires agreement they genuinely
+gate" `[repo-verified: library.py:77-80]`. The arithmetic is right and the reasoning is right.
+
+**The consequence for how results must be read is still unstated anywhere.** `trend` is **required by
+TREND, PULLBACK and FIBONACCI**, and the combinator fills the required slot with one member. A
+TREND strategy whose required `trend` condition is `price_above_ema50` has a required slot that is
+satisfied on 96% of bars: **its trade count is set by its other conditions, and its trade count is
+not evidence about EMA50.** Any condition-level attribution across the `trend` group is therefore
+comparing conditions whose base rates span 27% to 96% — a 3.5× range — and a base-rate difference that
+size will dominate any expectancy difference at these sample sizes. Stated here so it is not
+rediscovered as a market finding.
+
+---
+
+# Group 16 — `volatility` (3 conditions) → **MISNAMED**, and it contains a provably empty conjunction that the combinator generates
+
+This group has the widest reach in the repository — `volatility_normal` is a base filter in **12 of
+13 templates** `[measured: TEMPLATES]` — and it had never been audited.
+
+## D-V1 — `volatility_compressed` claims Bollinger width and reads ATR percentile
+
+```
+library.py:735-743
+@condition("volatility_compressed", "volatility", kind=ConditionKind.FILTER,
+           description="Bollinger width in the bottom quartile - coiled")
+def _vol_comp(snap, tf):
+    p = s["atr_percentile"]                       # <- not Bollinger width
+    return yes(...) if p <= 0.30 else no()         # <- not a quartile
+```
+
+Two errors in one two-line function, and **the described field exists**:
+`RegimeSnapshot.bb_width_percentile` is computed from `bollinger(closes, 20)` widths over a 250-bar
+lookback `[repo-verified: futures_agents/indicators/regime.py:40, 182-191]` and is reachable as
+`snap.regime.bb_width_percentile`. The condition reads a different one.
+
+They are **not interchangeable**: measured on the same bars,
+corr(`atr_percentile`, `bb_width_percentile`) = **0.506 (MGC), 0.513 (MCL), 0.522 (MNQ)**, and the
+"bottom 30%" verdict **disagrees on 27.5–29.9% of bars**
+`[measured: python3 over csv/raw/{MGC,MCL,MNQ}_1h.csv, bollinger(c,20) width vs atr(h,l,c,14), 250-bar percent rank]`.
+So on nearly three bars in ten, the condition's answer differs from the answer its own description
+promises. **`volatility_compressed` is the base filter of BREAKOUT** — unconditional on every
+BREAKOUT strategy — so the entire BREAKOUT population is gated on a quantity the template's
+documentation does not name. **MISNAMED.**
+
+`volatility_expanding` has the milder half of the same problem: "ATR in the **top quartile**" with a
+threshold of `p >= 0.70`, which is the top 30%. Right field, wrong quantile name.
+
+## D-V2 — `volatility_compressed` AND `volatility_expanding` is empty, and the combinator emits it
+
+Both read **`s["atr_percentile"]`**, both with `timeframe = None` so both evaluate at the strategy's
+primary timeframe `[measured: generate_strategies → the pair's Condition.timeframe is None for both]`.
+So the conjunction is `p <= 0.30 AND p >= 0.70` — **empty by arithmetic, on every bar, on every
+symbol, at every timeframe.**
+
+BREAKOUT has `volatility_compressed` in `base_filters` and `volatility_expanding` in
+`optional_filters` `[measured: TEMPLATES → BREAKOUT]`. A base filter is unconditional. So **any
+BREAKOUT strategy that selects `volatility_expanding` is a guaranteed zero-trade strategy.** Measured
+for reachability only, `generate_strategies(sym, [5,15,60,240], max_total=400)` on four symbols:
+
+| | count |
+|---|---|
+| BREAKOUT strategies generated | **60** |
+| carrying `volatility_expanding` → `p<=0.30 AND p>=0.70` → **empty** | **10** |
+| carrying `oi_expanding` → `open_interest is None` (round-1 finding) → **empty** | **10** |
+
+`[measured: python3 -c "from futures_agents.strategies.combinator import generate_strategies; ..." over MGC/MNQ/MCL/MES at max_total=400 → 314/314/296/336 strategies; MNQ and MCL each produced the contradictory pair, MGC and MES did not in this sample]`
+
+**So roughly a third of the BREAKOUT strategies in a 400-cap sample are structurally zero-trade, for
+two independent reasons, and neither is detectable from the strategy's name.** This is R1-Q2's
+question again — whether structurally-null candidates entered the ~2,975,629 denominator — now with a
+second cause and a measured rate. I still cannot answer it without a sweep; it now matters more.
+
+## D-V3 — `volatility_normal` is measured on a different series from the other two
+
+`volatility_normal` reads `snap.regime.volatility` `[repo-verified: library.py:719]`, which comes from
+`classify_regime(bars[-400:])` on the **frame's regime timeframe** `[repo-verified: features.py:928-943]`.
+`volatility_expanding` and `volatility_compressed` read `s["atr_percentile"]` on the **strategy's own
+timeframe** `[repo-verified: features.py:245]`. **Two different ATR percentiles, two different series,
+one group.** So `volatility_normal` inherits D-R1 in full: it is timeframe-inert, and which timeframe
+it is really measured on depends on which timeframes the runner built.
+
+Its arithmetic and description are otherwise exact: `volatility ∈ (LOW, NORMAL, HIGH)` corresponds to
+ATR percentile `∈ [0.08, 0.95)`, excluding `DEAD` (< 0.08) and `EXTREME` (>= 0.95)
+`[repo-verified: indicators/regime.py:131-142]` — "not dead, not unhinged" is accurate. Expected pass
+rate 87%; measured 78.7–85.1% `[measured: census]`, the shortfall being warm-up and alignment.
+
+**One warm-up asymmetry worth recording:** `RegimeSnapshot`'s default is `volatility = "NORMAL"` and
+`regime = "UNKNOWN"` `[repo-verified: regime.py:30-31]`, and `regime_at` returns a default snapshot
+when there are fewer than 60 bars `[repo-verified: features.py:936-941]`. So during warm-up
+**`volatility_normal` passes on a default value** while `regime_trending` and `regime_ranging` fail.
+The library's own stated principle is that a filter whose question does not apply must pass
+(`_spans_sessions`, `library.py:859-860`) — so this is arguably right, but it is right by accident of
+a dataclass default rather than by design, and the three conditions do not agree with each other.
+
+| condition | kind | verdict |
+|---|---|---|
+| `volatility_normal` | FILTER | **DEGRADED** — timeframe-inert, frame-dependent (D-V3); arithmetic and description exact |
+| `volatility_expanding` | FILTER | **MISNAMED (mild)** — "top quartile" is `p >= 0.70`; **and empty in conjunction with the BREAKOUT base filter** (D-V2) |
+| `volatility_compressed` | FILTER | **MISNAMED** — names Bollinger width, reads ATR percentile, 27.5–29.9% verdict disagreement; base filter of BREAKOUT |
+
+---
+
+# Group 17 — `volume` (3 conditions) → **CLEAN**, with one imprecise description
+
+| condition | kind | arithmetic | verdict |
+|---|---|---|---|
+| `relative_volume_high` | FILTER | `rel_volume >= 1.10`, where `rel_volume = relative_volume(bars, 20)` — **same clock minute over the previous 20 sessions** `[repo-verified: library.py:405-411; indicators/volume.py:266-285]` | **CLEAN**, see V-1 |
+| `volume_surge` | FILTER | `volume_regime == "SURGE"` | **CLEAN** — 9.4–12.0%, consistent with a decile |
+| `volume_not_thin` | FILTER | `volume_regime != "THIN"` | **CLEAN** — passes 83.9–88.8% |
+
+All three read volume and only volume. **This is the group whose name is least in doubt in the entire
+library**, which is worth saying given how much of it is `volume_not_thin` — a base filter in **12 of
+13 templates.**
+
+### V-1 — "the recent norm" is a time-of-day norm, not a trailing one
+
+`relative_volume_high`'s description is "Participation above the recent norm". The arithmetic compares
+the bar to **the same clock minute on the previous 20 sessions**, which is a *seasonal* norm, not a
+recent one — and the two select populations differing by **5–27×** on identical bars
+`[measured: BT1, backtest/BT1/code/frequency.py]`. Not a misnaming of the object (it is genuinely
+relative volume) but the word "recent" points at the wrong axis, and the repo's *other* volume norm —
+`detect_imbalances`' 20-bar trailing mean `[repo-verified: indicators/structure.py:452-455]` — is the
+one a reader of that sentence would assume. Filed as `R1-REQ-2`.
+
+The condition's docstring is the most self-aware in the library: it records that the threshold once
+passed **0.68%** of 15-minute bars, so "any template offering it as an *optional* filter was offering
+a treatment arm that takes no trades at all — which is not a control, it is an empty set. Two
+templates were doing exactly that" `[repo-verified: library.py:392-403]`. **That is D-V2's failure
+mode, found once before, in this same file.** It also warns that the 1.10 threshold was calibrated on
+generated data and "is one to re-check on real bars rather than inherit". Re-checked here:
+**29.6–32.1% pass on real bars, all five cells** `[measured: census]`. The recalibration holds.
+
+`volume_not_thin` returns `no()` when `volume_regime is None` `[repo-verified: library.py:429-430]`,
+so it **vetoes during warm-up** — the opposite of `volatility_normal`'s behaviour on the same kind of
+gap (D-V3). Correct in itself; inconsistent across the two most widely used base filters in the repo.
+
+---
+
+# Group 18 — `vwap` (5 conditions) → **DEGRADED**, and one name is the inverse of its arithmetic
+
+Round 1 filed all five HONEST-DERIVED with one qualifier (`R1_flow_auction.md:409-448`). **That
+verdict needs revising downward on two counts**, both found by work done for `R3-Q1`.
+
+## D-VW1 — `above_vwap` does not test above-VWAP, and returns SHORT
+
+```
+library.py:314-324
+if px > s["vwap_u1"]:  return yes(LONG,  "holding above the first VWAP band")
+if px < s["vwap_l1"]:  return yes(SHORT, "holding below the first VWAP band")
+```
+
+A condition named `above_vwap` returns **SHORT**, and neither branch tests `px` against `vwap`. The
+*description* is accurate ("Price holding beyond the first VWAP band") and the docstring explains why
+the band replaced the line — as `close != vwap` it fired on 99.99% of bars, produced the largest trade
+counts in the family (median 643 over 120 days against 28 for `vwap_band1_bounce`) and averaged a
+negative expectancy `[repo-verified: library.py:295-312]`. **The fix is correct and well-reasoned. The
+name was never updated**, and the name is what appears in every strategy identifier, every report row
+and every `scan_reports/` filename. **MISNAMED.**
+
+## D-VW2 — the bands are identically zero-width on the first bar of every CME trading day, and that breaks four of the five
+
+`vwap_bands` accumulates volume-weighted moments from the session anchor and **resets** at each
+`trading_day` boundary `[repo-verified: indicators/volume.py:70-104, _anchor_key :32-35]`. On the first
+bar after a reset, `var = pv2/vol − mean² = tp² − tp² = 0` exactly, so
+`vwap_u1 = vwap_l1 = vwap_u2 = vwap_l2 = vwap = Bar.typical`. There is **no warm-up guard** — the band
+is emitted on that bar rather than `None` `[repo-verified: volume.py:95-102]`.
+
+Measured, session-first bars against all other bars:
+
+| condition | MGC first-bar | MGC other | MNQ first-bar | MNQ other |
+|---|---|---|---|---|
+| `above_vwap` | **226/226 = 100.0%** | 60.4% | **227/227 = 100.0%** | 62.2% |
+| `vwap_band_extension` | **226/226 = 100.0%** | 18.0% | **227/227 = 100.0%** | 19.0% |
+| `vwap_band1_bounce` | **0/226 = 0.0%** | 25.1% | **0/227 = 0.0%** | 26.0% |
+| `vwap_proximity` | 219/226 = 96.9% | 42.3% | 222/227 = 97.8% | 45.3% |
+| `vwap_reclaim` | 171/226 = 75.7% | 24.4% | 183/227 = 80.6% | 26.3% |
+
+`[measured: python3 over csv/raw/{MGC,MNQ}_1h.csv, first bar of each trading_day vs the rest]`
+
+Three consequences, and the second is the one I did not expect:
+
+1. **`above_vwap` degenerates to exactly the condition its docstring says was removed.** With the band
+   equal to the line, it becomes `close != typical` — 100% firing, with a direction attached. The fix
+   is void on these bars.
+2. **`vwap_band_extension` becomes `sign(estimated_delta)` on these bars.** `close >= vwap_u2 = typical
+   = (H+L+C)/3` reduces to `2C >= H+L`, i.e. `close >= the bar's midpoint`, which is exactly
+   `sign(CLV) > 0` `[repo-verified: data/bars.py:106-117]`. So on the first bar of every session, a
+   `vwap` condition is the CLV bar-shape predicate — **and it takes SHORT on a close above the
+   midpoint, the opposite sign convention from `delta_confirms_bar` and from `candle_close_strength`.**
+   Three groups, one arithmetic, two sign conventions.
+3. **`vwap_band1_bounce` cannot fire at all** on these bars: it needs `vwap_l1 < close` **and**
+   `close < vwap`, which with `vwap_l1 == vwap` is a contradiction. Provably 0, and measured 0.
+
+**The affected fraction scales with the timeframe**, because it is one bar per session:
+
+| timeframe | session-first bars | share |
+|---|---|---|
+| 60m | 226 (MGC) / 227 (MNQ) / 241 (MCL) | **4.5–4.8%** |
+| 240m | 267 / 267 / 280 | **19.8–20.2%** |
+
+`[measured: python3, trading_day boundaries over csv/raw 1h and its 240m resample]`
+
+**So at 4h, one bar in five has zero-width VWAP bands**, and on those bars `above_vwap` and
+`vwap_band_extension` fire unconditionally while `vwap_band1_bounce` cannot fire. `vwap` is
+**required by VWAP**, so this is inside the required slot of a template, worst at the longest
+timeframe. **What the real object would require:** nothing new — a `None` until the anchor has
+accumulated at least a few bars, the same guard `atr_percentile` and every other percentile field
+already has.
+
+| condition | kind | verdict |
+|---|---|---|
+| `above_vwap` | SIGNAL | **MISNAMED** (D-VW1) + **DEGRADED** (D-VW2) |
+| `vwap_proximity` | FILTER | **CLEAN** arithmetic; **DEGRADED** by D-VW2 |
+| `vwap_band_extension` | SIGNAL | **DEGRADED** (D-VW2, and becomes a CLV predicate) |
+| `vwap_band1_bounce` | SIGNAL | **CLEAN** arithmetic; **DEAD on session-first bars** (D-VW2) |
+| `vwap_reclaim` | SIGNAL | **CLEAN** — the only one that reads `vwap` alone and not a band, so D-VW2 touches it only through `typical` |
+
+Also carried forward from the `R3-Q1` answer (`msgs/04_R1_R3_re-VWAP-BAND.md`): only the
+**Globex-anchored** band is reachable — `features.py:248` calls `vwap_bands(bars, "session", (1.0, 2.0))`
+with no `rth_only` — so the RTH-anchored VWAP is unbuilt, and `vwap_u3`/`vwap_l3` do not exist because
+only two multipliers are passed.
+
+---
+
+# Group 19 — `imbalance` (3 conditions) → **MISNAMED**, upgrading round 1's verdict
+
+Round 1 filed this as "3 PROXY (name), HONEST-DERIVED (arithmetic)" (`R1_flow_auction.md:479-507`).
+Two further findings move it to MISNAMED.
+
+## D-I1 — the upstream function documents an input it never reads (round-1 finding, now filed)
+
+`detect_imbalances`' docstring: "*Bars whose range and **delta** both far exceed the recent norm*"
+`[repo-verified: futures_agents/indicators/structure.py:443]`. The body computes
+`avg_vol = sum(b.volume for b in prior) / window` `[:454]` and `v_mult = bars[i].volume / avg_vol`
+`[:459]`. **No delta is read anywhere in the function**, and it returns `magnitude = r_mult` `[:461]`
+— the **range** multiple — so a caller ranking imbalances by magnitude is ranking by displacement,
+never by participation. Filed as **`R1-REQ-3`** for a D-number.
+
+## D-I2 — `imbalance_pullback` contains no pullback test
+
+```
+library.py:1180-1190
+since = s.bars_since_imbalance
+if since is None or not (1 <= since <= 10):  return no()
+return yes(LONG if s.recent_imbalance == "BULLISH" else SHORT, ...)
+```
+
+**There is no reference to price anywhere in it.** It fires on *every* bar 1 to 10 bars after a
+displacement, regardless of where price is relative to that displacement. The description is "Pullback
+into a displacement of the last few bars" — which names a price relationship the arithmetic does not
+test. Measured firing: **24.9–41.8% of bars** `[measured: census, 5 cells]`, far too high for a
+retracement-into-zone event and exactly what a 10-bar window after a 4.3–8.9% event should give.
+**MISNAMED**: the object is "within 10 bars of a displacement", and a `contains(price)` test against
+the displacement bar's range — which is what `fvg_nearby` and `zone_touch` both do — is absent.
+
+## D-I3 — the group named `imbalance` does not contain the object the literature calls an imbalance
+
+A three-bar fair value gap **is** the price imbalance of the ICT/SMC literature, and this repo
+implements it correctly — as `fvg_nearby`, **in the `structure` group** (Group 12). The group named
+`imbalance` computes a *range-and-volume displacement bar*. So the two objects are filed under each
+other's neighbours, and a reader looking for imbalance research in this repo finds the displacement
+bar. `FVG`'s own class docstring even says so: "A three-bar fair value gap (**imbalance**)"
+`[repo-verified: indicators/structure.py:383-384]`.
+
+| condition | kind | verdict |
+|---|---|---|
+| `imbalance_bar` | SIGNAL | **MISNAMED** — "one-sided aggressive participation" is the aggressor's language for `range >= 2.0× norm AND volume >= 1.2× norm`; no aggressor is read. Arithmetic honest, name and description are not |
+| `imbalance_pullback` | SIGNAL | **MISNAMED** (D-I2) — no pullback test exists |
+| `no_recent_imbalance` | FILTER | **CLEAN** — `bars_since_imbalance <= 2` → veto. "No violent bar in the last three" is exactly what it computes |
+
+**Required by:** nothing. Optional signal in TREND, MOMENTUM, LIQUIDITY, BREAKOUT, SUPPLY_DEMAND (5);
+`no_recent_imbalance` optional filter in PULLBACK, REVERSAL, SUPPLY_DEMAND (3). So `imbalance` is the
+one misnamed group in this audit whose blast radius is genuinely limited — it is never in a required
+slot. It is also the group `BT1-ALGO-1` was built as the inverse of, which is why its arithmetic
+mattered enough to re-verify.
+
+---
+
+# Final tally — all 19 groups
+
+| # | group | round | **group verdict** | conditions | required by | base filter in |
+|---|---|---|---|---|---|---|
+| 1 | `orderflow` | R1 | **MISNAMED** (bar-shape group) | 3 PROXY | **REVERSAL** | — |
+| 2 | `openinterest` | R1 | **DEAD** | 2 DEAD | — | — |
+| 3 | `news` | R1 | **MISNAMED** (no news in it) | 3 | — | — |
+| 4 | `candlestick` | **R2** | **CLEAN** | 5 CLEAN | — | — |
+| 5 | `fibonacci` | **R2** | **DEGRADED** | 4 DEGRADED | **FIBONACCI** | — |
+| 6 | `liquidity` | **R2** | **PROXY (name)**; 2 conditions **DEAD** per symbol | 5 clean-arithmetic, 2 DEAD | **OPENING_RANGE, LIQUIDITY** | — |
+| 7 | `meanreversion` | **R2** | **CLEAN** | 3 CLEAN | **PULLBACK, REVERSAL, MEAN_REVERSION** | — |
+| 8 | `momentum` | **R2** | **MISNAMED** | 3 CLEAN, 1 duplicate, 2 misfiled | **MOMENTUM** | — |
+| 9 | `multitimeframe` | **R2** | **DEGRADED** + **DEAD at top tf** | 1 CLEAN, 2 DEGRADED | **MULTI_TIMEFRAME** | PULLBACK |
+| 10 | `profile` | **R2** | **DEGRADED** + **DEAD at 240m** | 6 DEGRADED, 3 also MISNAMED | **VOLUME_PROFILE** | — |
+| 11 | `regime` | **R2** | **DEGRADED** (timeframe-inert) | 3 DEGRADED | — | TREND, MEAN_REVERSION |
+| 12 | `structure` | **R2** | **CLEAN** | 5 CLEAN | **TREND, BREAKOUT, MULTI_TIMEFRAME** | — |
+| 13 | `supplydemand` | **R2** | **CLEAN** | 2 CLEAN, 1 DEGRADED | **SUPPLY_DEMAND** | — |
+| 14 | `time` | **R2** | **MISNAMED** | 2 CLEAN, 2 MISNAMED | — | REVERSAL, OPENING_RANGE, LIQUIDITY |
+| 15 | `trend` | **R2** | **CLEAN** | 8 CLEAN | **TREND, PULLBACK, FIBONACCI** | — |
+| 16 | `volatility` | **R2** | **MISNAMED** + one **empty conjunction** | 1 DEGRADED, 2 MISNAMED | — | **12 of 13** + BREAKOUT |
+| 17 | `volume` | **R2** | **CLEAN** | 3 CLEAN | **MOMENTUM, BREAKOUT** | **12 of 13** |
+| 18 | `vwap` | **R2** | **DEGRADED** + 1 MISNAMED | 2 clean-arithmetic, 3 DEGRADED | **VWAP** | — |
+| 19 | `imbalance` | **R2** | **MISNAMED** | 1 CLEAN, 2 MISNAMED | — | — |
+
+## Counts
+
+**Round 2, the 16 previously unaudited groups:**
+
+| verdict | n | groups |
+|---|---|---|
+| **CLEAN** | **6** | `candlestick`, `meanreversion`, `structure`, `supplydemand`, `trend`, `volume` |
+| **MISNAMED** | **4** | `momentum`, `time`, `volatility`, `imbalance` |
+| **PROXY (group name)** | **1** | `liquidity` |
+| **DEGRADED** | **5** | `fibonacci`, `multitimeframe`, `profile`, `regime`, `vwap` |
+
+**So 5 of 16 have a group name that does not describe the arithmetic** (4 MISNAMED + 1 PROXY), and
+**10 of 16 carry a finding that changes how their results must be read** (those 5 plus the 5 DEGRADED).
+
+**Running tally across all 19:**
+
+- **name does not describe the arithmetic: 7 of 19** — `orderflow`, `news`, `momentum`, `time`,
+  `volatility`, `imbalance` (MISNAMED) and `liquidity` (PROXY).
+- **degraded but honestly named: 5 of 19** — `fibonacci`, `multitimeframe`, `profile`, `regime`, `vwap`.
+- **dead: 1 of 19** — `openinterest`.
+- **clean: 6 of 19** — `candlestick`, `meanreversion`, `structure`, `supplydemand`, `trend`, `volume`.
+
+**Round 1's 3-of-3 hit rate did not hold up, and that is the right outcome.** Sampling three groups
+found three misnamed; auditing all nineteen finds seven. The round-1 sample was biased — it was
+selected *because* those three were the participant-information groups, which is where a name is most
+likely to overreach. Six groups are genuinely clean and four of those six are in required slots.
+
+## Which templates are affected through a slot they cannot avoid
+
+This is the column that converts a naming finding into a misread result.
+
+**Through a REQUIRED group** (a strategy of that template cannot exist without a member of it):
+
+| template | required group | its verdict |
+|---|---|---|
+| **REVERSAL** | `orderflow` | **MISNAMED** (R1) — 3 PROXY conditions, no aggressor in the data |
+| **MOMENTUM** | `momentum` | **MISNAMED** — 1 exact duplicate, 2 mean-reversion conditions misfiled |
+| **OPENING_RANGE** | `liquidity` | **PROXY name**; its 2 opening-range conditions are **DEAD at 1h on MGC/MNQ/MES** |
+| **LIQUIDITY** | `liquidity` | same |
+| **FIBONACCI** | `fibonacci` | **DEGRADED** — leg mis-identified on 14–17% of bars |
+| **MULTI_TIMEFRAME** | `multitimeframe` | **DEGRADED**, and **DEAD at the frame's top timeframe** |
+| **VOLUME_PROFILE** | `profile` | **DEGRADED**, and **DEAD at 240m** |
+| **VWAP** | `vwap` | **DEGRADED**, bands zero-width on 4.5% of 1h and 19.8% of 4h bars |
+
+**8 of 13 templates.** The other five — TREND, PULLBACK, MEAN_REVERSION, BREAKOUT, SUPPLY_DEMAND —
+have clean required groups (`trend`, `structure`, `meanreversion`, `volume`, `supplydemand`).
+
+**Through a BASE FILTER** (unconditional on every strategy of that template):
+
+| template | base filter | verdict |
+|---|---|---|
+| all except BREAKOUT (**12 of 13**) | `volatility_normal` | **DEGRADED** — timeframe-inert, measured on the frame's regime timeframe |
+| **BREAKOUT** | `volatility_compressed` | **MISNAMED** — names Bollinger width, reads ATR percentile; verdict differs on 27.5–29.9% of bars |
+| all except MOMENTUM (**12 of 13**) | `volume_not_thin` | CLEAN |
+| TREND | `regime_trending` | **DEGRADED** — timeframe-inert, frame-composition-dependent |
+| MEAN_REVERSION | `regime_ranging` | **DEGRADED** — same; 13-point pass-rate swing from changing the frame's timeframe list |
+| PULLBACK | `mtf_not_conflicted` | **DEGRADED** — ignores its `tf` argument entirely |
+| REVERSAL | `avoid_lunch` | **MISNAMED** — on MGC it excludes the final 90 minutes of RTH, not lunch |
+| LIQUIDITY | `after_opening_range` | **MISNAMED** — 54–64% of its passes are outside RTH altogether |
+| OPENING_RANGE | `opening_drive_window` | CLEAN |
+
+**So all 13 of 13 templates carry at least one DEGRADED or MISNAMED condition in a slot the strategy
+does not choose** — the 12 via `volatility_normal`, BREAKOUT via `volatility_compressed`. That is the
+single most consequential line in this file, and it is a property of the base-filter lists, not of any
+strategy.
+
+## Structurally zero-trade configurations found
+
+An entire class of result that is not weak evidence but **no evidence**, because the configuration
+could never have produced a trade. Round 1 found one; this audit found four more.
+
+| # | configuration | cause | round |
+|---|---|---|---|
+| 1 | any strategy carrying `oi_price_confirmation` or `oi_expanding` | `open_interest` is `None` on every `csv/raw` bar | R1 |
+| 2 | **MULTI_TIMEFRAME at the frame's top timeframe** | `agreeing_timeframes(from_tf=top)` gives `voting < 2`; both SIGNALs return `no()` — 0/4965 MGC, 0/4999 MNQ | **R2** |
+| 3 | **VOLUME_PROFILE at 240m** | `prior_session_profile` needs `>= 10` bars per session; a 4h series has 5–6 — `prior_profile is None` on 100% of 240m bars, all three symbols | **R2** |
+| 4 | **OPENING_RANGE at 1h on MGC** (and effectively MNQ/MES) | `or_minutes = 30` hard-coded against a per-symbol `rth_open` that is off the 1h grid — `snap.opening_range is None` on 5000/5000 MGC bars, 4990/5000 MNQ and MES | **R2** |
+| 5 | **BREAKOUT + `volatility_expanding`** | `atr_percentile <= 0.30 AND >= 0.70`, same field, same timeframe — empty by arithmetic. **10 of 60 generated BREAKOUT strategies** | **R2** |
+
+Combined with #1, **20 of 60 BREAKOUT strategies in a `max_total=400` sample are structurally
+zero-trade.** R1-Q2 asked whether such candidates entered the ~2,975,629 denominator and the
+`free_t = 5.46` that follows from it. There are now **five** causes rather than one, and I still
+cannot answer it — it needs a sweep, which is outside my permissions. **Raised in priority, not
+resolved.**
+
+## The pattern behind most of it, stated once
+
+Seven of the twelve non-clean findings share one mechanism: **a condition reads a quantity computed on
+a series other than the one its caller thinks it is bound to, and its signature accepts a `tf` it does
+not use.**
+
+| condition | accepts `tf` | actually reads |
+|---|---|---|
+| `regime_trending`, `regime_ranging`, `regime_matches_direction` | yes | the frame's `regime_tf` — chosen by `_default_regime_tf`, not by the strategy |
+| `volatility_normal` | yes | same |
+| `mtf_not_conflicted` | yes | every timeframe in `snap.tfs` |
+
+`[repo-verified: library.py:752, 760, 768, 718, 837 — the parameter is named `tf` in all five and referenced in none]`
+
+Five of the 79 conditions, and between them they are the **unconditional base filter of every template
+in the repository**. The measurable consequence is that adding a timeframe a strategy does not trade
+changes its base filter's pass rate by up to **13 percentage points** (`regime_ranging`, MGC) or
+**25 points** (`mtf_not_conflicted`, PULLBACK) — a confound no report records and no parameter controls.
+
+`mtf_aligned`'s docstring proves the defect class was already known and fixed once, in this same file,
+for this same reason: "Previously this called `snap.alignment()` with no argument, which aggregates
+every timeframe in the snapshot … the timeframe binding was inert, and **this is the group that went on
+to dominate the daily rankings**" `[repo-verified: library.py:786-791]`. The fix was applied to two
+conditions. Five more have the same shape and did not get it.
+
+## Anti-overfitting checks I ran on this audit itself
+
+The mandate applies to my own work, not only to strategies.
+
+| risk | checked how | found |
+|---|---|---|
+| **look-ahead / repainting** | read every indicator each condition reaches; `fair_value_gaps` visibility at `i+1`, `sr_levels` bucket evaluated at its own first bar, `prior_session_profile` reads `position − 1`, `absorption_series` prefix-invariance (BT1) | **none introduced by this audit.** Three look-ahead bugs are recorded in-repo as already fixed |
+| **future-data leakage in my measurements** | every census used `iter_snapshots()`, the same path a backtest uses; no measurement reads a bar later than the one being evaluated | clean |
+| **survivorship** | none of the 19 groups is selected on outcome; **all 19 audited**, including the 6 that came back clean | clean — and this is why 6 CLEAN verdicts are reportable |
+| **data-mining bias / multiple comparisons** | **no expectancy, no z, no t, no P&L computed anywhere in this file.** Every number is a firing rate, a correlation, or an availability count. Nothing was selected for performance, so there is no deflation to apply | **not applicable by construction** |
+| **parameter sensitivity** | I varied **no** threshold. Where a threshold is part of a finding (`0.4 ATR` in `fib_sr_confluence`, `or_minutes = 30`) it is quoted as the repo sets it | n/a |
+| **insufficient sample** | 5,000 bars × 5 cells × 79 conditions; findings stated per cell, never pooled. Thin conditions flagged rather than aggregated (`fresh_zone_approach` 40–69 fires; `session_extreme_sweep` 23–92) | flagged, not hidden |
+| **per-symbol independence** | four contracts, every table per-symbol. **Seven findings are symbol-specific and one is inverted between symbols** (`avoid_lunch`: correct on MNQ/MES, inverted on MGC) | **nothing pooled across symbols** |
+| **per-timeframe independence** | 1h, 5m and 240m measured separately wherever a finding could depend on it. **Four findings change verdict with timeframe** (`opening_range` DEAD at 1h alive at 5m; `profile` DEAD at 240m; `multitimeframe` DEAD at top tf; `vwap` bands 4.5% → 19.8% affected) | **nothing pooled across timeframes** |
+| **unrealistic fills / understated costs** | **not applicable** — no trade is simulated anywhere in this file |
+| **my own confirmation bias** | the strongest specific risk here, given round 1's 3-of-3. Mitigated by auditing **all** 16 remaining groups rather than a sample, and by recording clean verdicts with the same evidence standard as misnamed ones. Outcome: 6 CLEAN | round 1's rate did **not** replicate — 7/19, not 19/19 |
+
+**One limitation I cannot remove.** This audit answers "does the arithmetic match the name". It does
+**not** answer "is the object worth trading", and nothing in it should be read as raising or lowering
+the prior on any strategy. A correctly named condition is not a good condition. `trend` is the
+cleanest group in the library and four of its eight members fire on 86–96% of bars.

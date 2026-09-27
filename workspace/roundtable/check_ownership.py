@@ -28,15 +28,22 @@ RULES: list[tuple[str, str]] = [
     (ROOT + "discovery/AVENUES.md", "discovery"),
     (ROOT + "discovery/MAIN_TASKS.md", "discovery"),
     (ROOT + "discovery/bursts/*", "discovery"),
+    (ROOT + "discovery2/*", "DISC2"),
     (ROOT + "manager/*", "manager"),
     (ROOT + "DIVISION.md", "manager"),
     (ROOT + "OPEN_QUESTIONS.md", "manager"),
     (ROOT + "research/R1*", "R1"),
     (ROOT + "research/R2*", "R2"),
     (ROOT + "research/R3*", "R3"),
+    (ROOT + "research/R4*", "R4"),
+    (ROOT + "research/R5*", "R5"),
+    (ROOT + "research/R6*", "R6"),
     (ROOT + "backtest/BT1/*", "BT1"),
     (ROOT + "backtest/BT2/*", "BT2"),
     (ROOT + "backtest/BT3/*", "BT3"),
+    (ROOT + "backtest/BT4/*", "BT4"),
+    (ROOT + "backtest/BT5/*", "BT5"),
+    (ROOT + "backtest/BT6/*", "BT6"),
     (ROOT + "BRIEF.md", "parent"),
     (ROOT + "THROTTLE.md", "parent"),
     (ROOT + "LEDGER.md", "parent"),
@@ -53,6 +60,10 @@ def owner(path: str) -> str | None:
     for pattern, who in RULES:
         if fnmatch.fnmatch(path, pattern):
             return who
+    if fnmatch.fnmatch(path, ROOT + "discovery/claims/*"):
+        return "msgs"          # write-once, same rule as a message
+    if fnmatch.fnmatch(path, ROOT + "lib/*"):
+        return "parent"
     if fnmatch.fnmatch(path, ROOT + "msgs/*"):
         # Write-once: the creator owns it. A *modified* message is always a violation,
         # whoever did it, because nobody may edit a message after it is posted.

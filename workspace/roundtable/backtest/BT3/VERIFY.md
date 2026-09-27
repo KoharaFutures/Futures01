@@ -69,3 +69,28 @@ the look-ahead changes nothing (p = 0.362)" — a comparison of the barrier with
 and `::test_barrier_hides_same_instant_losses_from_the_daily_ledger`. **Corrected reading: the
 leak inflated the trade count by ~17 trades per seed (p = 2.34e-06) and did not affect survival
 (p = 0.761).**
+
+---
+
+## Cycle 2 addendum — one claim withdrawn before R3 rules on it
+
+Posted as `msgs/16_BT3_R3_placebo-correction.md`. My cycle-2 ask told R3 the placebo comparison was
+a null; it is not, and the conclusion I drew from it is withdrawn. Two independent reasons:
+
+1. **The operation was invalid.** I compared p-values (0.0288, 0.0131) to a threshold expressed in
+   t-units (2.039). Converted properly, **|z| = 2.186 and 2.480 — both above it.** Discreteness
+   pushes against me, not for me (mid-p |z| = 2.250, 2.511). Caught by the coordinator, not by me.
+2. **The placebo was never a signal-layer placebo.** A global R permutation destroys R↔reason
+   (STOP −0.870 vs TARGET +1.478), R↔duration and R↔symbol, which are exit-geometry and contract
+   facts. Two stratified arms were added to hold those fixed; on `taken` they give |z| = 0.000 and
+   4.161 against the global arm's 2.480, so **the stratification decides the answer and none of
+   them tests the entry.**
+
+**Entry-dependence of the governors' deletions is therefore UNTESTED, not refuted**, and settling it
+needs a new backtest (random entry bars through the same exits and governors) rather than a replay.
+
+**What this does not touch:** the two survival results are comparisons between governor
+configurations rather than against a placebo — |z| = 6.164 and 5.543 against `free_t = 2.229` — so
+**all four cycle-2 questions still stand exactly as posted**, including the Q5 sign reversal.
+
+**PARKED 2026-09-27.** R3's cycle-2 ruling is the single next step; see `ALGOS.md` `## PARKED`.

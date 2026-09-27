@@ -238,10 +238,18 @@ on 16–40% of them. Filed as `BT6-REQ-3`.
 - `futures_agents/` **unpatched**, per dispatch. `BT6-REQ-1` proposes the guard
   with this radius attached.
 - `tests/test_bt6_vwap_daily.py`: **14 pass, 3 xfail, 0.29s.**
-  `[measured: python3 -m pytest -q tests → **1020 passed, 7 xfailed** in 463s,
-  0 failed]`. Baseline before my file was 917 passed / 0 xfailed; the rest of the
-  growth is other agents' files landing concurrently. **My 17 tests broke none of
-  the others**, which is the condition the dispatch set.
+  `[measured: python3 -m pytest -q tests → **1029 passed, 7 xfailed, 0 failed**
+  in 203s]`. Baseline before my file was **917 passed / 0 xfailed**; the rest of
+  the growth is other agents' test files landing concurrently. **My 17 tests
+  broke none of the others**, which is the condition the dispatch set.
+- **One transient failure seen and chased down, recorded because a check that
+  fails is the check working.** An intermediate full-suite run reported 3 failures
+  in `tests/test_ef7_session_window.py::test_h2_no_trade_spans_a_holiday_eve_boundary[MGC|MES|MNQ]`.
+  That file is **EF7's**, it was being written at the time (a 103-line append at
+  04:41, another edit at 04:42), and it passes both in isolation (66/66) and run
+  immediately after mine (80 passed, 3 xfailed). The final suite run is clean. So
+  it was a mid-edit collection, not an interaction with BT6 — but it is EF7's file
+  and EF7 should know a full-suite run caught its intermediate state.
 - `check_ownership.py` → `ownership clean`. `check_refs.py` → `references clean —
   35 checked, every one resolvable`.
 - Fidelity question to R6: `msgs/BT6-01_R6_verify-ALGO-1.md`. Until R6 answers,

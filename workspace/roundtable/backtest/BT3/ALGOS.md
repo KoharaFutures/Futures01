@@ -516,70 +516,134 @@ stream demands 22,325,550 position-minutes over a 490,320-minute span, so two co
 could service at most **4.39%** of it — comfortably above the observed 0.65–1.26%. **The
 concurrency ceiling is slack and never binds, because the floor deletes most candidates before
 exposure can accumulate.** Not saturation.
+#### The controls and the tests — corrected, after the coordinator caught an invalid comparison
 
-#### The controls and the tests, and the one place I have to contradict R3
+**First, the error, because it was mine and it was in the operation rather than the data.** Cycle 2
+of this file reported the placebo comparison as a null on the grounds that "p = 0.0288 and
+p = 0.0131 do not clear 2.039 free t-units". **That is not a comparison.** The deflation rule is
+stated in t-units — searching *n* variants buys about `sqrt(2·ln n)` free ones — so a result is
+judged by converting **its own statistic** to a z and comparing *that* to the threshold. I
+compared a p-value to a t-value, which is an operation with no meaning, and it produced the
+answer I would have got from eyeballing "0.029 looks weak".
 
-`paired_tests.py`. Every arm runs the **same 200 permutations**, so all comparisons are paired by
-seed; the tests are **exact McNemar** on "did this account die" and the **exact two-sided sign
-test** on per-seed `taken`. No unpaired test is used and `T.ab` is not used anywhere (D28).
-**Search size: 8** — four comparisons × two statistics, all reported, none discarded.
-`free_t = sqrt(2·ln 8) = 2.039` against the programme-wide 5.46. Two of the eight clear that
-threshold by a wide margin; the rest do not and are reported as nulls.
+Converted properly, `z = Φ⁻¹(1 − p/2)`: **|z| = 2.186 on deaths and 2.480 on `taken`.** Both are
+*above* 2.039. And I checked the one excuse available — that an exact test on 200 discrete paired
+seeds should not be read through a normal quantile — and it **pushes the other way**: the
+mid-p correction gives |z| = 2.250 and 2.511, i.e. *larger*, because discreteness makes an exact
+test conservative `[measured: code/paired_tests.py mid_p() vs binom_two_sided()]`. So discreteness
+cannot rescue the claim and was never the explanation. `z_from_p` and `mid_p` are now in
+`paired_tests.py` and **every table below carries the z beside the p**, with an explicit
+`CLEARS / does not` verdict, so this cannot recur silently.
 
-| comparison (vs the neutral arm) | death rate | McNemar exact p | `taken` sign test p |
-|---|---|---|---|
-| **volatility multiplier pinned** | 13.0% → **41.0%** | **7.08e-10** | 0.52 (median −1 trade) |
-| **`is_live_eligible=False`** (the honest arm) | 13.0% → **0.0%** | **2.98e-08** | 0.227 (median −5) |
-| barrier removed (the look-ahead priced) | 13.0% → 11.5% | 0.761 | **2.34e-06** (median −17) |
-| placebo (R permuted, count-matched) | 13.0% → 6.0% | 0.0288 | 0.0131 (median −19) |
+**Second, what I did about it rather than simply weakening a sentence.** The global R permutation
+I had used is *not* a signal-layer placebo, and I should have caught that before quoting it.
+Permuting R across the whole stream destroys three associations at once
+`[measured: over the 21,954 cached rows]`:
 
-**1. The one real result: at this account size every governor that shrinks position size is net
-protective, and the mechanism is that drawdown scales with size faster than the absorbing
-boundary moves.** Two independent size-reducing governors, both decisive and both in the same
-direction:
+| association destroyed | real | after global permutation |
+|---|---|---|
+| R ↔ exit reason | STOP **−0.870**, TARGET **+1.478** | STOP −0.063, TARGET −0.069 |
+| R ↔ holding duration | `mins == 0` → −0.792, `> 1440` → +0.348 | flat |
+| R ↔ symbol (and hence dollar risk per contract, which varies 3×: $98.5 MCL to $289 MGC) | MCL −0.111 … MGC −0.033 | flat |
 
-| arm | per-trade budget | absorbing boundary | median max drawdown | ratio | died |
+Only the first of those is remotely near the entry; the other two are exit-geometry and contract
+facts. **So a real-vs-global-placebo difference could never have been attributed to the entry, in
+either direction.** PIPELINE §4 asks for the *signal layer* replaced; I had replaced the outcome
+layer.
+
+So I added two **stratified** placebos, which permute R only within strata that hold those
+associations fixed — a STOP's R can land only on another STOP of the same symbol and timeframe —
+leaving **only the time-ordering of outcomes** destroyed, which is the single thing a
+path-dependent governor can read `[code: governor_replay.py permute_r()]`. Verified to work:
+both stratified arms preserve STOP −0.870 / TARGET +1.478 exactly, while the global arm flattens
+them `[measured]`.
+
+**Third, the result. Search size is now 12** — six comparisons × two statistics, all reported, none
+discarded — so `free_t = sqrt(2·ln 12) = **2.229**`. Raising my own threshold was the price of
+adding arms rather than defending the one I had, and it does not rescue the failed comparison,
+which is the point.
+
+| comparison vs the neutral arm | deaths: rate, \|z\| | `taken`: median per-seed diff, \|z\| |
+|---|---|---|
+| **volatility multiplier pinned** | 13.0% → 41.0%, **\|z\| = 6.164 CLEARS** | −1 trade, \|z\| = 0.643 |
+| **`is_live_eligible=False`** (honest) | 13.0% → 0.0%, **\|z\| = 5.543 CLEARS** | −5, \|z\| = 1.208 |
+| barrier removed (look-ahead priced) | 13.0% → 11.5%, \|z\| = 0.304 | +17, **\|z\| = 4.721 CLEARS** |
+| placebo **global** (ordering control, *not* signal-layer) | 13.0% → 6.0%, \|z\| = **2.186** (mid-p 2.250) | −19, **\|z\| = 2.480 CLEARS** |
+| placebo **stratified (symbol, tf, reason)** | 13.0% → 8.0%, \|z\| = 1.549 | **+3, \|z\| = 0.000** |
+| placebo **stratified (strategy, reason)** | 13.0% → 9.0%, \|z\| = 1.239 | −19, **\|z\| = 4.161 CLEARS** |
+
+**The answer to "does the placebo clear": on `taken`, two of the three constructions clear and one
+is a perfect null, and the spread straddles the threshold from 0.000 to 4.161. On deaths, none of
+the three clears, and all three agree in direction and magnitude** (real dies more; discordant
+pairs 25/11, 22/12, 20/12). The global arm's 2.186 sits a whisker below 2.229 and its mid-p a
+whisker above: **that comparison is on the threshold and I am not claiming either side of it.**
+
+**So the sentence I wrote must be withdrawn, and it cannot be replaced by its opposite either.**
+What I previously wrote —
+
+> ~~"Which trades the governors delete is a property of the stop distribution and the calendar,
+> not of the entry."~~
+
+— is **withdrawn**. The honest replacement is a statement of what the design can and cannot
+separate:
+
+> **The governors' deletion count does depend on the sequence of realised outcomes** — every arm
+> that perturbs that sequence and differs from the real one differs in the same direction (the real
+> stream takes ~19 fewer trades per seed and dies more often than its permutations). **But this
+> design cannot attribute that to the entry**, because no arm here replaces the signal layer: they
+> replace the outcome layer under different stratifications, and the stratification decides the
+> answer. Testing entry-dependence needs random entry bars run through the same exits and the same
+> governors — a new backtest, not a replay of a stored artefact.
+
+**And the disagreement between the two stratified arms is itself informative, which is why I am
+recording the mechanism rather than averaging over it.** The medium strata are 40 groups of median
+size 236, so a within-stratum permutation mostly exchanges R **between the 22 correlated arms
+firing at the same timestamp** — which the account cannot distinguish, since whichever arm wins
+the symbol slot draws a similar R either way. Hence the perfect null (100 vs 99). The tight strata
+are 695 groups of median size 10 confined to one strategy, so the permutation mostly moves R
+**across time within a strategy**, between the three disjoint slices — which changes *when* a
+given strategy's losses arrive. That arm clears at 4.161. **The quantity the account is sensitive
+to is therefore the temporal clustering of one strategy's own outcomes, not the cross-sectional
+assignment of outcomes at an instant.** That is a statement about the R sequence, and it points
+away from the entry rather than towards it.
+
+The tight arm carries one caveat that weakens it slightly: 124 of its 695 strata have size 1, so
+**0.56% of trades keep their own R** and cannot be permuted `[measured]`. That biases it *towards*
+the real arm, so it understates rather than overstates its own difference.
+
+**Direction, stated because it is not flattering under any reading and should not be lost:** the
+real stream **dies more often and takes fewer trades** than every placebo that differs from it.
+Nothing here is an edge claim, and nothing here suggests the governors improve anything.
+
+**Two results survive all of this untouched**, because they are comparisons between governor
+configurations rather than against a placebo, and both clear by a wide margin on the statistic
+they should be judged on:
+
+**At this account size every governor that shrinks position size is net protective, because the
+realised drawdown scales with size faster than the absorbing boundary moves.**
+
+| arm | per-trade budget | absorbing boundary | median max drawdown | maxDD / boundary | died |
 |---|---|---|---|---|---|
 | volatility pinned | $240 always | $2,800 | $3,079 | **1.100** | 41.0% |
 | neutral | $240, ×0.70 on HIGH/EXTREME | $2,800 | $2,670 | 0.954 | 13.0% |
 | honest (`is_live_eligible=False`) | $120, ×0.70 on HIGH/EXTREME | **$2,334** | $2,038 | **0.873** | **0.0%** |
 
-Halving the budget moves the cliff to 83% of its depth but the realised drawdown to 76% of its
-size, so the *safer* arm is the one with less headroom. **`max_drawdown / absorbing_boundary` is
-the whole predictor of survival here, and it falls monotonically as the governors tighten.** A
-governor that looks like a pure Channel-4a variance transform — "size down in high volatility",
-"size down for an unproven strategy" — is a Channel-2 survival effect at a $50,000 account,
-because survival is a threshold on the path and not on the mean.
+Halving the budget takes the cliff to 83% of its depth and the drawdown to 76% of its size, so the
+arm with *less* headroom is the safer one. **`max_drawdown / absorbing_boundary` is the whole
+predictor of survival and it falls monotonically as the governors tighten.** Two governors that
+look like pure Channel-4a variance transforms are **Channel-2 survival effects** at $50,000,
+because survival is a threshold on the *path* and not on the mean. |z| = 6.164 and 5.543 against
+free_t = 2.229. **This is a risk-management result. It is not a trading edge and it does not make
+anything profitable.**
 
-**2. Where I have to contradict R3, and it is on its own prediction.** R3 computed the two
-boundaries and predicted: *"the honest arm dies, at 47% of its permitted drawdown, and the
-neutral arm survives only by $53."* Measured with **both** of R3's own required fixes applied,
-the opposite holds: **the honest arm dies in 0 of 200 orderings (median max drawdown $2,038
-against a $2,334 cliff) and the neutral arm dies in 26 of 200.** R3's arithmetic was correct on
-the numbers it had — my cycle-1 report, which was vol-pinned and leaky. Turning on the
-volatility multiplier cuts the honest arm's drawdown below its own shallower boundary. **So the
-prediction was right about the mechanism and wrong about the sign, and it was the volatility fix
-R3 itself demanded that flipped it.** I am reporting the reversal rather than the agreement.
+**The look-ahead I removed inflated the trade count and did not affect survival.** With the leak
+in, the account takes 17 more trades per seed (|z| = 4.721) while the death rate is unchanged
+(|z| = 0.304). R3's mechanism: a position that vanishes before the next same-instant row is
+assessed never occupies a concurrency slot, so the leak manufactures capacity. My cycle-1 reading
+of this ("not detectable") was wrong for the reason recorded under choice 7 — a bug in my own fix.
 
-**3. The placebo is a null at the stated threshold, and that is the answer to "do the governors
-read the signal".** Real median `taken` 1.011% versus placebo 1.000%; the sign test picks up a
-direction (real takes ~19 fewer trades per seed, p = 0.0131) and the death rates differ
-(13.0% vs 6.0%, p = 0.0288), but **neither clears 2.039 free t-units** and the placebo's own
-spread is wider (p95 1.959% vs 1.257%). **Which trades the governors delete is a property of the
-stop distribution and the calendar, not of the entry.** That is the honest placebo verdict.
-
-**4. The look-ahead I removed inflated the trade count, and my cycle-1 reading of it was wrong
-because of a bug in my own fix.** With the leak in, the account takes **17 more trades per seed**
-(p = 2.34e-06, which does clear 2.039) while the death rate is unchanged (p = 0.761). The
-mechanism is R3's: a position that vanishes before the next same-instant row is assessed never
-occupies a concurrency slot, so the leak manufactures capacity. In cycle 1 I reported this as
-"not detectable" — that reading came from the group-flush bug described under choice 7, where
-`barrier=False` had silently become a barrier too. **The correct reading is that the look-ahead
-was load-bearing for the trade count and not for survival.**
-
-One robustness result falls out unchanged: **the `cap_on_open` divergence is empirically inert.**
-`taken` and `final_equity` are identical with the cap counted on closes and on opens in every
-anchor arm; the open-cap vetoes only relabel trades stage 3 or stage 7 would have refused anyway.
+One robustness result unchanged: **the `cap_on_open` divergence is empirically inert.** `taken` and
+`final_equity` are identical with the cap counted on closes and on opens in every anchor arm.
 
 #### The determinism proof, which R3 asked be reported as a finding in its own right
 
@@ -611,12 +675,17 @@ gappy trades where it binds most.**
 - **Nothing here is a search for a configuration that improves anything.** The
   `AccountConfig` defaults are used as shipped throughout; no parameter was tuned, scanned or
   chosen. Every arm exists to isolate a mechanism, and all arms are reported.
-- **Search size: 8 tests**, all in `paired_tests.py`, all reported, none discarded.
-  `free_t = 2.039`. **Two clear it:** the volatility-multiplier survival effect (p = 7.08e-10)
-  and the eligibility-multiplier survival effect (p = 2.98e-08), with the look-ahead's effect on
-  trade count a third (p = 2.34e-06). The **placebo comparison does not clear it** (p = 0.029 on
-  deaths, 0.013 on `taken`) and is therefore reported as a null, which is also what its medians
-  say. Nothing here is a t-statistic to compare against the programme's 3.923.
+- **Search size: 12 tests**, all in `paired_tests.py`, all reported, none discarded.
+  `free_t = sqrt(2·ln 12) = 2.229`, and **the comparison is |z| against that, not p against
+  that** — see the controls section for the error I made here and its correction. Four of the
+  twelve clear: the two size-reduction survival effects (|z| = 6.164 and 5.543), the look-ahead's
+  effect on trade count (4.721), and the tight-stratified placebo's effect on trade count
+  (4.161). **The claim that the deletions are entry-independent is withdrawn** — no arm in this
+  design replaces the signal layer, so entry-dependence is untested here, not refuted.
+- **Entry-dependence is out of reach for a replay.** Testing it needs random entry bars run
+  through the same exits and the same governors — a new backtest, which is more than an artefact
+  replay. All three placebos replace the *outcome* layer, and the stratification decides the
+  answer (|z| on `taken` spans 0.000 to 4.161).
 - **No comparative claim is routed through `T.ab`** (D28). Exact McNemar and an exact sign test,
   both paired on the shared seeds, are the only tests used and both are named in the table.
 - **`session` cuts are forbidden on this artefact.** Its `session` label and its `ts` are on
@@ -694,3 +763,161 @@ narrowed its own item-2 wording and dropped it from its ranked candidates
 `[msgs/10_R3_BT3_re-verify-ALGO-1-questions.md]`, noting that my pooled-versus-per-strategy
 inversion here and the same inversion in ALGO-1's population unit are **two independent
 instruments both saying the pooled unit fabricates structure**.
+
+---
+
+# PARKED 2026-09-27
+
+BT3 is parked mid-stream by the account owner, not stopped at a natural boundary. Written for
+someone arriving cold: what is true, what is not yet true, and the one thing to do next.
+
+## The one result that holds, stated so it cannot be misquoted
+
+**At a $50,000 account size, every governor that shrinks position size is net protective, because
+survival is a threshold on the *path* rather than on the mean. That makes two apparent variance
+transforms — "size down in high volatility" and "size down for an unproven strategy" — into
+Channel-2 survival effects.** |z| = 6.164 and 5.543 against `free_t = 2.229`.
+
+**It is not a trading edge.** It does not make any strategy profitable, it does not contradict the
+programme's settled negative verdict, and it says nothing about expectancy. It is a
+risk-management result about *account survival* at a given size. Under every reading the real
+trade stream dies more often and takes fewer trades than its own permutations. If this ever gets
+restated as "we found something that works", that restatement is wrong.
+
+The mechanism, which is the transportable part: `max_drawdown / absorbing_boundary` is the whole
+predictor of survival, and it falls monotonically as the governors tighten — 1.100 (volatility
+pinned, dies 41%), 0.954 (neutral, 13%), 0.873 (honest, 0%). Halving the per-trade budget takes
+the cliff to 83% of its depth but the realised drawdown to 76% of its size.
+
+## State of the three result tiers
+
+**Tier A — the absorbing state. SOLID, and no fidelity verdict can move it.** Derived from
+`config.py` and `risk/manager.py` alone, no trade data. Past a **$2,800** drawdown from peak the
+per-trade budget is $21.60 against `min_dollar_risk = $25`, so stage 7 refuses everything
+*before* `contracts_for` is reached; equity then moves only through open positions, freezes when
+they close, `peak_equity` never falls, and the budget never recovers. **`has_failed` stays False
+throughout, leaving $2,200 of the $5,000 failure allowance permanently unspendable.** On the
+honest arm (`is_live_eligible=False`, ×0.5) the boundary is **$2,334** — 46.7% of the allowance —
+and $2,666 is unspendable. The step is a discontinuity, not a fade: $36.03 at a $2,799 drawdown,
+$21.60 at $2,800, because the de-risk ladder steps ×0.50 → ×0.30 there. **Consequence worth
+carrying: `max_total_drawdown` is unreachable from above the boundary, so risk-of-ruin as this
+repo models it is measuring an event that cannot occur.**
+
+**Tier B — the integer floor. SOLID, mechanical, hand-checkable.** `9,042 of 21,954` deleted at
+the opening $240 budget = **41.19%** (35.38% with the volatility multiplier pinned; the ×0.70
+alone accounts for 1,275). By cell: **MGC 4h 99.42%, MNQ 4h 94.59%**, median **zero** contracts in
+both. R3's volatility-filter reading holds conditioned on symbol and timeframe, monotone in 5 of 6
+unsaturated cells; MGC 60m runs 68.6 → 69.7 → 48.2 → 2.5 → 1.3 across DEAD→EXTREME. **Always quote
+the elasticity with the percentage:** ≈ **2.0** near $240, so the figure is 14.7%/7.5% at $375/$500.
+The qualitative claim is robust; any specific percentage is a statement about one account size.
+
+**Tier C — the stateful replay. UNREPORTABLE. Fidelity is ASKED, cycle 2, unanswered.**
+Asked in `msgs/15_BT3_R3_verify-ALGO-1-v2.md`; R3 has not ruled. Four questions open, of which the
+first matters most: **R3's Q5 prediction reversed under its own required fixes** — it predicted the
+honest arm dies and the neutral survives by $53; measured over 200 orderings the honest arm dies
+**0 of 200** and the neutral **26 of 200**. Do not quote Tier C until that is ruled.
+
+What Tier C says, pending the ruling: at the per-strategy unit **5,537 of 21,954 trades survive
+(25.22%)**, and the integer floor does **16,184 of 16,417 refusals — 98.58%**, while the four daily
+governors this whole task was named after (daily loss limit, giveback, trade cap,
+consecutive-loss stand-down) do **207 of 16,417 = 1.26%**, and **two of the four never fire at
+all**. `max_trades_per_day = 6` **never binds on a single strategy** at 60m or 240m — no strategy's
+busiest day exceeds 6, modal 2–3 — and only bites when you pool. **18 of 22 MGC 4h strategies and
+11 of 22 MNQ 4h strategies take not one trade on a $50,000 account.** Not underperform: do not
+exist.
+
+## What is unreportable, and why
+
+1. **All of Tier C** — fidelity ASKED, cycle 2. Not a weak result; an unknown quantity.
+2. **The block-vs-iid side errand** — `MGR-T8` is **GATED** behind the D44 fix (`MGR-T16`, the
+   parent's one-line circular-block repair). The instrument is defective: `mode="block"` draws
+   `r_values[start:start+block]` with no wrap-around, so index 0 appears at **0.122×** its due
+   frequency against a 1.123× tail. Numbers are on disk in `code/block_vs_iid.json` and carry the
+   bias; they are provisional by design, not by accident.
+3. **Entry-dependence of the governors' deletions — WITHDRAWN, not resolved.** Cycle 2 of this file
+   claimed the deletions were entry-independent on the strength of a placebo comparison, using an
+   invalid operation (p-value compared to a t-threshold). Corrected: the global placebo clears on
+   `taken` at |z| = 2.480 > 2.229. But **no arm in this design replaces the signal layer** — all
+   three placebos permute the *outcome* layer, and the stratification decides the answer (|z| spans
+   0.000 to 4.161). Entry-dependence is **untested here, not refuted.** It needs random entry bars
+   through the same exits and governors, i.e. a new backtest.
+
+## Shelf life of the reproduction, which is load-bearing for everything above
+
+`code/stops.py` recovers the per-trade stop distance the artefact does not carry, by re-running the
+22 dumped strategies per cell. **The match is exact: 21,954 of 21,954, zero missing, worst
+|Δr| = 0.000e+00.** R3's reading, which I accept: this establishes that the generating study is
+**deterministic**, which nothing in this repo had established.
+
+**It expires.** The recovery holds only while `workspace/newstrats/run_geometry.py`,
+`toolkit.disjoint_slices` and the frozen `csv/raw` snapshot **all three still agree**. If any is
+reshaped the link is gone and `code/stops_cache.json` becomes unverifiable — at which point
+`code/checks.py::check_cache_matches_artefact` and
+`tests/test_bt3_governor_replay.py::test_cache_is_the_artefact_plus_exactly_three_fields` will
+fail, which is the intended alarm. That is the argument for the manager's board rule **`R-8`**
+(dumps record `entry_price`, `initial_stop`, `symbol`): three keys now beats a reconstruction later
+that may not be possible.
+
+## Two figures worth keeping rather than superseding
+
+The edge programme's session rule cannot be carried on 240m cells at all — the window is 22h =
+1320 min and 1320/240 = 5.5 — so **MGC 4h at 99.42% deleted and MNQ 4h at 94.59% are, for now, the
+only 240m numbers anyone has.** They are Tier B (mechanical, hand-checkable) and do not depend on
+the fidelity verdict. Keep them.
+
+## The warning for whoever resumes this
+
+**I planted a defect in my own look-ahead fix and only caught it by writing a test for something I
+had already "fixed".** Restructuring the replay loop to iterate timestamp *groups* made `flush()`
+run once per group, so **`barrier=False` silently became a barrier too** — and my first cycle-2
+result, "removing the look-ahead changes nothing (p = 0.362)", was a comparison of the barrier
+**with itself**. The corrected answer is that the leak inflated the trade count by ~17 trades per
+seed (|z| = 4.721) and did not affect survival.
+
+This is the same failure family as D38, D42, D44, D48, D51 and D57: **a defect whose signature is a
+null.** Every one of them presents as "this axis does nothing". The practical rule I would pass on:
+when a fix produces a null, the null is a hypothesis about the fix before it is a result about the
+world — write the synthetic test that would fail if the fix were inert. Two such tests now guard
+this one (`test_barrier_hides_same_instant_outcomes_from_same_instant_decisions`,
+`test_barrier_hides_same_instant_losses_from_the_daily_ledger`).
+
+Also inherited, from R3, and it will bite any Tier-1 exit work before it bites anything else:
+**R3-A-13** — `dataclasses.replace` inherits the cached `_id`, so `replace(s, exit=...)` without
+`_id=None` yields a strategy claiming `s`'s id, and `run_many` keys everything by that id, so both
+arms of a pair collapse into one row and the measured difference is **exactly zero**. ALGO-1 is not
+exposed (no `replace` anywhere in `code/`, and `stops.py` asserts zero duplicate keys), but the
+next algorithm will be.
+
+## The single next step
+
+**Get R3's cycle-2 ruling on `msgs/15_BT3_R3_verify-ALGO-1-v2.md`, then re-read Tier C against it.**
+Nothing else should start first: Tier C is the only unresolved part of ALGO-1, and a second
+algorithm built on an unruled first one is the mistake PIPELINE §4 exists to prevent.
+
+After that, in order, and all currently blocked:
+1. **ALGO-2**, pre-registered by R3: the `CONTROL`/`CONTROL_FADE` arms only — 2 bases × 2 exits × 4
+   symbols × 2 timeframes = **32 strategies in one account**, representative chosen *by
+   construction* so there is no selection on outcome. Must be a separate ALGO, never folded into
+   ALGO-1.
+2. **A real signal-layer placebo** for the entry-dependence question above. This is the one thing
+   that needs a new backtest rather than a replay, and it is what would let the withdrawn sentence
+   be settled either way.
+3. **R3's Tier-1 six** — blocked twice over: the manager's `R-6` (unpaired sweeps are not
+   reportable, D15: only 93 of 8,317 shipped rule sets exist with two exits) and, for the trailing
+   stop specifically, the A-2 fix at `engine.py:419-421`, because `STOP` is otherwise a mixture of
+   an initial-stop hit near −1R and a trail hit that locked in a gain — opposite signs, so the
+   per-reason mean R moves with the mixing weight even when nothing real changed.
+4. **Block-vs-iid**, once `MGR-T16` lands.
+
+## Files
+
+`ALGOS.md` (this file), `VERIFY.md`, `REQUESTS.md` (4 requests, all ruled),
+`bursts/01_governor_replay.md`, `bursts/02_governor_replay_cycle2.md`,
+`bursts/03_placebo_threshold.md`. Code: `code/stops.py`, `code/governor_replay.py`,
+`code/paired_tests.py`, `code/block_vs_iid.py`, `code/checks.py`. Artefacts:
+`code/stops_cache.json`, `code/algo1_report.json`, `code/paired_tests.json`,
+`code/block_vs_iid.json`. Tests: `tests/test_bt3_governor_replay.py` (10). Messages out:
+`msgs/04_BT3_R3_verify-ALGO-1.md`, `msgs/15_BT3_R3_verify-ALGO-1-v2.md`,
+`msgs/16_BT3_R3_placebo-correction.md`.
+
+`geo_trades.json` and everything under `csv/` were read and never written.

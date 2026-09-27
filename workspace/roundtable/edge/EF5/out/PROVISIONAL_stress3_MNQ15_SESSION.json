@@ -1,0 +1,206 @@
+{
+ "PROVISIONAL": "EF1 unvalidated; not publishable",
+ "cell": "MNQ 15m SESSION",
+ "selected_on_IS_only": 31,
+ "selected_by_group": {
+  "MOMENTUM": 10,
+  "MULTI_TIMEFRAME": 7,
+  "REVERSAL": 4,
+  "VOLUME_PROFILE": 10
+ },
+ "placebo_diag": {
+  "pool": "eligible",
+  "shift_bars": 5,
+  "n_bases": 31,
+  "dropped_empty": 0,
+  "id_collisions": 0,
+  "eligible_rate_mean": 0.6455,
+  "direction_changed_mean": 0.4403,
+  "signal_rate_mean": 0.0405,
+  "n_placebos": 62
+ },
+ "effective_n": {
+  "n_rows": 31,
+  "mean_pairwise_trade_jaccard": 0.0874,
+  "n_eff": 8.56
+ },
+ "by_placebo_kind_full_span": {
+  "vs_placebo_random": {
+   "n_pairs": 31,
+   "reals_above": 29,
+   "real_exp_r": 0.21656,
+   "placebo_exp_r": -0.07097,
+   "mean_diff_r": 0.28754,
+   "sign_z": 4.849
+  },
+  "vs_placebo_shuffle": {
+   "n_pairs": 31,
+   "reals_above": 27,
+   "real_exp_r": 0.21656,
+   "placebo_exp_r": -0.00039,
+   "mean_diff_r": 0.21695,
+   "sign_z": 4.131
+  }
+ },
+ "by_direction_full_span": {
+  "LONG_only": {
+   "n_pairs": 30,
+   "reals_above": 26,
+   "real_exp_r": 0.26043,
+   "placebo_exp_r": -0.02147,
+   "mean_diff_r": 0.2819,
+   "sign_z": 4.017
+  },
+  "SHORT_only": {
+   "n_pairs": 26,
+   "reals_above": 24,
+   "real_exp_r": 0.11581,
+   "placebo_exp_r": -0.09034,
+   "mean_diff_r": 0.20615,
+   "sign_z": 4.315
+  }
+ },
+ "contiguous_thirds": [
+  {
+   "third": 0,
+   "cycles": 13,
+   "price_drift_pct": 9.248,
+   "all": {
+    "n_pairs": 30,
+    "reals_above": 27,
+    "real_exp_r": 0.25816,
+    "placebo_exp_r": -0.01589,
+    "mean_diff_r": 0.27405,
+    "sign_z": 4.382
+   },
+   "LONG_only": {
+    "n_pairs": 28,
+    "reals_above": 23,
+    "real_exp_r": 0.33474,
+    "placebo_exp_r": 0.1225,
+    "mean_diff_r": 0.21224,
+    "sign_z": 3.402
+   },
+   "SHORT_only": {
+    "n_pairs": 18,
+    "reals_above": 14,
+    "real_exp_r": -0.06929,
+    "placebo_exp_r": -0.29729,
+    "mean_diff_r": 0.22799,
+    "sign_z": 2.357
+   },
+   "vs_random": {
+    "n_pairs": 29,
+    "reals_above": 26,
+    "real_exp_r": 0.27696,
+    "placebo_exp_r": -0.06018,
+    "mean_diff_r": 0.33713,
+    "sign_z": 4.271
+   },
+   "vs_shuffle": {
+    "n_pairs": 30,
+    "reals_above": 24,
+    "real_exp_r": 0.25816,
+    "placebo_exp_r": 0.04939,
+    "mean_diff_r": 0.20877,
+    "sign_z": 3.286
+   }
+  },
+  {
+   "third": 1,
+   "cycles": 14,
+   "price_drift_pct": -1.69,
+   "all": {
+    "n_pairs": 29,
+    "reals_above": 15,
+    "real_exp_r": -0.08232,
+    "placebo_exp_r": -0.13642,
+    "mean_diff_r": 0.05409,
+    "sign_z": 0.186
+   },
+   "LONG_only": {
+    "n_pairs": 26,
+    "reals_above": 12,
+    "real_exp_r": -0.20815,
+    "placebo_exp_r": -0.2201,
+    "mean_diff_r": 0.01195,
+    "sign_z": -0.392
+   },
+   "SHORT_only": {
+    "n_pairs": 25,
+    "reals_above": 15,
+    "real_exp_r": 0.0859,
+    "placebo_exp_r": -0.03478,
+    "mean_diff_r": 0.12068,
+    "sign_z": 1.0
+   },
+   "vs_random": {
+    "n_pairs": 29,
+    "reals_above": 12,
+    "real_exp_r": -0.08232,
+    "placebo_exp_r": -0.12119,
+    "mean_diff_r": 0.03887,
+    "sign_z": -0.928
+   },
+   "vs_shuffle": {
+    "n_pairs": 29,
+    "reals_above": 16,
+    "real_exp_r": -0.08232,
+    "placebo_exp_r": -0.15165,
+    "mean_diff_r": 0.06932,
+    "sign_z": 0.557
+   }
+  },
+  {
+   "third": 2,
+   "cycles": 14,
+   "price_drift_pct": 3.863,
+   "all": {
+    "n_pairs": 31,
+    "reals_above": 23,
+    "real_exp_r": 0.36014,
+    "placebo_exp_r": 0.01624,
+    "mean_diff_r": 0.3439,
+    "sign_z": 2.694
+   },
+   "LONG_only": {
+    "n_pairs": 30,
+    "reals_above": 25,
+    "real_exp_r": 0.42553,
+    "placebo_exp_r": -0.00907,
+    "mean_diff_r": 0.4346,
+    "sign_z": 3.651
+   },
+   "SHORT_only": {
+    "n_pairs": 29,
+    "reals_above": 20,
+    "real_exp_r": 0.36289,
+    "placebo_exp_r": -0.01181,
+    "mean_diff_r": 0.3747,
+    "sign_z": 2.043
+   },
+   "vs_random": {
+    "n_pairs": 31,
+    "reals_above": 25,
+    "real_exp_r": 0.36014,
+    "placebo_exp_r": -0.02093,
+    "mean_diff_r": 0.38107,
+    "sign_z": 3.413
+   },
+   "vs_shuffle": {
+    "n_pairs": 31,
+    "reals_above": 22,
+    "real_exp_r": 0.36014,
+    "placebo_exp_r": 0.05341,
+    "mean_diff_r": 0.30673,
+    "sign_z": 2.335
+   }
+  }
+ ],
+ "deflation": {
+  "sign_z_vs_shuffle_raw": 4.131,
+  "sign_z_deflated_by_effective_n": 2.17,
+  "free_t_12_arm_cells": 2.229,
+  "free_t_population_21060": 4.462
+ }
+}

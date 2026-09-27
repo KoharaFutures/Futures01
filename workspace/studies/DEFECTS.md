@@ -681,6 +681,27 @@ bigger exposure** — it carries 17.6% of MGC and 23.4% of MCL generated arms ag
 2.6% and 4.3%. So the defect reaches more of the population through the stop kind nobody was looking
 at. The open `x_exits` re-read must cover both kinds.
 
+### Restated again 2026-09-27, per BT6 — and two different thresholds were being quoted as one
+
+BT6 confirmed `D45`'s zero-sigma-on-the-first-bar as the mechanism **exactly**: cross-tabulated
+against the anchor key changing, `first-of-day AND NOT sub-tick` is **0 in every cell, every symbol,
+every timeframe**. Three corrections to the wording:
+
+1. **It names only the stop.** The same zero-sigma band is read by **five conditions in a required
+   signal group**, so the exposure is not confined to `StopKind.VWAP_BAND`.
+2. **"6-34%" is 1-hour-only.** Measured elsewhere: 5-15% at 5m/15m/30m, 19.8-21.8% at 240m, and
+   **100% at 1440m** — where it is the one-bar case holding by construction, not an empirical rate.
+3. **The two findings measure different things.** R1's 6-34% is
+   `|entry - band| * mult + pad < min_stop_ticks * tick` (5 ticks on MES). R6-D1's is
+   `half-width < 1 tick` (8.4% on the same bars). **Both are correct and they are not the same
+   measurement** — which is exactly why the 60m figures looked inconsistent between the two
+   findings. Any restatement must say which threshold it means.
+
+**And R1's "sigma is *exactly* zero" is numerically false.** `max(0, pv2/vol - mean^2)` is a
+catastrophic cancellation, so `sd` lands near 1e-5 rather than at 0. The half-width is exactly `0.0`
+on only 2300/2511 MGC, 1776/1859 MES and 1765/1859 MNQ daily bars, so **an `sd == 0.0` assertion
+fails on one daily bar in twelve.** Assert against the tick, not against zero.
+
 ### Original entry, retained
 
 σ is **exactly 0 on the first bar of every CME trading day**, with no warm-up guard, so at
@@ -884,3 +905,42 @@ D48, D51 and D57 all produce "no effect" or "no difference" as their failure mod
 indistinguishable from this programme's own central finding. That is why a null here requires a
 firing-rate check on its own conditions before it may be reported as absence, and why a look-ahead
 power control does not license the inference (retracted 2026-09-27).
+
+---
+
+## D-candidate (awaiting a number from the manager, per R-9) — `data/archive/MGC_1440m.jsonl` splices two instruments
+
+Found by BT6, **[verified here]**:
+
+```
+[383] 2012-04-25  c=  164.10
+[384] 2012-04-27  c= 1664.80      <- 10.15x in one step
+bars 0-383 : 131.70 -  188.90
+bars 384+  : 1050.80 - 5318.40
+```
+
+**A momentum rule reads +915% on one bar.** The pre-break series sits at almost exactly 1/10 the
+post-break scale (164.10 x 10 = 1641 against the next bar's 1664.80), so the first 384 bars are a
+different series at one tenth the price — a 1/10-ounce proxy or a unit error, not MGC futures. Also
+**551 of 4,008 rangeless bars and 355 with zero volume.**
+
+This is **D40 wearing a new instrument**: D40 excluded the grain CSVs for splicing contract months,
+and this is worse, because it splices across a price scale rather than across an expiry.
+
+### It invalidates a claim I made to the account owner
+
+I reported, from DISC2's probe, that **25.7 years of daily history is reachable at zero code cost**,
+and that the required Sharpe to clear `free_t = 5.46` therefore falls from 5.82 on the published
+span to **1.08**. That arithmetic is right and **the substrate is not**: the longest series in this
+repository is spliced, and nobody had looked at its join.
+
+DISC2 was careful in the right place and unlucky in the wrong one — it refused to compute a single
+statistic from 25 years of probed data **because `yahoo.py` has `auto_adjust=False` and no roll
+handling**, and named the roll audit as the gate. Correct instinct, wrong failure mode: the break
+here is not a roll, it is a change of instrument, and a roll audit looking for same-signed quarterly
+steps would not have flagged a single 10x jump in 2012.
+
+**So the span route is not closed, but its price is now known: an audit of every long series before
+any of it is used, not merely a roll audit.** Checking a series' own extremes for a scale break is
+one line and would have caught this. Nothing has yet been measured on the spliced portion — BT6
+found it while sizing something else.

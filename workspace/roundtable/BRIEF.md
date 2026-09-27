@@ -316,6 +316,20 @@ the market. That is a property of the experiment, not a discovery about trading.
 the published calendar span**, zero code change, `yahoo.py:86` already caps daily lookback at 25
 years. A required Sharpe of 1.08 is an ordinary number.
 
+> **CORRECTION 2026-09-27 (BT6).** The arithmetic above stands; the substrate does not.
+> `data/archive/MGC_1440m.jsonl` — the longest series in this repository — **splices two
+> instruments**: index 383 closes at 164.10 and index 384 at 1664.80, a **10.15× step**, with bars
+> 0–383 ranging 131.70–188.90 and everything after 1050.80–5318.40. The pre-break series is the
+> post-break one at almost exactly one tenth the scale. **A momentum rule reads +915% on one bar.**
+> Also 551 of 4,008 rangeless bars and 355 with zero volume.
+>
+> So **the span route is not closed, but its price is now known**: every long series needs a scale
+> audit before any of it is used, not merely the roll audit DISC2 named. DISC2's caution was right
+> and aimed at the wrong failure — it withheld every statistic pending a roll audit, and a roll audit
+> hunting same-signed quarterly steps would not flag a single 10× jump in 2012. Checking a series'
+> own extremes for a scale break is one line. **Nothing has been measured on the spliced portion**;
+> BT6 found it while sizing something else.
+
 **Two things this does NOT mean, and both matter.**
 
 1. **It rescues nothing already measured.** The direction is *unfavourable* for the existing

@@ -40,6 +40,8 @@ RULES: list[tuple[str, str]] = [
     (ROOT + "OWNERSHIP.md", "parent"),
     (ROOT + "PIPELINE.md", "parent"),
     (ROOT + "check_ownership.py", "parent"),
+    (ROOT + "check_refs.py", "parent"),
+    (ROOT + "REGISTRY.md", "parent"),
 ]
 
 

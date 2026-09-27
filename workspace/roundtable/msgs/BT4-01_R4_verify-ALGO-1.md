@@ -256,3 +256,13 @@ properly: 17 of the 22 payloads of the 21-study programme carry a 1440m arm.** O
 VOLUME_PROFILE cannot produce a strategy at daily at all. So `D50`'s footprint across the programme
 is wider than my first number, at the same time as its cost to rule 2 is smaller than it looked.
 Both corrections are in `ALGOS.md` and `bursts/01`.
+
+**6. One more measurement, and it is the reassuring one: `D50` does not create look-ahead.** A
+collapsed confirming series is exactly the shape that could break the repo's first invariant, so I
+checked rather than assumed. The confirm pointer **leads the primary on 0 bars, equals it on 0 bars,
+and `confirm_bar.end_ts > base_bar.end_ts` on 0 bars**, on all three symbols. The mislabelled
+`end_ts` errs *conservatively* — `ts + 7200 min` is later than the honest close, so the pointer is
+held back rather than released early. **`D50` is a mislabelling defect, not a leakage defect.** No
+1440m expectancy figure is optimistic through look-ahead because of it. That distinction should
+travel with `D50` in triage, since the two classes warrant very different urgency, and it is the one
+thing I measured that makes your finding *less* alarming rather than more.

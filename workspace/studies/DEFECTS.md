@@ -944,3 +944,45 @@ steps would not have flagged a single 10x jump in 2012.
 any of it is used, not merely a roll audit.** Checking a series' own extremes for a scale break is
 one line and would have caught this. Nothing has yet been measured on the spliced portion — BT6
 found it while sizing something else.
+
+---
+
+## D-candidate (awaiting a number, per R-9) — the shipped session exit closes an evening entry on its own entry bar
+
+Found by EF7 while building a *control* for "the shipped exit is inert under
+`allow_overnight=True`". The control failed, for a better reason than the thing it controlled for.
+
+`engine.py:470-473` fires when `minutes_since_open(bar.ts, spec.rth_open) + bar.minutes >=
+self._rth_minutes`. **`minutes_since_open` measures from the RTH open of the bar's own calendar date
+and is never clamped**, so it keeps growing all evening. **[verified here]** on MGC, where
+`_rth_minutes = 310`:
+
+| bar opens (ET) | elapsed | fires? |
+|---|---|---|
+| 09:00 | 100 | no |
+| 12:00 | 280 | no |
+| **12:30** | **310** | **closes on its entry bar** |
+| 16:00 | 520 | closes on its entry bar |
+| **19:00** | **700** | **closes on its entry bar** |
+| 22:00 | 880 | closes on its entry bar |
+
+So with `exit_at_session_close=True` and `allow_overnight=False` — the shipped default —
+**every position entered at or after 12:30 ET dies on the bar that opened it.** The position never
+lives. On MGC that is the whole afternoon, the entire evening and the overnight session.
+
+### Why this matters more than it looks
+
+Combined with EF1's finding that `exit_at_session_close` is **False on 58 of 184 MGC and 90 of 185
+MNQ** generated strategies, the prior programme had **two incoherent session regimes and no coherent
+one**:
+
+- roughly half the population: **no session control at all**, holding overnight freely;
+- roughly half: **any entry from 12:30 ET onward closed on its entry bar.**
+
+**Neither is "flat at the contract's RTH close."** My own claim to that effect was already retracted
+once on EF1's evidence; this is the mechanism behind why it was wrong, and it is worse than a
+mislabelling — it means a large part of the prior population could not hold an afternoon or evening
+position at all, and the trades it did record there are same-bar artefacts.
+
+It also explains a number nobody had accounted for: `csv/raw`'s hourly grid admits afternoon and
+evening entries freely, so those strategies generated signals the engine then closed instantly.

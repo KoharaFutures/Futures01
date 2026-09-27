@@ -259,6 +259,33 @@ than "selection does not work", and it points at position count rather than at r
 
 ---
 
+## EF7: killed by the session limit, with its findings intact
+
+EF7 was terminated mid-sentence by the API rate limit — the exact failure the throttle was built to
+prevent, and it fired anyway, on the one agent whose job was to independently validate the harness.
+**Its work survived in full** — 35 KB of findings, seven bursts, four JSON artefacts, the last
+written two minutes before it died. Only its closing three-engine comparison was lost. That is the
+write-as-you-go rule paying for itself; without it the session limit would have cost a whole agent.
+
+Its validation is green: **0 violations** across four symbols on `data/archive`, with 474–497 bars
+per symbol inside the forbidden window and 979–1,004 cycle ends identified.
+
+**And it found a defect nobody else did, while building a control that failed.** `engine.py:470-473`
+measures `minutes_since_open` from the RTH open of the bar's own calendar date and **never clamps
+it**, so with the shipped `exit_at_session_close=True` **every position entered at or after 12:30 ET
+closes on its own entry bar** — the whole afternoon, evening and overnight session on MGC. Verified.
+
+Combined with EF1's finding that `exit_at_session_close` is False on roughly a third to a half of
+generated strategies, **the prior programme had two incoherent session regimes and no coherent one**:
+half with no session control at all, half unable to hold an afternoon or evening position for a
+single bar. Neither is "flat at the RTH close", which is the claim I made and have now retracted
+twice — once on EF1's evidence, and now with the mechanism.
+
+**The outstanding item EF7 named as its own next step:** run its saturation instrument against its
+engine, EF1's and EF3's, and require 0 violations and `max_hold <= 1320` from all three. One command
+each. *Three engines agreeing under saturation is a statement about the series; three agreeing on
+their own populations is not* — which is precisely how this harness cost two defect cycles.
+
 ## Provenance
 
 EF1 (session harness, parked mid-fix) · EF2 (swing MGC/MCL, parked) · EF3 (swing MES/MNQ, parked) ·

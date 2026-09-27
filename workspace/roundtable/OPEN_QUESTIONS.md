@@ -170,3 +170,69 @@ are untouched.
 
 **Routed:**
 **Answer:**
+
+### Q2 — R3 → R1 — is `StopKind.VWAP_BAND` a participant-information stop or an ATR band in disguise?
+**Asked:** 2026-09-27 (round 1)
+**Question.** `ExitModel.stop_price` places a `VWAP_BAND` stop at
+`abs(entry - s["vwap_l1" or "vwap_u1"]) * stop_mult + pad`
+`[repo-verified: futures_agents/strategies/base.py:296-300]`, and the bands come from
+`vwap_bands(bars, "session", (1.0, 2.0))` `[repo-verified: futures_agents/features.py:248-251]`.
+DIVISION §5.3 gives you the audit of the five `vwap` conditions and gives me `VWAP_BAND` as a
+stop primitive only, so I have deliberately not opened `indicators/volume.py`.
+
+What I need is one verdict: **is `vwap_u1`/`vwap_l1` a σ band computed from an OHLCV
+typical-price proxy, or does it read anything a participant actually transacted?** If it is a
+standard-deviation band around a volume-weighted typical price, then a `VWAP_BAND` stop is
+functionally a *volatility* band — i.e. a second ATR stop with a different scale factor — and
+my `StopKind` vocabulary has **four distinct stop mechanisms, not five**
+`[repo-verified: base.py:187-192]`.
+
+**What I would do differently depending on the answer.** If it is a σ band, I downgrade
+`StopKind.VWAP_BAND` in `R3_operating_vocabulary.md` row R1 from "a fifth mechanism" to "a
+re-scaled ATR stop", and I add a line to R3-D4 noting that two of the five stop kinds are the
+same Channel-1 knob — which matters, because `x_exits` reported "no stable best stop width"
+and a duplicated mechanism would partly explain that.
+
+**Why it is not mine to answer.** `futures_agents/indicators/volume.py` and the `vwap`
+condition group are R1's code surface (DIVISION §2 table, §5.3).
+**Blocking?** no. My verdict is written and marked `PENDING Q2` in
+`R3_operating_vocabulary.md` row R1 / `R3_path_operation.md` III-10.
+
+**Routed:**
+**Answer:**
+
+### Q3 — R3 → manager — I refute DIVISION §6's "≤2" pre-registration for R3-D5, with the count
+**Asked:** 2026-09-27 (round 1)
+**Question.** Not a question — the cover note asked us to say so loudly when we refute a
+pre-registered expectation, so this is the loud version, filed here so it is visible outside my
+own file.
+
+DIVISION §6 predicts of R3-D5: *"an operating rule that is (a) expressible with today's
+vocabulary and (b) never varied by any completed study… I predict **≤2 exist**."*
+
+**Measured: six exist under the strict definition, plus two that need no library change at
+all.** The six are: turn `trail_atr_mult` on; leave a residual runner (`sum(scale_out) < 1`);
+set `time_stop_bars=None`; the three combined into "half off at 1R, breakeven, trail the rest";
+vary `StrategyFilters` scope; and `StopKind.FIXED_TICKS`. Evidence, all from one generation:
+`[measured: python3 -c "from futures_agents.strategies.combinator import generate_strategies,
+expand_exit_models; S=generate_strategies('MGC',[5,15,60,240],max_total=400)" → 314 strategies;
+trail_atr_mult ∈ {None}; scale_out sums ∈ {1.0}; time_stop_bars is None in 0 of 11 catalogue
+exits; 1 distinct StrategyFilters.identity; FIXED_TICKS in 0 of 11]`.
+
+The mechanism behind five of the six is one line: `generate_combinations` passes
+`filters=template.filters` unchanged `[repo-verified: combinator.py:581]` and the exit
+catalogue is a fixed list of 11 literals `[repo-verified: combinator.py:53-110]`. Nothing
+*forbids* these configurations — `ExitModel.__post_init__` accepts every one of them
+`[repo-verified: base.py:226-236]` — they were simply never written into the catalogue.
+
+**One thing I want routed back if you think it is worth it:** all six must be run as a **paired
+re-emission of the same rule sets**, per D15 (only 93 of 8,317 shipped rule sets exist with two
+different exits) `[repo-verified: workspace/studies/DEFECTS.md:184-187]`. If round 2 turns any
+of these into a run, that pairing requirement is the whole design and I would rather state it
+here than have it rediscovered.
+
+**Why it is not mine to answer.** It is yours — it is your pre-registration.
+**Blocking?** no.
+
+**Routed:**
+**Answer:**

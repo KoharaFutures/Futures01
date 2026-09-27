@@ -1015,7 +1015,10 @@ means placing the stop beyond the obvious cluster rather than inside it `[genera
 **How it dies.** A stop inside the noise floor converts a valid idea into a coin flip; a stop
 beyond the noise floor but inside the liquidity cluster gets swept.
 **Expressibility here.** **EXPRESSIBLE for placement, EXPRESSIBLE-NEVER-VARIED for
-trailing.** Five `StopKind`s `[repo-verified: base.py:187-192]`, a per-contract noise floor
+trailing — PENDING Q2 on whether there are five mechanisms or four.** Five `StopKind`s
+`[repo-verified: base.py:187-192]` — though `VWAP_BAND` may be a re-scaled volatility band
+rather than a distinct mechanism; asked as Q2 in `OPEN_QUESTIONS.md` because
+`indicators/volume.py` is R1's surface — a per-contract noise floor
 `[repo-verified: base.py:313-315, 719-723]`, and the one-way ratchet
 `[repo-verified: engine.py:449, 462]`. The trail has never been switched on (A-1); the trail
 *reason* is unreachable (A-2); parabolic and structural trails are absent (missing primitive:
@@ -1663,9 +1666,9 @@ those is a name that a reader — or a future study — would reasonably trust.
 
 ---
 
-# Answers to the manager's three questions
+## Answers to the manager's three questions
 
-## Q1 — Is our null result a property of the market, or of our information set?
+### Q1 — Is our null result a property of the market, or of our information set?
 
 **For Class III, it is a property of neither the market nor the data. It is a property of the
 code.**
@@ -1710,7 +1713,7 @@ operating parameters sit on the far side of an import boundary from every publis
 live-eligible" is a statement about *signals run flat, one at a time, with geometric exits*.
 It is not yet a statement about futures trading operated by a desk.
 
-## Q2 — Any family expressible with today's combinator, widely operated, and never tested here?
+### Q2 — Any family expressible with today's combinator, widely operated, and never tested here?
 
 **Yes — this is not empty, and it is larger than DIVISION §6 pre-registered.** Ranked, cheapest
 first. Full detail and the search method are in R3-D5.
@@ -1765,7 +1768,7 @@ bracket needs an order-type object, III-5 needs sequence support, III-6 is settl
 what a track called "path and operation" should return, and it is the strongest argument for
 DIVISION's decision to cut by mechanism.
 
-## Q3 — Which single missing primitive unlocks the most families in your class?
+### Q3 — Which single missing primitive unlocks the most families in your class?
 
 **By the letter of the question (families): `ExitModel.exit_conditions` plus a
 `FeatureSnapshot` in `_manage` — 5 of 19 Class III families.**

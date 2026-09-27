@@ -533,3 +533,137 @@ bindings, the "strong" condition was a duplicate of the "weak" one, the base-fil
 timeframe-blind, and the signal conditions were dead at the top timeframe. **Whether multi-timeframe
 alignment helps is therefore still an open question here, not a settled negative** — what was measured
 was this implementation of it. That is a finding, not a defence of the hypothesis.
+
+---
+
+# Group 10 — `profile` (6 conditions) → **DEGRADED** (round-1 verdict confirmed and quantified), plus **DEAD at 4h**
+
+Round 1 filed all six as DEGRADED (`R1_flow_auction.md:339-408`) and claimed they can flip sign on the
+same market day depending on which CSV is read. **Both now measured.**
+
+Every one of the six reads `TFSnapshot.prior_profile` `[repo-verified: library.py:935-937]`, which is
+`prior_session_profile` — `volume_profile(prior_bars, bins=40)` built from **that timeframe's own bars
+of the previous completed session**, requiring `len(prior_bars) >= 10`
+`[repo-verified: features.py:600-624]`.
+
+## D-P1 — all six are DEAD at 240m, and `profile` is required by VOLUME_PROFILE
+
+A CME trading day is 23 hours, so a 4h series has 5–6 bars per session — under the `>= 10` guard. So
+the profile is never built.
+
+| cell | `prior_profile is None` |
+|---|---|
+| MGC 60m | 151 / 5000 = 3.0% |
+| MGC **240m** | **1348 / 1348 = 100.0%** |
+| MCL 60m | 231 / 5000 = 4.6% |
+| MCL **240m** | **1384 / 1384 = 100.0%** |
+| MNQ 60m | 170 / 5000 = 3.4% |
+| MNQ **240m** | **1347 / 1347 = 100.0%** |
+
+`[measured: python3 over csv/raw/{MGC,MCL,MNQ}_1h.csv, TimeframeFrame.snapshot(i).prior_profile, every bar of each timeframe]`
+
+`profile` is **required by VOLUME_PROFILE**, and four of the six are its only SIGNALs. So **a
+VOLUME_PROFILE strategy at 240m is structurally zero-trade** — the third instance of that shape in
+this audit, after `openinterest` (R1, round 1) and `multitimeframe` at the top timeframe (D-MTF1).
+It also silently removes the `away_from_hvn` and `open_outside_value` filters at 4h: both return
+`no()` when the profile is missing, and a FILTER returning `no()` **vetoes the entry**
+`[repo-verified: library.py:1032-1033, 1050-1051]` — so at 4h they do not merely abstain, they block.
+
+## D-P2 — the value area is a function of which CSV was loaded, measured
+
+`volume_profile` bins **the bars of the timeframe it is called on**, so the same market session
+produces a different POC/VAH/VAL depending on whether 5m, 15m or 60m bars were the source. Measured on
+bars where all three profiles exist:
+
+| cell | `in_value_area(close)` disagrees 5m vs 15m | 5m vs 60m | 15m vs 60m | median \|POC(5m) − POC(60m)\| | in ticks |
+|---|---|---|---|---|---|
+| MGC | 190 / 4617 = 4.1% | **279 = 6.0%** | 343 = 7.4% | 2.795 | ~28 ticks |
+| MCL | 213 / 4616 = 4.6% | **308 = 6.7%** | 341 = 7.4% | 0.133 | ~13 ticks |
+| MNQ | 149 / 4879 = 3.1% | **513 = 10.5%** | 428 = 8.8% | 24.99 | **~100 ticks** |
+
+`[measured: python3, build_symbol_frame(MGC/MCL/MNQ 5m, [5,15,60]), comparing prior_profile.in_value_area(close) across the three timeframes at the same base bar]`
+
+`in_value_area` is the **gate** of `poc_reversion` (`library.py:950`), the inverse gate of
+`value_area_breakout` via VAH/VAL, and the whole of `open_outside_value` (`library.py:1055`). So on
+6–10.5% of bars a `profile` condition's verdict — including its **direction** — is determined by the
+runner's timeframe choice rather than by the session's auction. The round-1 claim stands, and the
+effect is larger on the index micros than on gold or crude, which is again a per-symbol fact.
+
+## Per-condition table
+
+| condition | kind | verdict | note |
+|---|---|---|---|
+| `poc_reversion` | SIGNAL | **DEGRADED** | gated on `in_value_area` (D-P2); direction is `sign(poc − close)` with a `0.5 ATR` deadband. Description "rotating back toward the POC" claims **rotation** — the arithmetic tests only *position*, never that price is moving toward the POC. **Closer to MISNAMED than the others**: no velocity term exists anywhere in it `[repo-verified: library.py:942-959]` |
+| `value_area_edge` | SIGNAL | **DEGRADED** | `abs(close − VAL) <= 0.35 ATR and low <= VAL and close >= VAL` — a genuine tag-and-hold test, the most faithful of the six. Thinnest: 82–383 fires per cell |
+| `value_area_breakout` | SIGNAL | **DEGRADED** | `close > VAH + 0.25 ATR`. Description says "**Accepted** beyond" — acceptance in auction theory is *two closes* or time-at-price; the arithmetic is one close plus a margin. MISNAMED on "accepted", and it is the **only** `profile` condition ever named in the reports corpus (R1-D4) |
+| `lvn_rejection` | SIGNAL | **DEGRADED** | within `0.3 ATR` of the nearest LVN, direction from `close > open`. Description says "**rejection** — price does not linger there"; the arithmetic tests **proximity** plus bar colour, never traversal or time-at-price. **MISNAMED** |
+| `away_from_hvn` | FILTER | **DEGRADED** | and it **blocks** rather than abstains when the profile is missing (D-P1) |
+| `open_outside_value` | FILTER | **DEGRADED** | reads `session_levels.day_open` against the prior value area; D-P2 applies directly |
+
+**Required by:** VOLUME_PROFILE. Optional signal in TREND, VWAP, REVERSAL, OPENING_RANGE,
+MEAN_REVERSION, BREAKOUT (6 templates); `away_from_hvn` optional filter in MEAN_REVERSION and
+VOLUME_PROFILE; `open_outside_value` optional filter in VOLUME_PROFILE.
+
+---
+
+# Group 11 — `regime` (3 conditions) → **DEGRADED**: all three are timeframe-inert, and two are the same predicate
+
+## D-R1 — `tf` is accepted and never read by any of the three
+
+```
+library.py:752-754   def _reg_trend(snap, tf):  r = snap.regime.regime      # tf unused
+library.py:760-762   def _reg_range(snap, tf):  r = snap.regime.regime      # tf unused
+library.py:768-774   def _reg_dir(snap, tf):    r = snap.regime.regime      # tf unused
+```
+
+`snap.regime` comes from `regime_at`, which reads `self.regime_tf` — **one timeframe chosen for the
+whole frame** `[repo-verified: features.py:928-943]` — and `_default_regime_tf` picks the first of
+`(15, 30, 5, 60, 10, 3, 1)` present `[repo-verified: features.py:819-825]`.
+
+**So which timeframe the regime is read off is a property of the frame the runner built, not of the
+strategy.** Measured, varying only `tfs` on an identical 5m base series:
+
+| symbol | `tfs` | chosen `regime_tf` | `regime_trending` | `regime_ranging` |
+|---|---|---|---|---|
+| MGC | `[60, 240]` | 60 | 1117 / 5000 = 22.3% | 2758 = **55.2%** |
+| MGC | `[5, 15, 60, 240]` | 15 | 981 = 19.6% | 3297 = 65.9% |
+| MGC | `[5, 60]` | **5** | 849 = 17.0% | 3409 = **68.2%** |
+| MGC | `[15, 60, 240]` | 15 | 981 = 19.6% | 3297 = 65.9% |
+| MNQ | `[60, 240]` | 60 | 1112 = 22.2% | 2872 = 57.4% |
+| MNQ | `[5, 15, 60, 240]` | 15 | 1246 = **24.9%** | 2804 = 56.1% |
+| MNQ | `[5, 60]` | **5** | 1082 = 21.6% | 3204 = **64.1%** |
+
+`[measured: python3, identical csv/raw/{MGC,MNQ}_5m.csv base, only the timeframe list varied]`
+
+`regime_trending` is a **base filter in TREND** and `regime_ranging` a **base filter in
+MEAN_REVERSION** `[measured: TEMPLATES]` — both unconditional on every strategy of those templates. So
+a **13-percentage-point swing in MEAN_REVERSION's base filter (55.2% → 68.2% on MGC) is produced by
+adding or removing a timeframe the strategy does not trade.** Same defect class as D-MTF3, on two more
+templates, and this one is not even partially fixed: there is no `from_tf` anywhere in the group.
+
+A 4h TREND strategy in a `[5, 15, 60, 240]` frame is gated by the **15-minute** regime. That is the
+plain reading of `features.py:819-825` and there is nothing in the condition's name or description to
+warn a reader of it.
+
+## D-R2 — `regime_matches_direction` is `regime_trending` plus a direction vote
+
+Both gate on `regime in ("TREND_UP", "TREND_DOWN")` `[repo-verified: library.py:754, 770-773]`.
+Measured identical fire counts in all five census cells: MCL 1106/1106, MES 1112/1112, MGC 5m 981/981,
+MGC 1h 1012/1012, MNQ 1105/1105 `[measured: census]`.
+
+TREND carries `regime_trending` as a **base filter** *and* offers `regime` as an optional signal group.
+So a TREND strategy that picks `regime_matches_direction` as one of its three optional signals adds
+**zero additional gating** — the base filter has already applied the identical test — and contributes
+only a direction vote, while occupying one of three optional slots and appearing in the strategy's
+identity as a distinct condition. Any confluence count on such a strategy is one higher than the
+number of independent readings it makes.
+
+| condition | kind | verdict |
+|---|---|---|
+| `regime_trending` | FILTER | **DEGRADED** — timeframe-inert, frame-composition-dependent |
+| `regime_ranging` | FILTER | **DEGRADED** — same |
+| `regime_matches_direction` | SIGNAL | **DEGRADED** — same, plus no independent gate over `regime_trending` |
+
+The three conditions' *arithmetic* faithfully reports what `classify_regime` returned, and the
+descriptions say "Regime classifier says …", which is honest. The degradation is entirely in **which
+series the classifier was run on** — invisible at the call site and not chosen by the strategy.

@@ -68,6 +68,45 @@ follows them.
   `Condition.label`, in the per-bar cache key, and therefore in `Strategy.strategy_id`. A binding
   that is invisible to any of the three is a silent-wrong-answer defect, not a missing feature.
 
+### 0.4 The six families Wall A unlocks, and the two it is **not sufficient** for
+
+Required by the manager's ADJ-1 covering message
+`[repo-verified: workspace/roundtable/msgs/11_manager_R2_wall-a-and-axis-c.md, "One thing the Wall A
+spec must carry"]`: *"a reader will otherwise read 6 as six testable families."* The manager is right
+and the correction belongs here rather than only in the catalogue entry, because the spec is what a
+developer reads.
+
+**"Unlocked" means the architectural blocker is removed. It does not mean testable.** Two of the six
+have a second, independent constraint that Wall A cannot touch, because it is not a code constraint.
+
+| family | what Wall A unlocks | partner data on disk | **is Wall A sufficient?** |
+|---|---|---|---|
+| **II-9** correlation regime | rolling-correlation regime as a filter | any on-disk pair | **Yes.** The cheapest Wall-A unlock in Class II: correlation regime *is* the mechanism, and two aligned price series are the whole data requirement |
+| **II-5** inter-market | gold-vs-equity, gold-vs-crude conditioning | `MGC_1d`×`SPY_1d` **2,507** (longest aligned pair in the repo); `MGC_1h`×`MCL_1h` **4,636** | **Yes for the version the data supports.** **No** for the canonical rates-vs-equity and dollar-vs-metals versions: no ZN, no DX, no FX series exists — that is a **data** gap, not an architecture one |
+| **II-8** lead-lag | cross-contract structural lead-lag | ES/NQ/MES/MNQ/SPY/QQQ | **Yes for the structural version only.** The real (sub-second) version is **INEXPRESSIBLE-DATA at any architecture**: 1m is the finest bar here, so a sub-second lag is unmeasurable *in principle*. And D14/D41: these are one complex, so a result is a microstructure statement and cross-leg agreement is **not** corroboration |
+| **II-3** basis | futures rich/cheap vs ETF as a signal | `MES_1d`×`SPY_1d` **1,855**; `MNQ_1d`×`QQQ_1d` **1,855** | **Yes as a rich/cheap signal, at daily** (§9.1). **No** as index arb: no financing rate, no dividend stream, no borrow cost, no tick data — and an ETF has its own NAV premium and creation/redemption mechanics, so the proxy is not the mechanism |
+| **II-6** statarb | ratio z-score as a signal | `MES_1h`×`MGC_1h` **4,986** | **Yes for a one-legged, labelled-as-such signal.** **No** as a market-neutral pairs *trade* — that needs **Wall B**. A one-legged "the ratio is stretched, buy the cheap leg" carries the leg's own variance; report its Sharpe as an outright's or the number will be read as a spread's |
+| **II-7** cross-sectional momentum | a rank filter over the symbol universe | the four micros | **NO, and no amount of Wall A fixes it.** |
+
+**II-7 is the one to state loudly, because it is the one a reader will over-count.** Its binding
+constraint is **universe size**, which is quantitative, not architectural:
+`[measured: ls csv/raw/ → 11 distinct symbols]`, of which **3 are D40-excluded** (`MZC`/`MZS`/`MZW`
+splice more than one contract month) and **2 are ETFs** that must never be costed as traded (§7), and
+`[repo-verified: futures_agents/config.py:107-125]` `MES`/`MNQ`/`ES`/`NQ` all share one
+`correlation_group`. **So the effective cross-section is ≈2** (an index complex and a metal), against a
+canonical version that ranks 40-60 markets. Wall A would let the rank be *computed*. It would not make
+the rank *informative*, and a 2-wide cross-section has no cross-section. The manager's ADJ-1 accepts
+this framing as written: II-7's constraint is one *"the class definition does not capture and no code
+change here fixes"*.
+
+**Honest total, then.** Wall A removes the architectural blocker on **six** families. Of those,
+**one (II-9) is unreservedly testable**, **four (II-5, II-8, II-3, II-6) are testable in a named
+degraded form with a named caveat that must travel with any result**, and **one (II-7) remains
+untestable for a reason Wall A does not address**. The nine-after-a-vendor-fetch figure is subject to
+the same distinction and I have not re-audited it here, because the fetch is a board decision and
+`R2_expressibility_wall.md` §4 already records that "reachable by the code" is not "verified to have
+history".
+
 ---
 
 ## 1. A1 — `FeatureSnapshot` gains a partner map
@@ -720,7 +759,14 @@ signal input and is never traded, never costed, never sized.**
    their backtests against the micros" and to "treat results here as a proxy read". Under Wall A
    they cannot be traded at all, which makes the prohibition structural rather than a convention —
    worth writing down precisely so that nobody relaxes it when Wall B is considered.
-2. **A partner-derived result is not a spread result.** A one-legged "the ratio is stretched, buy the
+2. **A multi-leg position would be costed as one contract, so do not build toward one here.**
+   `[repo-verified: futures_agents/backtest/engine.py:235]` `self.costs = CostModel(self.spec)` is a
+   **single-spec** object. A 3:2:1 crack is six contracts across three tick grids and three round
+   turns; this object would charge one. That is why Wall A keeps the traded instrument scalar (A7) and
+   why any leg-ratio work is Wall B, priced separately. Stated here because `CostModel(self.spec)` is
+   three lines from `self.spec = frame.spec` and is exactly where a developer "finishing the job"
+   would reach.
+3. **A partner-derived result is not a spread result.** A one-legged "the ratio is stretched, buy the
    cheap leg" carries the leg's own variance, not a spread's. Any ranking of a Wall-A strategy must
    say so in the same sentence as the Sharpe, or the number will be read as a market-neutral one.
    (`R2_expressibility_wall.md` §5, II-6.)

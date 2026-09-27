@@ -1279,3 +1279,289 @@ The mandate applies to my own work, not only to strategies.
 **not** answer "is the object worth trading", and nothing in it should be read as raising or lowering
 the prior on any strategy. A correctly named condition is not a good condition. `trend` is the
 cleanest group in the library and four of its eight members fire on 86–96% of bars.
+
+---
+
+# Addendum A — scope reconciliation against `ADJ-8`, written after the fact and declaring the overlap
+
+`msgs/10_manager_R1_requests-and-scope.md` and `ADJUDICATIONS.md` **ADJ-8** reached me **after** this
+audit was written, and they change its scope. Recording that rather than quietly leaving the overlap,
+because a silent duplication is exactly what the division exists to prevent.
+
+**What ADJ-8 rules.** The unaudited remainder is **11 groups / 47 conditions**, not 16 / 71 — because
+R1-D4 already delivered verdicts for 32 conditions across 8 groups. The 11 are split three ways by
+**code surface**:
+
+| board id | owner | groups | conditions |
+|---|---|---|---|
+| **`MGR-T5`** | **R1 — mine** | `structure`, `supplydemand`, `fibonacci` | **12** |
+| `MGR-T6` | **R3** | `trend`, `momentum`, `meanreversion`, `volatility`, `regime`, `multitimeframe`, `candlestick` | 31 |
+| `MGR-T7` | **R2** | `time` (+ the ADJ-1 consolidation) | 4 |
+
+`[repo-verified: workspace/roundtable/manager/ADJUDICATIONS.md:495-504]`
+
+**ADJ-8's arithmetic is right and my dispatch's was not.** My dispatch listed 16 groups to audit,
+including four — `liquidity`, `profile`, `volume`, `vwap` — that R1-D4 had already covered at the
+condition level. Counting the genuinely-new groups here: `candlestick` 5 + `fibonacci` 4 +
+`meanreversion` 3 + `momentum` 6 + `multitimeframe` 3 + `regime` 3 + `structure` 5 + `supplydemand` 3 +
+`time` 4 + `trend` 8 + `volatility` 3 = **47 conditions across 11 groups**, matching ADJ-8 exactly.
+
+## How the work above should be read, given that
+
+| groups | status |
+|---|---|
+| `structure`, `supplydemand`, `fibonacci` (Groups 12, 13, 5) | **`MGR-T5` delivered.** My assigned surface, my verdict. |
+| `liquidity`, `profile`, `volume`, `vwap`, `imbalance` (Groups 6, 10, 17, 18, 19) | **Mine by `DIVISION.md` §2** (participant-information groups). Round 1 audited them condition-by-condition; this is a **deepening**, and every finding in them is new: D-L1/D-L2/D-L3, D-P1/D-P2, V-1, D-VW1/D-VW2, D-I2/D-I3. |
+| `trend`, `momentum`, `meanreversion`, `multitimeframe`, `regime`, `volatility`, `candlestick` (Groups 15, 8, 7, 9, 11, 16, 4) | **`MGR-T6` is R3's, not mine.** What is above is offered as an **independent cross-check** — measured evidence for R3 to verify or refute on its own surface. It is **not** a claim of ownership, **not** a substitute for `MGR-T6`, and R3 should not treat it as one. I read the indicators underneath (`indicators/regime.py`, `indicators/candles.py`, `indicators/core.py`) which is R3's surface, and that is the overlap. |
+| `time` (Group 14) | **`MGR-T7` is R2's.** Same standing: cross-check, not a claim. |
+
+**The value of an accidental second audit, stated so the duplication is not pure waste.** ADJ-8's
+reasoning for splitting by surface is that "the audit's value comes from having read the indicator
+underneath". That is right. But it also means **two independent readings of the same 35 conditions now
+exist**, and where they agree the verdict is stronger than either alone, and where they disagree one of
+us has made an error that would otherwise have shipped. The one thing R3 and R2 should **not** do is
+read this file first and then audit — that destroys the independence, which is the only thing the
+duplication bought. **Audit first, then compare.**
+
+**This is a defect in my dispatch, not in ADJ-8.** Same precedent as `OWNERSHIP.md`'s recorded
+exception for round 1's `OPEN_QUESTIONS.md` appends: the prompt was stale, the map is the thing to
+keep, the work stands and the overlap is declared on the record rather than hidden.
+
+## Vocabulary map, so three auditors stay comparable
+
+ADJ-8 fixes the shared vocabulary as **PROXY / DEGRADED / HONEST-DERIVED / HONEST-DERIVED-BUT-BROKEN**.
+My dispatch specified CLEAN / PROXY / DEGRADED / DEAD / MISNAMED. Neither is a superset, so here is the
+mapping — **read the right-hand column as authoritative for cross-auditor comparison**:
+
+| mine (used above) | shared (ADJ-8) | note |
+|---|---|---|
+| **CLEAN** | **HONEST-DERIVED** | name, description and arithmetic agree; no claim to unavailable data |
+| **PROXY** | **PROXY** | identical meaning |
+| **DEGRADED** | **DEGRADED** | identical meaning |
+| **MISNAMED** | **PROXY** when the name claims unavailable data (`imbalance_bar`, `orderflow`); **HONEST-DERIVED-BUT-BROKEN** when the data is available and the wrong field or window is read (`volatility_compressed`, `avoid_lunch`, `after_opening_range`, `above_vwap`, `imbalance_pullback`, `lvn_rejection`, `poc_reversion`, `value_area_breakout`) | **this is the split ADJ-8's vocabulary makes and mine does not, and it is the more useful cut** — one needs data the repo cannot get, the other needs a one-line change |
+| **DEAD** | **DEGRADED**, at its limit | no shared term exists for "cannot fire". I would ask for one: 6 configurations found (Addendum B) and `DEGRADED` understates every one |
+
+**Under the shared vocabulary my 16-group tally reads:** 6 HONEST-DERIVED, 5 DEGRADED, 1 PROXY
+(`liquidity`), 4 split between PROXY and HONEST-DERIVED-BUT-BROKEN per the table above. The **most
+useful single number is unchanged either way: 8 of 13 templates are affected through a required slot
+and 13 of 13 through a base filter.**
+
+## Credit and two sharpenings of `X-9` and `X-10`
+
+ADJ-8 instructs me not to re-derive `X-9`'s seven filter⇄group aliases. **I did re-derive them and
+should not have** — `AVENUES.md` X-9 already holds `avoid_lunch`≡REVERSAL,
+`opening_drive_window`≡OPENING_RANGE, `after_opening_range`≡LIQUIDITY, `mtf_not_conflicted`≡PULLBACK,
+`regime_trending`≡TREND, `regime_ranging`≡MEAN_REVERSION, `volatility_compressed`≡BREAKOUT
+`[repo-verified: discovery/AVENUES.md:213]`. **The alias fact is X-9's, and X-9 is the citation.**
+
+**What is new here is the arithmetic behind five of those seven**, which X-9 does not carry — X-9's
+point is "A/B on any of them compares groups", a *design* observation. Mine is that the conditions
+themselves are wrong: `avoid_lunch` excludes MGC's final 90 minutes (D-T1), `after_opening_range`
+passes most of Globex (D-T2), `volatility_compressed` reads the wrong field (D-V1),
+`mtf_not_conflicted` ignores its `tf` (D-MTF3), `regime_trending`/`regime_ranging` are measured on a
+timeframe the strategy does not choose (D-R1). **So the seven aliases are worse than X-9 states: five
+of them are not merely group-redundant, they are group-redundant *and* misnamed or timeframe-blind.**
+
+`X-10` likewise already holds two facts I re-measured, and my measurements **sharpen one and correct
+the scope of the other**:
+
+1. **`opening_range_breakout` fires on 4 of 4,256 bars** — X-10 has the *rate*
+   `[repo-verified: AVENUES.md:214]`. **D-L1 supplies the mechanism** it lacks: `or_minutes = 30`
+   hard-coded against a per-symbol `rth_open` that is off the hourly grid. R3 then generalised my
+   per-cell table to a **closed form** — the window is reachable iff `∃h : 0 <= 60h − open_minutes < 30`,
+   which is `∅` for MGC (500), MES and MNQ (570) and `{9}` for MCL (540)
+   `[repo-verified: msgs/11_R3_R1_re-stopkind-RANGE.md §2]`. **That is strictly better than my table**
+   and it predicts the collapse for any future symbol with an off-hour open. Cite R3's form, not mine.
+2. **`session_extreme_sweep` "compares a bar against a session high that includes that bar
+   (arithmetically cannot fire)"** `[repo-verified: AVENUES.md:214]`. **True inside RTH, and the
+   condition does fire outside it** — my census measured 23–92 fires per 5,000 bars, which looked like
+   a contradiction. It is not; it is a narrower claim than X-10 states, and the resolution is a
+   finding in its own right:
+
+### D-L4 — `session_extreme_sweep` fires **only** outside RTH, and `rth_only=True` then kills it
+
+`session_high`/`session_low` accumulate **only while `is_rth(b.ts)`**
+`[repo-verified: features.py:880-895]` and are updated with the current bar *before* `SessionLevels` is
+built `[repo-verified: features.py:883-884 then :899]`. So on an RTH bar `session_high >= b.high`
+always and `_level_sweep`'s `b.high > high_level` is unsatisfiable — X-10's point, exactly right. On a
+**non**-RTH bar the accumulator is not updated, so `session_high` is the **previous RTH session's** high
+and the current bar can exceed it. Measured:
+
+| symbol | fires | inside RTH | outside RTH |
+|---|---|---|---|
+| MGC 1h | 92 | **0** | **92** |
+| MCL 1h | 58 | **0** | **58** |
+| MNQ 1h | 28 | **0** | **28** |
+| MES 1h | 29 | **0** | **29** |
+
+`[measured: python3 over csv/raw/{MGC,MCL,MNQ,MES}_1h.csv, snap.is_rth at each firing]`
+
+**So the object is "an overnight bar took out the prior RTH session's extreme"** — which is
+`overnight_sweep`'s territory, not "session extreme sweep". **MISNAMED.**
+
+**And then it cannot fire in a strategy at all.** `StrategyFilters.rth_only` defaults to `True`
+`[repo-verified: futures_agents/strategies/base.py:393]` and is `True` on **314 of 314** generated
+strategies `[measured: generate_strategies('MGC',[5,15,60,240],max_total=400) → Counter({True: 314})]`,
+consistent with `R3-Q2`'s finding that the exit/filter catalogue never varies `StrategyFilters`. Since
+the condition fires only outside RTH and `rth_only=True` vetoes every non-RTH bar,
+**`session_extreme_sweep` is structurally dead inside every strategy the combinator can currently
+build**, and its 23–92 census fires are all on bars no generated strategy would ever trade.
+
+`liquidity` is **required by OPENING_RANGE and LIQUIDITY**, so this is a third dead member of a
+required group — alongside `opening_range_breakout` and `opening_range_fade` at 1h. **Of `liquidity`'s
+7 conditions, 3 cannot produce a trade at 1h on MGC.**
+
+---
+
+# Addendum B — structurally zero-trade configurations, final list
+
+Updated from the tally above with D-L4. **Six, of which five are new in this audit.**
+
+| # | configuration | cause | scope |
+|---|---|---|---|
+| 1 | any strategy carrying `oi_price_confirmation` / `oi_expanding` | `open_interest` is `None` on every `csv/raw` bar | all symbols, all timeframes (R1, round 1; now `D47`) |
+| 2 | MULTI_TIMEFRAME at the frame's top timeframe | `voting < 2` → both SIGNALs `no()` | all symbols; depends on the frame's timeframe list |
+| 3 | VOLUME_PROFILE at 240m | `prior_session_profile` needs ≥ 10 bars/session; 4h gives 5–6 | MGC, MCL, MNQ measured; 100% of 240m bars |
+| 4 | OPENING_RANGE at 1h | `or_minutes = 30` vs an off-hour `rth_open` | **MGC total, MNQ/MES 99.8%, MCL unaffected** — closed form in R3's msg 11 |
+| 5 | BREAKOUT + `volatility_expanding` | `atr_percentile <= 0.30 AND >= 0.70`, same field, same tf | all symbols; **10 of 60 generated BREAKOUT strategies** |
+| 6 | any strategy carrying `session_extreme_sweep` | fires only outside RTH; `rth_only=True` on 314/314 | all symbols, all timeframes |
+
+**Three of the six sit inside a *required* group** (#2 `multitimeframe`, #3 `profile`, #4 and #6
+`liquidity`), which means the affected template cannot be built any other way at that timeframe. This
+is `R1-Q2`'s question with five more causes than it had; the manager has since closed `R1-Q2` with the
+answer that the denominator direction is safe and `free_t` is logarithmic
+`[repo-verified: msgs/10_manager_R1_requests-and-scope.md]` — **so none of these six can rescue a
+result, and that is not why they matter.** They matter because each one is an *absence that was
+available to be read as a market fact*, which `_spans_sessions`' docstring says already happened once:
+"those absences were read as market facts for weeks" `[repo-verified: library.py:856-857]`.
+
+---
+
+# Addendum C — a correction to my own `volume` row, from R4, verified; and the mechanism that makes Addendum B binding
+
+`research/R4_group_audit.md` is an independent replication of the 7 groups I audited outside my
+surface, and it returned one **REFINED** verdict against my file. **R4 is right. I verified it from the
+code myself rather than accepting it, and I am applying it.**
+
+## C-1 — `volume` is *declared* required by MOMENTUM and BREAKOUT and the combinator does not enforce it
+
+```
+combinator.py:363-369
+def _signal_pools(template):
+    def pool(group):
+        return sorted(n for n in CONDITION_GROUPS.get(group, [])
+                      if CONDITIONS[n].kind is ConditionKind.SIGNAL)
+    required = [pool(g) for g in template.required_groups]
+    optional = [pool(g) for g in template.optional_groups]
+    return [p for p in required if p], [p for p in optional if p]
+```
+
+`[repo-verified: futures_agents/strategies/combinator.py:363-369]` — **signals only, and empty pools
+are discarded.** Four groups contain zero SIGNAL conditions:
+
+`[measured: python3 over CONDITION_GROUPS + CONDITIONS[n].kind → **news 0/3, time 0/4, volatility 0/3,
+volume 0/3**; others: candlestick 4/5, fibonacci 3/4, imbalance 2/3, liquidity 7/7, meanreversion 3/3,
+momentum 6/6, multitimeframe 2/3, openinterest 1/2, orderflow 3/3, profile 4/6, regime 1/3,
+structure 5/5, supplydemand 2/3, trend 6/8, vwap 4/5]`
+
+`[measured: for each template, required_groups vs groups with >= 1 SIGNAL → **MOMENTUM declared
+('momentum','volume') → enforced ['momentum']; BREAKOUT declared ('structure','volume') → enforced
+['structure']**; the other eleven templates match]`
+
+**Corrections to this file, applied here rather than by editing the tables above, so a stale citation
+still resolves:**
+
+1. **"The template requirement map"** and the **final tally** list `volume` as "REQUIRED by MOMENTUM,
+   BREAKOUT". **Read that as *declared* required and *not enforced*.** `volume` cannot satisfy a
+   required slot because it has no SIGNAL member.
+2. **D-M2's stated consequence is overstated and R4 caught it.** I wrote that a MOMENTUM strategy whose
+   only `momentum` condition is `rsi_extreme_reversal` is "a mean-reversion strategy published under
+   the MOMENTUM template's name, **with a `volume` filter on it**". **The last clause is wrong.**
+   MOMENTUM is also the one template of thirteen whose `base_filters` omits `volume_not_thin` — its
+   base set is `('volatility_normal',)` alone — so a generated MOMENTUM strategy can contain **no
+   volume condition of any kind**, in the template whose own `required_groups` names one. R4 measured
+   24 of 40 MNQ and 15 of 25 MCL MOMENTUM strategies with zero `volume` conditions. **The misfiling is
+   worse than I stated, not better**: the template's entire declared content beyond `momentum` can be
+   absent.
+3. The "8 of 13 templates affected through a required slot" count is **unchanged** — MOMENTUM is in it
+   via `momentum` (MISNAMED), not via `volume`, and BREAKOUT was never counted in it.
+
+**The latent trap R4 names is the important part and I endorse it:** nothing warns that moving a
+condition from SIGNAL to FILTER **silently deletes a template's requirement**, and
+`if not required: continue` `[repo-verified: combinator.py:513]` means a template whose every required
+pool emptied would be skipped in silence rather than raising. Same failure shape as `D38` and as the
+`openinterest` FILTER.
+
+## C-2 — `Strategy.evaluate` is a strict AND, which is what makes every item in Addendum B binding
+
+Addendum B asserts six configurations take zero trades. I had inferred that from the conditions; it is
+provable from the aggregation:
+
+```
+base.py:670-684
+for cond in self.filter_conditions:
+    res = cond.evaluate(snap, self.primary_tf, cache)
+    if not res.triggered:
+        return None                      # one dead FILTER kills the strategy
+...
+for cond in self.signal_conditions:
+    res = cond.evaluate(snap, self.primary_tf, cache)
+    if not res.triggered or res.direction is Direction.NEUTRAL:
+        return None                      # one dead SIGNAL kills the strategy
+```
+
+`[repo-verified: futures_agents/strategies/base.py:670-684]`
+
+**There is no `min_signals` k-of-n anywhere in it.** Every filter must pass and every signal must fire
+*and agree in direction*. So **a single condition that can never fire makes the whole strategy
+structurally zero-trade**, regardless of how many other conditions it carries. That is the mechanism
+Addendum B depends on, and it was worth proving rather than assuming.
+
+## C-3 — the six configurations are reachable, measured, and R4's method objection does not apply to them
+
+R4 writes that I "measured timeframe bindings the harness never generates". **Measured against the
+harness: it does generate them.** `generate_strategies(sym, [5,15,60,240], max_total=400)` on four
+symbols, 1,260 strategies:
+
+| `primary_tf` distribution | 5m | 15m | 60m | **240m** |
+|---|---|---|---|---|
+| MGC (314) | 54 | 54 | 136 | **70** |
+| MNQ (314) | 56 | 100 | 78 | **80** |
+| MCL (296) | 38 | 84 | 126 | **48** |
+| MES (336) | 44 | 80 | 104 | **108** |
+
+**MULTI_TIMEFRAME at `primary_tf = 240`:** MNQ **32**, MES **8**, MCL **8** — and every one has
+`confirm_tfs = ()` with `timeframe = None` on every condition, so all conditions evaluate at 240m
+`[measured: same run, inspecting Strategy.confirm_tfs and Condition.timeframe]`. 240 is the frame's top
+timeframe, so `agreeing_timeframes(from_tf=240)` gives `voting = 1` and D-MTF1 bites.
+**VOLUME_PROFILE at 240m:** MGC **20**, MES **40**.
+
+Full census of the sample against Addendum B:
+
+| never-firing cause | strategies carrying it |
+|---|---|
+| `profile` conditions at 240m (D-P1) | **98** |
+| `mtf_aligned`/`mtf_strongly_aligned` at the frame's top tf (D-MTF1) | **48** |
+| `session_extreme_sweep` under `rth_only=True` (D-L4) | **46** |
+| `openinterest` (R1, round 1 / `D47`) | **23** |
+| `opening_range_*` at 1h on MGC/MNQ/MES (D-L1) | **16** |
+| `volatility_compressed ∧ volatility_expanding` (D-V2) | **10** |
+| **at least one of the above** | **239 of 1,260 = 19.0%** |
+
+per symbol: **MGC 36/314 = 11.5%, MNQ 86/314 = 27.4%, MCL 41/296 = 13.9%, MES 76/336 = 22.6%**
+`[measured: python3 -c "from futures_agents.strategies.combinator import generate_strategies; ..." over MGC/MNQ/MCL/MES at max_total=400]`
+
+**Three limits on that 19%, stated because the number is quotable and would otherwise travel too far.**
+(i) It is a `max_total=400` **reachability** sample with a per-symbol RNG seed, not the published
+population — `generate_combinations` seeds per symbol, so this sample shares no rule set with any
+shipped scan (`X-13`). (ii) I called `generate_strategies` with **all thirteen** groups; the published
+sweeps may have used `groups_for()` profiles, and MGC's default profile is 6 groups (R1-D4a), which
+would change the mix. (iii) **The spread across symbols — 11.5% to 27.4%, a 2.4× range — is the part
+that does not average**, and per the independence rule it is four facts, not one.
+
+**What this does and does not mean.** It does **not** rescue any result: the manager has closed
+`R1-Q2` with the arithmetic that `free_t = sqrt(2·ln n)` is logarithmic and the direction of a
+denominator error is safe. What it means is that roughly one generated strategy in five was never
+capable of producing evidence, **for six distinct reasons, none of which is visible in the strategy's
+name**, and that `_spans_sessions`' docstring already records what happens next: "those absences were
+read as market facts for weeks" `[repo-verified: library.py:856-857]`.

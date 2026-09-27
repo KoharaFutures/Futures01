@@ -39,7 +39,7 @@ ID = re.compile(
       | DISC-LEAD-\d+
       | D\d+                        # programme-wide defect
       | (R[1-6]|BT[1-6]|DISC2?)-      # issuer-prefixed:
-        (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[AB]-\d+)
+        (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[ABM]-?\d+)
       | MGR-(T\d+|Q\d+|REQ-\d+)    # manager task / question / request
       | ADJ-\d+                     # manager adjudication
       | R-\d+                       # board rule

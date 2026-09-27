@@ -927,6 +927,25 @@
    "max_drawdown_max": 2934.32,
    "mean_r_taken_median": -0.06288
   },
+  "placebo_ensemble": {
+   "arm": "PLACEBO (R permuted), same 200 seeds",
+   "n_seeds": 200,
+   "taken_pct_median": 1.0,
+   "taken_pct_p05": 0.683,
+   "taken_pct_p95": 1.959,
+   "taken_pct_min": 0.055,
+   "taken_pct_max": 3.198,
+   "n_absorbing": 12,
+   "pct_absorbing": 6.0,
+   "n_failed_hard": 1,
+   "death_index_median": 6599.0,
+   "death_ts_earliest": "2025-10-22T19:00:00-04:00",
+   "death_ts_latest": "2026-07-07T11:00:00-04:00",
+   "taken_before_death_median": 163.0,
+   "max_drawdown_median": 2561.05,
+   "max_drawdown_max": 5160.71,
+   "mean_r_taken_median": -0.08271
+  },
   "seeds": [
    {
     "label": "SEED 1",
@@ -7922,7 +7941,7 @@
   ]
  },
  "placebo": {
-  "label": "POOLED placebo (R permuted)",
+  "label": "ANCHOR placebo (R permuted)",
   "candidates": 21954,
   "taken": 415,
   "taken_pct": 1.89,

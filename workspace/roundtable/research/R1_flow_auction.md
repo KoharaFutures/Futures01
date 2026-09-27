@@ -1,12 +1,32 @@
 # R1 — Flow, auction and participant information
 
 **Track:** R1 (DIVISION §2). **Class:** I — participant information.
-**Owner:** researcher R1. **Round:** 1. **Started:** 2026-09-27.
-**Deliverables:** R1-D1 … R1-D6 per DIVISION §3. Companion file:
-`workspace/roundtable/research/R1_data_requirements.md` (R1-D3).
+**Owner:** researcher R1. **Round:** 1, with round-2 corrections marked in place.
+**Started:** 2026-09-27.
+**Deliverables:** R1-D1 … R1-D6 per DIVISION §3. Companion files:
+`research/R1_data_requirements.md` (R1-D3), `research/R1_group_audit.md` (DISC-LEAD-05),
+`research/R1_REQUESTS.md`.
 
 Marking convention per `BRIEF.md` rule 3: `[general knowledge]`, `[repo-verified: path:line]`,
 `[measured: command → result]`. Written incrementally, newest sections appended.
+
+## Round-2 changes to this file, all of them in one list
+
+Nothing below has been deleted. Corrections are inline block quotes headed **CORRECTION** so a
+reader of a stale citation can see what moved. Ids are canonical per `REGISTRY.md`.
+
+| what changed | where | source |
+|---|---|---|
+| the `estimated_delta` claim narrowed to `range == 0`, general sign-blindness claim stated beside it as the load-bearing one | HEADLINE, after the A/D paragraph | **BT1** Q4, `msgs/02_BT1_R1_verify-ALGO-1.md`; my ruling `msgs/03_R1_BT1_re-verify-ALGO-1.md` |
+| "every MEDIUM/LOW `ECON_RULES` entry" → there are **no LOW rules**; 5 MEDIUM; visible universe is 5 rules for MNQ/MES/MGC; the `features.py:969-971` comment is **false for MGC and MCL** | `news` evidence chain | **R2-Q2**, answering **R1-Q3** |
+| `orderflow` is **required** by REVERSAL and optional in the other **12**, not optional in all 13 | R1-D4a consequence 1 | mine, round-2 template map |
+| **§7 Q2 rank-1 (high volume, low range) was built by BT1 and came back near-empty.** Verdict recorded there | §7 Q2 table, after the table | **BT1-ALGO-1** census |
+| `imbalance` group verdict upgraded from PROXY(name)/HONEST-DERIVED to **MISNAMED** | R1-D4 `imbalance` section | `R1_group_audit.md` Group 19 |
+
+**Round-2 work that is in its own files, not here:** the 16-group name-versus-arithmetic audit
+(`research/R1_group_audit.md`, DISC-LEAD-05), the `BT1-ALGO-1` fidelity ruling
+(`msgs/03_…`), the `R3-Q1` answer on `StopKind.VWAP_BAND` (`msgs/04_…`), the `StopKind.RANGE`
+collapse (`msgs/05_…`), and four manager requests (`research/R1_REQUESTS.md`).
 
 ---
 
@@ -90,6 +110,33 @@ does — because a bar with no range has `CLV` undefined and returns `0.0`
 `[repo-verified: futures_agents/data/bars.py:111]`, whereas true absorption is a *large*
 delta with *zero* range. **The proxy returns zero precisely in the case the real measure returns
 its maximum.** That is not a noisy estimate; it is sign-blind in the family's central setup.
+
+> **CORRECTION, applied round 2 — narrowing the arithmetic claim and stating the general one.**
+> BT1 challenged the scope of the sentence above in `msgs/02_BT1_R1_verify-ALGO-1.md` Q4 and **the
+> challenge is right; I accept it in full** (my ruling: `msgs/03_R1_BT1_re-verify-ALGO-1.md` Q4).
+>
+> The arithmetic is exact **at** `range == 0` and **does not extend to the neighbourhood of that
+> point**, because CLV is normalised **by** range: numerator and denominator shrink together, so a
+> high-volume bar closing on its extreme yields `delta` near ±volume however narrow the bar is. And
+> exactly-zero range is a corner, not the family's typical case — **0.000–0.600% of bars**
+> `[measured: BT1, awk over csv/raw/{MGC,MCL}_{1m,5m,15m,1h}.csv → MGC 0.000/0.020/0.053/0.080%,
+> MCL 0.600/0.000/0.027/0.160%]`.
+>
+> **The load-bearing claim is the general one, and it is stronger than the arithmetic version:**
+> CLV reads only *where the close sits*, so it cannot distinguish **"no aggression arrived"** from
+> **"aggression arrived and was absorbed"** — the two states this family is entirely about. A truly
+> absorbed bar often closes back in the *middle*, sending `CLV × volume` toward zero for a reason
+> that has nothing to do with range being zero. **That is sign-blindness in the family's central
+> setup without needing the degenerate case at all**, and it is the form to cite from here.
+>
+> Two consequences recorded where they belong rather than here:
+> - The `estimated_delta` sign is exactly `close > midpoint` for any bar with range > 0
+>   `[measured: sign agreement 78/78 on ALGO-1's firing bars; 4904/4996 MGC, 4901/4992 MCL,
+>   4907/4994 MNQ, 4912/4998 MES over all 1h bars]`. This is why I ruled `BT1-ALGO-1`'s directional
+>   form **DIVERGENT**: its direction rule *is* this proxy, under another name.
+> - The same CLV arithmetic is filed a second time, honestly, as `candle_close_strength` in the
+>   `candlestick` group — see `research/R1_group_audit.md` finding C-1. The `orderflow` group is a
+>   duplicate of it under the aggressor's name.
 
 **Step 4 — condition by condition.**
 
@@ -203,10 +250,42 @@ Two honest positives, which I am recording because they are the opposite of a co
    the calendar is generated rather than loaded. Its conditions are testable *as time filters*.
 
 The **inventory** of which releases the calendar projects is R2's (`DIVISION §5.2`, R2-D5). I do
-not audit `econ_calendar.py`. One handoff I owe R2, written to `OPEN_QUESTIONS.md`: the plumbing
+not audit `econ_calendar.py`. One handoff I owe R2, filed as **R1-Q3**: the plumbing
 filters to `impact.rank >= Impact.HIGH.rank` before computing proximity
 `[repo-verified: futures_agents/features.py:972-973]`, so every MEDIUM/LOW rule in `ECON_RULES` is
 invisible to all three `news` conditions regardless of what the calendar holds.
+
+> **CORRECTION, applied round 2 — R2 answered R1-Q3 and the correction stands, so I am applying it.**
+> Source: **R2-Q2** (`OPEN_QUESTIONS.md`, filed there as "Q5"; canonical id per `REGISTRY.md`).
+> R2 confirms R1-Q3 and the citation, and sharpens it in three ways I had wrong or vague:
+>
+> 1. **There are no LOW rules.** My phrasing "every MEDIUM/**LOW** rule" implies a population that
+>    does not exist. Measured inventory: **11 rules, {HIGH: 6, MEDIUM: 5}, no LOW**
+>    `[measured: R2, python3 -c "from futures_agents.econ_calendar import ECON_RULES; ..."]`. The
+>    invisible set is the **5 MEDIUM** rules — PPI, Claims, Retail Sales, GDP, ISM. Read the sentence
+>    above as "every MEDIUM rule".
+> 2. **The visible universe is smaller than 6 for four of the five symbols.** One of the six HIGH
+>    rules (EIA Crude) is symbol-scoped to `("MCL","CL","MNG","NG")`
+>    `[repo-verified: futures_agents/econ_calendar.py:219-221]`, so for MNQ/MES/MGC the visible
+>    universe is **5 rules**, not 6.
+> 3. **The in-code comment I did not challenge is false for MGC, and this one is mine to carry**
+>    because the `news` conditions are my audit surface. `features.py:969-971` says "Every other HIGH
+>    rule prints at 08:30, before the 09:30 open … four FOMC days in a hundred and twenty and nothing
+>    else". With each contract's **own** RTH from `ContractSpec` — MGC 08:20–13:30, MCL 09:00–14:30
+>    `[repo-verified: futures_agents/config.py:157,179]` — the count of distinct **in-RTH event days**
+>    is **MNQ 7, MES 7, MGC 32, MCL 49**
+>    `[measured: R2, project_events over each measured file span, is_rth per contract]`. Gold's pit
+>    session opens at 08:20, so the 08:30 prints land **ten minutes inside it**. So the comment is
+>    true for the index micros and **false for MGC and MCL**, and the `news` dimension is an almost
+>    empty filter on MNQ/MES (7 event days in eleven months) but a real one on MGC (32) and MCL (49).
+>    **Per-symbol, and not transferable** — which is the independence rule biting on a condition
+>    group I had described in one sentence for all symbols.
+>
+> R2 also self-answered its own question back to me, so nothing is outstanding: **exactly three
+> conditions read the calendar, all three are FILTERs, and zero of the 79 read `trading_day` or
+> `day_of_week`** `[measured: R2, inspect.getsource over CONDITIONS]`. That is a strictly stronger
+> statement than my "`news` is a `time` group": **the library can only ever *avoid* an event, never
+> trade one, and it cannot see the date.** My R1-D4 verdicts are untouched by any of this.
 
 ### Why this matters more than an expectancy number
 
@@ -243,6 +322,17 @@ Three consequences, each of which is a statement about published results and not
 condition from the `orderflow` group, i.e. contain a Chaikin A/D term presented as order flow.
 `orderflow` is offered as an `optional_groups` entry by **all thirteen** templates
 `[repo-verified: futures_agents/strategies/combinator.py:166-332]`.
+
+> **PRECISION CORRECTION, round 2, mine not anyone else's.** "Offered as an `optional_groups` entry
+> by all thirteen" is one template too many. Enumerated exactly:
+> **`orderflow` is `required` by REVERSAL and an `optional_groups` entry in the other 12** — it
+> appears in all thirteen templates, but in REVERSAL it is not optional, it is mandatory
+> `[measured: python3 over combinator.TEMPLATES → required_groups: ['REVERSAL'];
+> optional_groups: ['TREND','PULLBACK','VWAP','MOMENTUM','OPENING_RANGE','LIQUIDITY',
+> 'MEAN_REVERSION','BREAKOUT','MULTI_TIMEFRAME','VOLUME_PROFILE','SUPPLY_DEMAND','FIBONACCI']]`.
+> The 50.7% figure and consequence 2 are unaffected; the sentence was imprecise about *how* it
+> reaches thirteen. The full 19-group × 13-template requirement map is in
+> **`research/R1_group_audit.md`**, "The template requirement map".
 
 **2. The REVERSAL group is defined by the proxy.** `StrategyTemplate(group="REVERSAL",
 description="Exhaustion and absorption against the prevailing move",
@@ -504,6 +594,29 @@ by contrast, is exactly right: "Bar-level aggressive participation: range and vo
 the recent norm" `[repo-verified: futures_agents/strategies/library.py:1160-1166]`. So the docstring
 is the error, not the code, and the fix is one line of prose. Two further words to drop: "footprint"
 has a technical meaning this object does not satisfy, and "delta" is not read.
+
+> **UPGRADE, round 2 — this group's verdict moves from PROXY(name)/HONEST-DERIVED to MISNAMED.**
+> Full audit at `research/R1_group_audit.md` Group 19. Two things I missed here:
+>
+> 1. **`imbalance_pullback` contains no pullback test.** Its whole body is
+>    `1 <= bars_since_imbalance <= 10` plus the displacement's stored direction
+>    `[repo-verified: library.py:1180-1190]` — **there is no reference to price anywhere in it**. It
+>    fires on every bar in a 10-bar window after a displacement, wherever price happens to be.
+>    Measured **24.9–41.8% of bars** `[measured: 5-cell census]`, which is what a 10-bar window after a
+>    4.3–8.9% event should give and far too high for a retracement event. The description
+>    ("Pullback **into** a displacement") names a price relationship the arithmetic never tests.
+>    `fvg_nearby` and `zone_touch` both do the `contains(price)` test this one is missing.
+> 2. **The object the literature calls an imbalance is in a different group.** A three-bar fair value
+>    gap *is* the price imbalance of that literature, this repo implements it correctly, and it lives
+>    in **`structure`** as `fvg_nearby`. `FVG`'s own class docstring says so — "A three-bar fair value
+>    gap (**imbalance**)" `[repo-verified: indicators/structure.py:383-384]`. So the two objects are
+>    filed under each other's neighbours.
+>
+> Also filed as **`R1-REQ-3`**: the `detect_imbalances` docstring defect above needs a `D<n>`, which is
+> not mine to allocate. And it returns `magnitude = r_mult` `[repo-verified: structure.py:461]` — the
+> **range** multiple — so a caller ranking "imbalances" by magnitude is ranking by displacement, never
+> by participation. **Mitigating fact:** `imbalance` is **required by no template**, so it is the one
+> misnamed group here whose blast radius is genuinely limited.
 
 ### Tally of the 27
 
@@ -1745,6 +1858,39 @@ letter:
 | 3 | **RTH-anchored and week-anchored VWAP** | `vwap_bands` accepts `rth_only` and an anchor `[repo-verified: futures_agents/indicators/volume.py:72-74]`; `features.py:248` calls it with `"session"` and no `rth_only`, so only the Globex VWAP is reachable. The RTH VWAP is the one tied to cash-equity execution. | ~10 lines: extra feature columns + condition variants. |
 | 4 | **TPO / time-at-price counts (P7)** | Zero occurrences of TPO, time-at-price or bracket anywhere `[measured: grep → 0]`. Unlocks excess-vs-poor-extreme, which is the invalidation primitive of I-8. | ~60 lines, zero new data. |
 | 5 | **Composite / multi-session profile and naked POC (P8)** | `prior_session_profile` reads exactly `position - 1` `[repo-verified: futures_agents/features.py:615-622]`. | ~40 lines, zero new data. |
+
+> **OUTCOME OF RANK 1, recorded round 2 — it was built, and it is near-empty.**
+> BT1 implemented this exact item as **`BT1-ALGO-1`** (`backtest/BT1/code/absorption.py`,
+> `backtest/BT1/ALGOS.md`) with my thresholds verbatim — `v_mult >= 2.0`, `r_mult <= 1.0`, off
+> `detect_imbalances`' own 20-bar trailing mean. **Taken literally the shape fires 2 to 41 times per
+> 5,000-bar series**, putting 4 of 6 cells below `toolkit.FLOOR = 20` before an exit model touches
+> them `[measured: BT1, code/frequency.py → MGC 1h 11, MGC 15m 2, MGC 5m 9, MCL 1h 41, MCL 15m 5,
+> MCL 5m 11]`.
+>
+> **The cause is not the implementation, it is the clock.** Volume and range on a time bar are both
+> integrals over the same interval, so they are coupled by construction —
+> **corr(v_mult, r_mult) = 0.537–0.885** on two unrelated contracts, and conditional on `v_mult >= 2`
+> the median `r_mult` is 1.77–2.00, with only **0.51–5.85%** of high-volume bars having range at or
+> below norm `[measured: BT1, code/frequency.py → coupling table]`. **A bar that takes double its
+> normal volume almost always moves.**
+>
+> **My ruling (`msgs/03_R1_BT1_re-verify-ALGO-1.md`): `CONCLUDED-UNMEASURABLE`, two named causes, and
+> no threshold relaxation.** The two causes are both already in this file: **I-2's
+> `INEXPRESSIBLE-DATA`** (no aggressor flag) and **I-12's `INEXPRESSIBLE-ARCHITECTURE`** (the
+> integer-minute time bar, `:1131`). BT1's coupling table is the first *measurement* of the second,
+> on a named family — round 1 filed I-12 on architectural grounds only. The doubly-blocked shape is
+> the same as B.6's.
+>
+> Two limits on how far this may be read. (i) The qualifier **"as a single-bar OHLCV object"** is
+> load-bearing: what was measured is {total volume high, range low}; the real object is
+> {|delta| high, range low}, and neither contains the other, so **this census says nothing about
+> whether the real object is rare**. (ii) I ruled the directional form **DIVERGENT** — its direction
+> rule `close_pos > 0.5` is exactly `sign(estimated_delta)`, the proxy this very finding rejects, so
+> only the direction-free FILTER form is `BT1-ALGO-1`.
+>
+> **The rank-1 placement stands as correct advice.** It was ranked cheapest-and-never-asked, not
+> most-likely-to-work, and ~15 lines bought a mechanism finding about the sampling clock. **A
+> hypothesis that turns out to be unmeasurable is a result, and it is the cheapest kind to get.**
 
 **Two honesty notes on this list.** (i) Items 2 and 3 are *implemented-but-unwired*, which is a
 stronger claim than "never tested" and a weaker one than "expressible today" — they need a wire, not

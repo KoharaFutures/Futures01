@@ -98,3 +98,69 @@ PIPELINE §3 shape. Filed as they arose; I kept working on the current task in e
 - **What it blocks:** nothing of mine. R3's `StopKind` vocabulary rows and any published result
   carrying `VWAP_BAND`.
 - **My estimate of its size:** small as a defect entry; the re-read of affected results is R3's call.
+
+---
+
+# Rulings received — `msgs/10_manager_R1_requests-and-scope.md`, `msgs/13_manager_all_D48-D49-and-triage.md`
+
+All four requests above are ruled. Recorded here so this file is not read as still open.
+
+| request | ruling | id to cite from now on |
+|---|---|---|
+| `R1-REQ-1` D38 registration guard | **Granted.** Goes to the **parent**, not a backtester, as `workspace/roundtable/lib/registry_guard.py` — a helper imported by all three backtesters cannot live in one owner's `code/`. Interim: BT2/BT3 import BT1's copy read-only. | **`MGR-T12`** |
+| `R1-REQ-2` the two volume norms | **Granted and promoted** above the sub-task I filed it as; ruled a question about the **existing corpus**, touching `BRIEF` rule 6 and the ICT kill-zone finding. My design constraint — both axes take the time-of-day norm or neither does — **adopted verbatim and binding.** Ruled a **prerequisite input to the group audit**, because an auditor who does not know which norm a condition uses cannot classify it. | **`MGR-T13`** |
+| `R1-REQ-3` `detect_imbalances` docstring | **No new number — folded in as instance 2 of a class**, so that ten docstring defects do not become ten adjacent numbers and bury the pattern. Split trigger recorded at about six instances. | **`D46`** |
+| `R1-REQ-4` `VWAP_BAND` floor collapse | **Allocated**, and ruled the strongest of five defect candidates that turn, because it puts a **measurement artefact behind a result the programme treats as settled** (`x_exits`' "no stable best stop width"). | **`D45`** |
+
+**Also allocated from work in `R1_group_audit.md` that I did not file as a request:** `D49` —
+`StopKind.RANGE` is `StopKind.ATR` (D-L1/D-L3, sent as `msgs/05_R1_R3_stopkind-RANGE.md`).
+`D45` + `D49` together are escalated to **`MGR-T17`** (R3's), as the first settled negative finding in
+this programme with a named, measured, artefactual candidate explanation.
+
+**`R1-Q1` → `D46`. `R1-Q2` → CLOSED**, and it needed no sweep: the zero-trade `openinterest` carriers
+are a strict subset of the 82% that never traded, the ~495k discount is already published at
+`free_t = 5.15`, and `free_t = sqrt(2·ln n)` is logarithmic — *n* would have to fall to ~2,197 to meet
+the largest t ever found (3.923). **My instinct was right and now has the number attached**, and it
+also closes the open half of `X-15`.
+
+---
+
+## R1-REQ-5 A shared verdict term for "cannot fire", because `DEGRADED` understates six configurations
+
+- **Arose in:** `MGR-T5` / the wider group audit, `research/R1_group_audit.md` Addendum B
+- **The ask:** add one term to `ADJ-8`'s shared audit vocabulary (PROXY / DEGRADED / HONEST-DERIVED /
+  HONEST-DERIVED-BUT-BROKEN) for a condition or configuration that **cannot produce a trade**, so that
+  R1, R2 and R3 classify these the same way. I used `DEAD` in my own file; the shared vocabulary has no
+  equivalent and `DEGRADED` is the nearest, which materially understates it.
+- **Why it is not cosmetic.** A DEGRADED condition produces a weak number; a dead one produces **no
+  evidence at all**, and the two must not be aggregated in any tally. Six are now on the record and
+  **three of the six sit inside a *required* group**, so the affected template cannot be built any other
+  way at that timeframe: `openinterest` (`D47`); MULTI_TIMEFRAME at the frame's top timeframe;
+  VOLUME_PROFILE at 240m; OPENING_RANGE at 1h (MGC total, MNQ/MES 99.8%); BREAKOUT +
+  `volatility_expanding` (10 of 60 generated); and `session_extreme_sweep` under `rth_only=True`
+  (314/314 generated strategies). `_spans_sessions`' own docstring records why it matters — "those
+  absences were read as market facts for weeks" `[repo-verified: futures_agents/strategies/library.py:856-857]`.
+- **What it blocks:** nothing. It makes `MGR-T5`/`T6`/`T7` comparable on the one verdict that is not
+  about degree.
+- **My estimate of its size:** trivial — one row in `ADJ-8`.
+
+## R1-REQ-6 Declaring an overlap: I audited all 11 remaining groups before `ADJ-8` reached me
+
+- **Arose in:** `MGR-T5`; `ADJ-8` and `msgs/10_manager_R1_requests-and-scope.md` arrived after the work
+- **The situation, not an ask for absolution.** My dispatch instructed me to audit **16 groups**.
+  `ADJ-8` splits the remainder three ways by code surface and gives me **3 groups / 12 conditions**
+  (`structure`, `supplydemand`, `fibonacci` = `MGR-T5`), assigning 7 groups / 31 conditions to R3
+  (`MGR-T6`) and `time` to R2 (`MGR-T7`). **I had already audited all 11.** `ADJ-8`'s arithmetic is
+  right and my dispatch's was wrong — the genuinely-new remainder is 47 conditions, which my own count
+  reproduces exactly.
+- **The ask, in two parts.** (i) **Rule on what the overlapping 8 groups are worth**, since two
+  independent readings of the same 35 conditions now exist: where they agree the verdict is stronger
+  than either alone, and where they disagree one of us has shipped an error. (ii) **Relay one
+  instruction to R3 and R2 if you agree with it:** *audit first, then compare.* Reading
+  `R1_group_audit.md` before doing `MGR-T6`/`T7` destroys the independence, which is the only thing the
+  duplication bought.
+- **What I have already done about it.** `R1_group_audit.md` Addendum A declares the overlap in full,
+  labels the 8 groups explicitly as a **cross-check and not a claim of ownership**, maps my vocabulary
+  onto `ADJ-8`'s, and credits `X-9` for the seven filter⇄group aliases I re-derived and should not have.
+- **What it blocks:** nothing of mine. Possibly R3's `MGR-T6` sequencing.
+- **My estimate of its size:** small for you; it is a routing decision, not research.

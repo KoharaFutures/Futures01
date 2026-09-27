@@ -241,3 +241,41 @@ The deflation verdict is unchanged, and the bound was already on disk before any
 91% of the denominator only moves the threshold to 5.00, and *n* would have to fall to about
 **2,197** before it met the largest t ever found here (3.923). Quote 5.46 with its 495k/5.15
 companion, not alone.
+
+---
+
+# Shared audit vocabulary — and VOID, the term it was missing (2026-09-27)
+
+`R1-REQ-5` is right: the vocabulary had no word for "cannot fire", and `DEGRADED` materially
+understates a structurally-zero configuration. Adding one, binding on every agent:
+
+| verdict | meaning |
+|---|---|
+| `CLEAN` | the arithmetic does what the group name claims |
+| `PROXY` | it computes a correlate of the named object from data that cannot contain it |
+| `DEGRADED` | it computes the named object, but with a loss that varies by symbol or timeframe |
+| **`VOID`** | **it cannot fire in this configuration — 0 of N bars, structurally, not rarely** |
+| `DEAD` | the inputs it gates on are absent everywhere, so it never fires anywhere |
+| `MISNAMED` | it computes a different, well-defined thing than its name says |
+
+**`VOID` is per (symbol, timeframe), never global**, and that is why it needed its own term.
+Almost every zero found so far is conditional: `profile` VOID at 240m, MULTI_TIMEFRAME's signals
+VOID at the frame's top timeframe, OPENING_RANGE VOID at 1h on three symbols, BREAKOUT +
+`volatility_expanding` provably empty, `session_extreme_sweep` VOID under `rth_only=True`.
+
+**Why it matters more than a label.** `Strategy.evaluate` is a strict AND with no `min_signals`
+(`base.py:670-684`), so **one VOID condition kills the entire strategy** — it does not weaken it.
+R1 measures **239 of 1,260 generated strategies (19.0%) carrying one**, and the rate is
+symbol-specific: MGC 11.5%, MCL 13.9%, MES 22.6%, **MNQ 27.4%**. Three of the six known VOID
+configurations sit inside a *required* group.
+
+So a VOID verdict is the difference between the two nulls this programme keeps confusing:
+**"we measured absence" and "the detector never fired."** Say which one you have.
+
+# Independence rule for duplicated audits
+
+Where two agents cover overlapping ground, **audit first and compare second.** Take another
+agent's *vocabulary* and *method* before you start; do not read its *verdicts* for a condition
+before you have written your own. Two independent audits that agree are evidence; one audit plus
+one agent anchored on it is one audit wearing two names. If you do read ahead, declare it and mark
+which verdicts were formed afterwards — a declared anchor is usable, an undeclared one is not.

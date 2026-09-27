@@ -794,6 +794,12 @@ def main() -> None:
             "max_drawdown_max": round(max(p.max_drawdown for p in rs), 2),
             "mean_r_taken_median": round(stats.median(
                 stats.mean(p.taken_r) for p in rs if p.taken_r), 5),
+            # Per-seed, so the arms can be compared *paired*. The seeds are
+            # shared across arms, so an unpaired test would ignore the largest
+            # source of common variance - the ordering itself - and D28 is this
+            # repo's standing warning about exactly that failure.
+            "absorbing_by_seed": [p.absorbing for p in rs],
+            "taken_by_seed": [p.n_taken for p in rs],
         }
 
     report["anchor"] = {k: pack(v) for k, v in runs.items()}

@@ -89,6 +89,11 @@ RULES: list[tuple[str, str]] = [
     (ROOT + "check_ownership.py", "parent"),
     (ROOT + "check_refs.py", "parent"),
     (ROOT + "REGISTRY.md", "parent"),
+    (ROOT + "lib/*", "parent"),
+    # The two paper-trading sessions. Each owns its own journal tree and nothing
+    # else writes there - the same one-writer-per-file rule as every other lane.
+    ("workspace/paper/CALL/*", "CALL"),
+    ("workspace/paper/REPLAY/*", "REPLAY"),
 ]
 
 

@@ -248,11 +248,18 @@ because that is where it usually hides, and I did not find it. Recording that as
    and re-projected from the actual fill `[repo-verified: engine.py:369-370, 524-536]`, so a
    worse fill does not silently buy a nearer target.
 
-One residual I could not close by reading alone and am flagging rather than asserting: the
-trail (`engine.py:451-462`) and the slippage scaler (`engine.py:334-342`) both read a
-higher-timeframe column at `self.frame.tf_index(i, tf)`. If `tf_index` maps a base index to
-the *containing* (possibly incomplete) higher-timeframe bar, then the ATR read is an ATR that
-includes bars after `i`. Because `trail_atr_mult` is always `None` (A-1) this is inert for
-the trail today, but `_atr_percentile` runs on **every** fill. I have not verified
-`tf_index`'s semantics; that is `features.py`, which DIVISION §2 does not assign to me for
-audit. **Logged to `OPEN_QUESTIONS.md`** rather than claimed.
+6. **The higher-timeframe reads in the management loop are not look-ahead either.** The trail
+   (`engine.py:451-462`) and the slippage scaler (`engine.py:334-342`) both index a
+   higher-timeframe ATR column via `self.frame.tf_index(i, tf)`, which is the obvious place
+   for a partially-formed higher bar to leak. It does not:
+   `tf_index` returns the "*Index of the newest **completed** ``timeframe`` bar at
+   ``base_index``*" `[repo-verified: futures_agents/features.py:921-926]`. I verified the
+   contract from the docstring and signature only, not the construction of `self._align`,
+   which is R1's surface under DIVISION §5; I am recording it as clean with that caveat
+   stated rather than silently.
+
+**So: on the five classic biases that live in a position-management loop — look-ahead fills,
+repainting stops, optimistic tie-breaking, favourable gap handling and target
+re-projection — this engine is clean.** The problems on my track are not correctness
+problems. They are *coverage* problems: the vocabulary exists, is largely correct, and has
+never been exercised.

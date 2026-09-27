@@ -166,3 +166,40 @@ The genuinely unobservable-on-this-vendor item is a **per-expiry ticker**. `=F` 
 front-month series. Whether Yahoo serves `CLZ26.NYM`-style single-expiry symbols at all is
 `[general knowledge, low confidence]` — historically unreliable coverage. Until it is tested,
 II-1 and II-2 are **unobservable**, and that half of the manager's pre-registration stands.
+
+---
+
+## 5. Per-family proxy ledger — the cheapest *valid* proxy, or the named reason there is none
+
+Rule applied: a proxy is **valid** only if it preserves the family's *mechanism*. A proxy that
+preserves the correlation but not the mechanism is named and rejected, because the tempting ones are
+the dangerous ones.
+
+| family | cheapest valid proxy in this repo | verdict |
+|---|---|---|
+| **II-1** calendar spread | **NONE.** The tempting one is the spliced grain series (D40) — `MZC/MZS/MZW` roll between contract months inside one CSV, so a roll *is* visible in this data. **Invalid:** a splice is a discontinuity in one series, not two simultaneously observable expiries. You can see that a roll happened; you can never see the spread, because the two legs never coexist on the same bar. | no proxy |
+| **II-2** carry / roll yield | **NONE valid.** The tempting one is the `MCL`-vs-`CL` pair in `data/archive/` — both energy, different series. **Invalid:** those are the same expiry at two contract sizes, not two points on the curve; their spread is a size/vendor artefact (BRIEF: 0.95c mean, 4c worst across 109 hourly bars), not a carry signal. | no proxy |
+| **II-3** basis / index arb | **YES, and the data is on disk.** `SPY_1d` vs `MES_1d` and `QQQ_1d` vs `MNQ_1d` `[measured: per-file span scan, §6]` overlap 2019-05-03 → 2026-09-18 ≈ 1,850 aligned daily bars. Valid as a *rich/cheap* signal; **invalid** as index arb proper (SPY is an ETF with its own NAV premium and creation/redemption mechanics; the futures fair value needs financing and dividends, neither present). Needs Wall A. | proxy: ETF-vs-futures ratio |
+| **II-4** crack / crush / ratio | **NONE on disk.** No RB, HO, ZM, ZL or SI series exists `[measured: ls csv/raw data/archive]`. Wheat-corn (`MZW`/`MZC`) is the only inter-commodity pair present and is excluded by D40. **But the vendor reaches all of them with zero code change** (§4). | proxy after a fetch, not before |
+| **II-5** inter-market | **YES.** `MGC_1d` vs `MES_1d` (gold vs equity) and `MGC_1h` vs `MCL_1h` on disk. **Invalid** for the canonical rates-vs-equity and dollar-vs-metals versions: no ZN, no DX, no FX series exists. | partial proxy |
+| **II-6** statarb / cointegration | **YES for the signal.** Any of the pairs above. **Invalid** as a market-neutral pairs *trade* without Wall B: a one-legged "ratio is stretched, buy the cheap leg" is a directional bet with a relational filter, not a spread, and its risk is the leg's own risk. Say so or the backtest reports a spread's Sharpe on an outright's variance. | proxy: one-legged, and label it |
+| **II-7** cross-sectional momentum | **YES, degraded.** Rank the 4-symbol universe and use the rank as a *filter* on one traded leg. **Invalid** as cross-sectional carry (needs the curve) and structurally underpowered as cross-sectional momentum: the canonical version ranks 40-60 markets; here N=4 and `[repo-verified: futures_agents/config.py:107-125]` MES/MNQ/ES/NQ share `correlation_group`, so the effective cross-section is closer to **2** (index complex, metals) than to 4. | proxy, but N≈2 |
+| **II-8** lead-lag between contracts | **YES, cleanest of all.** One traded leg, partner used only as a signal. ES/NQ/MES/MNQ/SPY/QQQ overlap. **Caveat, not invalidation:** D14/D41 — they are one complex, so a lead-lag result is a statement about microstructure within a complex, and agreement between them is not corroboration. | proxy: intra-complex only |
+| **II-9** correlation regime | **YES.** Rolling correlation of two on-disk series as a filter. Fully valid — correlation regime *is* the mechanism, and no second expiry or surface is needed. | full |
+| **II-10** seasonality | **Needs no second series at all.** See §7 / R2-D4 in the main file — this family is mis-cut into Class II. | expressible today, in part |
+| **II-11** scheduled events | **Needs no second series.** `econ_calendar.py` supplies it deterministically. | expressible today, in part |
+| **II-12** unscheduled news | **NONE.** A headline feed is not a recurrence rule, and `econ_calendar.py:8-10` says so itself: *"Scraped headlines cannot answer that question for the past without look-ahead."* The tempting proxy — a large gap or a volume spike — is **invalid**: it is the *reaction*, so conditioning on it is conditioning on the outcome. | no proxy, and the tempting one is circular |
+| **II-13** inventory / fundamental | **NONE.** No EIA/WASDE number, only the *timing* of the release. The tempting proxy — using the post-release price move as the surprise — is **invalid** for the same circularity. | no proxy |
+| **II-14** options-informed / GEX | **NONE.** No strike, no open interest, no IV. The tempting proxy — round-number pinning as a stand-in for max pain — is **invalid**: round numbers attract price for reasons unrelated to dealer gamma, so it cannot discriminate the hypothesis. | no proxy |
+| **II-15** delta-neutral / gamma scalping | **NONE.** Requires an options book to be neutral *against*. Not a data gap that a proxy closes. | no proxy |
+| **II-16** volatility as an instrument | **NONE on disk.** No VX series. **Invalid tempting proxy:** realised volatility of the traded series is RV, and the entire family is about the *spread* between IV and RV — using RV for both sides measures zero by construction. `^VIX` is vendor-reachable; VX *term structure* needs per-expiry tickers (§4, untested). | no proxy; partial after a fetch |
+| **II-17** COT / open interest | **NONE.** `[repo-verified: futures_agents/config.py:22-53]` `ContractSpec` has no OI field and `[measured: head -1 csv/raw/*.csv \| sort -u -> open_time,open,high,low,close,volume]` the bar has no OI column. The library's two `openinterest` conditions are the proxy question and belong to R1's audit (Appendix A; R1's OPEN_QUESTIONS Q2 reports they return `no()` on every bar). | no proxy |
+| **II-18** carry-conditioned trend | **NONE.** The conditioning variable *is* the curve slope. Without a second expiry the filter has no input; what remains is unconditioned trend, i.e. Class III. | no proxy |
+| **II-19** macro-regime overlay | **NONE valid on disk.** No rates, no dollar, no inflation series. A `MGC/MES` ratio is a *risk-appetite* proxy at best and cannot separate "rate cycle" from "inflation regime" from "liquidity" — three different overlays collapsing to one number. `^TNX`/`DX-Y.NYB` are vendor-reachable. | no proxy; partial after a fetch |
+
+**Count:** 6 families have a valid proxy from data already on disk (II-3, II-5, II-6, II-7, II-8,
+II-9) and all 6 require Wall A. 2 more (II-10, II-11) need no second series and are partly
+expressible **today**. 3 become proxy-able after a zero-code-change vendor fetch (II-4, II-16,
+II-19). 8 have **no valid proxy at any price** (II-1, II-2, II-12, II-13, II-14, II-15, II-17,
+II-18) — and for 4 of those the tempting proxy is not merely weak but **circular or
+zero-by-construction**, which is the more useful thing to have written down.

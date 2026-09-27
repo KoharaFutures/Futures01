@@ -280,3 +280,244 @@ immunity transfers to MNQ.
 probe and did not audit the file's contents.)*
 
 ---
+## R1-D4 Proxy audit — all 27 conditions in the six participant-information groups
+
+DIVISION §3 R1-D4: of the 27 conditions in `orderflow` (3), `volume` (3), `profile` (6),
+`vwap` (5), `liquidity` (7), `imbalance` (3), which read participant information and which are
+OHLCV derivations wearing the name. Every row carries a verdict and a path.
+
+**Three verdict labels, which I define once so the table is unambiguous:**
+
+- **PROXY** — the name promises below-the-bar or participant information; the arithmetic is a
+  function of `(o,h,l,c,v)` only. A real desk running this family reads a different object.
+- **HONEST-DERIVED** — the name is a legitimate OHLCV quantity and the arithmetic matches it.
+  No gap. (`volume_not_thin` really is "volume above a percentile"; nothing is being faked.)
+- **DEGRADED** — the *object* is the right object and would be computed the same way at a desk,
+  but the sampling resolution available here materially changes its value. Cited with the
+  measurement.
+
+### orderflow — 3 conditions, 3 PROXY
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `cvd_directional` | **PROXY** | sign of the session-reset **Chaikin A/D line** `Σ CLV·V`, gated `abs(cvd) >= 0.25*volume` | `library.py:439-453`; `features.py:222-223`; `bars.py:106-113` |
+| `delta_confirms_bar` | **PROXY** (the extreme case) | `close > (high+low)/2 AND close > open`. **Volume cancels** — only `sign(CLV·V)` is tested | `library.py:455-467` |
+| `delta_divergence` | **PROXY** | 20-bar price high vs 20-bar A/D high, trailing only. Fires on a new-extreme bar that closes weak or thin | `volume.py:144-170`; `library.py:469-478` |
+
+Full chain in the HEADLINE section. Summary: `delta` is `CLV × volume`
+`[repo-verified: futures_agents/data/bars.py:106-113]`, `delta_is_estimated` is `True` on every bar
+of every file `[measured]`, and the `estimated` flag is never read by any consumer
+`[measured: grep -rn "estimated" futures_agents/ → 13 hits, all in volume.py and bars.py]`.
+
+### volume — 3 conditions, 3 HONEST-DERIVED
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `relative_volume_high` | **HONEST-DERIVED** | `rel_volume >= 1.10`, where `rel_volume` is bar volume / 20-bar mean | `library.py:389-412`; `features.py:259` |
+| `volume_surge` | **HONEST-DERIVED** | `percent_rank(volume, 60) >= 0.90` | `library.py:415-422`; `features.py:330-339` |
+| `volume_not_thin` | **HONEST-DERIVED** | `percent_rank(volume, 60) >= 0.10` | `library.py:425-432`; `features.py:330-339` |
+
+No gap in any of the three. Total traded volume per bar **is** in the CSV; these conditions read
+it and say so. This is the group with the cleanest name-to-arithmetic match in the library, and it
+is worth saying because it shows the repo *can* name things accurately when the data is there.
+
+One caveat, which is the repo's own and which I am echoing rather than discovering:
+`relative_volume_high`'s docstring says its threshold was calibrated against synthetic bars and
+"Real futures volume has a much fatter right tail than the generator's, so this threshold is one to
+re-check on real bars rather than inherit" `[repo-verified: futures_agents/strategies/library.py:405-411]`.
+A threshold calibrated on a generator is a parameter-selection risk on real data, which belongs on
+the anti-overfitting list. Not a proxy problem; a calibration problem.
+
+Two absences worth naming, because they are what a volume-reading desk actually uses and neither
+exists here: **(a)** no separation of volume into aggressive-buy and aggressive-sell — that is the
+missing aggressor flag; **(b)** no **trade count** (number of executions) alongside volume, so
+average trade size is not computable, and average trade size is the standard cheap proxy for
+"institutional vs retail participation" `[general knowledge]`. A `trades` / `tick_count` column is
+a *much* smaller acquisition than tick data and it is not in the header
+`[measured: 48 files, header `open_time,open,high,low,close,volume`]`.
+
+### profile — 6 conditions, 6 DEGRADED
+
+The conditions themselves are faithful implementations of the market-profile vocabulary, computed
+**strictly from the prior completed session** `[repo-verified: futures_agents/features.py:600-623]`
+— no look-ahead, and the docstring at `:601-607` says so correctly. The degradation is upstream, in
+how the profile is built.
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `poc_reversion` | DEGRADED | inside prior value area and `abs(poc-close) >= 0.5*atr` | `library.py:940-960` |
+| `value_area_edge` | DEGRADED | close within `0.35*atr` of prior VAL/VAH, wick through, close back inside | `library.py:962-981` |
+| `value_area_breakout` | DEGRADED | close beyond prior VAH/VAL by `> 0.25*atr` | `library.py:983-1004` |
+| `lvn_rejection` | DEGRADED | close within `0.3*atr` of a prior-profile LVN; direction from `close>open` | `library.py:1006-1026` |
+| `away_from_hvn` | DEGRADED (FILTER) | nearest prior-profile HVN more than `0.25*atr` away | `library.py:1028-1044` |
+| `open_outside_value` | DEGRADED (FILTER) | session open outside prior VAL..VAH | `library.py:1046-1060` |
+
+**Why DEGRADED and not PROXY.** A volume profile needs **exchange volume-at-price**, which is a
+distinct data object from bar volume. It is not below-the-bar in the aggressor sense — it needs no
+bid/ask split — so it is *closer* to reachable than delta is. But it is not in the CSV, and the
+repo reconstructs it by **spreading each bar's volume uniformly over every price bin its range
+touches**: `share = (b.volume or 1.0) / span` `[repo-verified: futures_agents/indicators/volume.py:225-232]`.
+The docstring is candid: "That is an approximation of true tick-level distribution, but it is the
+standard one and it is stable" `[repo-verified: futures_agents/indicators/volume.py:216-222]`.
+
+**How much is lost — measured.** `volume_profile(..., bins=40)` is applied to the prior session's
+bars *at the strategy's own timeframe* `[repo-verified: futures_agents/features.py:620-623, 665]`.
+Bins are 1/40 of the prior day's range, so the smearing depends on the timeframe:
+
+```
+[measured: python3 -c "... load_csv(csv/raw/MGC_{1m,5m,1h}.csv); bins=40 across each day's range;
+count bins each bar's range touches ..."
+  MGC_1h: 175 days, median 23 bars/day, median bar touches  8 of 40 bins, 98% touch >= 4
+  MGC_5m:  16 days, median 276 bars/day, median bar touches 3 of 40 bins, 28% touch >= 4
+  MGC_1m:   4 days, median 1089 bars/day, median bar touches 2 of 40 bins,  8% touch >= 4]
+```
+
+At 60 minutes the median bar's volume is spread across **20% of the entire day's range**. A profile
+built that way is close to structureless: its POC is determined mainly by where bar ranges overlap,
+not by where volume traded. That makes the 1h "volume profile" arithmetically nearer a very coarse
+**TPO/time-at-price** estimate (23 brackets per day) than a volume profile.
+
+**The invariance test, which is the decisive one.** A true volume profile is *invariant to bar
+sampling* — volume at a price is volume at that price however you slice time. The repo's is not:
+
+```
+[measured: python3 -c "... volume_profile(day's 1m bars, bins=40) vs volume_profile(same day's
+1h bars, bins=40); |dPOC| expressed in the 1h ATR(14) the conditions themselves use ..."
+  MGC 2026-09-17 0.45 ATR | 09-18 0.00 | 09-21 0.40 | 09-22 0.47
+  MCL 2026-09-17 0.04 ATR | 09-18 0.18 | 09-21 2.02 | 09-22 0.23
+  MES 2026-09-17 0.01 ATR | 09-18 0.35 | 09-21 1.74 | 09-22 0.16
+  (n = 4 overlapping trading days per symbol: csv/raw/*_1m.csv spans only ~4-5 days)]
+```
+
+Compare those to the tolerances the conditions decide on: `value_area_edge` uses a band of
+**0.35 ATR**, `poc_reversion` a floor of **0.5 ATR**, `lvn_rejection` **0.3 ATR**, `away_from_hvn`
+**0.25 ATR**. On 7 of 12 symbol-days the POC moved further than `value_area_edge`'s entire
+tolerance band purely by changing which CSV you read it from, and on two days it moved by ~2 ATR.
+
+**So the six `profile` conditions can flip sign on the same market day as a function of bar
+sampling.** Sample is n=4 days per symbol (the 1m files are short — Appendix B fact 3), so this
+establishes *existence and magnitude*, not a rate. It is enough to say: the profile object here is
+not the invariant it is named after. Per the independence rule, note MCL's worst case (2.02 ATR)
+and MES's (1.74 ATR) are separate facts about separate contracts; MGC's largest was 0.47 ATR.
+
+**Second-order finding — the flag labels the wrong thing.** `VolumeProfile.estimated` is
+`any(b.delta_is_estimated for b in bars)` `[repo-verified: futures_agents/indicators/volume.py:258]`,
+i.e. a *bid/ask-split* flag on an object that does not need a bid/ask split. The approximation a
+bar-built profile actually makes — uniform range allocation — has no flag at all. And neither is
+read by anything `[measured: grep, above]`.
+
+### vwap — 5 conditions, 5 HONEST-DERIVED (with one important qualifier)
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `above_vwap` | HONEST-DERIVED | `close > vwap + 1sd` / `< vwap - 1sd` | `library.py:292-325` |
+| `vwap_proximity` | HONEST-DERIVED (FILTER) | `abs(close-vwap)/atr <= 0.5` | `library.py:328-337` |
+| `vwap_band_extension` | HONEST-DERIVED | `close >= vwap + 2sd` → SHORT; mirror → LONG | `library.py:340-353` |
+| `vwap_band1_bounce` | HONEST-DERIVED | wick through the 1sd band, close back inside it and on the VWAP side | `library.py:355-369` |
+| `vwap_reclaim` | HONEST-DERIVED | bar opened one side of VWAP, traded through, closed the other side | `library.py:371-385` |
+
+**VWAP is the one participant-behaviour object this repo can compute essentially correctly**, and
+that is a genuine positive. VWAP needs price and volume per bar and nothing else; the exact desk
+quantity is `Σ p·v / Σ v` over the session, and a bar-level approximation using the typical price
+`(h+l+c)/3` is what every charting package does `[general knowledge]`. `vwap()` resets on the CME
+18:00 ET trading day by default and offers an RTH variant, and the docstring is explicit that these
+are different numbers `[repo-verified: futures_agents/indicators/volume.py:46-57, 33-44]`. The bands
+are one and two standard deviations of the session's own volume-weighted distribution
+`[repo-verified: futures_agents/indicators/volume.py:~95-105]`.
+
+The qualifier, and it is the only real gap in this group: **VWAP is only an institutional benchmark
+if you can see execution against it.** The tradeable content of I-10 as desks run it is not "price
+is above VWAP"; it is "a large participant is working an order benchmarked to VWAP, so flow is
+predictably one-sided until the order is done" `[general knowledge]`. That inference needs
+participation-rate evidence — trade counts, print sizes, a child-order cadence. None exists here.
+So: the *line* is right; the *institutional-benchmark interpretation* of the line is not supported
+by any data in this repo. The conditions above are mean-reversion-to-a-band conditions computed on
+a volume-weighted anchor, and that is exactly how they should be described.
+
+Two capability notes, both positives and both **untested here**:
+- `anchored_vwap(bars, anchor_index)` exists `[repo-verified: futures_agents/indicators/volume.py:108-120]`,
+  as do anchor generators `major_move_anchors` and `swing_anchors`
+  `[repo-verified: futures_agents/indicators/volume.py:26-28 (__all__)]`. **No condition in the
+  library consumes any of them** `[measured: grep -n "anchored_vwap\|AnchorVWAP\|swing_anchors\|major_move_anchors" futures_agents/strategies/library.py → no matches]`.
+  Anchored VWAP is built, reachable, and has never been made into a condition. See §7 Q2.
+- `vwap()` takes `rth_only` `[repo-verified: futures_agents/indicators/volume.py:46-48]` but
+  `features.py` calls `vwap_bands(bars, "session", (1.0, 2.0))` with no `rth_only` argument
+  `[repo-verified: futures_agents/features.py:248]`, so **every `vwap` condition in the library reads
+  the Globex-session VWAP only.** The RTH VWAP — the one most retail platforms draw, per the
+  docstring — is implemented and never used by a condition. Also untested; also cheap.
+
+### liquidity — 7 conditions, 7 HONEST-DERIVED
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `prior_day_sweep` | HONEST-DERIVED | wick through PDH/PDL, close back inside | `library.py:581-585` + `_level_sweep` `:565-579` |
+| `overnight_sweep` | HONEST-DERIVED | same against ONH/ONL | `library.py:588-592` |
+| `session_extreme_sweep` | HONEST-DERIVED | same against session high/low | `library.py:595-600` |
+| `prior_day_breakout` | HONEST-DERIVED | close beyond PDH/PDL | `library.py:603-616` |
+| `opening_range_breakout` | HONEST-DERIVED | close beyond a **completed** OR | `library.py:619-632` |
+| `opening_range_fade` | HONEST-DERIVED | wick through a completed OR boundary, close back inside | `library.py:635-647` |
+| `initial_balance_break` | HONEST-DERIVED | close beyond first-hour range, only after `minutes_since_open >= 60` | `library.py:650-663` |
+
+No name/arithmetic gap anywhere in this group. Session levels, previous-day levels, overnight
+levels, the opening range and the initial balance are all **exactly** computable from timestamped
+OHLCV plus session boundaries, and that is what the code does. Two look-ahead guards are explicit
+and correct: the OR conditions require `orr.complete` with the reason stated inline — "An OR
+breakout signal on an incomplete range is a look-ahead artefact"
+`[repo-verified: futures_agents/strategies/library.py:623-626]` — and `initial_balance_break`
+refuses to fire before 60 minutes have elapsed `[repo-verified: library.py:655-656]`.
+
+**This group is the honest core of Class I.** It is why the manager's §6 prediction that the
+EXPRESSIBLE set "consists of things already measured and already null (session-level sweeps,
+profile location, VWAP location)" is *half* right — see my §6 contradiction note below.
+
+The one thing missing is the reason a desk cares: **liquidity mapping is about resting size, not
+about the level.** "Stops are clustered under PDL" is a claim about the resting book, which needs
+DOM depth; here the level is a geometric coordinate with no size attached. So the repo can express
+*where the stop-run level is* with full fidelity and cannot express *how much is resting there*.
+That distinction decides I-11's verdict below.
+
+### imbalance — 3 conditions, 3 PROXY (name), HONEST-DERIVED (arithmetic)
+
+This group needs its own verdict shape, because the **library header is accurate and the
+indicator's own docstring is not**.
+
+| condition | verdict | the arithmetic | path |
+|---|---|---|---|
+| `imbalance_bar` | PROXY-BY-NAME | this bar: `range >= 2.0 * 20-bar mean range` **and** `volume >= 1.2 * 20-bar mean volume`; direction `close>open` | `library.py:1168-1176`; `indicators/structure.py:442-463` |
+| `imbalance_pullback` | PROXY-BY-NAME | most recent such bar was 1–10 bars ago, trade in its direction | `library.py:1178-1191`; `features.py:577-599` |
+| `no_recent_imbalance` | PROXY-BY-NAME (FILTER) | no such bar in the last 3 | `library.py:1193-1202` |
+
+**The gap.** In order-flow vocabulary an "imbalance" is a specific footprint object: at a given
+price level, the volume filled at the offer exceeds the volume filled at the bid one tick below by
+some ratio (commonly 3:1), and "stacked imbalances" means several such levels consecutively
+`[general knowledge]`. It requires a per-price bid/ask ladder. What this repo computes is a
+**range-and-volume expansion bar** — a displacement bar. That is a perfectly good, well-defined
+price-action object; it is not an imbalance.
+
+**And the indicator docstring mis-states its own arithmetic.**
+`detect_imbalances` is documented as "Bars whose range and **delta** both far exceed the recent
+norm … the footprint of a real initiative move"
+`[repo-verified: futures_agents/indicators/structure.py:444-448]`, but the code computes
+`v_mult = bars[i].volume / avg_vol` `[repo-verified: futures_agents/indicators/structure.py:455,459-460]`
+— **volume, not delta.** `delta` appears nowhere in the function. The library's own group header,
+by contrast, is exactly right: "Bar-level aggressive participation: range and volume both far above
+the recent norm" `[repo-verified: futures_agents/strategies/library.py:1160-1166]`. So the docstring
+is the error, not the code, and the fix is one line of prose. Two further words to drop: "footprint"
+has a technical meaning this object does not satisfy, and "delta" is not read.
+
+### Tally of the 27
+
+| verdict | n | groups |
+|---|---|---|
+| **PROXY** (name promises participant info, arithmetic is OHLCV) | **6** | `orderflow` 3, `imbalance` 3 |
+| **DEGRADED** (right object, sampling materially changes its value) | **6** | `profile` 6 |
+| **HONEST-DERIVED** (name matches arithmetic) | **15** | `volume` 3, `vwap` 5, `liquidity` 7 |
+
+Plus, outside the 27 but inside the manager's diagnostic: `openinterest` 2 = **structurally dead**
+(cannot fire), `news` 3 = **a clock, not news** (fires correctly, as a time filter).
+
+**Six of 27, plus 2 dead and 3 misnamed, is 11 of 79 conditions — 14% of the library — where the
+group name does not describe what the code computes.** That is the number I would put in front of
+anyone reading a `scan_reports/` table.
+
+---

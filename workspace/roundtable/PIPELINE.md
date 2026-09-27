@@ -8,14 +8,24 @@ The pipeline below inverts the two ends. **Discovery is its own agent**, and **s
 the researcher who has to do the work.**
 
 ```
-   DISCOVERY  --------- main task ---------->  MANAGER  ---- "what do you need?" ---->  RESEARCH
-   short bursts                                task board                              scopes itself
-   AVENUES.md ledger                           sections                                     |
-        ^                                          ^                                        |
-        |                                          |                                        |
-        +--- never re-explores a closed avenue     +------ "add a sub-task" <----------------+
-                                                            mid-research request
+  DISCOVERY ------ main task ------> MANAGER ---- "what do you need?" ----> RESEARCH  <--+
+  short bursts                      task board                            scopes        |
+  AVENUES.md ledger                 sections, one at a time                itself        |
+       ^                               ^   ^                                  |          |
+       |                               |   |                                  |       findings
+       +-- never re-explores           |   +---- "add a sub-task" <------------+          |
+           a closed avenue             |   |         mid-research request                |
+                                       |   |                                             |
+                                       |   +---- "add a sub-task" <---------+            |
+                                       |             from the bench          |           |
+                                       |                                 BACKTESTER -----+
+                                       +--- board carries both -------->  short bursts
+                                                                          codes ALGO-k
+                                                                          asks: faithful?
 ```
+
+Three pairs run this way: **R1+BT1, R2+BT2, R3+BT3.** Both halves of a pair can put work on the
+manager's board, and a backtester's questions go to its own researcher, never to another's.
 
 ## 1. Discovery — breadth, in short bursts
 
@@ -100,7 +110,91 @@ Then **keep working on the current section.** Do not stall on the request and do
 widen your section to cover it — silent widening is how a section stops being resumable. The
 manager routes it, and either adds it to the board or says why not.
 
-## 4. What the parent session does
+## 4. Backtesters — one paired to each researcher
+
+**BT1 ↔ R1, BT2 ↔ R2, BT3 ↔ R3.** Each backtester owns `backtest/<id>/ALGOS.md`,
+`VERIFY.md`, `REQUESTS.md`, `bursts/*.md` and `code/*`.
+
+A backtester turns its researcher's findings into **running code**, and its defining constraint is
+that it is **not searching for a winner**. This repository has already spent ~3,000,000 evaluations
+searching for winners and found none that clears its own threshold. A backtester that starts
+hunting profitable variants is re-running that programme with fewer controls, and its output would
+be worth less than nothing because it would look new.
+
+What it is doing instead: **making a researched idea executable and then finding out what it
+actually does.** A faithful implementation that measures nothing is a complete success. An
+implementation that measures something, with a placebo beside it, is a bigger one.
+
+```
+R<n> findings.md  ──read──>  BT<n> codes ALGO-k  ──"is this faithful?"──>  R<n>
+                                    ^                                       │
+                                    └────────── verdict, then correct ───────┘
+                                                (loop until FAITHFUL)
+```
+
+### The fidelity loop, which is the point of the pairing
+
+A backtester reads findings; it does not receive them pre-digested. Reading is lossy, so **before
+trusting any number an algorithm produces, the backtester asks its researcher whether the code
+means what the research said.** Not "does this look right" — a specific, answerable question.
+
+Each algorithm gets an entry in `ALGOS.md` and a numbered question in `VERIFY.md`:
+
+```
+## ALGO-<k> <name>
+- **Implements:** <finding id> from research/<id>/findings.md
+- **Code:** backtest/<id>/code/<file>.py:<lines>
+- **My reading of the finding:** <what you believe it claims, in your own words>
+- **Where I had to choose:** <every place the finding was silent and you decided>
+- **Fidelity:** UNVERIFIED | ASKED | FAITHFUL | DIVERGENT(<how>)
+```
+
+The **"where I had to choose"** field carries most of the value. A finding never fully specifies
+an implementation — which bar, inclusive or exclusive, what happens on a tie, what happens when the
+window is short. Those silent choices are where an implementation quietly stops being the thing
+that was researched, and writing them down is what makes the researcher's answer possible.
+
+Ask via `msgs/NN_BT<n>_R<n>_verify-ALGO-<k>.md`. The researcher replies
+`msgs/NN_R<n>_BT<n>_re-verify-ALGO-<k>.md` with **FAITHFUL**, or **DIVERGENT** and what is wrong.
+On DIVERGENT: fix the code, then ask again. Do not argue the finding — if you think the finding
+itself is wrong, that is a `REQUESTS.md` entry for the manager, not a fidelity dispute.
+
+**Never report a number from an UNVERIFIED algorithm.** An unverified result is not a weak result,
+it is an unknown quantity: nobody can say what was measured.
+
+### Short bursts, here too
+
+One burst is **one algorithm, or one fidelity cycle, or one measurement** — then write it down and
+stop. Never code three algorithms before asking about any of them: a wrong assumption in the first
+propagates silently into the rest, and you will have spent three bursts to learn one thing.
+
+Each burst writes `backtest/<id>/bursts/NN_<slug>.md`: what you did, what you chose, what you
+asked, where you stopped.
+
+### What a backtester may run, and what it must report with any number
+
+Unlike round 1, backtesters **may** run backtests — that is the job. With three obligations:
+
+1. **A placebo beside every result.** Run the algorithm's own exits, filters and sizing with the
+   signal layer replaced (random bars count-matched, or timestamp-shuffled). `placebo_shift` leaks
+   and is a conservative control only — see D42. A result without a control is not reportable.
+2. **State the search size and the deflation threshold.** Searching *n* variants buys roughly
+   `sqrt(2·ln n)` free t-units. If you tried six parameterisations, say six. The programme-wide
+   figure is `free_t = 5.46` and the largest t ever found here is 3.923.
+3. **Never route a comparative claim through `T.ab`** — it inflates z roughly 3.3× (D28). Use a
+   paired test that accounts for the correlation, and name the test you used.
+
+Read `workspace/studies/DEFECTS.md` before trusting any library function. D38 in particular:
+`toolkit.measure_custom` silently zeroes custom conditions because it never calls
+`register_frame` — if you write a custom condition and it appears to do nothing, that is why.
+
+### Sub-task requests
+
+Same channel as a researcher: append to your own `REQUESTS.md` in the PIPELINE §3 shape and keep
+working. A backtester's requests tend to be the most concrete in the pipeline, because code either
+runs or does not — "this needs a primitive the engine has no field for" is discovered by trying.
+
+## 5. What the parent session does
 
 Relays (no agent can call another), dispatches every agent so the limit gate is never bypassed,
 records burn in `LEDGER.md`, runs `check_ownership.py` before every commit, and commits and pushes.
@@ -108,7 +202,7 @@ records burn in `LEDGER.md`, runs `check_ownership.py` before every commit, and 
 The manager is told not to spawn agents: only the parent can read `rate_limit_info`, so only the
 parent can safely decide that a round may fire. See `THROTTLE.md`.
 
-## 5. Round 1's output is not discarded
+## 6. Round 1's output is not discarded
 
 Three researchers ran under the old shape and their files are on the branch. Under this pipeline
 that output becomes **discovery's starting ledger** — 53 families already mapped is 53 avenues

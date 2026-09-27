@@ -29,7 +29,36 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `research/<agent>/findings.md` | **that researcher** | read |
 | `research/<agent>/REQUESTS.md` | **that researcher** | read |
 | `research/R1_*.md`, `R2_*.md`, `R3_*.md` (round-1 flat files) | **that researcher** | read |
+| `research/<id>/REQUESTS.md` | **that researcher** | read |
+| `backtest/<bt>/ALGOS.md` | **that backtester** | read |
+| `backtest/<bt>/VERIFY.md` | **that backtester** | read |
+| `backtest/<bt>/REQUESTS.md` | **that backtester** | read |
+| `backtest/<bt>/bursts/*.md` | **that backtester** | read |
+| `backtest/<bt>/code/*` | **that backtester** | read, and run |
 | `msgs/NN_from_to_topic.md` | **whoever created it**, once | read only, forever |
+
+## Read is universal. Write is exclusive. Asking is how you cross the line.
+
+**Every agent may read every file in this tree, always, without asking.** Ownership restricts
+writing only. There is no private working file here and nothing is hidden from a teammate —
+`AVENUES.md`, another track's `findings.md`, a backtester's code, the manager's board, the
+parent's ledger, every posted message. **Read before you ask**, every time: the answer is usually
+already written down, and a question whose answer was on disk costs the owner a turn for nothing.
+
+When reading is genuinely not enough — you need the owner's *intent*, a judgement they did not
+record, a reason behind a choice, or you believe their file is wrong — **ask them**:
+
+```
+msgs/NN_<you>_<owner>_<topic>.md
+```
+
+State what you read, what you could not determine from it, and what you would do with the answer.
+The owner replies with their own message, `msgs/NN_<owner>_<you>_re-<topic>.md`. Both files are
+write-once and each has exactly one writer, so the conversation never contends.
+
+**Never edit another agent's file, not even to correct a plain error.** Especially then: a silent
+cross-edit is how two agents come to hold different beliefs about what a file says, and neither
+can tell which of them is stale. Post the correction as a message and let the owner apply it.
 
 ## The three rules every agent follows
 

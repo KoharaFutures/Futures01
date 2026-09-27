@@ -21,7 +21,14 @@ answers survive without the chat transcript:
 
 ## The four mandatory statements
 
-**1. How many strategies were screened.** 516,651 evaluations on the clean MGC+MCL population
+**1. How many strategies were screened.** [**Wording corrected 2026-09-27:** these are
+candidates *generated*, of which an unmeasured subset could never trade — 19.0% of generated
+strategies carry a condition that cannot fire, and `Strategy.evaluate` is a strict AND, so one dead
+condition kills the whole strategy. Rates are symbol-specific: MGC 11.5%, MCL 13.9%, MES 22.6%, MNQ
+27.4%. "N strategies were tested" overstates it throughout this corpus. The deflation verdict is
+unchanged — `free_t` is logarithmic, and the 82%-non-trader discount was already on disk at
+`RANKING_FINDINGS.md:66-72` giving ~495k and 5.15, still uncleared.] 516,651 evaluations on the
+clean MGC+MCL population
 (60m, 240m, MGC daily; both `rth_only` arms built and never mixed in one `run_portfolio` call).
 Programme-wide across this repository: **2,975,629**.
 
@@ -37,7 +44,12 @@ ranked. The median trade count inside a disjoint third is **7–15**, which is w
 column below is weak evidence rather than strong.
 
 **4. What the data could not support.** The hourly files carry 11–12 months, which cannot support
-a transition matrix over thirteen strategy groups — the chronology test is reported on **daily**
+a transition matrix over the strategy groups [**corrected 2026-09-27: this said "thirteen strategy
+groups". The test's actual candidate set was 6 on MGC, 4 on MNQ and 3 on MES** — groups reaching the
+24-month minimum. `workspace/chrono/analyse.py:64-65` printed `groups with >=24 months: 6 / 4 / 3`
+on stdout on every run; the prose said thirteen. Re-run unmodified, it still does. The no-chaining
+verdict is unaffected and slightly safer, since a smaller candidate set means a *less* stringent
+Bonferroni bar] — the chronology test is reported on **daily**
 series only, and the hourly attempt is recorded as skipped rather than squeezed. MES/MNQ/NQ/ES are
 one index complex (they share 0.5–0.8% of rule sets, D14/D41), so agreement between them is not
 corroboration. The grain CSVs splice contract months (D40) and are excluded. Nested windows
@@ -108,8 +120,29 @@ A deliberate look-ahead cheat (the same entries shifted 5 bars *backward*) ranks
 beating its own base in **15 of 16** matched pairs. A second cheat (peeking 2 bars early) ranks
 **1 of 147, 1 of 106, 1 of 21, 1 of 24** in the four MGC/MCL cells.
 
-**The harness detects a signal that is really there.** That licenses reading the null results above
-as real absence rather than an insensitive test.
+**The harness detects a signal that is really there** — in the sense that a strategy which fires
+normally and has an edge is ranked first. That much stands.
+
+> **RETRACTION, 2026-09-27 (R6 audit).** The sentence that followed here claimed this "licenses
+> reading the null results above as real absence rather than an insensitive test." **It does not,
+> and this was the single most load-bearing sentence in this corpus** — every other null in all four
+> reports inherited it by implication.
+>
+> The control is sound; the *inference from it* was too wide. A look-ahead cheat is a **different
+> strategy that fires normally**. Its ranking shows the harness can detect an edge *in a strategy
+> whose detector works*. It carries **no information about whether any other strategy's detector
+> fired at all** — and those two failures are indistinguishable in the output, because both produce
+> a null.
+>
+> Rounds 1–2 then found the counterexamples the licence had ruled out a priori: **five structurally
+> zero-trade configurations** and three degenerate ones (`workspace/roundtable/research/R1_group_audit.md`),
+> and — measured by the audit — **three whole strategy groups taking zero daily trades inside this
+> very report's own Part C** (VOLUME_PROFILE, OPENING_RANGE, LIQUIDITY).
+>
+> **What the power control actually licenses:** that a null from a strategy whose conditions are
+> known to fire is real absence. It says nothing about a null from a strategy that never traded.
+> Distinguishing the two requires a firing-rate check per condition, which this programme did not
+> run until the round-1 group audit.
 
 ### A.5 Fill and cost audit
 
@@ -185,8 +218,15 @@ hypothesis directly.
 | MNQ daily | 18 / 60 | 14.7 | +1.00 |
 | MES daily | 17 / 56 | 18.3 | −0.37 |
 
-Which groups win most often is only mildly symbol-specific, and **the same three groups top all
-three symbols** (MULTI_TIMEFRAME, VWAP, MOMENTUM) — shared structure, not a per-symbol signature.
+Which groups win most often is only mildly symbol-specific, and the same three groups top all
+three symbols (MULTI_TIMEFRAME, VWAP, MOMENTUM).
+
+> **RETRACTED as evidence, 2026-09-27 (R6 audit).** This was published as "shared structure, not a
+> per-symbol signature." It cannot carry that weight: the candidate set is **6 groups on MGC, 4 on
+> MNQ and 3 on MES**, so **on MES those three groups are the only three in the test** and topping it
+> is arithmetic rather than a finding. VOLUME_PROFILE, OPENING_RANGE and LIQUIDITY take **zero daily
+> trades on all three symbols** — they were never candidates. The overlap is real and is now
+> evidence of a shared *candidate set*, not of shared market structure.
 
 **Own-group autocorrelation — weak, positive, uncorrected.** Strongest are all on MGC (TREND
 r=+0.383 on n=25, MULTI_TIMEFRAME r=+0.249, VWAP r=+0.165 on 106 months). None reaches |z|=1.96

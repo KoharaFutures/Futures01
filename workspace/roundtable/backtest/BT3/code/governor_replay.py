@@ -621,7 +621,8 @@ def floor_budget_sensitivity(rows: Sequence[dict]) -> dict:
     }
 
 
-def absorbing_boundary(step: float = 1.0) -> dict:
+def absorbing_boundary(step: float = 1.0, *,
+                       eligibility_mult: float = 1.0) -> dict:
     """Find the drawdown at which the account can never open another position.
 
     R3 solved this and I am reproducing it rather than citing it, because it is
@@ -650,10 +651,13 @@ def absorbing_boundary(step: float = 1.0) -> dict:
         eq = peak - dd
         base = min(cfg.usable_buffer(eq, peak) * cfg.base_risk_pct_of_buffer,
                    eq * cfg.max_risk_pct_of_equity, cfg.max_dollar_risk)
-        budget = base * cfg.derisk_multiplier(eq, peak)
+        budget = base * cfg.derisk_multiplier(eq, peak) * eligibility_mult
         if budget < cfg.min_dollar_risk:
             return {
+                "eligibility_mult": eligibility_mult,
                 "drawdown_at_which_the_account_dies": dd,
+                "pct_of_max_total_drawdown": round(
+                    100.0 * dd / cfg.max_total_drawdown, 1),
                 "budget_there": round(budget, 2),
                 "min_dollar_risk": cfg.min_dollar_risk,
                 "last_live_drawdown": prev[0] if prev else None,
@@ -667,6 +671,38 @@ def absorbing_boundary(step: float = 1.0) -> dict:
         prev = (dd, round(budget, 2))
         dd += step
     return {"drawdown_at_which_the_account_dies": None}
+
+
+def _per_strategy_by_cell(per: List[ReplayResult]) -> dict:
+    """The 176 per-strategy survival rates, grouped by ``(symbol, tf)``.
+
+    R3's Q1 condition 3: "your `taken_pct` range of [0.0, 100.0] with median
+    26.7 is almost certainly eight tight clusters, not one spread". Pooled
+    across cells the distribution is uninterpretable, because the floor's bite
+    is a function of ``point_value`` and bar size. Per cell it is the finding.
+    """
+    g: Dict[str, List[ReplayResult]] = collections.defaultdict(list)
+    for p in per:
+        sym, tf, _arm, _ex = p.label.split("|")
+        g[f"{sym}_{tf}"].append(p)
+    out = {}
+    for cell, rs in sorted(g.items()):
+        tp = sorted(100.0 * p.n_taken / max(1, p.n_candidates) for p in rs)
+        out[cell] = {
+            "n_strategies": len(rs),
+            "candidates": sum(p.n_candidates for p in rs),
+            "taken": sum(p.n_taken for p in rs),
+            "taken_pct_pooled_in_cell": round(
+                100.0 * sum(p.n_taken for p in rs)
+                / max(1, sum(p.n_candidates for p in rs)), 2),
+            "taken_pct_median": round(stats.median(tp), 2),
+            "taken_pct_min": round(tp[0], 2),
+            "taken_pct_max": round(tp[-1], 2),
+            "iqr": round(tp[int(0.75 * len(tp))] - tp[int(0.25 * len(tp))], 2),
+            "n_absorbing": sum(1 for p in rs if p.absorbing),
+            "n_zero_trades": sum(1 for p in rs if p.n_taken == 0),
+        }
+    return out
 
 
 def measure_stage6(rows: Sequence[dict]) -> dict:
@@ -701,7 +737,12 @@ def main() -> None:
         rows, vol_aware=False)
     report["stage6"] = measure_stage6(rows)
 
-    report["absorbing_boundary"] = absorbing_boundary()
+    # Both eligibility arms, because halving the budget moves the cliff
+    # *shallower* - the honest arm dies sooner. R3 solved this; reproduced here.
+    report["absorbing_boundary"] = {
+        "live_eligible_True": absorbing_boundary(eligibility_mult=1.0),
+        "live_eligible_False": absorbing_boundary(eligibility_mult=0.5),
+    }
     report["floor_budget_sensitivity"] = floor_budget_sensitivity(rows)
 
     pooled = sort_stream(rows)      # the labelled anchor, not the headline
@@ -739,6 +780,15 @@ def main() -> None:
                          label=f"SEED {s} barrier=False", live_eligible=True,
                          barrier=False)
                   for s in range(1, N_ORDER_SEEDS + 1)]
+    # **The finding's arm.** R3 ruled that `live_eligible=False` is what a live
+    # account would have applied, since the BRIEF settles that nothing here is
+    # live-eligible; `True` is the neutral control that isolates the governors
+    # from the eligibility penalty. Halving the budget moves the absorbing
+    # boundary from a $2,800 drawdown to $2,335, so this arm dies sooner.
+    order_honest = [replay(sort_stream(rows, seed=s),
+                           label=f"SEED {s} live_eligible=False",
+                           live_eligible=False)
+                    for s in range(1, N_ORDER_SEEDS + 1)]
 
     # ---- placebo: R values permuted, timestamps and stops untouched -----
     # The governors' input is the *sequence* of outcomes. Permuting R
@@ -844,6 +894,8 @@ def main() -> None:
                                         order_ctrl),
         "barrier_off_leak": pack_dist("vol_aware=True barrier=False",
                                       order_leak),
+        "honest_arm_live_eligible_False": pack_dist(
+            "live_eligible=False (THE FINDING'S ARM)", order_honest),
         "placebo_ensemble": pack_dist("PLACEBO (R permuted), same 200 seeds",
                                       placebos),
         "seeds": [pack(v) for v in order_runs],
@@ -865,6 +917,9 @@ def main() -> None:
             sum((collections.Counter(p.vetoes) for p in per),
                 collections.Counter()).items())),
         "rows": [pack(p) for p in per],
+        # R3's Q1 condition 3: pooled across cells the [0, 100] range is
+        # uninterpretable; per cell it is the finding.
+        "by_cell": _per_strategy_by_cell(per),
     }
     per_ctrl = [replay(sort_stream(rs), label="ctrl", vol_aware=False)
                 for _, rs in sorted(by_strat.items())]
@@ -879,12 +934,14 @@ def main() -> None:
                        "workspace/roundtable/backtest/BT3/code/algo1_report.json")
     json.dump(report, open(out, "w"), indent=1, default=str)
 
-    ab = report["absorbing_boundary"]
-    print("ABSORBING STATE: the account can open nothing past a drawdown of "
-          f"${ab['drawdown_at_which_the_account_dies']:,.0f} "
-          f"(budget ${ab['budget_there']:.2f} < min ${ab['min_dollar_risk']:.0f}), "
-          f"with ${ab['dollars_of_headroom_left_unused']:,.0f} of the $5,000 "
-          "failure buffer still unused\n")
+    for arm, ab in report["absorbing_boundary"].items():
+        print(f"ABSORBING STATE ({arm}): dead past a drawdown of "
+              f"${ab['drawdown_at_which_the_account_dies']:,.0f} "
+              f"({ab['pct_of_max_total_drawdown']}% of the $5,000 allowance), "
+              f"budget ${ab['budget_there']:.2f} < min "
+              f"${ab['min_dollar_risk']:.0f}, "
+              f"${ab['dollars_of_headroom_left_unused']:,.0f} never spendable")
+    print()
 
     for name, key in (("vol-aware", "static_integer_floor"),
                       ("vol-pinned", "static_integer_floor_vol_pinned")):
@@ -897,8 +954,8 @@ def main() -> None:
               f"median_contracts={v['median_contracts']}")
     print(f"stage 6: {report['stage6']}\n")
 
-    for k in ("vol_aware_barrier", "vol_pinned_control", "barrier_off_leak",
-              "placebo_ensemble"):
+    for k in ("honest_arm_live_eligible_False", "vol_aware_barrier",
+              "vol_pinned_control", "barrier_off_leak", "placebo_ensemble"):
         d = report["primary"][k]
         print(f"PRIMARY {d['arm']:<34s} taken% median={d['taken_pct_median']:6.3f} "
               f"[p05 {d['taken_pct_p05']:.3f}, p95 {d['taken_pct_p95']:.3f}]  "

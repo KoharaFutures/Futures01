@@ -28,6 +28,23 @@ not optional:
    on 20 trades is statistically compatible with 53%.
 4. **What the data could not support.** Window labels the span cannot carry, timeframes
    with too little history, symbols that were excluded and why.
+5. **Which nulls are absence and which are non-detection.** Added 2026-09-27 after an audit of
+   all four reports found 6 claims invalid of 104, every one of them a misattributed object rather
+   than a wrong number. A strategy that never traded and a strategy that traded and lost both
+   produce a null, and only the second is a result. So a null needs a firing-rate check on its own
+   conditions before it is reported as absence — the programme has now found **five structurally
+   zero-trade configurations** and three degenerate ones. A look-ahead power control does **not**
+   substitute for this: a cheat is a different strategy that fires normally, so ranking it first
+   shows the harness can find an edge in a working detector and says nothing about whether any
+   other strategy's detector fired.
+6. **Candidates generated, not strategies tested.** 19.0% of generated strategies carry a
+   condition that cannot fire, and `Strategy.evaluate` is a strict AND, so one dead condition
+   kills the strategy. Write "≥ N candidates were generated, of which an unmeasured subset could
+   not trade."
+7. **The span, beside the search width.** `t ≈ SR × sqrt(years)`. On the 322-calendar-day span
+   these reports rest on, clearing `free_t = 5.46` needed an annualised Sharpe of **5.82**. Quote
+   the span with the threshold, or the null reads as a fact about the market when it is partly a
+   fact about the window.
 
 ## Reading the tables
 
@@ -40,6 +57,19 @@ Both standard rankings mislead when read alone, in opposite directions:
 
 Expectancy in R is the column that decides whether a strategy makes money. The other two
 describe its shape.
+
+## Audit status
+
+All four reports were audited claim-by-claim on 2026-09-27 against the round-1/2 findings
+(`workspace/roundtable/research/R6_report_audit.md`, 104 claims): **64 STANDS, 33 WEAKENED,
+6 INVALID, 1 UNAFFECTED**. No invalidation reverses a sign, a verdict, or the deflation
+conclusion; all six are misattributed objects. Retractions are applied **in place** in each
+report, marked and dated, never by deletion.
+
+The claim to cite in preference to any ranking table is **"selecting is worse than not
+selecting"** (+0.022R against +0.057R; −0.024R against +0.064R). It is structurally immune to this
+whole class of defect: both arms are the same population on the same bars by the same method, so
+every dead detector is in both arms or neither.
 
 ## Index
 

@@ -686,3 +686,142 @@ the only pattern needing the 20-bar average range, so `_avg_range` is computed o
 pattern nothing consumes. Dead code in the indicator, not a misnamed condition — recorded so the
 group's coverage is not overstated at 7 patterns when 5 are reachable. (R1 recorded the same as
 `C-2`; I reproduce the grep because it is one command and confirms the reading.)
+
+---
+
+# Group 5 — `volatility` (3 conditions) → **MISNAMED**, and it is the base filter of 13 of 13 templates
+
+This group has the widest reach in the library: `volatility_normal` is a base filter in 12 of 13
+templates and `volatility_compressed` is BREAKOUT's `[measured: TEMPLATES]`. A base filter is
+unconditional. So **every strategy in the corpus carries a member of this group in a slot it did not
+choose**, and all three members are FILTERs — the group has 0 SIGNALs
+`[measured: CONDITION_GROUPS + CONDITIONS[n].kind]`.
+
+## R4-V1 — `volatility_compressed` names Bollinger width, reads ATR percentile, and the two diverge more at 4h than at 1h
+
+```
+library.py:735-743
+@condition("volatility_compressed", "volatility", kind=ConditionKind.FILTER,
+           description="Bollinger width in the bottom quartile - coiled")
+def _vol_comp(snap, tf):
+    s = _s(snap, tf)
+    ...
+    p = s["atr_percentile"]                  # <- not Bollinger width
+    return yes(...) if p <= 0.30 else no()   # <- not a quartile
+```
+
+`[repo-verified: futures_agents/strategies/library.py:735-743]`
+
+The described field **exists and is reachable**: `RegimeSnapshot.bb_width_percentile`
+`[repo-verified: indicators/regime.py:39]` is computed from `bollinger(closes, 20)` widths over a
+250-bar lookback `[repo-verified: regime.py:182-191]` and is available as
+`snap.regime.bb_width_percentile`. The condition reads a different quantity. Measured on the same
+bars, on all four symbols and at two timeframes:
+
+| cell | n | corr(atr_pct, bb_width_pct) | "bottom 30%" verdict **disagrees** | `P(bb ≤ .3)` vs `P(atr ≤ .3)` |
+|---|---|---|---|---|
+| MGC 60m | 4,941 | 0.508 | **1,471 = 29.8%** | 32.8% vs 35.6% |
+| MNQ 60m | 4,941 | 0.520 | **1,362 = 27.6%** | 32.1% vs 34.1% |
+| MES 60m | 4,941 | 0.576 | **1,198 = 24.2%** | 32.7% vs 34.9% |
+| MCL 60m | 4,941 | 0.514 | **1,393 = 28.2%** | 29.4% vs 34.5% |
+| MGC 240m | 1,051 | 0.692 | 220 = 20.9% | 24.4% vs 33.3% |
+| **MNQ 240m** | 1,051 | **−0.060** | **388 = 36.9%** | 22.7% vs 27.3% |
+| **MES 240m** | 1,051 | **−0.102** | **511 = 48.6%** | 28.0% vs 31.7% |
+| **MCL 240m** | 1,086 | 0.415 | **455 = 41.9%** | **2.3% vs 41.3%** |
+
+`[measured: python3 over csv/raw with tfs=FRAMES[tf], TFSnapshot["atr_percentile"] vs snap.regime.bb_width_percentile, Pearson corr on the paired series]`
+
+**The 60m row is the clean measurement of the misnaming**, because at 60m the frame is
+`[60,240,1440]` and `regime_tf = 60`, so both percentiles are computed on the *same* series and the
+only difference is which quantity. On roughly one bar in four, BREAKOUT's unconditional base filter
+gives the opposite answer to the one its own description promises. This reproduces R1's 27.5–29.9%
+on three symbols and extends it to MCL — **CONFIRMED.**
+
+**The 240m row is a second defect stacked on the first, and it is mine.** At 240m,
+`regime_tf = 1440` (`R4-M3`), so `bb_width_percentile` is a *daily* quantity while `atr_percentile`
+is a 4-hour one. The correlation collapses to **−0.060 (MNQ) and −0.102 (MES)** — the two are
+uncorrelated to faintly anti-correlated — and the verdict disagrees on **36.9% to 48.6%** of bars.
+On **MCL at 240m the described field would fire on 2.3% of bars and the field actually read fires on
+41.3% — an 18× difference.** So the size of the misnaming is a per-symbol, per-timeframe quantity
+ranging from "one bar in four" to "almost every bar", and nobody could have known that from the
+1-hour measurement alone. **Every symbol is its own universe, and so is every timeframe.**
+
+`volatility_expanding` carries the milder half: "ATR in the **top quartile** of its own history" with
+a threshold of `p >= 0.70`, which is the top 30% `[repo-verified: library.py:724-732]`. Right field,
+wrong quantile name. Measured pass rate 26–40%, consistent with a 30% cut plus volatility clustering.
+
+## R4-V2 — `volatility_compressed` AND `volatility_expanding` is empty by arithmetic, and BREAKOUT generates it
+
+Both read `s["atr_percentile"]` through `_s(snap, tf)` with the same `tf`
+`[repo-verified: library.py:727-731, 738-742]`, so the conjunction is `p <= 0.30 AND p >= 0.70` —
+**empty on every bar, every symbol, every timeframe, for any binding.** This does not depend on the
+measured `Condition.timeframe`; it follows from both conditions resolving the same row.
+
+`volatility_compressed` is in BREAKOUT's `base_filters` and `volatility_expanding` in its
+`optional_filters` `[repo-verified: combinator.py:272-274]`, and `_filter_sets` emits
+`base + (f,)` for **each** optional filter `[repo-verified: combinator.py:447-456]`. A base filter is
+unconditional. So **every BREAKOUT strategy that draws `volatility_expanding` is VOID.**
+
+| path | BREAKOUT generated | VOID via `volatility_expanding` | VOID via `oi_expanding` | total VOID |
+|---|---|---|---|---|
+| default profile | 60 | 10 | 10 | **20 / 60 = 33.3%** |
+| `groups=ALL_GROUPS` (the corpus) | **84** | **14** | **14** | **28 / 84 = 33.3%** |
+
+`[measured: python3, generate_strategies(sym,[5,15,60,240],max_total=400), four symbols, both paths]`
+
+**Verdict VOID**, per `R1-REQ-5`'s new term, not DEGRADED: these strategies cannot take a trade, and
+`Strategy.evaluate` returns `None` at the first non-firing filter before a signal is read
+`[repo-verified: base.py:670-674]`. This is the same shape as `openinterest` and it is a second,
+independent cause. R1's D-V2 found it; my contribution is that it holds on **all four symbols** in
+the corpus's own generation path, not two (`R4-M2`).
+
+## R4-V3 — `volatility_normal` is measured on a different series from its own group-mates, and at 240m a quarter of its passes are a dataclass default
+
+`volatility_normal` reads `snap.regime.volatility` `[repo-verified: library.py:716-721]` — the
+frame's **regime timeframe** — while the other two read `s["atr_percentile"]` on the **strategy's
+own** timeframe. Two ATR percentiles, two series, one group. It therefore inherits `R4-M3` in full.
+
+The part that is new and that the 1-hour cells hide: `regime_at` returns a **default
+`RegimeSnapshot()`** when the regime timeframe has fewer than 60 bars
+`[repo-verified: features.py:935-943]`, and that default has `volatility = "NORMAL"` and
+`regime = "UNKNOWN"` `[repo-verified: regime.py:30-31]`. `volatility_normal` accepts LOW/NORMAL/HIGH,
+so **it passes on the default**. At the 240m row the regime timeframe is 1440, and 60 daily bars take
+~360 of the 240m bars to accumulate:
+
+| cell | regime_tf | bars with `regime == "UNKNOWN"` (the default) | `volatility_normal` passes | **of which are the default** |
+|---|---|---|---|---|
+| MGC 60m | 60 | 59 = 1.2% | 3,988 = 79.8% | 59 = 1.5% |
+| MNQ 60m | 60 | 59 = 1.2% | 3,971 = 79.4% | 59 = 1.5% |
+| MES 60m | 60 | 59 = 1.2% | 3,933 = 78.7% | 59 = 1.5% |
+| MCL 60m | 60 | 59 = 1.2% | 3,959 = 79.2% | 59 = 1.5% |
+| **MGC 240m** | **1440** | **297 = 22.0%** | 1,286 = **95.4%** | **297 = 23.1%** |
+| **MNQ 240m** | **1440** | **296 = 22.0%** | 1,257 = **93.3%** | **296 = 23.5%** |
+| **MES 240m** | **1440** | **296 = 22.0%** | 1,259 = **93.5%** | **296 = 23.5%** |
+| **MCL 240m** | **1440** | **298 = 21.5%** | 1,103 = 79.7% | **298 = 27.0%** |
+| MGC 1440m | 7200 | 62 = 2.5% | 2,077 = 82.7% | 62 = 3.0% |
+| MNQ / MES 1440m | 7200 | 63 = 3.4% | 1,466 / 1,461 = 78.9% / 78.6% | 63 = 4.3% |
+
+`[measured: census + python3 over csv/raw, snap.regime.regime and volatility_normal per bar]`
+
+Three things follow, and the third is the one that changes how a 4-hour result reads:
+
+1. **The base filter of 12 of 13 templates has a 14-point higher pass rate at 240m than at 60m on
+   three of four symbols** (79% → 93–95%) and *not* on the fourth (MCL, 79.2% → 79.7%). That is a
+   per-symbol fact with no market content: it is the daily-regime warm-up.
+2. **On 22% of 240m bars, the three regime-derived base filters contradict each other.**
+   `volatility_normal` passes on `volatility = "NORMAL"` (default) while `regime_trending` and
+   `regime_ranging` both fail on `regime = "UNKNOWN"` (default) — so a TREND or MEAN_REVERSION
+   strategy is vetoed on exactly the bars where the 12-of-13 filter waves through. The library's own
+   stated principle is that a filter whose question does not apply must pass
+   `[repo-verified: library.py:855-860]`; three conditions reading the same dataclass implement two
+   different answers to that principle, and neither by design.
+3. **~23–27% of every 4-hour strategy's `volatility_normal` passes are not a volatility measurement
+   at all.** They are the string `"NORMAL"` from `RegimeSnapshot`'s field default.
+
+| condition | kind | verdict |
+|---|---|---|
+| `volatility_normal` | FILTER | **DEGRADED** — timeframe-inert, frame-dependent, and 23–27% of its 240m passes are a dataclass default |
+| `volatility_expanding` | FILTER | **MISNAMED (mild)** — "top quartile" is `p >= 0.70`; **and VOID in conjunction with BREAKOUT's base filter**, 14 of 84 generated BREAKOUT strategies |
+| `volatility_compressed` | FILTER | **MISNAMED** — names Bollinger width, reads ATR percentile; verdicts disagree 24–30% at 60m and **37–49% at 240m**; base filter of BREAKOUT |
+
+**Group verdict: MISNAMED**, with one VOID conjunction the combinator emits.

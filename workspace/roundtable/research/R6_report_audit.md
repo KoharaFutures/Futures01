@@ -455,6 +455,34 @@ the cross-lag test as "MGC **20** pairs, MNQ **12** pairs, MES **6** pairs". Ord
 groups is `k(k−1)`: 12 = 4×3 and **6 = 3×2**. So the artefact says 4 and 3 groups while the prose
 says thirteen.
 
+**And the programme's own analysis script prints the group count on every line.** I re-ran it
+unmodified — the only command I executed that produces the report's numbers directly:
+
+`[measured: PYTHONPATH=. python3 workspace/chrono/analyse.py]`
+
+```
+MES 1440m   89 months  2019-05-03..2026-09-21   34,027 trades   groups with >=24 months: 3
+   winner repeats next month: 17/56 vs 18.3 shuffled   z=-0.37
+   most frequent monthly winner: VWAP 22x, MOMENTUM 18x, MULTI_TIMEFRAME 17x
+   cross-lag A(t) -> B(t+1): 6 pairs tested, Bonferroni needs |z|>=2.64, 0 survive
+
+MGC 1440m  117 months  2016-09-26..2026-09-21   56,670 trades   groups with >=24 months: 6
+   winner repeats next month: 20/95 vs 18.2 shuffled   z=+0.49
+   most frequent monthly winner: MULTI_TIMEFRAME 29x, VWAP 20x, MOMENTUM 18x, REVERSAL 12x
+   cross-lag A(t) -> B(t+1): 20 pairs tested, Bonferroni needs |z|>=3.02, 0 survive
+
+MNQ 1440m   89 months  2019-05-03..2026-09-21   39,373 trades   groups with >=24 months: 4
+   winner repeats next month: 18/60 vs 14.7 shuffled   z=+1.00
+   most frequent monthly winner: MULTI_TIMEFRAME 18x, MOMENTUM 16x, VWAP 16x, REVERSAL 11x
+   cross-lag A(t) -> B(t+1): 12 pairs tested, Bonferroni needs |z|>=2.87, 0 survive
+```
+
+`groups with >=24 months: 3 / 6 / 4` is printed by `workspace/chrono/analyse.py:65` on every run.
+Every z, every repeat count and every pair count in Part C reproduces exactly. **The number was on
+stdout the whole time and the prose says thirteen.** Note also that `REVERSAL` is the 4th-most
+frequent winner on both MGC and MNQ — so on those two symbols "the same three groups" is the top 3
+of 6 and of 4 candidates, and on MES it is the top 3 of **3**.
+
 ---
 
 # Report D — `scan_reports/2026-09-24_MGC-MCL_ranking-persistence-and-chronology.md`

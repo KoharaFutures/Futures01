@@ -61,10 +61,10 @@ replicated first and only then looked for more; the four items in §3 are what t
 
 R1's claim (`msgs/04_R1_R3_re-VWAP-BAND.md:108-115`): on the first bar after an anchor reset
 `pv2/vol − mean² = tp² − tp² = 0`, so `sd = 0` and `upper_1 = lower_1 = vwap = tp`, with no warm-up
-guard `[repo-verified: futures_agents/indicators/volume.py:88-102]`.
+guard `[repo-verified: futures_agents/indicators/volume.py:85-103]`.
 
 I cross-tabulated `half-width < 1 tick` against `the anchor key changed at this bar`, computing the
-anchor key the way the indicator does (`trading_day(bar.ts)`, `volume.py:34-35`) rather than off a
+anchor key the way the indicator does (`trading_day(bar.ts)`, `volume.py:32-35`) rather than off a
 clock:
 
 | cell | trading days | first-of-day bars | first & sub-tick | first & **not** sub-tick | later & sub-tick |
@@ -138,7 +138,7 @@ tested before `close <= vwap_l2` and on a zero-width band both hold. This is R6-
 `candle_close_strength` extended to the whole group, and it is R1 finding C-1 at 1440m.
 
 **Consequence for the generator, and it is the conservative direction.** `GLOBAL_EXCLUSIVE`
-(`combinator.py:391-402`) holds three pairs and **none of these**, so a daily VWAP strategy drawing
+(`combinator.py:391-399`) holds three pairs and **none of these**, so a daily VWAP strategy drawing
 `above_vwap` (required `vwap`) plus `delta_confirms_bar` (optional `orderflow`) is a two-signal
 confluence counting one observation twice — the exact failure the diversity rule exists to prevent,
 recorded in that list's own docstring. But the *opposite-sign* pair cannot be generated:
@@ -162,7 +162,7 @@ on MES and MNQ `[measured: csv.DictReader over the three files]`. A flat bar has
 **On MGC daily bars that have any range at all, `above_vwap` fires on 2228 / 2230 = 99.91%** — and
 on MES, 1854/1858 = 99.78%. That is R6-D1 made *stronger*: the condition's own docstring records
 the pre-fix version as firing on "99.99% of bars" and calls that the defect the band was introduced
-to fix `[repo-verified: futures_agents/strategies/library.py:296-305]`. At 1440m the fixed version
+to fix `[repo-verified: futures_agents/strategies/library.py:295-306]`. At 1440m the fixed version
 is back to 99.9%. R6's "the fix is void at 1440m" is right, and 92.4% understates it because the
 shortfall is a data property of MGC's daily file, not selectivity.
 
@@ -175,7 +175,7 @@ it is noise wearing a direction, and it is not in R6-D1.
 ### 3.3 `vwap_band1_bounce` is `VOID` at 1440m by arithmetic, and I checked the arithmetic
 
 `vwap_band1_bounce` needs `b.low <= vwap_l1 < b.close and b.close < vwap`
-`[repo-verified: futures_agents/strategies/library.py:355-366]`. With `vwap_l1 == vwap` that is
+`[repo-verified: futures_agents/strategies/library.py:355-367]`. With `vwap_l1 == vwap` that is
 `vwap < close AND close < vwap` — empty for any real `close`, at any tick size, on any symbol. The
 0/2511, 0/1859, 0/1859 and 0/4008, 0/1863, 0/1863 are `VOID` in `BRIEF.md`'s sense, not `DEGRADED`
 and not "rare". It cannot fire, and the float-noise σ does not rescue it: the band would have to be

@@ -2,7 +2,7 @@
 
 `vwap_bands` resets its accumulation at every anchor boundary and emits a band
 on the first bar of the new group, with no warm-up guard
-(`futures_agents/indicators/volume.py:82-103`). On that bar the group holds one
+(`futures_agents/indicators/volume.py:85-103`). On that bar the group holds one
 observation, so the volume-weighted variance is ``tp**2 - tp**2`` and the band
 has no width. That is `D45`.
 
@@ -125,7 +125,7 @@ def half_widths(bars: Sequence[Bar]) -> List[float]:
 
 def first_of_anchor(bars: Sequence[Bar]) -> List[bool]:
     """True where `vwap_bands`' own anchor key changes - computed the way the
-    indicator computes it (`volume.py:34-35`), not off a clock."""
+    indicator computes it (`volume.py:32-35`), not off a clock."""
     out, cur = [], None
     for b in bars:
         key = trading_day(b.ts)
@@ -339,7 +339,7 @@ def test_vwap_is_the_required_group_of_exactly_one_template():
 def test_no_template_can_draw_two_vwap_conditions_as_signals():
     """The conservative half: `above_vwap` and `vwap_band_extension` are exact
     opposites at 1440m, and `Strategy.evaluate` rejects disagreeing signals
-    (`base.py:677-684`) - so a strategy holding both would be zero-trade. It
+    (`base.py:677-685`) - so a strategy holding both would be zero-trade. It
     cannot be generated: the combinator draws at most one condition per group
     (`combinator.py:538-541`) and no template lists `vwap` in both its required
     and optional groups. **No published null can be that artefact.**"""

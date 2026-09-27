@@ -24,12 +24,12 @@ pinned in `tests/test_bt6_vwap_daily.py::test_vwap_is_the_required_group_of_exac
 `vwap_proximity` is additionally an `optional_filter` of the VWAP template
 `[repo-verified: combinator.py:198]`, and the VWAP template declares
 `exclusive=(("above_vwap","vwap_proximity"),)` — which was decoration until the
-filter-side check was added (`combinator.py:569-575` and its comment).
+filter-side check was added (`combinator.py:569-576` and its comment).
 
 **One thing that is NOT a hazard, stated because it is the conservative
 direction.** At 1440m `above_vwap` and `vwap_band_extension` are exact opposites
 (burst 01 §3.1), and `Strategy.evaluate` returns `None` when two signals
-disagree `[repo-verified: futures_agents/strategies/base.py:677-684]` — so a
+disagree `[repo-verified: futures_agents/strategies/base.py:677-685]` — so a
 strategy holding both would be zero-trade. **The generator cannot emit one:**
 `itertools.combinations(range(len(optional)), n_opt)` picks distinct *groups*
 `[repo-verified: combinator.py:538-541]` and no template lists `vwap` in both

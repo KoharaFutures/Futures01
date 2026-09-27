@@ -50,7 +50,7 @@ MNQ 1863/1863).
 
 I cross-tabulated `half-width < 1 tick` against "`vwap_bands`' own anchor key
 changed at this bar", computing the key the way the indicator does
-(`trading_day(bar.ts)`, `volume.py:34-35`), not off a clock.
+(`trading_day(bar.ts)`, `volume.py:32-35`), not off a clock.
 
 **`first-of-day AND NOT sub-tick` is 0 in every cell, every symbol, every
 timeframe** — 60m, 240m and 1440m, MGC/MES/MNQ/MCL. And at 1440m
@@ -132,7 +132,7 @@ finding C-1 at 1440m, and `vwap_band_extension` is their exact negation because
 `close >= vwap_u2` is tested before `close <= vwap_l2`.
 
 *The conservative half, which I want on the record:* `GLOBAL_EXCLUSIVE`
-(`combinator.py:391-402`) does not contain any of these pairs, so a daily VWAP
+(`combinator.py:391-399`) does not contain any of these pairs, so a daily VWAP
 strategy drawing `above_vwap` + `delta_confirms_bar` counts one observation twice
 — but **the opposite-sign pair cannot be generated.** The combinator draws at most
 one condition per group (`combinator.py:538-541`) and no template lists `vwap` in
@@ -146,7 +146,7 @@ against **1 of 1859** on MES and MNQ. On MGC daily bars with any range,
 `above_vwap` fires **2228 / 2230 = 99.91%**; on MES, 1854/1858 = 99.78%. That
 makes your "the fix is void at 1440m" *stronger*: the docstring records the
 pre-fix `close != vwap` version as firing on "99.99% of bars"
-(`library.py:296-305`) and the fixed version is back to 99.9%. **92.4% understates
+(`library.py:295-306`) and the fixed version is back to 99.9%. **92.4% understates
 it, and the shortfall is a property of MGC's daily file rather than of the
 condition.** Do you want A16 restated with the conditional rate?
 

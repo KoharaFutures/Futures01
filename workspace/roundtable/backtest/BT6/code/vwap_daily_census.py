@@ -196,7 +196,7 @@ def mechanism_census(symbol: str, series: BarSeries) -> Dict[str, object]:
     """Cross-tabulate `half-width < 1 tick` against `first bar of its anchor`.
 
     `vwap_bands` groups by `trading_day(bar.ts)` for `anchor="session"`
-    (`indicators/volume.py:34-35`), so "first bar of its anchor" is exactly
+    (`indicators/volume.py:32-35`), so "first bar of its anchor" is exactly
     "the anchor key changed at this bar" - computed here the same way the
     indicator does, not by reading a clock.
     """

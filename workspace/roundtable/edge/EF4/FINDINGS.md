@@ -666,39 +666,53 @@ the same `SessionWindowEngine` pass over the same frame. Signal-count matched (n
 matched, so both arms face identical downstream attrition) and direction-matched.
 `placebo_shift` was **not** used — D42 records that it leaks and it is conservative-only.
 
-| cell | arms with a control | **placebo mean net E** | placebo mean trades | implied **placebo GROSS** | best real arm's z vs its own placebos | arms at placebo percentile 1.00 |
-|---|---|---|---|---|---|---|
-| MGC 15m | 34 | **−0.0123** | 61 | +0.038 | **+4.17** | 13 |
-| MGC 30m | 30 | **−0.0228** | 49 | +0.012 | +3.19 | 12 |
-| MCL 15m | 28 | **−0.1115** | 52 | +0.013 | +2.08 | 2 |
-| MCL 30m | 34 | **−0.0647** | 53 | +0.019 | +2.04 | 5 |
+| cell | arms with a control | **placebo mean net E** | placebo mean trades | cell median cost | **implied placebo GROSS** | best real arm's z vs its own placebos | arms at placebo percentile 1.00 |
+|---|---|---|---|---|---|---|---|
+| MGC 5m | 28 | **−0.1309** | 87 | 0.0927 | **−0.038** | **+4.74** | 10 |
+| MGC 15m | 34 | **−0.0123** | 61 | 0.0503 | +0.038 | +4.17 | 13 |
+| MGC 30m | 30 | **−0.0228** | 49 | 0.0346 | +0.012 | +3.19 | 12 |
+| MCL 15m | 28 | **−0.1115** | 52 | 0.1254 | +0.014 | +2.08 | 2 |
+| MCL 30m | 34 | **−0.0647** | 53 | 0.0835 | +0.019 | +2.04 | 5 |
 
-**Two readings, and the second is the one that matters.**
+**Three readings, and the second one corrected something I had already written.**
 
-1. **The placebo behaves exactly as the arithmetic says it should, which validates the control.**
-   Implied placebo *gross* is **+0.01 to +0.04 R** in every cell — essentially zero, marginally
-   positive, which is what a random entry with a 1.5 R target against a 1.0 R stop produces on a
-   series with volatility clustering. Placebo *net* is then approximately minus the cell's cost.
-   So the control is measuring what it is supposed to measure and nothing else.
+1. **The control behaves as the arithmetic says, which validates it.** At 15m and 30m implied
+   placebo *gross* is **+0.012 to +0.038 R** — essentially zero, marginally positive, which is what
+   a random entry with a 1.5 R target against a 1.0 R stop produces on a series with volatility
+   clustering. Placebo *net* is then approximately minus the cell's cost. The control is measuring
+   what it should and nothing else.
 
-2. **And therefore: the placebo beats the median real strategy in every cell.**
+2. **At 5 minutes the placebo's gross is NEGATIVE (−0.038 R), and that overturns my own first
+   reading of rule 7.** In §8 I decomposed the 5-minute graveyard into a gross half and a cost half
+   and called the gross half a signal-quality effect. **It is not.** The placebo entries carry no
+   information by construction, so a negative *placebo* gross at 5m means the degradation belongs
+   to the **exit geometry meeting a 5-minute bar grid** — a 1.0-ATR stop, a 1.5 R target, the
+   engine's pessimistic stop-before-target tie rule `[repo-verified: engine.py:398-403]` and a
+   2-hour time stop, all evaluated on bars six times finer. **So the non-cost half of "sub-hourly is
+   a graveyard" is a statement about exits, not about signals, and it can be established with random
+   entries and no search whatsoever.** §8's table stands; its interpretation is corrected here.
 
-| cell | placebo mean net E | **median net E of the real ≥30-trade population** |
-|---|---|---|
-| MGC 5m | — | −0.132 |
-| MGC 15m | −0.012 | −0.046 |
-| MGC 30m | −0.023 | −0.049 |
-| MCL 5m | — | −0.241 |
-| MCL 15m | −0.112 | −0.143 |
-| MCL 30m | −0.065 | −0.093 |
+3. **The placebo matches or beats the median real strategy in every cell.**
 
-**A count-matched random entry, run through a real strategy's own exits and filters, outperforms
-the median censused, mandate-derived strategy in this cell.** That is the programme's own placebo
-finding ("placebo entries rank alongside real signals; five separate constructions matched or beat
+| cell | placebo mean net E | **median net E of the real ≥30-trade population** | placebo verdict |
+|---|---|---|---|
+| MGC 5m | −0.131 | −0.132 | **ties** |
+| MGC 15m | −0.012 | −0.046 | **placebo wins** |
+| MGC 30m | −0.023 | −0.049 | **placebo wins** |
+| MCL 15m | −0.112 | −0.143 | **placebo wins** |
+| MCL 30m | −0.065 | −0.093 | **placebo wins** |
+
+That is the programme's own placebo finding ("five separate placebo constructions matched or beat
 the real thing") reproduced under a session rule that has never been run — and in a sharper form,
-because here the placebo does not merely *match* the median, it **beats** it. The mechanism is not
-mysterious: a random entry pays the same cost and has the same ~zero gross, while the median real
-condition contributes *negative* gross at 5m and roughly zero gross at 15m/30m.
+because at 15m and 30m the placebo does not merely match the median, it **beats** it.
+
+**And three pre-registered arms are significantly WORSE than their own placebos.** MGC 5m:
+`A1_ON_SWEEP` at percentile **0.00**, z = **−2.99**; `A6_ON_COMPRESSION` percentile **0.00**,
+z = **−2.69**; `A4_VWAP_BAND` percentile 0.05, z = −1.49. A placebo beating a real signal has
+happened five times in this repository. **A real signal losing to its own placebo at z = −3 is a
+different and stronger statement**: both arms share the exit, the sizing and the session rule, so
+the difference is attributable to where the entry fires, and the condition is not uninformative but
+*anti*-informative in that cell.
 
 **Where the real rows do separate.** The top rows are not reproduced by their own controls:
 placebo z = +1.2 to +2.9 for MGC's survivors, +1.1 to +1.3 for MCL's. That is a real distinction

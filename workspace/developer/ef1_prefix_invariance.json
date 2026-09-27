@@ -1,0 +1,154 @@
+{
+  "level1_classification": [
+    {
+      "n_bars": 11297,
+      "prefixes_checked": 3866,
+      "classification_mismatches": 0,
+      "classification_detail": [],
+      "session_end_mismatches_on_cut_date": 2123,
+      "session_end_mismatches_off_cut_date": 0,
+      "session_end_detail": [],
+      "mismatches": 0,
+      "coverage": "exhaustive k<= 1200, stride 250 to k=11297, plus every k within +/-2 of each ON_BOUNDARY/IN_WINDOW bar",
+      "symbol": "MGC",
+      "timeframe": 60
+    },
+    {
+      "n_bars": 10934,
+      "prefixes_checked": 3751,
+      "classification_mismatches": 0,
+      "classification_detail": [],
+      "session_end_mismatches_on_cut_date": 2068,
+      "session_end_mismatches_off_cut_date": 0,
+      "session_end_detail": [],
+      "mismatches": 0,
+      "coverage": "exhaustive k<= 1200, stride 250 to k=10934, plus every k within +/-2 of each ON_BOUNDARY/IN_WINDOW bar",
+      "symbol": "MCL",
+      "timeframe": 60
+    },
+    {
+      "n_bars": 11287,
+      "prefixes_checked": 3858,
+      "classification_mismatches": 0,
+      "classification_detail": [],
+      "session_end_mismatches_on_cut_date": 2114,
+      "session_end_mismatches_off_cut_date": 0,
+      "session_end_detail": [],
+      "mismatches": 0,
+      "coverage": "exhaustive k<= 1200, stride 250 to k=11287, plus every k within +/-2 of each ON_BOUNDARY/IN_WINDOW bar",
+      "symbol": "MES",
+      "timeframe": 60
+    },
+    {
+      "n_bars": 11291,
+      "prefixes_checked": 3861,
+      "classification_mismatches": 0,
+      "classification_detail": [],
+      "session_end_mismatches_on_cut_date": 2111,
+      "session_end_mismatches_off_cut_date": 0,
+      "session_end_detail": [],
+      "mismatches": 0,
+      "coverage": "exhaustive k<= 1200, stride 250 to k=11291, plus every k within +/-2 of each ON_BOUNDARY/IN_WINDOW bar",
+      "symbol": "MNQ",
+      "timeframe": 60
+    }
+  ],
+  "level2_engine": [
+    {
+      "symbol": "MGC",
+      "timeframe": 60,
+      "strategies": 29,
+      "window": [
+        6000,
+        6400
+      ],
+      "span": [
+        "2025-10-21T10:00:00-04:00",
+        "2025-11-13T19:00:00-05:00"
+      ],
+      "full_run_trades": 12,
+      "prefixes_checked": 58,
+      "stride": 7,
+      "mismatches": 0,
+      "detail": []
+    },
+    {
+      "symbol": "MCL",
+      "timeframe": 60,
+      "strategies": 60,
+      "window": [
+        6000,
+        6400
+      ],
+      "span": [
+        "2025-10-21T10:00:00-04:00",
+        "2025-11-13T19:00:00-05:00"
+      ],
+      "full_run_trades": 3,
+      "prefixes_checked": 58,
+      "stride": 7,
+      "mismatches": 1,
+      "detail": [
+        {
+          "k": 140,
+          "n_bad": 3,
+          "example": [
+            "MCL-60m-031f1a211de3",
+            139,
+            139,
+            60.83,
+            "SESSION_CLOSE"
+          ]
+        }
+      ]
+    },
+    {
+      "symbol": "MES",
+      "timeframe": 60,
+      "strategies": 29,
+      "window": [
+        6000,
+        6400
+      ],
+      "span": [
+        "2025-10-22T00:00:00-04:00",
+        "2025-11-14T08:00:00-05:00"
+      ],
+      "full_run_trades": 5,
+      "prefixes_checked": 56,
+      "stride": 7,
+      "mismatches": 1,
+      "detail": [
+        {
+          "k": 357,
+          "n_bad": 5,
+          "example": [
+            "MES-60m-04bc2d1fdd12",
+            356,
+            356,
+            6860.5,
+            "SESSION_CLOSE"
+          ]
+        }
+      ]
+    },
+    {
+      "symbol": "MNQ",
+      "timeframe": 60,
+      "strategies": 33,
+      "window": [
+        6000,
+        6400
+      ],
+      "span": [
+        "2025-10-21T23:00:00-04:00",
+        "2025-11-14T07:00:00-05:00"
+      ],
+      "full_run_trades": 0,
+      "prefixes_checked": 56,
+      "stride": 7,
+      "mismatches": 0,
+      "detail": []
+    }
+  ]
+}

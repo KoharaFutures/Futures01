@@ -145,3 +145,36 @@ This brief's earlier figure of 2.96 was the floor for a *single pre-registered* 
 search width these cells actually use, the scalp requirement is **9.59**. That number does not
 occur in futures. **Use `EF6/code/deflation.py`; do not derive a threshold by hand and do not quote
 5.46.**
+
+---
+
+# In three scalp cells a "top 10" IS the whole qualifying universe (EF5, in flight)
+
+EF5's floor-feasibility census, before any profitability test:
+
+| cell | population | zero-trade | clear 20 trades | after clone collapse | top 10 as % of qualifying |
+|---|---|---|---|---|---|
+| MES 5m RTH | 1,689 | 1,284 | 67 | **38** | 26% |
+| MES 15m RTH | 1,689 | 1,392 | 26 | **15** | 67% |
+| MES 30m RTH | 1,689 | 1,390 | 14 | **7** | **the entire universe** |
+| MNQ 5m RTH | 1,821 | 1,308 | 89 | **48** | 21% |
+| MNQ 15m RTH | 1,821 | 1,458 | 12 | **7** | **the entire universe** |
+| MNQ 30m RTH | 1,821 | 1,463 | 13 | **8** | **the entire universe** |
+
+**Three RTH cells cannot produce a top 10 at all** — fewer than ten strategies survive the trade
+floor after clones are collapsed. In three more, a top 10 is between a fifth and two thirds of
+everything that qualifies.
+
+**This is not a power caveat, it is a definitional one, and it changes what the deliverable means.**
+The programme's own settled result is that **trading the previous period's top 10 underperformed
+trading the entire qualifying universe** (+0.022R against +0.057R). When the top 10 *is* 67% of the
+qualifying universe, "rank the top 10" and "trade everything that qualifies" are close to the same
+instruction, and the ranking cannot be doing the work it is being asked to do.
+
+So for any cell in this table: **report the qualifying count beside the list, and where the list is
+most of the universe, say that the ranking is not a selection.** Handing back seven rows and the
+sentence "this cell has seven qualifying strategies, so there is no top ten" is the correct
+deliverable, not a shortfall. The `SESSION` arm is better populated than `RTH` in every cell, which
+is the first measured argument for the session rule adding something — but note D24 prices the
+`rth_only=False` route at 2–4× sample for a loss of expectancy, so more rows is not the same as
+better rows.

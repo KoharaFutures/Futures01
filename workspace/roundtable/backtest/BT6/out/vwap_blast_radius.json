@@ -1,0 +1,70 @@
+{
+ "files_with_1440_rows": {
+  "workspace/bigscan/all_rows.json": 94,
+  "workspace/bigscan/cells/MES_1440m_180d.json": 1,
+  "workspace/bigscan/cells/MES_1440m_274d.json": 23,
+  "workspace/bigscan/cells/MGC_1440m_180d.json": 2,
+  "workspace/bigscan/cells/MGC_1440m_274d.json": 8,
+  "workspace/bigscan/cells/MNQ_1440m_180d.json": 3,
+  "workspace/bigscan/cells/MNQ_1440m_274d.json": 23,
+  "workspace/bigscan/cells/QQQ_1440m_180d.json": 2,
+  "workspace/bigscan/cells/QQQ_1440m_274d.json": 15,
+  "workspace/bigscan/cells/SPY_1440m_180d.json": 1,
+  "workspace/bigscan/cells/SPY_1440m_274d.json": 16,
+  "workspace/focus/all_rows.json": 95,
+  "workspace/focus/cells/MES_1440m_180d.json": 2,
+  "workspace/focus/cells/MES_1440m_274d.json": 56,
+  "workspace/focus/cells/MGC_1440m_180d.json": 7,
+  "workspace/focus/cells/MGC_1440m_274d.json": 30,
+  "workspace/research_plan/screen_MES_position.json": 7,
+  "workspace/research_plan/screen_MGC_position.json": 36,
+  "workspace/research_plan/screen_MNQ_position.json": 22,
+  "workspace/research_plan/validate_MGC_position.json": 2,
+  "workspace/studies/merged.json": 30,
+  "workspace/studies/out/x_robustness.json": 30
+ },
+ "never": [
+  "BREAKOUT",
+  "MOMENTUM",
+  "SUPPLY_DEMAND"
+ ],
+ "offers": [
+  "FIBONACCI",
+  "LIQUIDITY",
+  "MEAN_REVERSION",
+  "MULTI_TIMEFRAME",
+  "OPENING_RANGE",
+  "PULLBACK",
+  "REVERSAL",
+  "TREND",
+  "VOLUME_PROFILE"
+ ],
+ "requires": [
+  "VWAP"
+ ],
+ "rows_1440_by_class": {
+  "certain": 148,
+  "possible": 192,
+  "unaffected": 165
+ },
+ "rows_1440_by_group": {
+  "BREAKOUT|unaffected": 8,
+  "FIBONACCI|possible": 2,
+  "MEAN_REVERSION|possible": 2,
+  "MOMENTUM|unaffected": 157,
+  "MULTI_TIMEFRAME|possible": 143,
+  "PULLBACK|possible": 1,
+  "REVERSAL|possible": 2,
+  "TREND|possible": 42,
+  "VWAP|certain": 148
+ },
+ "rows_1440_naming_vwap_conditions": {},
+ "rows_by_tf": {
+  "1440": 505,
+  "15": 7653,
+  "240": 53717,
+  "30": 1732,
+  "5": 6336,
+  "60": 127140
+ }
+}

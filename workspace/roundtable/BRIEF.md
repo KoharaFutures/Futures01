@@ -49,11 +49,23 @@ Any claim contradicting one of these needs evidence, not assertion:
 
 ## What the library currently holds
 
-**13 strategy groups:** BREAKOUT, FIBONACCI, LIQUIDITY, MEAN_REVERSION, MOMENTUM,
-MULTI_TIMEFRAME, OPENING_RANGE, PULLBACK, REVERSAL, SUPPLY_DEMAND, TREND, VOLUME_PROFILE, VWAP.
+**Two taxonomies, and an earlier version of this brief conflated them.** They are different
+things and the distinction matters — R1's track in particular turns on it:
 
-**79 conditions** (`futures_agents/strategies/library.py` → `CONDITIONS`), split
-`ConditionKind.SIGNAL` / `.FILTER`.
+- **13 *strategy* groups**, the uppercase labels the combinator assembles into
+  (`futures_agents/strategies/combinator.py`, `group="..."`): BREAKOUT, FIBONACCI, LIQUIDITY,
+  MEAN_REVERSION, MOMENTUM, MULTI_TIMEFRAME, OPENING_RANGE, PULLBACK, REVERSAL, SUPPLY_DEMAND,
+  TREND, VOLUME_PROFILE, VWAP. These are what every `scan_reports/` result is grouped by.
+- **19 *condition* groups**, the lowercase tags on the 79 conditions
+  (`futures_agents/strategies/library.py` → `CONDITIONS`, a dict of 79): candlestick,
+  fibonacci, imbalance, liquidity, meanreversion, momentum, multitimeframe, news, openinterest,
+  orderflow, profile, regime, structure, supplydemand, time, trend, volatility, volume, vwap.
+  Measured split: **53 SIGNAL / 26 FILTER.**
+
+Three of those condition groups name information the data does not contain — **`orderflow`,
+`openinterest`, `news`** — while the CSV header is `open_time,open,high,low,close,volume`. Work
+out what those conditions are actually computing from OHLCV before treating any of them as what
+its name claims. This is a finding waiting to be written down, not a trap to avoid.
 **Stops:** ATR, STRUCTURE, FIXED_TICKS, VWAP_BAND, RANGE.
 **Targets:** R_MULTIPLE, ANCHOR_ATR, ANCHOR_STRUCTURE.
 

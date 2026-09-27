@@ -306,6 +306,19 @@ print(alert(Priority.SHORT, headline, body))   # ORANGE background (48;5;208, bl
 print(alert(Priority.NO_TRADE, headline, body))# GREY background   (48;5;250)
 ```
 
+**And render it as a PNG as well**, because ANSI escapes do not show as colour on every surface
+the owner reads this on:
+
+```
+python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002 --out workspace/paper/CALL/cards.png
+```
+
+`card_png.py` drives `card.py`, so the image and the terminal card cannot disagree about the
+numbers, and it resolves each xterm-256 index through the **colour-cube arithmetic** rather than an
+eyeballed hex: **27 -> `#005FFF`**, **208 -> `#FF8700`**, **250 -> `#BCBCBC`**. Send it with
+`SendUserFile` using `display: "render"`. Do not hand-pick a hex that "looks blue" — the indices are
+fixed by `alerts.py` and the conversion must be derived, not guessed.
+
 This applies to a **pre-registered** direction too, not only a filled one: `CALL-0002` is a SHORT and
 renders orange even though nothing has filled. The body then carries `PRE-REGISTERED, NOT FILLED`
 alongside `PAPER — UNVALIDATED`, so the colour states the direction and the text states the status.

@@ -236,6 +236,27 @@ remade at every bar has no pre-registration and unbounded search width"). **At 5
 job is to WATCH a pre-registered plan, not to keep re-forming an opinion.** A new directional read
 belongs in a full check, or when price reaches a level that was written down in advance.
 
+## Render the bias chart on every response
+
+```
+python3 workspace/paper/CALL/chart.py MGC MNQ --frame 15 --bars 40
+```
+
+Standing requirement from the account owner, 2026-09-27: **every response shows a bullish/bearish
+chart with colours.** `chart.py` renders an ANSI candle chart plus a three-component bias panel from
+the stub-free snapshots.
+
+**The colours are the desk's existing palette and must not be changed**: bullish is **256-colour 27
+(blue)**, bearish is **208 (orange)**, neutral/conflicted is **250 (grey)** — the same codes
+`alerts.py` uses for LONG / SHORT / NO_TRADE. Not green and red. `CALLOUT.md` moved NO_TRADE off
+orange and SIGNAL off bright blue so nothing could be mistaken for a direction in peripheral vision,
+and a chart introducing a second colour language would undo exactly that.
+
+**The bias is a description, not a signal.** All three components (trend vs EMA20, swing structure,
+location in range) are printed every time with the tally, so a 2-1 can never be read as a 3-0, and
+a non-unanimous reading prints the rule-1 reminder that disagreement is a reason *not* to trade.
+Nothing in the panel is backtested.
+
 ## The one-line report
 
 When nothing changed, the whole report is one line, in this shape:

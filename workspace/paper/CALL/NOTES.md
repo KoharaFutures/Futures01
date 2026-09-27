@@ -237,3 +237,35 @@ So the honest recommendation, once — the owner has asked for 5 minutes and it 
 **the interval that matches this feed is 10–15 minutes**, and the accumulating `feed_lag.jsonl`
 will say whether 12.9 minutes holds during RTH liquidity or is worse on a Sunday reopen. I will
 report the distribution rather than re-raise the point.
+
+## N8 — MNQ's bias flipped unanimously bearish against a pending LONG, and I am deliberately not touching the plan
+
+**basis: f549f35, 2026-09-27 19:02 ET.** `chart.py` reads MNQ 15m **BEARISH 0-3** — trend (close
+30789.25 below a falling EMA20 30864.05), structure (swing highs 30935.25→30922.50 lower, lows
+30880.50→30797.25 lower) and location (35.7% of range) all bearish. `CALL-0001` is a **LONG**.
+
+The thesis it was pre-registered on — uptrend, pullback complete, Friday's higher high and higher
+low, so a break of 30998.50 is continuation — **has been contradicted** by a Sunday reopen that
+gapped down and is now printing lower highs *and* lower lows on the 15m.
+
+**The plan stays exactly as written. Unmodified, unwidened, untightened.**
+
+The reason is not optimism, it is that **editing a pre-registered hypothesis after watching the price
+move destroys the only statistical advantage it had.** The whole point of writing 30998.50 down
+before the session opened is that it faces `free_t` 1.177 instead of 5.46. A level revised in light
+of what price then did is not a pre-registered hypothesis at all — it is a searched one with a
+sample size of one and a threshold four t-units higher, wearing the label of the thing it stopped
+being. Adjusting it "because conditions changed" is the exact mechanism by which this programme's
+2,975,629-candidate search became unreportable, reproduced in miniature.
+
+**And the plan is self-invalidating anyway, which is why no action is needed.** It is a stop-entry
+199 points *above* the market. It cannot fire unless MNQ rallies 199 points — and a rally of that
+size would substantially rebuild the bullish condition the thesis requires. The trigger is
+structurally incapable of filling into the tape that currently invalidates it.
+
+**The residual risk, named rather than fixed:** if MNQ rallies 199 points *sharply*, the trigger
+fires on a V-recovery rather than on the continuation-from-a-held-pullback I actually described.
+Those are different setups and a bare stop-entry cannot tell them apart. That is a genuine weakness
+of the plan as written — **and the honest response is to note it now and write a better entry
+condition into the NEXT pre-registration, not to patch this one mid-flight.** The Monday 16:00
+expiry bounds the exposure to one session either way.

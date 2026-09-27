@@ -319,3 +319,52 @@ opposite of R1's example** at the two coarse rows and **nil at three of six rows
 are on-timeframe at 15m, 30m and 60m, coarser-by-3× at 5m, and read the **daily** regime at 240m.
 That is a smaller total blast radius than R1's framing implies and a much sharper single-cell one.
 **REFINED.**
+
+---
+
+# DECLARED ANCHOR — read this before any verdict below
+
+**2026-09-27, mid-task.** My dispatch told me to read `research/R1_group_audit.md` in full "for the
+method and vocabulary you are continuing", and I did — **all 1,281 lines, including R1's
+per-condition verdicts for all 31 of my conditions**, before forming any of my own. The coordinator
+then corrected the dispatch (`R1-REQ-6`): verdicts must be formed independently and compared
+afterwards, because one audit plus one agent anchored on it is one audit.
+
+**I cannot unread it, so I am declaring it rather than pretending otherwise.**
+
+> **Every verdict in this file was formed after seeing R1's verdict for the same condition.**
+> None of the 31 is an independent verdict in the strict sense. Treat any agreement between this
+> file and `R1_group_audit.md` as **corroboration of the reading, not replication of the audit.**
+
+What is *not* anchored, and is therefore the part of this file with independent evidential value:
+
+1. **The measurements.** My census is my own harness (`census.py`, 31 conditions × 47 cells) on a
+   **different cell design** from R1's: the corpus's own `FRAMES` groups, all four symbols, six
+   timeframes, plus single-timeframe frames. R1's five cells were MCL/MES/MGC/MNQ 1h (tfs 60,240)
+   and MGC 5m (tfs 5,15,60). Where my number and R1's disagree, that is genuine independent
+   evidence; where R1 measured nothing (MES and MCL for `multitimeframe` and `regime`; 30m; 1440m;
+   single-timeframe frames), the number is new.
+2. **`R4-M1`, `R4-M2`, `R4-M3`** — three structural findings absent from R1's file, two of which
+   change what R1's own findings mean. Finding something the first auditor did not is the only
+   available evidence that a second auditor is not merely agreeing.
+3. **`R4-M4` onward** — where I disagree, I say so and quote the line.
+
+A second reviewer who is told the first reviewer's answer is worth less than one who is not. I would
+have preferred not to know. The honest mitigation is to make the disagreements and the additions
+carry the weight, and to mark the agreements as what they are.
+
+## One vocabulary addition, per `R1-REQ-5`: **VOID**
+
+R1's six verdicts have no term for "cannot fire", and DEGRADED materially understates it. Adopting
+the coordinator's term:
+
+| verdict | meaning |
+|---|---|
+| **VOID** | the condition, or the configuration carrying it, **cannot fire by construction** — not rare, not weak, arithmetically impossible or structurally unreachable in the named cell |
+
+VOID is always stated **per symbol and per timeframe**, never in general. It matters because
+`Strategy.evaluate` is a strict AND with no `min_signals`: one non-firing FILTER returns `None`
+before any signal is read, and one non-firing SIGNAL — or one that returns `Direction.NEUTRAL`, or
+one that disagrees in direction — returns `None` too
+`[repo-verified: futures_agents/strategies/base.py:670-684]`. So a single VOID member is not a weak
+component, it is the whole strategy's zero.

@@ -49,7 +49,24 @@ TIER_A: List[dict] = [
                "18:00->16:00 rule does NOT improve expectancy in R, on either "
                "symbol, at either timeframe.",
          axis="rth_only True vs False",
-         predicted="no improvement; D24 predicts the False arm is worse",
+         predicted=("TWO-SIDED, no direction registered. AMENDED 2026-09-27 "
+                    "before any measurement, and the amendment is STRICTER than "
+                    "what it replaces. The original registration was 'no "
+                    "improvement; D24 predicts the False arm is worse'. EF4-01 "
+                    "is right that D24 does not transfer: it measured "
+                    "rth_only=False as buying sample and costing expectancy "
+                    "UNDER THE OLD REGIME, where a position was flattened at the "
+                    "contract's own RTH close - so an overnight entry had almost "
+                    "no runway to work with. Under the 18:00->16:00 rule the "
+                    "overnight bars are holdable and D24's sign has no bearing. "
+                    "With its only prior withdrawn the hypothesis has no "
+                    "defensible direction, so it becomes two-sided, which needs a "
+                    "LARGER |t| at the same alpha than the one-sided version did. "
+                    "EF6 separately measured rth_only=False multiplying raw "
+                    "signals per strategy by 2.5x on MGC 60m; that is a power "
+                    "fact, not a direction, and it does not move "
+                    "required_annual_sharpe because it does not lengthen the "
+                    "span."),
          test="paired t on the per-rule-set difference in expectancy, pairing "
               "on (rule set, cell); NOT T.ab (D28)",
          unit="R per trade",

@@ -352,11 +352,12 @@ beside it and never rank. The trade floor and the t-statistic **gate** a row; th
 
 ---
 
-## F9 — MCL's 60m series is missing 366 bars in two contiguous runs, in BOTH stores, and the 16:00 flat cannot fire in 34 of its 505 cycles
+## F9 — Both archive hourly series are incomplete (MGC 93.3%, MCL 89.5% of cycles), and the 16:00 flat cannot fire in 17 MGC / 34 MCL cycles
 
-Prompted by `EF3-01`, which found EF1's `classify_bar` under-enforcing the flat on 19 of 507 MES/MNQ
-sessions. **I re-measured on my own symbols rather than inheriting the count** — MGC is COMEX, MCL is
-NYMEX, neither shares the equity complex's calendar. Detail: `bursts/06`.
+Detail: `bursts/06` and the correction in `bursts/12`. Prompted by `EF3-01`, which found EF1's
+`classify_bar` under-enforcing the flat on 19 of 507 MES/MNQ sessions. **I re-measured on my own symbols
+rather than inheriting the count** — MGC is COMEX, MCL is NYMEX, neither shares the equity complex's
+calendar.
 
 | cell | bars | cycles | **cycles where the flat cannot fire** | share |
 |---|---|---|---|---|
@@ -367,32 +368,77 @@ NYMEX, neither shares the equity complex's calendar. Detail: `bursts/06`.
 
 Zero `INTERIOR` bars in any cell, so `SessionGridError` never fires and the run proceeds while those
 cycles go untested. **The audit is per series; the hole is per cycle.**
+Independently confirmed by EF1's own arm-C validation: **33 `SPANS_WINDOW` violations, every one at
+`primary_tf = 240m`, 18 of them MCL**, plus EF1 reaching the MCL hole by a different method. And by EF4
+from the other side: at 5m/15m/30m the flat is reachable in **41 of 41** cycles on both symbols, so this
+is a coarse-grid and sparse-data defect, not a property of the rule.
 
-**16 of MGC's 17 and 16 of MCL's 34 are the same holiday dates.** MCL's other **18** are ordinary
-weekdays on which MCL is simply missing bars:
+### The completeness measurement, and a correction to how I first framed it
 
-```
-MGC archive 60m 11,297 bars   MCL archive 60m 10,934 bars
-bars MGC has that MCL lacks: 366, over 34 dates, in two contiguous runs:
-    2026-01-09 -> 2026-01-16   and   2026-02-20 -> 2026-03-11
-on those dates: MGC 442 bars, MCL 102 bars
-csv/raw/MCL_1h.csv on those dates: 102 bars — bars csv/raw has that the archive LACKS: 0
-```
+Burst 06 measured MCL's missing bars **relative to MGC** — 366 bars MGC has that MCL lacks — which is
+true and silently implies MGC is complete. **It is not.** Absolute completeness (distinct ET hours per
+18:00→16:00 cycle, excluding the 16:00–17:00 break, so a full cycle is 22 bars):
 
-**Absent from both stores.** So `BarArchive` behaved correctly, this is the vendor's MCL series, and
-**every published MCL result in `scan_reports/` rests on the same gap.** The BRIEF's data policy
-verified the two stores hold the *same* series over *overlapping* stamps; it never asked whether either
-is *complete*. On MCL at 60m it is not — 3.3% of the series.
+| symbol | cycles | **complete (22/22)** | partial | bars short of 22 | cycles with ≤6 of 22 |
+|---|---|---|---|---|---|
+| MGC | 506 | **472 = 93.3%** | 34 | **330** | 11 |
+| MCL | 505 | **452 = 89.5%** | 53 | **650** | **28** |
 
-**Independently confirmed by EF1** on a different method and a different population:
-*"a two-month hole in MCL 60m — 17 further dates, 2026-01-12 to 2026-03-10 … 1 to 5 bars each …
-this is a substrate defect, not a calendar one"*. EF1's arm-C validation found **33 `SPANS_WINDOW`
-violations, every one at `primary_tf = 240m`, 18 of them MCL.** Two agents, disjoint methods, agreeing.
+Most of MGC's 34 partials are **genuine** early closes and holidays and should be short. Two are not:
+**`2026-02-02` is 3 of 22 hours on MGC** — a Monday, and a **51-hour hole** (every bar from
+2026-01-30T11:00 to 2026-02-02T12:00 absent) — **and `2026-02-02` is 3 of 22 on MCL too, so that hole is
+shared by both contracts**, which points at the vendor rather than either exchange. MCL additionally
+carries two multi-day runs MGC does not: **2026-01-09 → 01-16** and **2026-02-20 → 03-11**.
 
-Raised with the manager as a D-candidate (`msgs/EF2-03`); only the manager allocates `D` numbers.
-Every MCL row will be reported **with and without** the two windows, named above before any expectancy
-exists. `D40`'s consequence without `D40`'s cause: not splicing, absence — but the bar after a
-multi-day hole still carries a multi-day return that a one-bar momentum rule reads as a one-hour move.
+All of it is in `csv/raw` as well as `data/archive` — `csv/raw/MCL_1h.csv` has the same 102 bars on
+MCL's gap dates and **zero** bars the archive lacks — so `BarArchive` behaved correctly, this is the
+vendor's series, and **every published result on these two contracts rests on it.** The BRIEF's data
+policy verified the two stores hold the *same* series over *overlapping* stamps; it never asked whether
+either is *complete*.
+
+**Why the relative framing was the wrong measurement, which is the more useful lesson:** a cross-symbol
+comparison can only find a hole in one series that the other fills. It cannot find a **shared** hole —
+and a shared hole is precisely the blind spot created by only ever comparing two symbols to each other,
+which is what the independence rule encourages. The absolute test costs the same and finds both.
+
+Raised with the manager as a D-candidate (`msgs/EF2-03`); only the manager allocates `D` numbers. Every
+MCL row will be reported **with and without** the two runs, named before any expectancy exists; `D40`'s
+consequence without `D40`'s cause — not splicing, absence — but the bar after a multi-day hole still
+carries a multi-day return that a one-bar momentum rule reads as a one-hour move.
+
+## F9b — The gap-fill tail in R: MCL at 240m is the worst cell in my set, and EF4's 5m magnitude does not transfer
+
+Detail: `bursts/12`. `EF4-01` measured that with `veto_signals_in_window=False` (EF1's default, the rule
+as written) a signal on the 16:00–17:00 bar fills at the next bar's open — after a Friday, the Sunday
+18:00 reopen — worth 7.8 R against a 1.0-ATR 5m stop. This is downstream of my own burst-05 mask
+correction, which makes the 16:00 bar legal *precisely because* the fill is at 18:00. Both facts travel
+together.
+
+| cell | legal signal bars | non-contiguous next bar | share | max abs gap |
+|---|---|---|---|---|
+| MGC 60m | 10,801 | 503 | 4.66% | **405.70 pts** |
+| MGC 240m | 2,466 | 23 | 0.93% | 405.70 pts |
+| MCL 60m | 10,459 | 552 | 5.28% | 9.90 pts |
+| MCL 240m | 2,427 | 41 | 1.69% | 9.90 pts |
+
+In R, on the ATR stops the catalogue draws:
+
+| cell | stop | median R | p90 R | **max R** | share >2R | share >5R |
+|---|---|---|---|---|---|---|
+| MGC 60m | ATR×0.75 | 0.07 | 1.10 | 8.60 | 5.8% | 0.6% |
+| MGC 240m | ATR×0.75 | 0.78 | 2.03 | 4.65 | 13.0% | 0.0% |
+| MCL 60m | ATR×0.75 | 0.15 | 1.99 | **15.45** | 9.8% | 2.4% |
+| **MCL 240m** | ATR×0.75 | **1.08** | **4.34** | **12.97** | **26.8%** | **7.3%** |
+
+**Four cells, four different answers** — which is what the independence rule predicts. MCL 240m's
+*median* gap fill is 1.08 R and 7.3% exceed 5 R; MGC 60m's median is 0.07 R. **EF2 adopts EF4's option
+(1):** every row states its gap-fill count and R distribution, and a row whose expectancy depends on
+fewer than three gap fills is not reportable.
+
+**The 405-point MGC figure was checked, not assumed.** It is a real multi-day crash (gold 5447 → 4676
+over five days, with a genuine 395-point range hour on 279,898 contracts) **plus** the 51-hour hole. The
+tape is internally consistent; the hole is the defect. An implausible number in a gap audit is usually
+the audit's own timezone alignment (the BRIEF's own trap) and here it was neither that nor a bad print.
 
 ## F10 — In the swing setting the clock is the dominant exit, which constrains what the exit axis can mean
 

@@ -655,3 +655,169 @@ column has to be read before the Δ column.
    the real CME maintenance window for MGC and MCL is 17:00–18:00, and `data/archive/` carries a
    full set of 16:00–17:00 bars. The rule forbids an hour of genuinely traded time (~4.4% of 5m
    bars). That is a choice the account owner may want to know is a choice.
+
+---
+
+# 11. The placebo beside every row
+
+`code/placebo.py`, `code/run_placebo.py` → `out/placebo_<sym>_<tf>m.json`. 20 count-matched
+random-bar placebos per arm, each running through the arm's **own** exit, filters and sizing in
+the same `SessionWindowEngine` pass over the same frame. Signal-count matched (not trade-count
+matched, so both arms face identical downstream attrition) and direction-matched.
+`placebo_shift` was **not** used — D42 records that it leaks and it is conservative-only.
+
+| cell | arms with a control | **placebo mean net E** | placebo mean trades | implied **placebo GROSS** | best real arm's z vs its own placebos | arms at placebo percentile 1.00 |
+|---|---|---|---|---|---|---|
+| MGC 15m | 34 | **−0.0123** | 61 | +0.038 | **+4.17** | 13 |
+| MGC 30m | 30 | **−0.0228** | 49 | +0.012 | +3.19 | 12 |
+| MCL 15m | 28 | **−0.1115** | 52 | +0.013 | +2.08 | 2 |
+| MCL 30m | 34 | **−0.0647** | 53 | +0.019 | +2.04 | 5 |
+
+**Two readings, and the second is the one that matters.**
+
+1. **The placebo behaves exactly as the arithmetic says it should, which validates the control.**
+   Implied placebo *gross* is **+0.01 to +0.04 R** in every cell — essentially zero, marginally
+   positive, which is what a random entry with a 1.5 R target against a 1.0 R stop produces on a
+   series with volatility clustering. Placebo *net* is then approximately minus the cell's cost.
+   So the control is measuring what it is supposed to measure and nothing else.
+
+2. **And therefore: the placebo beats the median real strategy in every cell.**
+
+| cell | placebo mean net E | **median net E of the real ≥30-trade population** |
+|---|---|---|
+| MGC 5m | — | −0.132 |
+| MGC 15m | −0.012 | −0.046 |
+| MGC 30m | −0.023 | −0.049 |
+| MCL 5m | — | −0.241 |
+| MCL 15m | −0.112 | −0.143 |
+| MCL 30m | −0.065 | −0.093 |
+
+**A count-matched random entry, run through a real strategy's own exits and filters, outperforms
+the median censused, mandate-derived strategy in this cell.** That is the programme's own placebo
+finding ("placebo entries rank alongside real signals; five separate constructions matched or beat
+the real thing") reproduced under a session rule that has never been run — and in a sharper form,
+because here the placebo does not merely *match* the median, it **beats** it. The mechanism is not
+mysterious: a random entry pays the same cost and has the same ~zero gross, while the median real
+condition contributes *negative* gross at 5m and roughly zero gross at 15m/30m.
+
+**Where the real rows do separate.** The top rows are not reproduced by their own controls:
+placebo z = +1.2 to +2.9 for MGC's survivors, +1.1 to +1.3 for MCL's. That is a real distinction
+and it is **not a licence to report them**, because the row was selected as the extreme of a
+2,800–3,600-arm screen and its 20-placebo z carries no multiple-testing correction at all. A z of
++2.9 against 20 controls, for the best of 3,591 arms, is what noise looks like at that width.
+
+---
+
+# 12. What I hand you: the rows, and the count of them
+
+`code/rank_final.py` → `out/rank_final.json`. De-duplicated by **signal set** (filters excluded),
+keeping the variant with the largest out-of-sample trade count, because §7 shows the raw top 10 in
+every cell is one or two conditions and eight variants of them.
+
+Promotion required all four of: ≥30 trades in the full sample **and** in both halves; the same
+**sign** in-sample and out-of-sample; positive in **every** walk-forward fold reaching 10 trades;
+and **t ≥ the declared `free_t` of its own track**.
+
+## The count, which is the answer
+
+| symbol | distinct signal sets meeting the sample floor | sign-consistent, positive, positive in every fold | **clearing their declared threshold (`free_t` = 4.441)** |
+|---|---|---|---|
+| **MGC** | 401 | **19** | **0** |
+| **MCL** | 360 | **3** | **0** |
+
+**Zero rows are live-eligible. I am handing you a candidate list of 5 for MGC and 3 for MCL, and
+the statement that none of them clears.** Largest t anywhere in my cell is **+2.62** against a
+required **4.441**; MCL's largest is **+1.12**, which fails even `free_t = 1.177` — the code's own
+floor for a *single pre-registered* hypothesis, the most generous threshold available anywhere in
+this repository. **On MCL the answer is nothing, at every threshold.**
+
+## MGC — 5 candidates, none live-eligible
+
+All Track B (n = 19,152 declared, `free_t` = 4.441). Gross reconstructed from the fill geometry;
+`cost` is commission + slippage in R. Every number `[measured: out/rank_final.json]`.
+
+| # | tf | signal set | n | win rate | avg win R | avg loss R | R/R | PF | **gross E** | cost | **net E** | **t** | Sharpe/trade | **Sharpe ann.** | Sortino | max DD | avg DD | max cons W / L | hold | avg MAE | avg MFE | % outside RTH | exits (STOP / TARGET / 16:00 flat) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 15m | `candle_engulfing + structure_trend` | 121 | 0.537 | +1.441 | −1.030 | 1.399 | 1.624 | +0.3504 | 0.0531 | **+0.2973** | **+2.62** | 0.238 | **6.58** | 0.421 | 7.04 R | 0.96 R | 7 / 5 | 55 m | 0.942 | 1.423 | 73.6% | 45.5 / 52.1 / 2.5% |
+| 2 | 30m | `candle_close_strength + poc_reversion` | 78 | 0.513 | +1.468 | −0.967 | 1.519 | 1.599 | +0.3189 | 0.0369 | **+0.2820** | +2.02 | 0.229 | 5.08 | 0.407 | 6.01 R | 1.00 R | 4 / 5 | 87 m | 0.899 | 1.358 | 83.3% | 44.9 / 50.0 / 5.1% |
+| 3 | 15m | `above_vwap + poc_reversion` | 87 | 0.506 | +1.483 | −1.031 | 1.439 | 1.472 | +0.2999 | 0.0593 | **+0.2406** | +1.78 | 0.191 | 4.47 | 0.330 | 8.20 R | 1.01 R | 5 / 4 | 57 m | 0.917 | 1.310 | 94.3% | 48.3 / 50.6 / 1.1% |
+| 4 | 15m | `poc_reversion + pullback_to_support` | 159 | 0.491 | +1.439 | −1.010 | 1.425 | 1.372 | +0.2474 | 0.0560 | **+0.1914** | +1.95 | 0.155 | 4.90 | 0.263 | 7.57 R | 0.97 R | 10 / 6 | 57 m | 0.915 | 1.250 | 78.6% | 47.8 / 46.5 / 5.7% |
+| 5 | 30m | `imbalance_pullback` | 170 | 0.529 | +1.250 | −1.008 | 1.240 | 1.395 | +0.2174 | 0.0299 | **+0.1875** | +2.08 | 0.159 | 5.22 | 0.270 | 5.23 R | 0.94 R | 5 / 5 | 112 m | 0.923 | 1.175 | 50.0% | 45.3 / 39.4 / 14.7% |
+
+Split sample, walk-forward and control, same five rows:
+
+| # | IS net E (n) | **OOS net E (n)** | fold 1 | fold 2 | fold 3 | **placebo mean E** | placebo percentile | **placebo z** |
+|---|---|---|---|---|---|---|---|---|
+| 1 | +0.347 (75) | **+0.216 (46)** | +0.17 / 32 | +0.46 / 47 | +0.22 / 42 | +0.010 | 1.00 | **+2.34** |
+| 2 | +0.098 (46) | **+0.546 (32)** | +0.01 / 25 | +0.21 / 21 | +0.55 / 32 | −0.001 | 0.95 | +1.68 |
+| 3 | +0.301 (55) | **+0.137 (32)** | +0.15 / 28 | +0.45 / 27 | +0.14 / 32 | −0.003 | 1.00 | +2.16 |
+| 4 | +0.087 (97) | **+0.355 (62)** | +0.15 / 42 | +0.02 / 56 | +0.38 / 61 | −0.027 | 1.00 | +2.03 |
+| 5 | +0.202 (95) | **+0.169 (75)** | +0.09 / 47 | +0.28 / 55 | +0.18 / 68 | −0.009 | 1.00 | +1.90 |
+
+**The power bound, made vivid by row 1.** Its annualised Sharpe is **6.58** — a number that does
+not exist in real futures trading — and on a 0.1585-year span that still only produces t = +2.62
+against the **4.441** its 19,152-arm search width demands. `6.58 × 0.398 = 2.62`. **The row would
+need a sustained annualised Sharpe of 11.16 to clear.** That is the bound, in a row, not in a
+footnote.
+
+Two further rows survive the sign and fold tests but are weaker and live in `out/rank_final.json`
+rather than here: `candle_engulfing + value_area_breakout` (15m, n = 111, net +0.1799, t = +1.54,
+OOS +0.019, placebo z = +1.20) and `above_vwap + imbalance_pullback` (30m, n = 92, net +0.1673,
+t = +1.35, OOS +0.008, placebo z = +1.94).
+
+**Read the list as three condition families, not five rows.** `poc_reversion` carries rows 2, 3 and
+4; `imbalance_pullback` carries row 5; `candle_engulfing` carries row 1. **Rows 2–4 are not
+independent evidence for each other**, and neither is row 5 for the sixth row in the paragraph
+above.
+
+## MCL — 3 candidates, none live-eligible, and none clearing even `free_t = 1.177`
+
+| # | tf | signal set | n | win rate | avg win R | avg loss R | R/R | PF | **gross E** | cost | **net E** | **t** | Sharpe/trade | Sharpe ann. | Sortino | max DD | avg DD | max cons W / L | hold | avg MAE | avg MFE | % outside RTH | exits (STOP / TARGET / 16:00 flat) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 30m | `delta_divergence + keltner_outside` | 95 | 0.463 | +1.424 | −0.992 | 1.435 | 1.238 | +0.2116 | 0.0846 | **+0.1270** | +1.00 | 0.102 | 2.51 | 0.169 | 8.38 R | 0.89 R | 4 / 7 | 99 m | 0.951 | 1.135 | 70.5% | 48.4 / 42.1 / 9.5% |
+| 2 | 30m | `bollinger_extreme` | 152 | 0.474 | +1.408 | −1.051 | 1.340 | 1.206 | +0.2009 | 0.0871 | **+0.1138** | **+1.12** | 0.091 | 2.81 | 0.148 | 10.59 R | 0.69 R | 8 / 6 | 83 m | 1.041 | 1.131 | 73.7% | 50.7 / 43.4 / 5.9% |
+| 3 | 30m | `candle_engulfing + value_area_breakout` | 74 | 0.473 | +1.324 | −1.017 | 1.302 | 1.169 | +0.1765 | 0.0861 | **+0.0903** | +0.63 | 0.073 | 1.57 | 0.113 | 4.28 R | 1.17 R | 4 / 3 | 87 m | 0.868 | 1.078 | 77.0% | 45.9 / 41.9 / 12.2% |
+
+| # | IS net E (n) | **OOS net E (n)** | fold 1 | fold 2 | fold 3 | placebo mean E | placebo percentile | placebo z |
+|---|---|---|---|---|---|---|---|---|
+| 1 | +0.085 (58) | **+0.193 (37)** | +0.06 / 34 | +0.22 / 26 | +0.12 / 35 | −0.041 | 0.85 | +1.13 |
+| 2 | +0.105 (86) | **+0.125 (66)** | +0.04 / 42 | +0.20 / 49 | +0.10 / 61 | −0.035 | 0.90 | +1.18 |
+| 3 | +0.142 (44) | **+0.014 (30)** | +0.08 / 26 | +0.15 / 20 | +0.05 / 28 | −0.065 | 0.90 | +1.23 |
+
+**MCL's largest t anywhere is +1.12, which fails `free_t = 1.177`** — the code's own floor for a
+single pre-registered hypothesis and the most generous threshold available in this repository.
+**On MCL the answer is nothing, at every threshold, including the one nobody has ever had to use.**
+
+**All three are 30-minute rows. Nothing at MCL 5m or 15m survives** — the same boundary rule 7 drew
+in §8, arriving from a different direction. And the cost column is the mechanism: **0.085–0.087 R
+against MGC's 0.030–0.059 R.** MCL's gross expectancies (+0.18 to +0.21) are comparable to MGC's
+(+0.22 to +0.35) and its net ones are roughly half. That is MCL's cost-fragility as arithmetic
+rather than as a warning.
+
+---
+
+# 13. The one thing I would ask the parent session to carry into `RESULTS.md`
+
+Not the eight rows. **The count.** 401 distinct MGC signal sets and 360 MCL ones reached the sample
+floor; 19 and 3 survived sign-consistency and every walk-forward fold; **0 and 0 cleared their own
+declared threshold.** Largest t in the cell is +2.62 against a required 4.441, and MCL's largest is
++1.12 against 1.177.
+
+And the reason, which is not "the market is efficient" and not "these rules do not work". It is:
+**0.1585 years, √0.1585 = 0.398, and a search width of 19,152.** On that span, clearing the
+threshold would have needed a sustained annualised Sharpe of **11.16**. The best row in my cell
+achieved **6.58** — extraordinary, and 41% short. **That is a property of the experiment, not a
+discovery about MGC or MCL.**
+
+If the programme wants a scalp answer that can clear anything, it needs one of two things and
+neither is a harder search:
+
+1. **Span.** At 10 years, `free_t = 4.441` needs an annualised Sharpe of 1.40; at 25 years, 0.89.
+   Row 1's measured 6.58 clears both by a wide margin. The scalp timeframes cannot get there —
+   Yahoo caps 5-minute lookback far below it — so this is a swing-timeframe route, not mine.
+2. **A genuinely pre-registered hypothesis, written down before looking, at n = 1.** `free_t` =
+   1.177 needs an annualised Sharpe of 2.96, which is 45% of what row 1 measured. **That is the
+   only route available on 57 days**, and it costs the right to search: the hypothesis must be
+   fixed in writing first, and each one spends its single shot. My Track A was exactly this attempt
+   with n = 36; its result was that **three of six MGC 5m hypotheses were significantly
+   *negative*.** That is what a pre-registered scalp study on this span can produce: rejections.

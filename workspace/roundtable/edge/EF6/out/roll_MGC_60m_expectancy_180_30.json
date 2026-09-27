@@ -1,0 +1,423 @@
+{
+ "symbol": "MGC",
+ "setting": "swing",
+ "base_tf": 60,
+ "substrate": "data/archive",
+ "criterion": "expectancy",
+ "lookback_days": 180,
+ "trade_days": 30,
+ "floor": 20,
+ "top_k": 10,
+ "n_strategies": 205,
+ "folds_total": 23,
+ "folds_traded": 17,
+ "oos_trades": 1171,
+ "topk_exp_r": 0.0255,
+ "universe_exp_r": 0.0302,
+ "randomk_exp_r": 0.0069,
+ "selection_edge_vs_universe_r": -0.0047,
+ "selection_edge_vs_randomk_r": 0.0186,
+ "null_exp_r": 0.0218,
+ "null_sd": 0.0258,
+ "z_vs_null": 0.14,
+ "folds_where_topk_is_the_whole_universe": "0 of 17",
+ "mean_rank_window_qualifiers": 16.2,
+ "folds_profitable": "10 of 17",
+ "folds_beating_universe": "11 of 17",
+ "consecutive_jaccard": 0.6063,
+ "union_selected": 22,
+ "top1_changed": "9 of 16",
+ "deflation": {
+  "n_screened": 465,
+  "preregistered": false,
+  "span_days": 718.88,
+  "span_years": 1.9682,
+  "sqrt_years": 1.4029,
+  "free_t": 3.5049,
+  "prereg_floor_t": 1.1774,
+  "threshold_t": 3.5049,
+  "required_annual_sharpe": 2.498,
+  "required_annual_sharpe_prereg": 0.839,
+  "t_at_sharpe_1": 1.403,
+  "t_at_sharpe_2": 2.806,
+  "t_at_sharpe_3": 4.209,
+  "answerable_at_sharpe_2": false,
+  "answerable_prereg_at_sharpe_2": true
+ },
+ "folds": [
+  {
+   "span": [
+    "2025-04-06T18:00:00-04:00",
+    "2025-05-06T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-10-08T18:00:00-04:00",
+    "2025-04-06T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 12,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0082,
+   "in_sample_exp_r": 0.0082,
+   "oos_trades": 72,
+   "oos_exp_r": 0.012,
+   "universe_trades": 79,
+   "universe_exp_r": -0.0293,
+   "randomk_exp_r": -0.0912,
+   "top1": "MGC-60m-0a83f75261df"
+  },
+  {
+   "span": [
+    "2025-05-06T18:00:00-04:00",
+    "2025-06-05T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-11-07T17:00:00-05:00",
+    "2025-05-06T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 12,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": -0.009,
+   "in_sample_exp_r": -0.009,
+   "oos_trades": 98,
+   "oos_exp_r": -0.2084,
+   "universe_trades": 121,
+   "universe_exp_r": -0.2254,
+   "randomk_exp_r": -0.2386,
+   "top1": "MGC-60m-0a83f75261df"
+  },
+  {
+   "span": [
+    "2025-06-05T18:00:00-04:00",
+    "2025-07-05T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2024-12-07T17:00:00-05:00",
+    "2025-06-05T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 14,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": -0.0096,
+   "in_sample_exp_r": -0.0096,
+   "oos_trades": 63,
+   "oos_exp_r": -0.1456,
+   "universe_trades": 105,
+   "universe_exp_r": -0.1473,
+   "randomk_exp_r": -0.1776,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2025-07-05T18:00:00-04:00",
+    "2025-08-04T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-01-06T17:00:00-05:00",
+    "2025-07-05T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 13,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": -0.0094,
+   "in_sample_exp_r": -0.0094,
+   "oos_trades": 99,
+   "oos_exp_r": -0.1676,
+   "universe_trades": 118,
+   "universe_exp_r": -0.1675,
+   "randomk_exp_r": -0.1447,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2025-08-04T18:00:00-04:00",
+    "2025-09-03T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-02-05T17:00:00-05:00",
+    "2025-08-04T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 13,
+   "qualifiers_score_window": 1,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": -0.1152,
+   "in_sample_exp_r": -0.1152,
+   "oos_trades": 63,
+   "oos_exp_r": 0.1678,
+   "universe_trades": 99,
+   "universe_exp_r": 0.1647,
+   "randomk_exp_r": 0.182,
+   "top1": "MGC-60m-0a83f75261df"
+  },
+  {
+   "span": [
+    "2025-09-03T18:00:00-04:00",
+    "2025-10-03T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-03-07T17:00:00-05:00",
+    "2025-09-03T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 16,
+   "qualifiers_score_window": 1,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0112,
+   "in_sample_exp_r": 0.0112,
+   "oos_trades": 83,
+   "oos_exp_r": -0.0438,
+   "universe_trades": 151,
+   "universe_exp_r": -0.024,
+   "randomk_exp_r": -0.0712,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2025-10-03T18:00:00-04:00",
+    "2025-11-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-04-06T18:00:00-04:00",
+    "2025-10-03T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 18,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0361,
+   "in_sample_exp_r": 0.0361,
+   "oos_trades": 76,
+   "oos_exp_r": 0.1642,
+   "universe_trades": 160,
+   "universe_exp_r": 0.154,
+   "randomk_exp_r": 0.1805,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2025-11-02T18:00:00-05:00",
+    "2025-12-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-05-06T19:00:00-04:00",
+    "2025-11-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 17,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0538,
+   "in_sample_exp_r": 0.0538,
+   "oos_trades": 59,
+   "oos_exp_r": -0.1235,
+   "universe_trades": 104,
+   "universe_exp_r": -0.1411,
+   "randomk_exp_r": -0.0958,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2025-12-02T18:00:00-05:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-06-05T19:00:00-04:00",
+    "2025-12-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 18,
+   "qualifiers_score_window": 2,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0897,
+   "in_sample_exp_r": 0.0897,
+   "oos_trades": 87,
+   "oos_exp_r": 0.1153,
+   "universe_trades": 135,
+   "universe_exp_r": 0.1917,
+   "randomk_exp_r": 0.1895,
+   "top1": "MGC-60m-cb08d68c17c6"
+  },
+  {
+   "span": [
+    "2026-01-01T18:00:00-05:00",
+    "2026-01-31T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-07-05T19:00:00-04:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 21,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.1411,
+   "in_sample_exp_r": 0.1411,
+   "oos_trades": 93,
+   "oos_exp_r": 0.1155,
+   "universe_trades": 174,
+   "universe_exp_r": 0.136,
+   "randomk_exp_r": 0.0492,
+   "top1": "MGC-60m-cb08d68c17c6"
+  },
+  {
+   "span": [
+    "2026-01-31T18:00:00-05:00",
+    "2026-03-02T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2025-08-04T19:00:00-04:00",
+    "2026-01-31T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 21,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.1973,
+   "in_sample_exp_r": 0.1973,
+   "oos_trades": 24,
+   "oos_exp_r": 0.0385,
+   "universe_trades": 60,
+   "universe_exp_r": -0.1297,
+   "randomk_exp_r": -0.2856,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2026-03-02T18:00:00-05:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-09-03T19:00:00-04:00",
+    "2026-03-02T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 20,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.1292,
+   "in_sample_exp_r": 0.1292,
+   "oos_trades": 33,
+   "oos_exp_r": 0.6602,
+   "universe_trades": 67,
+   "universe_exp_r": 0.5789,
+   "randomk_exp_r": 0.5567,
+   "top1": "MGC-60m-357b132a61d5"
+  },
+  {
+   "span": [
+    "2026-04-02T18:00:00-04:00",
+    "2026-05-02T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-10-04T18:00:00-04:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 18,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.2278,
+   "in_sample_exp_r": 0.2278,
+   "oos_trades": 34,
+   "oos_exp_r": -0.2152,
+   "universe_trades": 60,
+   "universe_exp_r": -0.1052,
+   "randomk_exp_r": -0.1918,
+   "top1": "MGC-60m-101213246c1c"
+  },
+  {
+   "span": [
+    "2026-05-02T18:00:00-04:00",
+    "2026-06-01T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-11-03T17:00:00-05:00",
+    "2026-05-02T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 18,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.2063,
+   "in_sample_exp_r": 0.2063,
+   "oos_trades": 62,
+   "oos_exp_r": 0.0112,
+   "universe_trades": 134,
+   "universe_exp_r": -0.0997,
+   "randomk_exp_r": -0.0295,
+   "top1": "MGC-60m-101213246c1c"
+  },
+  {
+   "span": [
+    "2026-06-01T18:00:00-04:00",
+    "2026-07-01T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-12-03T17:00:00-05:00",
+    "2026-06-01T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 18,
+   "qualifiers_score_window": 1,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.2384,
+   "in_sample_exp_r": 0.2384,
+   "oos_trades": 62,
+   "oos_exp_r": 0.553,
+   "universe_trades": 137,
+   "universe_exp_r": 0.3875,
+   "randomk_exp_r": 0.5454,
+   "top1": "MGC-60m-101213246c1c"
+  },
+  {
+   "span": [
+    "2026-07-01T18:00:00-04:00",
+    "2026-07-31T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2026-01-02T17:00:00-05:00",
+    "2026-07-01T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 14,
+   "qualifiers_score_window": 0,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.2513,
+   "in_sample_exp_r": 0.2513,
+   "oos_trades": 46,
+   "oos_exp_r": -0.2883,
+   "universe_trades": 81,
+   "universe_exp_r": -0.2371,
+   "randomk_exp_r": -0.2027,
+   "top1": "MGC-60m-06e80b21dfc4"
+  },
+  {
+   "span": [
+    "2026-07-31T18:00:00-04:00",
+    "2026-08-30T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2026-02-01T17:00:00-05:00",
+    "2026-07-31T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 13,
+   "qualifiers_score_window": 2,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.1712,
+   "in_sample_exp_r": 0.1712,
+   "oos_trades": 117,
+   "oos_exp_r": 0.0446,
+   "universe_trades": 173,
+   "universe_exp_r": 0.0378,
+   "randomk_exp_r": 0.0602,
+   "top1": "MGC-60m-be289c30cdcb"
+  }
+ ]
+}

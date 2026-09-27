@@ -31,6 +31,10 @@ PRE_REGISTRY = frozenset({
     # EF2 had no id to cite: no kind existed for a harness component when it wrote.
     # EF1-H<n> was added in response; this message predates it.
     "EF2-01_EF1_rth-only-makes-the-overnight-switch-inert.md",
+    # Same cause: EF1 had not published EF1-H<n> ids for its harness components,
+    # so EF3 also had nothing to cite. Grandfathered rather than asking anyone to
+    # rewrite a write-once file.
+    "EF3-01_EF1_session-rule-misses-early-close-sessions.md",
 })
 
 # <ISSUER>-<KIND>-<n> and the kinds that legitimately have no issuer prefix

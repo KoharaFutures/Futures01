@@ -1,0 +1,115 @@
+{
+ "symbol": "MGC",
+ "setting": "swing",
+ "base_tf": 60,
+ "substrate": "data/archive",
+ "criterion": "expectancy",
+ "lookback_days": 360,
+ "trade_days": 90,
+ "floor": 20,
+ "top_k": 10,
+ "n_strategies": 205,
+ "folds_total": 7,
+ "folds_traded": 3,
+ "oos_trades": 312,
+ "topk_exp_r": 0.0946,
+ "universe_exp_r": 0.1192,
+ "randomk_exp_r": 0.1527,
+ "selection_edge_vs_universe_r": -0.0246,
+ "selection_edge_vs_randomk_r": -0.0581,
+ "null_exp_r": 0.119,
+ "null_sd": 0.0565,
+ "z_vs_null": -0.43,
+ "folds_where_topk_is_the_whole_universe": "0 of 3",
+ "mean_rank_window_qualifiers": 29.3,
+ "folds_profitable": "3 of 3",
+ "folds_beating_universe": "1 of 3",
+ "consecutive_jaccard": 0.5476,
+ "union_selected": 15,
+ "top1_changed": "1 of 2",
+ "deflation": {
+  "n_screened": 465,
+  "preregistered": false,
+  "span_days": 718.88,
+  "span_years": 1.9682,
+  "sqrt_years": 1.4029,
+  "free_t": 3.5049,
+  "prereg_floor_t": 1.1774,
+  "threshold_t": 3.5049,
+  "required_annual_sharpe": 2.498,
+  "required_annual_sharpe_prereg": 0.839,
+  "t_at_sharpe_1": 1.403,
+  "t_at_sharpe_2": 2.806,
+  "t_at_sharpe_3": 4.209,
+  "answerable_at_sharpe_2": false,
+  "answerable_prereg_at_sharpe_2": true
+ },
+ "folds": [
+  {
+   "span": [
+    "2025-10-03T18:00:00-04:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "rank_span": [
+    "2024-10-08T18:00:00-04:00",
+    "2025-10-03T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 26,
+   "qualifiers_score_window": 12,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.0918,
+   "in_sample_exp_r": 0.0918,
+   "oos_trades": 87,
+   "oos_exp_r": 0.0216,
+   "universe_trades": 443,
+   "universe_exp_r": 0.1003,
+   "randomk_exp_r": 0.1065,
+   "top1": "MGC-60m-3d2aca39b143"
+  },
+  {
+   "span": [
+    "2026-01-01T18:00:00-05:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-01-06T18:00:00-05:00",
+    "2026-01-01T18:00:00-05:00"
+   ],
+   "qualifiers_rank_window": 31,
+   "qualifiers_score_window": 3,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.178,
+   "in_sample_exp_r": 0.178,
+   "oos_trades": 93,
+   "oos_exp_r": 0.2719,
+   "universe_trades": 371,
+   "universe_exp_r": 0.1842,
+   "randomk_exp_r": 0.2613,
+   "top1": "MGC-60m-b93d1168a236"
+  },
+  {
+   "span": [
+    "2026-04-02T18:00:00-04:00",
+    "2026-07-01T18:00:00-04:00"
+   ],
+   "rank_span": [
+    "2025-04-07T18:00:00-04:00",
+    "2026-04-02T18:00:00-04:00"
+   ],
+   "qualifiers_rank_window": 31,
+   "qualifiers_score_window": 4,
+   "selected": 10,
+   "topk_is_whole_universe": false,
+   "in_sample_key": 0.1518,
+   "in_sample_exp_r": 0.1518,
+   "oos_trades": 132,
+   "oos_exp_r": 0.0178,
+   "universe_trades": 413,
+   "universe_exp_r": 0.0812,
+   "randomk_exp_r": 0.1169,
+   "top1": "MGC-60m-b93d1168a236"
+  }
+ ]
+}

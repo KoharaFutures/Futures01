@@ -23,10 +23,24 @@ What it does, in order, per (symbol, primary_tf, arm):
    ``placebo_shuffle``; ``placebo_shift`` is excluded because D42 measured it as
    a degraded real strategy, not a control -- and run them through the SAME
    engine, same costs, same clock rule.
-7. Rank reals and placebos in ONE table on the pre-registered durability score.
-8. Report the best placebo's rank against its analytic null
-   (``placebo.null_rank_distribution``), the search size, ``free_t``, and the
-   annualised Sharpe each threshold implies on a 0.1585-year span.
+7. Two placebo tests, both pre-registered, because the obvious one has no power
+   in a cell this thin (burst 05):
+
+   **PRIMARY, paired.** Each floored real against the mean of ITS OWN two
+   placebos, on ``expectancy_r_net``. Sign test and Wilcoxon over rows. Power
+   comes from the number of real rows, not from the ranking, and it is a paired
+   test with the pairing explicit -- never ``T.ab`` (D28).
+
+   **SECONDARY, share-matched ranking.** Two placebos per real makes the control
+   cohort 67% of the table, at which the analytic null already expects the best
+   placebo at rank 1.50 with P(rank 1) = 0.667 -- so "a placebo topped the table"
+   would be evidence of nothing. So the ranking test draws a **10% share-matched**
+   placebo cohort, 500 times, and reports how often a placebo reaches rank 1 and
+   the top 10 against ``null_rank_distribution`` for that share (E[best] ~ 9.6,
+   P(rank 1) ~ 0.10). This is worker 1's v3 correction, applied up front.
+8. Report both tests, the raw (unmatched) best-placebo rank with its own null so
+   the inflation is visible, the search size, ``free_t``, and the annualised
+   Sharpe each threshold implies on a 0.1585-year span.
 9. Out-of-sample: a chronological 60/40 split by 18:00->16:00 cycle, and a
    3-fold disjoint-thirds check. In-sample rank is never reported alone.
 
@@ -148,6 +162,110 @@ def row_of(sid: str, m, *, kind: str, group: str, name: str,
     }
 
 
+def paired_placebo_test(reals: List[dict], plcs: List[dict]) -> dict:
+    """PRIMARY test: each real against the mean of ITS OWN placebos.
+
+    Paired by construction -- the placebo carries the base's exits, filters,
+    scope, confirmation and execution timeframes and differs only in the entry
+    signal -- so the difference isolates the signal. Reported as a sign test and
+    a Wilcoxon signed-rank, with both arms' means, never as a ``T.ab`` z (D28).
+    """
+    import math
+    import statistics as st
+    by_base: Dict[str, List[dict]] = {}
+    for p in plcs:
+        by_base.setdefault(p["placebo_base"], []).append(p)
+    pairs = []
+    for r in reals:
+        own = by_base.get(r["id"], [])
+        if not own:
+            continue
+        ctrl = st.fmean(p["expectancy_r_net"] for p in own)
+        pairs.append((r["id"], r["expectancy_r_net"], ctrl, len(own)))
+    n = len(pairs)
+    if n == 0:
+        return {"n_pairs": 0, "note": "no real row had a floored placebo"}
+    diffs = [a - b for _, a, b, _ in pairs]
+    wins = sum(1 for d in diffs if d > 0)
+    ties = sum(1 for d in diffs if d == 0)
+    eff = n - ties
+    sign_z = ((wins - eff / 2) / math.sqrt(eff / 4)) if eff else 0.0
+    # Wilcoxon signed-rank, normal approximation with tie-average ranks.
+    nz = sorted(((abs(d), 1 if d > 0 else -1) for d in diffs if d != 0))
+    ranks, i = [0.0] * len(nz), 0
+    while i < len(nz):
+        j = i
+        while j + 1 < len(nz) and nz[j + 1][0] == nz[i][0]:
+            j += 1
+        avg = (i + j) / 2.0 + 1.0
+        for k in range(i, j + 1):
+            ranks[k] = avg
+        i = j + 1
+    wplus = sum(ranks[k] for k in range(len(nz)) if nz[k][1] > 0)
+    m = len(nz)
+    mu = m * (m + 1) / 4.0
+    sd = math.sqrt(m * (m + 1) * (2 * m + 1) / 24.0) if m else 0.0
+    wz = (wplus - mu) / sd if sd else 0.0
+    return {
+        "n_pairs": n, "real_mean_exp_r": round(st.fmean(d[1] for d in pairs), 5),
+        "placebo_mean_exp_r": round(st.fmean(d[2] for d in pairs), 5),
+        "mean_paired_diff_r": round(st.fmean(diffs), 5),
+        "median_paired_diff_r": round(st.median(diffs), 5),
+        "reals_above_own_placebo": wins, "ties": ties,
+        "sign_z": round(sign_z, 3),
+        "wilcoxon_z": round(wz, 3),
+        "test": "paired sign test + Wilcoxon signed-rank on expectancy_r_net; "
+                "NOT T.ab (D28)",
+        "power_note": ("a 60/40 true split gives sign z = 0.2*sqrt(n_pairs); "
+                       f"at n={n} that is {0.2 * math.sqrt(n):.2f}"),
+    }
+
+
+def share_matched_ranking(reals: List[dict], plcs: List[dict], *,
+                          share: float = 0.10, draws: int = 500,
+                          seed: int = 0) -> dict:
+    """SECONDARY test: the ranking, with the control cohort share-matched.
+
+    Two placebos per real puts the control at ~67% of the table, where the
+    analytic null already expects the best placebo at rank 1.5. That test cannot
+    distinguish anything, which is exactly the inflation worker 1 identified
+    (``RANKING_FINDINGS.md``, the v1/v2/v3 iteration). Here a ``share`` cohort is
+    drawn ``draws`` times and the observed rate is compared with the analytic
+    null for that cohort size.
+    """
+    import random
+    import statistics as st
+    if not reals or not plcs:
+        return {"note": "empty cohort"}
+    k = max(1, round(len(reals) * share / (1.0 - share)))
+    k = min(k, len(plcs))
+    rng = random.Random(f"ef5-sharematch:{seed}")
+    top1 = top5 = top10 = 0
+    best_ranks = []
+    for _ in range(draws):
+        cohort = rng.sample(plcs, k)
+        tab = sorted(reals + cohort, key=lambda r: -r["score"])
+        br = next((i for i, r in enumerate(tab, 1) if r["kind"] != "real"), None)
+        if br is None:
+            continue
+        best_ranks.append(br)
+        top1 += br == 1
+        top5 += br <= 5
+        top10 += br <= 10
+    null = P.null_rank_distribution(len(reals) + k, k)
+    return {
+        "share": share, "k_placebos": k, "n_reals": len(reals), "draws": draws,
+        "observed_E_best_placebo_rank": round(st.fmean(best_ranks), 2) if best_ranks else None,
+        "observed_p_rank1": round(top1 / max(1, len(best_ranks)), 4),
+        "observed_p_top5": round(top5 / max(1, len(best_ranks)), 4),
+        "observed_p_top10": round(top10 / max(1, len(best_ranks)), 4),
+        "analytic_null": null,
+        "reading": ("observed >> null => the ranking cannot tell a real rule set "
+                    "from a random entry; observed << null => the control is "
+                    "handicapped and the placebo ranks are understated"),
+    }
+
+
 def slice_metrics(trades, key_fn) -> Dict[str, dict]:
     """Per-slice expectancy: session, time bucket, regime, volatility."""
     buckets: Dict[str, list] = {}
@@ -227,7 +345,12 @@ def run_cell(symbol: str, primary_tf: int, arm: str, Engine, assert_distinct_ids
     best_plc = next((r["rank"] for r in table if r["kind"] != "real"), None)
     null = P.null_rank_distribution(len(table), n_plc) if n_plc else None
 
+    paired = paired_placebo_test(reals, placebo_rows)
+    matched = share_matched_ranking(reals, placebo_rows, seed=seed)
+
     return {
+        "paired_placebo_test": paired,
+        "share_matched_ranking": matched,
         "symbol": symbol, "primary_tf": primary_tf, "arm": arm,
         "frame_tfs": CELL_FRAMES[primary_tf],
         "population_declared": len(strats),

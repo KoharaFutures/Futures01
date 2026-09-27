@@ -310,11 +310,17 @@ print(alert(Priority.NO_TRADE, headline, body))# GREY background   (48;5;250)
 the owner reads this on:
 
 ```
-python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002 --out workspace/paper/CALL/cards.png
+python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002
 ```
 
-`card_png.py` drives `card.py`, so the image and the terminal card cannot disagree about the
-numbers, and it resolves each xterm-256 index through the **colour-cube arithmetic** rather than an
+**One card per symbol, landscape.** Each call writes its own `card_{SYMBOL}_{call_id}.png` at
+1480px wide, roughly 2.3–2.8:1 — the mechanics in the left column (the numbers a reader checks
+first: trigger, entry, stop, target, R:R, size, risk, window), the reasoning in the right (thesis,
+weakness, confidence). Do not stack every call into one tall image; a 728×2463 strip is a scroll,
+not a card, and it buries the one number the reader wanted.
+
+`card_png.py` reads the same `pending.jsonl` the terminal card does, so the two cannot disagree
+about the numbers, and it resolves each xterm-256 index through the **colour-cube arithmetic** rather than an
 eyeballed hex: **27 -> `#005FFF`**, **208 -> `#FF8700`**, **250 -> `#BCBCBC`**. Send it with
 `SendUserFile` using `display: "render"`. Do not hand-pick a hex that "looks blue" — the indices are
 fixed by `alerts.py` and the conversion must be derived, not guessed.

@@ -54,7 +54,13 @@ def stored(symbol: str, minutes: int) -> dict[str, tuple]:
 
 def main() -> int:
     now = datetime.now(timezone.utc)
-    stamp = now.strftime("%Y-%m-%dT%H-%MZ")
+    # SECONDS, not minutes. The stamp is the snapshot's filename, so minute granularity
+    # means two fetches in the same minute OVERWRITE each other. That was survivable while
+    # every snapshot held the full series - any clobbered bar existed in a dozen other files -
+    # but a delta is the ONLY copy of the revisions it records, so an in-minute overwrite
+    # would silently destroy them. Found by noticing the data directory SHRINK by 188 KB on
+    # the run that introduced deltas: a 23:28Z delta had replaced a 23:28Z full series.
+    stamp = now.strftime("%Y-%m-%dT%H-%M-%SZ")
     DATA.mkdir(parents=True, exist_ok=True)
     feed = YahooFeed()
     lag_rows, wrote, failures = [], [], []
@@ -77,10 +83,20 @@ def main() -> int:
             revised = [b for b in bars
                        if b.ts.isoformat() in have
                        and have[b.ts.isoformat()] != (b.open, b.high, b.low, b.close, b.volume)]
-            if new_ts or revised:
+            # Write the DELTA, not the series. `resolve.py` and `chart.py` merge every
+            # snapshot keyed on timestamp with the latest file winning, so a delta composes
+            # to exactly the same series a full rewrite would give - and a full rewrite at
+            # this cadence is ruinous. Measured 2026-09-27: 39 full snapshots reached 2.5 MB
+            # in 40 minutes, because each one re-emitted ~3,700 bars to record ~3 changed
+            # ones. That is ~90 MB/day of PERMANENT git history for a few hundred real bars.
+            # A delta is also better evidence: the file records what changed at that fetch,
+            # which is precisely how N5a's before/after stub comparison was possible.
+            delta = new_ts + revised
+            if delta:
+                delta.sort(key=lambda b: b.ts)
                 (DATA / f"{sym}_{mins}m_fetched_{stamp}.jsonl").write_text("\n".join(
                     json.dumps({"ts": b.ts.isoformat(), "o": b.open, "h": b.high,
-                                "l": b.low, "c": b.close, "v": b.volume}) for b in bars) + "\n")
+                                "l": b.low, "c": b.close, "v": b.volume}) for b in delta) + "\n")
                 wrote.append(f"{sym} {mins}m (+{len(new_ts)} new, {len(revised)} revised)")
 
             newest = bars[-1]

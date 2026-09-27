@@ -49,6 +49,22 @@ the one step the entire record rests on, and re-typing it each check is a transc
 
 At a **full** check also pull 60m/30d for the longer structure; `fetch.py` covers the fast frames.
 
+**Snapshots are DELTAS, and the filename carries SECONDS.** Two findings from the 19:28 check:
+
+- A snapshot holding the full series re-emitted ~3,700 bars to record ~3 changed ones. Measured:
+  **39 full snapshots reached 2.5 MB in 40 minutes** — roughly **90 MB/day of permanent git
+  history**, for a few hundred real bars. A delta of the new plus revised bars is **105 bytes
+  against 88,161**, an ~840× reduction, and composes to the identical series because the loaders
+  merge on timestamp with the latest file winning. Verified before and after the change: 832 / 280 /
+  830 / 281 bars, sorted and unique, nothing lost. A delta is also *better* evidence — the file
+  records what changed at that fetch, which is exactly how N5a's before/after stub comparison worked.
+- The stamp must be **second**-resolution. At minute resolution two fetches in the same minute
+  overwrite each other. That was survivable while snapshots held the full series, because any
+  clobbered bar existed in a dozen other files — but **a delta is the only copy of the revisions it
+  records**, so an in-minute overwrite would silently destroy them. Caught by noticing the data
+  directory *shrink* by 188 KB on the very run that introduced deltas: a `23:28Z` delta had replaced
+  a `23:28Z` full series. Latent data loss, created and closed in the same check.
+
 **Why its freshness test is not "is this timestamp new?".** The newest bar is usually still forming
 and its OHLCV gets revised. Keying on the timestamp alone silently drops those revisions — measured
 on the very check that introduced the fix: **both 15m frames reported `+0 new, 2 revised`**, so a

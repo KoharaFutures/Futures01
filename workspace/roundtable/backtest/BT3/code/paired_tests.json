@@ -1,6 +1,6 @@
 {
  "placebo_ensemble": {
-  "comparison": "real vs placebo (R permuted)",
+  "comparison": "neutral vs placebo (R permuted)",
   "absorbing": {
    "test": "McNemar exact (paired binomial on discordant seeds)",
    "n_pairs": 200,
@@ -24,7 +24,7 @@
   "taken_median_other": 1.0
  },
  "vol_pinned_control": {
-  "comparison": "real vs volatility pinned",
+  "comparison": "neutral vs volatility pinned",
   "absorbing": {
    "test": "McNemar exact (paired binomial on discordant seeds)",
    "n_pairs": 200,
@@ -48,27 +48,51 @@
   "taken_median_other": 0.991
  },
  "barrier_off_leak": {
-  "comparison": "real vs barrier removed",
+  "comparison": "neutral vs barrier removed",
   "absorbing": {
    "test": "McNemar exact (paired binomial on discordant seeds)",
    "n_pairs": 200,
-   "a_only": 18,
-   "b_only": 12,
-   "n_discordant": 30,
-   "p_two_sided": 0.361594608053565
+   "a_only": 23,
+   "b_only": 20,
+   "n_discordant": 43,
+   "p_two_sided": 0.7607916425613439
   },
   "taken": {
    "test": "exact sign test (two-sided binomial, ties dropped)",
    "n_pairs": 200,
-   "a_greater": 89,
-   "b_greater": 110,
+   "a_greater": 66,
+   "b_greater": 133,
    "ties": 1,
-   "median_diff": -4,
-   "p_two_sided": 0.15608547576770987
+   "median_diff": -17,
+   "p_two_sided": 2.3437999954114107e-06
   },
   "absorbing_rate_real": 13.0,
-  "absorbing_rate_other": 10.0,
+  "absorbing_rate_other": 11.5,
   "taken_median_real": 1.011,
-  "taken_median_other": 1.023
+  "taken_median_other": 1.073
+ },
+ "honest_arm_live_eligible_False": {
+  "comparison": "neutral vs honest (is_live_eligible=False)",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 26,
+   "b_only": 0,
+   "n_discordant": 26,
+   "p_two_sided": 2.9802322387695312e-08
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 90,
+   "b_greater": 108,
+   "ties": 2,
+   "median_diff": -5,
+   "p_two_sided": 0.22690555254948622
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 0.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 0.998
  }
 }

@@ -48,14 +48,15 @@ from futures_agents.schema import Direction
 from futures_agents.strategies.base import (Condition, ConditionKind,
                                             ConditionResult, ExitModel,
                                             StopKind, Strategy, StrategySignal)
-from futures_agents.timeutil import ET
+from futures_agents.timeutil import ET, to_et
 
 from session_window import (BarWindow, FlatEvent, SessionGridError,
-                            SessionWindowEngine, assert_distinct_ids,
-                            assert_hooks_reachable, classify_bar,
-                            classify_series, et_minute_of_day,
-                            in_forbidden_window, is_session_flat,
-                            prefix_invariance_report, violations, with_exit)
+                            SessionWindowEngine, SessionWindowViolation,
+                            assert_distinct_ids, assert_hooks_reachable,
+                            classify_bar, classify_series, et_minute_of_day,
+                            flat_exit_keys, in_forbidden_window,
+                            is_session_flat, prefix_invariance_report,
+                            session_end_indices, violations, with_exit)
 
 # --------------------------------------------------------------------------
 # Construction helpers
@@ -382,7 +383,8 @@ def test_flat_pays_market_order_slippage_not_zero():
     ev = eng.counters.flat_events[0]
     assert ev.slippage_points > 0.0
     assert t.exit_price < 21_020.0, "a long must fill below the print"
-    assert t.exit_price == pytest.approx(21_020.0 - ev.slippage_points)
+    assert t.exit_price == pytest.approx(
+        get_contract("MNQ").round_to_tick(21_020.0 - ev.slippage_points))
     # A market order slips like a stop, not like a marketable limit.
     assert ev.slippage_points >= costs.slippage_price(is_stop=True)
 
@@ -422,7 +424,11 @@ def test_hole_at_the_deadline_fills_at_the_next_open_gap_and_all():
     assert eng.counters.flats_in_window == 1
     assert eng.counters.flats_on_boundary == 0
     assert eng.counters.flat_events[0].bar_class is BarWindow.IN_WINDOW
-    assert violations(res.trades) == []
+    # Stamped 16:00 because Trade.exit_ts is the bar's OPEN time and the fill
+    # was at that open - i.e. at the deadline instant, which is compliant. The
+    # strict audit flags it; the audit that knows what the rule filled does not.
+    assert [v["kind"] for v in violations(res.trades)] == ["EXIT_IN_WINDOW"]
+    assert violations(res.trades, flat_exits=flat_exit_keys(eng)) == []
     # And the excursions do not read the post-deadline bar's range.
     assert t.mae_points == pytest.approx(21_010.0 - 21_008.0)
 
@@ -470,6 +476,90 @@ def test_stop_beats_target_in_the_flat_bar():
     res, _ = run(rows, Stub(signal_at=(1,), entry=21_010.0, stop=21_000.0,
                             targets=[21_030.0]))
     assert res.trades[0].exit_reason is ExitReason.STOP
+
+
+# ==========================================================================
+# 5b. Component 1b — the session that shuts before 16:00
+# ==========================================================================
+
+#: An exchange early close: the session ends at 13:00 and does not reopen until
+#: 18:00, so no bar ends at 16:00 and no bar starts inside the window. This is
+#: the shape of 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28 and six others on
+#: all four symbols, and the shape that produced EF1's first 33 violations.
+EARLY_CLOSE: List[Tuple[datetime, float, float, float, float]] = [
+    (at(DAY, 18, days=-1), 21_000.0, 21_005.0, 20_995.0, 21_000.0),   # 0 prev eve
+    (at(DAY, 10), 21_000.0, 21_005.0, 20_995.0, 21_002.0),            # 1 signal
+    (at(DAY, 11), 21_010.0, 21_015.0, 21_008.0, 21_012.0),            # 2 entry
+    (at(DAY, 12), 21_012.0, 21_018.0, 21_009.0, 21_016.0),            # 3 LAST bar
+    (at(DAY, 18), 21_100.0, 21_105.0, 21_098.0, 21_102.0),            # 4 reopen
+    (at(DAY, 10, days=1), 21_102.0, 21_108.0, 21_100.0, 21_106.0),    # 5
+    (at(DAY, 15, days=1), 21_106.0, 21_112.0, 21_104.0, 21_110.0),    # 6 boundary
+]
+
+
+def test_position_is_flat_at_the_early_close_not_carried_to_the_reopen():
+    res, eng = run(EARLY_CLOSE, Stub(signal_at=(1,), entry=21_010.0,
+                                     stop=21_000.0, targets=[21_500.0]))
+    t = res.trades[0]
+    assert is_session_flat(t)
+    assert t.exit_index == 3, "must go flat on the session's last bar"
+    assert t.exit_price == pytest.approx(21_016.0)
+    assert eng.counters.flats_forced_session_end == 1
+    assert eng.counters.flats_on_boundary == 0
+    assert eng.counters.flat_events[0].forced_session_end is True
+    assert violations(res.trades) == []
+
+
+def test_session_end_map_marks_exactly_the_early_close_date():
+    idx = session_end_indices(bars(EARLY_CLOSE))
+    assert idx == {3: DAY.date().isoformat()}, \
+        "only the early-close date has no bar at the deadline"
+    # The normal day keeps its ON_BOUNDARY bar and is not marked.
+    assert not any(v == (DAY + timedelta(days=1)).date().isoformat()
+                   for v in idx.values())
+    assert session_end_indices(bars(FLAT_DAY)) == {}
+
+
+def test_session_end_map_is_a_function_of_timestamps_only():
+    """The map is built from the whole series, so it must be shown to read no
+    prices. Every OHLC value is perturbed; the map must not move. This is the
+    check that separates "exchange calendar knowledge, published in advance"
+    from "reading a price the backtest did not have"."""
+    original = bars(EARLY_CLOSE)
+    perturbed = [replace(b, open=b.open * 3.0 + 1.0, high=b.high * 3.0 + 9.0,
+                         low=b.low * 3.0 - 9.0, close=b.close * 3.0 + 1.0,
+                         volume=b.volume * 7.0) for b in original]
+    assert session_end_indices(perturbed) == session_end_indices(original)
+    # Reversing the price direction must not move it either.
+    flipped = [replace(b, open=-b.low, high=-b.low, low=-b.high, close=-b.high)
+               for b in original]
+    assert session_end_indices(flipped) == session_end_indices(original)
+
+
+def test_strict_emission_catches_the_hole_that_shipped():
+    """Disabling component 1b must make the engine *raise*, not under-report.
+
+    This is the regression for the 33 violations. With the session-end map
+    emptied the position runs through the window exactly as it did before the
+    fix, and the strict check has to stop it at the point of emission.
+    """
+    f = frame(EARLY_CLOSE)
+    eng = SessionWindowEngine(f, no_slip())
+    eng._session_end = {}                          # simulate the pre-fix build
+    with pytest.raises(SessionWindowViolation, match="SPANS_WINDOW"):
+        eng.run(Stub(signal_at=(1,), entry=21_010.0, stop=21_000.0,
+                     targets=[21_500.0]))
+
+
+def test_strict_can_be_switched_off_and_then_the_violation_is_only_counted():
+    """The escape hatch exists so a diagnostic run can measure how bad a hole is
+    instead of dying on the first trade. It is off by default for a reason."""
+    f = frame(EARLY_CLOSE)
+    eng = SessionWindowEngine(f, no_slip(), strict=False)
+    eng._session_end = {}
+    res = eng.run(Stub(signal_at=(1,), entry=21_010.0, stop=21_000.0,
+                       targets=[21_500.0]))
+    assert [v["kind"] for v in violations(res.trades)] == ["SPANS_WINDOW"]
 
 
 # ==========================================================================
@@ -524,6 +614,33 @@ def test_violations_detects_each_way_of_breaking_the_window(entry, exit_, want):
     assert want in kinds, f"the detector missed {want}"
 
 
+def test_the_flat_exemption_cannot_launder_a_violation():
+    """The carve-out is keyed on the engine's own fill record, so an in-window
+    exit the rule did not fill is still reported even when the carve-out is
+    supplied. Without this the exemption would be a hole big enough to hide the
+    thing the audit exists to find."""
+    real = _trade(at(DAY, 14), at(DAY, 16, 30))           # alive at 16:30
+    def kinds(**kw):
+        return sorted(v["kind"] for v in violations([real], **kw))
+    assert kinds() == ["EXIT_IN_WINDOW", "SPANS_WINDOW"]
+    # Exempting the exit does NOT exempt the span: the position was demonstrably
+    # alive across the deadline, and that is a separate, independent test.
+    assert kinds(flat_exits={("x", 2)}) == ["SPANS_WINDOW"]
+    # And a key set from a trade the engine did not close exempts nothing.
+    assert kinds(flat_exits={("x", 7)}) == ["EXIT_IN_WINDOW", "SPANS_WINDOW"]
+
+
+def test_flat_exit_keys_only_covers_in_window_fills():
+    """ON_BOUNDARY flats are stamped 15:00 and need no exemption; only the
+    IN_WINDOW gap fills do. A key set that covered both would exempt exits that
+    were never inside the window, which is sloppy rather than wrong - and sloppy
+    is how a carve-out grows into a hole."""
+    _, eng = run(FLAT_DAY, Stub(signal_at=(1,), entry=21_010.0, stop=21_000.0,
+                                targets=[21_500.0]))
+    assert eng.counters.flats_on_boundary == 1
+    assert flat_exit_keys(eng) == set()
+
+
 @pytest.mark.parametrize("entry,exit_", [
     (at(DAY, 18), at(DAY, 15, days=1)),      # a full legal cycle
     (at(DAY, 11), at(DAY, 15)),              # intraday, flat by 16:00
@@ -546,7 +663,11 @@ def test_the_clock_rule_is_prefix_invariant_for_every_k():
                          21_000.0, 21_010.0, 20_990.0, 21_005.0))
     series = bars(rows)
     rep = prefix_invariance_report(series)
-    assert rep["mismatches"] == 0
+    # classify_bar is a pure function of one bar, so this is exactly zero.
+    assert rep["classification_mismatches"] == 0
+    # The session-end map needs a date's full timestamp list, so a prefix cut
+    # inside a date may differ *on that date*. Off the cut date it must not.
+    assert rep["session_end_mismatches_off_cut_date"] == 0
     assert rep["prefixes_checked"] == len(series) + 1
 
 
@@ -583,9 +704,20 @@ def test_the_engine_produces_a_prefix_of_its_own_trades_on_every_prefix():
         s = replace(strat, entry=sub[0][1], stop=sub[0][1] - 200.0,
                     targets=[sub[0][1] + 5_000.0])
         res = eng.run(s)
-        # Drop any trailing END_OF_DATA trade: that one is an artefact of where
-        # the prefix was cut, not of the rule.
-        out = [t for t in res.trades if t.exit_reason is not ExitReason.END_OF_DATA]
+        # Two exclusions, and both are artefacts of where the cut fell rather
+        # than of the rule:
+        #  - a trailing END_OF_DATA trade;
+        #  - a component-1b forced session-end flat on the prefix's LAST ET
+        #    date, because that date's bar list is still incomplete. Once the
+        #    prefix passes into the next date the determination is fixed, which
+        #    is why only the cut date is exempt.
+        cut_date = to_et(bars(sub)[-1].ts).date()
+        forced = {(e.entry_index, e.exit_index)
+                  for e in eng.counters.flat_events
+                  if e.forced_session_end and to_et(e.exit_ts).date() == cut_date}
+        out = [t for t in res.trades
+               if t.exit_reason is not ExitReason.END_OF_DATA
+               and (t.entry_index, t.exit_index) not in forced]
         return [(t.entry_index, t.exit_index, t.exit_price, t.exit_reason)
                 for t in out]
 
@@ -611,7 +743,12 @@ def test_the_engine_hooks_are_still_reachable():
 
 def _real_strategy(symbol: str = "MNQ") -> Strategy:
     from futures_agents.strategies.library import CONDITIONS
-    cond = CONDITIONS["ema_cross_up"]
+    # `trend` is the group R4 audited CLEAN 8/8 with R1 agreeing independently,
+    # so a D48 fixture built on it cannot be confounded by a second defect.
+    # Deliberately NOT macd_directional/macd_hist_direction: R4 measured those
+    # identical on 5000/5000 bars, so a fixture using both tests one condition
+    # twice.
+    cond = CONDITIONS["ema_fast_above_slow"]
     return Strategy(name="ef1-probe", group="TREND", symbol=symbol,
                     primary_tf=60, conditions=(cond,), exit=plain_exit())
 

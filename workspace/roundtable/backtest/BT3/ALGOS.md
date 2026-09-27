@@ -34,7 +34,7 @@ Nothing here touches `data/archive/` (BRIEF's 2026-09-27 data ruling, condition 
   - Cycle 2: all five of R3's ranked items applied, plus the two it asked me to *report*
     (the absorbing boundary, and the capacity slack). **Everything below is the corrected
     version and the cycle-1 numbers are superseded.** Re-asked in
-    `msgs/06_BT3_R3_verify-ALGO-1-v2.md` — on the difference only, as R3 asked.
+    `msgs/15_BT3_R3_verify-ALGO-1-v2.md` — on the difference only, as R3 asked.
 
 ### What R3 ruled DIVERGENT, and what I changed
 
@@ -405,13 +405,18 @@ the vol-pinned arm has MGC 60m HIGH at 37.3% rather than 2.5%.
 HIGH and EXTREME all survive better. HIGH there is n=16 and EXTREME n=52 against NORMAL's
 n=954, so it is plausibly small-sample, but it is one cell out of six behaving backwards and it
 should be checked before the monotonicity is quoted as general.
+#### Tier C — the stateful replay, corrected, with R3's cycle-2 conditions applied
 
-#### Tier C — the stateful replay. Corrected, and still contingent on R3's cycle-2 ruling
+**PER_STRATEGY — 176 fresh $50,000 accounts, keyed by `(symbol, tf, arm, exitm)`. R3 ruled this
+the finding's unit, not a close call.** Its reasoning: Tier 0 item 1 names five *account*
+governors, and the question the item exists to answer is "if a strategy has an edge, do the
+account governors delete enough of its trades to change its own measurement?" The pooled figure
+answers a different question whose answer was already known (correlated arms cannibalise) and is
+already R3-B-4.
 
-**PER_STRATEGY — 176 fresh $50,000 accounts, the non-pooled reading, which is the one I report
-as the governor effect.** **5,537 of 21,954 trades survive — 25.22%**, against 5,705 (25.99%)
-with the volatility multiplier pinned. Median survival per strategy 26.7%, range [0%, 100%],
-**30 of 176 strategies take no trade at all.** And the refusals are one governor:
+**5,537 of 21,954 trades survive — 25.22%**, against 5,705 (25.99%) with the volatility
+multiplier pinned. **2 of 176 accounts reached the absorbing state; 0 of 176 hard-failed.** And
+the refusals are one governor:
 
 | veto | count | share of 16,417 refusals |
 |---|---|---|
@@ -420,80 +425,155 @@ with the volatility multiplier pinned. Median survival per strategy 26.7%, range
 | `2_stop_inside_noise_floor` | 23 | 0.14% |
 | `7_below_min_dollar_risk` | 3 | 0.02% |
 | `1_trade_cap` | 2 | 0.01% |
-| `1_daily_loss_limit`, `1_profit_giveback`, all `3_*` exposure caps | **0** | 0 |
+| `1_daily_loss_limit`, `1_profit_giveback`, and **every `3_*` exposure cap** | **0** | 0 |
 
-**So the daily governors that R3's Tier 0 item 1 is named after — daily loss limit, giveback,
-trade cap, consecutive-loss stand-down — account for 207 of 16,417 refusals, 1.26%, and two of
-the four never fire at all.** At this account size the integer floor is not one governor among
-nineteen: it is the governor.
+**So the four daily governors Tier 0 item 1 is named after — daily loss limit, giveback, trade
+cap, consecutive-loss stand-down — account for 207 of 16,417 refusals, 1.26%, and two of the four
+never fire at all.** At this account size the integer floor is not one governor among nineteen:
+it is the governor.
 
-`max_trades_per_day = 6` **never binds on a single strategy.** No strategy's busiest day
-exceeds 6 trades and `days_over_6_taken = 0` across all 176; the modal busiest day is 2–3
-trades `[measured: max_taken_in_a_day distribution {0:30, 1:15, 2:44, 3:45, 4:24, 5:13, 6:5}]`.
-At 60m and 240m bars a single strategy does not generate seven signals in a session. **The cap
-is inert at this timeframe and only bites when you pool.** And note it is 6 for the *whole
-account across all four symbols and both timeframes*, not 6 per symbol.
+**Why stage 3 fires exactly zero times here, which is structural rather than lucky** (R3's Q3):
+the stored artefact already has one-position-at-a-time baked in, because
+`engine.py:304-309` skips a strategy that is already positioned. **No strategy in
+`geo_trades.json` ever has two overlapping trades**, so `position_for(symbol)` in a
+one-strategy account can never find one. Stage 3 is faithful *and* redundant with the engine's
+own skip rule at this unit. R3 ruled explicitly: **do not re-key exposure to strategy** — that
+would invent a capability the live system does not have, since two strategies long MGC is one
+MGC position with two owners and `close_position` resolves by symbol.
+
+`max_trades_per_day = 6` **never binds on a single strategy.** No strategy's busiest day exceeds
+6 and `days_over_6_taken = 0` across all 176; the modal busiest day is 2–3 trades
+`[measured: max_taken_in_a_day {0:30, 1:15, 2:44, 3:45, 4:24, 5:13, 6:5}]`. At 60m and 240m bars
+a single strategy does not generate seven signals in a session. **The cap is inert at this
+timeframe and only bites when you pool.** And it is 6 for the *whole account across all four
+symbols and both timeframes*, not 6 per symbol.
 
 Of the 16,184 floor deletions, **7,766 fire at the opening budget and 8,418 only after the
-budget has shrunk**, so roughly half the floor's bite is the de-risk ladder rather than the
-floor's static reach. Median dollar risk actually taken is **$166.50** against a $240 opening
-budget. **2 of 176 accounts reached the absorbing state; 0 of 176 hard-failed.**
+budget has shrunk**, so roughly half the floor's bite is the de-risk ladder rather than its
+static reach. Median dollar risk actually taken is **$166.50** against a $240 opening budget.
 
-**POOLED — 200 seeded within-timestamp orders. Reported as a diagnostic of pooling, never as a
-result.** Median survival **1.011%** of candidates, p05–p95 **[0.647%, 1.257%]**, versus 25.22%
-unpooled. **A factor of 25, and it is pooling, not governance**: the extra refusals are the
-per-symbol and concurrency caps firing because 22 correlated arms compete for one symbol slot.
-**26 of 200 orderings (13.0%) drove the account into the absorbing state**, median death date
-2026-01-22 … 2026-03-09, median 199.5 trades taken before it, and median max drawdown **$2,670**
-— which is $130 from the cliff, so most surviving orderings survive narrowly.
+**Conditioned on `(symbol, tf)`, as R3 required — pooled across cells the [0%, 100%] range is
+uninterpretable.** R3 predicted "eight tight clusters". **Half right, and the other half matters:**
 
-#### The controls, with the tests named
+| cell | strategies | pooled in cell | median | min–max | IQR | take **zero** trades |
+|---|---|---|---|---|---|---|
+| MES 60m | 22 | 39.8% | **64.0%** | 16.4–85.7 | 36.7 | 0 |
+| MCL 60m | 22 | 42.6% | 49.3% | 25.0–85.4 | 28.3 | 0 |
+| MCL 240m | 22 | 40.0% | 39.6% | 24.5–77.8 | 26.8 | 0 |
+| MES 240m | 22 | 32.8% | 36.7% | 13.0–100.0 | 39.3 | 0 |
+| MNQ 60m | 22 | 13.1% | 17.4% | 4.2–74.7 | 11.8 | 0 |
+| MGC 60m | 22 | 13.9% | 12.8% | 0.0–66.0 | 20.1 | 1 |
+| MNQ 240m | 22 | 2.9% | **1.4%** | 0.0–22.2 | 5.5 | **11** |
+| MGC 240m | 22 | 0.3% | **0.0%** | 0.0–4.2 | 0.0 | **18** |
 
-`paired_tests.py`. Every arm runs the **same 200 permutations**, so all comparisons are paired
-by seed; the tests are **exact McNemar** on the binary "did this account die" and the **exact
-two-sided sign test** on per-seed `taken`. Unpaired tests are not used, and `T.ab` is not used
-anywhere (D28). **Search size: 6** — three comparisons × two statistics, all reported, none
-discarded; `free_t = sqrt(2·ln 6) = 1.893` against the programme-wide 5.46.
+The cells are **well separated** — medians span 0.0% to 64.0% and the ordering is exactly the
+floor's ordering — so the pooled median of 26.7% was indeed describing a mixture and should not
+have been the headline. But they are **not tight**: within-cell IQRs run to 39.3 points, so the
+same governors applied to two arms of the *same base condition on the same symbol and
+timeframe* can survive at 13% or at 100%. The floor discriminates between cells and, within a
+cell, between arms whose stop distances differ.
 
-| comparison | death rate | McNemar exact p | `taken` sign test p |
-|---|---|---|---|
-| real vs **placebo** (R permuted, count-matched) | 13.0% vs 6.0% | 0.0288 | 0.0131 (median −19 trades) |
-| real vs **volatility pinned** (control) | 13.0% vs **41.0%** | **7.08e-10** | 0.52 (median −1 trade) |
-| real vs **barrier removed** (the look-ahead priced) | 13.0% vs 10.0% | 0.362 | 0.156 (median −4) |
+**The sharpest single statement in the whole replay: 18 of 22 MGC 4h strategies and 11 of 22
+MNQ 4h strategies take not one trade on a $50,000 account.** Not "underperform" — do not exist.
 
-Three readings, in order of how much I would defend them:
+**POOLED — 200 seeded within-timestamp orders. A diagnostic of pooling, never a result.**
+Median survival **1.011%** of candidates, p05–p95 **[0.647%, 1.257%]**, versus 25.22% unpooled.
+**A factor of 25, and R3's decomposition shows it is not about governors at all**: the gap is
+`3_symbol_already_held` + `3_concurrent_limit` + `1_trade_cap`, and stage 3 is *exposure*, which
+is not one of the five rules the finding names. A number whose variance is dominated by a rule
+outside the hypothesis is a diagnostic. **26 of 200 orderings (13.0%) drove the account into the
+absorbing state**, death dates 2026-01-22 … 2026-03-09, median 199.5 trades taken before it,
+median max drawdown **$2,670** — $130 short of the $2,800 cliff, so the survivors survive
+narrowly.
 
-1. **The volatility multiplier decides whether the account lives, and barely touches how many
-   trades it takes.** Pinning it to NORMAL raises the death rate 13.0% → 41.0% (p = 7e-10,
-   against 1.893 free t-units — this one clears its own threshold by a wide margin) while
-   moving median `taken` by one trade (p = 0.52). **A governor that looks like it only shrinks
-   position size is the one that determines survival**, because smaller size in high-volatility
-   regimes keeps the drawdown under the $2,800 cliff. That is a Channel-2 effect arriving
-   through what looks like a Channel-4a knob, and it is the most interesting thing ALGO-1 found.
-2. **The governors' deletion rate does not read the signal at all.** Real median `taken` 1.011%
-   versus placebo 1.000% — the medians are indistinguishable, and although the sign test picks
-   up a direction (p = 0.0131, real takes ~19 fewer trades per seed) that is well inside 1.893
-   free t-units and the placebo's own spread is wider (p95 1.959% vs 1.257%). **Which trades
-   the governors delete is a property of the stop distribution and the calendar, not of the
-   entry.** That is the honest placebo verdict and it is a null.
-3. **The look-ahead I removed was not what moved the number.** Removing the barrier changes the
-   death rate 13.0% → 10.0% (p = 0.362) and `taken` by 4 trades (p = 0.156) — neither
-   detectable. **The leak was real and had to go on principle, and pricing it shows it was not
-   load-bearing.** Worth recording precisely because the instinct is to assume a look-ahead one
-   has just fixed was the whole result. On the biased lexicographic anchor it looked far larger
-   (192 taken and dead, versus 233 and alive), which is itself evidence that the anchor order
-   was unrepresentative — exactly R3's point.
-
-One robustness result falls out: **the `cap_on_open` divergence is empirically inert.** `taken`
-and `final_equity` are *identical* with the cap counted on closes and on opens in every anchor
-arm; the open-cap vetoes only relabel trades that stage 3 or stage 7 would have refused anyway.
-So the `DayState.record`-counts-closes ambiguity changes nothing here.
-
-And one capacity check, because "1% taken" invites the reader to assume saturation: the pooled
+One capacity check, because "1% taken" invites the reader to assume saturation: the pooled
 stream demands 22,325,550 position-minutes over a 490,320-minute span, so two concurrent slots
-could service at most **4.39%** of it — well above the observed 0.65–1.26%. **The concurrency
-ceiling is slack and never binds, because the floor deletes most candidates before exposure can
-accumulate.** It is not saturation.
+could service at most **4.39%** of it — comfortably above the observed 0.65–1.26%. **The
+concurrency ceiling is slack and never binds, because the floor deletes most candidates before
+exposure can accumulate.** Not saturation.
+
+#### The controls and the tests, and the one place I have to contradict R3
+
+`paired_tests.py`. Every arm runs the **same 200 permutations**, so all comparisons are paired by
+seed; the tests are **exact McNemar** on "did this account die" and the **exact two-sided sign
+test** on per-seed `taken`. No unpaired test is used and `T.ab` is not used anywhere (D28).
+**Search size: 8** — four comparisons × two statistics, all reported, none discarded.
+`free_t = sqrt(2·ln 8) = 2.039` against the programme-wide 5.46. Two of the eight clear that
+threshold by a wide margin; the rest do not and are reported as nulls.
+
+| comparison (vs the neutral arm) | death rate | McNemar exact p | `taken` sign test p |
+|---|---|---|---|
+| **volatility multiplier pinned** | 13.0% → **41.0%** | **7.08e-10** | 0.52 (median −1 trade) |
+| **`is_live_eligible=False`** (the honest arm) | 13.0% → **0.0%** | **2.98e-08** | 0.227 (median −5) |
+| barrier removed (the look-ahead priced) | 13.0% → 11.5% | 0.761 | **2.34e-06** (median −17) |
+| placebo (R permuted, count-matched) | 13.0% → 6.0% | 0.0288 | 0.0131 (median −19) |
+
+**1. The one real result: at this account size every governor that shrinks position size is net
+protective, and the mechanism is that drawdown scales with size faster than the absorbing
+boundary moves.** Two independent size-reducing governors, both decisive and both in the same
+direction:
+
+| arm | per-trade budget | absorbing boundary | median max drawdown | ratio | died |
+|---|---|---|---|---|---|
+| volatility pinned | $240 always | $2,800 | $3,079 | **1.100** | 41.0% |
+| neutral | $240, ×0.70 on HIGH/EXTREME | $2,800 | $2,670 | 0.954 | 13.0% |
+| honest (`is_live_eligible=False`) | $120, ×0.70 on HIGH/EXTREME | **$2,334** | $2,038 | **0.873** | **0.0%** |
+
+Halving the budget moves the cliff to 83% of its depth but the realised drawdown to 76% of its
+size, so the *safer* arm is the one with less headroom. **`max_drawdown / absorbing_boundary` is
+the whole predictor of survival here, and it falls monotonically as the governors tighten.** A
+governor that looks like a pure Channel-4a variance transform — "size down in high volatility",
+"size down for an unproven strategy" — is a Channel-2 survival effect at a $50,000 account,
+because survival is a threshold on the path and not on the mean.
+
+**2. Where I have to contradict R3, and it is on its own prediction.** R3 computed the two
+boundaries and predicted: *"the honest arm dies, at 47% of its permitted drawdown, and the
+neutral arm survives only by $53."* Measured with **both** of R3's own required fixes applied,
+the opposite holds: **the honest arm dies in 0 of 200 orderings (median max drawdown $2,038
+against a $2,334 cliff) and the neutral arm dies in 26 of 200.** R3's arithmetic was correct on
+the numbers it had — my cycle-1 report, which was vol-pinned and leaky. Turning on the
+volatility multiplier cuts the honest arm's drawdown below its own shallower boundary. **So the
+prediction was right about the mechanism and wrong about the sign, and it was the volatility fix
+R3 itself demanded that flipped it.** I am reporting the reversal rather than the agreement.
+
+**3. The placebo is a null at the stated threshold, and that is the answer to "do the governors
+read the signal".** Real median `taken` 1.011% versus placebo 1.000%; the sign test picks up a
+direction (real takes ~19 fewer trades per seed, p = 0.0131) and the death rates differ
+(13.0% vs 6.0%, p = 0.0288), but **neither clears 2.039 free t-units** and the placebo's own
+spread is wider (p95 1.959% vs 1.257%). **Which trades the governors delete is a property of the
+stop distribution and the calendar, not of the entry.** That is the honest placebo verdict.
+
+**4. The look-ahead I removed inflated the trade count, and my cycle-1 reading of it was wrong
+because of a bug in my own fix.** With the leak in, the account takes **17 more trades per seed**
+(p = 2.34e-06, which does clear 2.039) while the death rate is unchanged (p = 0.761). The
+mechanism is R3's: a position that vanishes before the next same-instant row is assessed never
+occupies a concurrency slot, so the leak manufactures capacity. In cycle 1 I reported this as
+"not detectable" — that reading came from the group-flush bug described under choice 7, where
+`barrier=False` had silently become a barrier too. **The correct reading is that the look-ahead
+was load-bearing for the trade count and not for survival.**
+
+One robustness result falls out unchanged: **the `cap_on_open` divergence is empirically inert.**
+`taken` and `final_equity` are identical with the cap counted on closes and on opens in every
+anchor arm; the open-cap vetoes only relabel trades stage 3 or stage 7 would have refused anyway.
+
+#### The determinism proof, which R3 asked be reported as a finding in its own right
+
+`stops.py` reproduces the generating study's 21,954 trades exactly: **zero not found, zero whose
+`net_r` disagrees, worst `|Δr| = 0.000e+00`**, matched on
+`(cell, arm, exitm, entry_ts, direction)`. R3's reading, which I accept: this does not merely
+recover a missing field, **it establishes that the generating study is deterministic** — which
+nothing in this repository had established. It carries an expiry clause: the recovery exists only
+while `run_geometry.py`, `toolkit.disjoint_slices` and the frozen `csv/raw` snapshot all still
+agree, so it is a repair with a shelf life and not a substitute for the manager's `R-8` field
+discipline.
+
+R3 also asked that the choice of `risk_points = |entry_price − initial_stop|` over
+`stop_mult × atr(signal bar)` be on record, because it is the kind of thing that gets simplified
+later: the entry gaps and slips away from the signal bar and the engine honours the original stop
+level rather than re-deriving it `[repo-verified: engine.py:354-361]`, so the modelled and
+realised distances are different numbers and a live `contracts_for` would size off the realised
+one. **Using the modelled distance would have made the floor look less binding on exactly the
+gappy trades where it binds most.**
 
 ### What it does not measure, stated so nobody reads it as more than it is
 
@@ -506,10 +586,12 @@ accumulate.** It is not saturation.
 - **Nothing here is a search for a configuration that improves anything.** The
   `AccountConfig` defaults are used as shipped throughout; no parameter was tuned, scanned or
   chosen. Every arm exists to isolate a mechanism, and all arms are reported.
-- **Search size: 6 tests**, all in `paired_tests.py`, all reported, none discarded.
-  `free_t = 1.893`. The one result that clears its own threshold by a wide margin is the
-  volatility-multiplier survival effect (p = 7e-10); the placebo comparison (p = 0.029) does
-  **not** clear it and is therefore reported as a null, which is also what its medians say.
+- **Search size: 8 tests**, all in `paired_tests.py`, all reported, none discarded.
+  `free_t = 2.039`. **Two clear it:** the volatility-multiplier survival effect (p = 7.08e-10)
+  and the eligibility-multiplier survival effect (p = 2.98e-08), with the look-ahead's effect on
+  trade count a third (p = 2.34e-06). The **placebo comparison does not clear it** (p = 0.029 on
+  deaths, 0.013 on `taken`) and is therefore reported as a null, which is also what its medians
+  say. Nothing here is a t-statistic to compare against the programme's 3.923.
 - **No comparative claim is routed through `T.ab`** (D28). Exact McNemar and an exact sign test,
   both paired on the shared seeds, are the only tests used and both are named in the table.
 - **`session` cuts are forbidden on this artefact.** Its `session` label and its `ts` are on

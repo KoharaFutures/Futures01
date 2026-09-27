@@ -1,0 +1,730 @@
+{
+ "cells": {
+  "MGC:60m": {
+   "symbol": "MGC",
+   "timeframe": 60,
+   "bars": 11297,
+   "cycles": 506,
+   "cycles_where_the_flat_cannot_fire": 17,
+   "share": 0.0336,
+   "detail": [
+    {
+     "cycle_ends": "2024-11-28",
+     "bars": 6,
+     "first_bar": "2024-11-27T18:00:00-05:00",
+     "last_bar": "2024-11-27T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2024-11-29",
+     "bars": 4,
+     "first_bar": "2024-11-29T09:30:00-05:00",
+     "last_bar": "2024-11-29T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2024-12-24",
+     "bars": 10,
+     "first_bar": "2024-12-23T18:00:00-05:00",
+     "last_bar": "2024-12-24T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2025-01-20",
+     "bars": 6,
+     "first_bar": "2025-01-19T18:00:00-05:00",
+     "last_bar": "2025-01-19T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-02-17",
+     "bars": 6,
+     "first_bar": "2025-02-16T18:00:00-05:00",
+     "last_bar": "2025-02-16T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-05-26",
+     "bars": 21,
+     "first_bar": "2025-05-25T18:00:00-04:00",
+     "last_bar": "2025-05-26T14:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 21
+     }
+    },
+    {
+     "cycle_ends": "2025-06-19",
+     "bars": 21,
+     "first_bar": "2025-06-18T18:00:00-04:00",
+     "last_bar": "2025-06-19T14:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 21
+     }
+    },
+    {
+     "cycle_ends": "2025-07-03",
+     "bars": 10,
+     "first_bar": "2025-07-02T18:00:00-04:00",
+     "last_bar": "2025-07-03T12:30:00-04:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2025-07-04",
+     "bars": 13,
+     "first_bar": "2025-07-04T00:00:00-04:00",
+     "last_bar": "2025-07-04T12:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 13
+     }
+    },
+    {
+     "cycle_ends": "2025-11-27",
+     "bars": 6,
+     "first_bar": "2025-11-26T18:00:00-05:00",
+     "last_bar": "2025-11-26T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-11-28",
+     "bars": 4,
+     "first_bar": "2025-11-28T09:30:00-05:00",
+     "last_bar": "2025-11-28T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2025-12-24",
+     "bars": 10,
+     "first_bar": "2025-12-23T18:00:00-05:00",
+     "last_bar": "2025-12-24T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2026-01-19",
+     "bars": 1,
+     "first_bar": "2026-01-18T23:00:00-05:00",
+     "last_bar": "2026-01-18T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-30",
+     "bars": 17,
+     "first_bar": "2026-01-29T18:00:00-05:00",
+     "last_bar": "2026-01-30T10:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 17
+     }
+    },
+    {
+     "cycle_ends": "2026-02-16",
+     "bars": 6,
+     "first_bar": "2026-02-15T18:00:00-05:00",
+     "last_bar": "2026-02-15T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2026-06-19",
+     "bars": 6,
+     "first_bar": "2026-06-18T18:00:00-04:00",
+     "last_bar": "2026-06-18T23:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2026-07-03",
+     "bars": 6,
+     "first_bar": "2026-07-02T18:00:00-04:00",
+     "last_bar": "2026-07-02T23:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    }
+   ],
+   "class_totals": {
+    "OUTSIDE": 10313,
+    "ON_BOUNDARY": 489,
+    "IN_WINDOW": 495
+   }
+  },
+  "MGC:240m": {
+   "symbol": "MGC",
+   "timeframe": 240,
+   "bars": 3052,
+   "cycles": 602,
+   "cycles_where_the_flat_cannot_fire": 9,
+   "share": 0.015,
+   "detail": [
+    {
+     "cycle_ends": "2024-11-28",
+     "bars": 1,
+     "first_bar": "2024-11-27T20:00:00-05:00",
+     "last_bar": "2024-11-27T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-01-20",
+     "bars": 1,
+     "first_bar": "2025-01-19T20:00:00-05:00",
+     "last_bar": "2025-01-19T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-02-17",
+     "bars": 1,
+     "first_bar": "2025-02-16T20:00:00-05:00",
+     "last_bar": "2025-02-16T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-11-27",
+     "bars": 1,
+     "first_bar": "2025-11-26T20:00:00-05:00",
+     "last_bar": "2025-11-26T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-19",
+     "bars": 1,
+     "first_bar": "2026-01-18T20:00:00-05:00",
+     "last_bar": "2026-01-18T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-30",
+     "bars": 4,
+     "first_bar": "2026-01-29T20:00:00-05:00",
+     "last_bar": "2026-01-30T08:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2026-02-16",
+     "bars": 1,
+     "first_bar": "2026-02-15T20:00:00-05:00",
+     "last_bar": "2026-02-15T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-06-19",
+     "bars": 1,
+     "first_bar": "2026-06-18T20:00:00-04:00",
+     "last_bar": "2026-06-18T20:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-07-03",
+     "bars": 1,
+     "first_bar": "2026-07-02T20:00:00-04:00",
+     "last_bar": "2026-07-02T20:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    }
+   ],
+   "class_totals": {
+    "IN_WINDOW": 586,
+    "OUTSIDE": 1969,
+    "ON_BOUNDARY": 497
+   }
+  },
+  "MCL:60m": {
+   "symbol": "MCL",
+   "timeframe": 60,
+   "bars": 10934,
+   "cycles": 505,
+   "cycles_where_the_flat_cannot_fire": 34,
+   "share": 0.0673,
+   "detail": [
+    {
+     "cycle_ends": "2024-11-28",
+     "bars": 6,
+     "first_bar": "2024-11-27T18:00:00-05:00",
+     "last_bar": "2024-11-27T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2024-11-29",
+     "bars": 4,
+     "first_bar": "2024-11-29T09:30:00-05:00",
+     "last_bar": "2024-11-29T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2024-12-24",
+     "bars": 10,
+     "first_bar": "2024-12-23T18:00:00-05:00",
+     "last_bar": "2024-12-24T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2025-01-20",
+     "bars": 6,
+     "first_bar": "2025-01-19T18:00:00-05:00",
+     "last_bar": "2025-01-19T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-02-17",
+     "bars": 6,
+     "first_bar": "2025-02-16T18:00:00-05:00",
+     "last_bar": "2025-02-16T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-05-26",
+     "bars": 21,
+     "first_bar": "2025-05-25T18:00:00-04:00",
+     "last_bar": "2025-05-26T14:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 21
+     }
+    },
+    {
+     "cycle_ends": "2025-06-19",
+     "bars": 21,
+     "first_bar": "2025-06-18T18:00:00-04:00",
+     "last_bar": "2025-06-19T14:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 21
+     }
+    },
+    {
+     "cycle_ends": "2025-07-03",
+     "bars": 10,
+     "first_bar": "2025-07-02T18:00:00-04:00",
+     "last_bar": "2025-07-03T12:30:00-04:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2025-07-04",
+     "bars": 13,
+     "first_bar": "2025-07-04T00:00:00-04:00",
+     "last_bar": "2025-07-04T12:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 13
+     }
+    },
+    {
+     "cycle_ends": "2025-11-27",
+     "bars": 6,
+     "first_bar": "2025-11-26T18:00:00-05:00",
+     "last_bar": "2025-11-26T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2025-11-28",
+     "bars": 4,
+     "first_bar": "2025-11-28T09:30:00-05:00",
+     "last_bar": "2025-11-28T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2025-12-24",
+     "bars": 10,
+     "first_bar": "2025-12-23T18:00:00-05:00",
+     "last_bar": "2025-12-24T12:30:00-05:00",
+     "classes": {
+      "OUTSIDE": 10
+     }
+    },
+    {
+     "cycle_ends": "2026-01-09",
+     "bars": 20,
+     "first_bar": "2026-01-08T18:00:00-05:00",
+     "last_bar": "2026-01-09T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 20
+     }
+    },
+    {
+     "cycle_ends": "2026-01-12",
+     "bars": 1,
+     "first_bar": "2026-01-12T03:00:00-05:00",
+     "last_bar": "2026-01-12T03:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-13",
+     "bars": 2,
+     "first_bar": "2026-01-13T03:00:00-05:00",
+     "last_bar": "2026-01-13T05:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 2
+     }
+    },
+    {
+     "cycle_ends": "2026-01-14",
+     "bars": 2,
+     "first_bar": "2026-01-14T03:00:00-05:00",
+     "last_bar": "2026-01-14T05:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 2
+     }
+    },
+    {
+     "cycle_ends": "2026-01-15",
+     "bars": 1,
+     "first_bar": "2026-01-15T05:00:00-05:00",
+     "last_bar": "2026-01-15T05:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-16",
+     "bars": 1,
+     "first_bar": "2026-01-16T03:00:00-05:00",
+     "last_bar": "2026-01-16T03:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-30",
+     "bars": 17,
+     "first_bar": "2026-01-29T18:00:00-05:00",
+     "last_bar": "2026-01-30T10:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 17
+     }
+    },
+    {
+     "cycle_ends": "2026-02-16",
+     "bars": 6,
+     "first_bar": "2026-02-15T18:00:00-05:00",
+     "last_bar": "2026-02-15T23:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2026-02-20",
+     "bars": 20,
+     "first_bar": "2026-02-19T18:00:00-05:00",
+     "last_bar": "2026-02-20T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 20
+     }
+    },
+    {
+     "cycle_ends": "2026-02-23",
+     "bars": 4,
+     "first_bar": "2026-02-23T03:00:00-05:00",
+     "last_bar": "2026-02-23T10:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2026-02-24",
+     "bars": 4,
+     "first_bar": "2026-02-24T03:00:00-05:00",
+     "last_bar": "2026-02-24T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2026-02-25",
+     "bars": 5,
+     "first_bar": "2026-02-25T03:00:00-05:00",
+     "last_bar": "2026-02-25T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-02-26",
+     "bars": 5,
+     "first_bar": "2026-02-26T03:00:00-05:00",
+     "last_bar": "2026-02-26T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-02-27",
+     "bars": 5,
+     "first_bar": "2026-02-27T03:00:00-05:00",
+     "last_bar": "2026-02-27T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-02",
+     "bars": 5,
+     "first_bar": "2026-03-02T03:00:00-05:00",
+     "last_bar": "2026-03-02T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-03",
+     "bars": 5,
+     "first_bar": "2026-03-03T03:00:00-05:00",
+     "last_bar": "2026-03-03T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-04",
+     "bars": 5,
+     "first_bar": "2026-03-04T03:00:00-05:00",
+     "last_bar": "2026-03-04T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-05",
+     "bars": 5,
+     "first_bar": "2026-03-05T03:00:00-05:00",
+     "last_bar": "2026-03-05T13:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-09",
+     "bars": 5,
+     "first_bar": "2026-03-09T03:00:00-04:00",
+     "last_bar": "2026-03-09T13:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-03-10",
+     "bars": 5,
+     "first_bar": "2026-03-10T03:00:00-04:00",
+     "last_bar": "2026-03-10T13:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 5
+     }
+    },
+    {
+     "cycle_ends": "2026-06-19",
+     "bars": 6,
+     "first_bar": "2026-06-18T18:00:00-04:00",
+     "last_bar": "2026-06-18T23:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    },
+    {
+     "cycle_ends": "2026-07-03",
+     "bars": 6,
+     "first_bar": "2026-07-02T18:00:00-04:00",
+     "last_bar": "2026-07-02T23:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 6
+     }
+    }
+   ],
+   "class_totals": {
+    "OUTSIDE": 9990,
+    "ON_BOUNDARY": 470,
+    "IN_WINDOW": 474
+   }
+  },
+  "MCL:240m": {
+   "symbol": "MCL",
+   "timeframe": 240,
+   "bars": 2990,
+   "cycles": 596,
+   "cycles_where_the_flat_cannot_fire": 14,
+   "share": 0.0235,
+   "detail": [
+    {
+     "cycle_ends": "2024-11-28",
+     "bars": 1,
+     "first_bar": "2024-11-27T20:00:00-05:00",
+     "last_bar": "2024-11-27T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-01-20",
+     "bars": 1,
+     "first_bar": "2025-01-19T20:00:00-05:00",
+     "last_bar": "2025-01-19T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-02-17",
+     "bars": 1,
+     "first_bar": "2025-02-16T20:00:00-05:00",
+     "last_bar": "2025-02-16T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2025-11-27",
+     "bars": 1,
+     "first_bar": "2025-11-26T20:00:00-05:00",
+     "last_bar": "2025-11-26T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-12",
+     "bars": 1,
+     "first_bar": "2026-01-12T00:00:00-05:00",
+     "last_bar": "2026-01-12T00:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-13",
+     "bars": 2,
+     "first_bar": "2026-01-13T00:00:00-05:00",
+     "last_bar": "2026-01-13T04:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 2
+     }
+    },
+    {
+     "cycle_ends": "2026-01-14",
+     "bars": 2,
+     "first_bar": "2026-01-14T00:00:00-05:00",
+     "last_bar": "2026-01-14T04:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 2
+     }
+    },
+    {
+     "cycle_ends": "2026-01-15",
+     "bars": 1,
+     "first_bar": "2026-01-15T04:00:00-05:00",
+     "last_bar": "2026-01-15T04:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-16",
+     "bars": 1,
+     "first_bar": "2026-01-16T00:00:00-05:00",
+     "last_bar": "2026-01-16T00:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-01-30",
+     "bars": 4,
+     "first_bar": "2026-01-29T20:00:00-05:00",
+     "last_bar": "2026-01-30T08:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 4
+     }
+    },
+    {
+     "cycle_ends": "2026-02-16",
+     "bars": 1,
+     "first_bar": "2026-02-15T20:00:00-05:00",
+     "last_bar": "2026-02-15T20:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-02-23",
+     "bars": 3,
+     "first_bar": "2026-02-23T00:00:00-05:00",
+     "last_bar": "2026-02-23T08:00:00-05:00",
+     "classes": {
+      "OUTSIDE": 3
+     }
+    },
+    {
+     "cycle_ends": "2026-06-19",
+     "bars": 1,
+     "first_bar": "2026-06-18T20:00:00-04:00",
+     "last_bar": "2026-06-18T20:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    },
+    {
+     "cycle_ends": "2026-07-03",
+     "bars": 1,
+     "first_bar": "2026-07-02T20:00:00-04:00",
+     "last_bar": "2026-07-02T20:00:00-04:00",
+     "classes": {
+      "OUTSIDE": 1
+     }
+    }
+   ],
+   "class_totals": {
+    "IN_WINDOW": 563,
+    "OUTSIDE": 1936,
+    "ON_BOUNDARY": 491
+   }
+  }
+ }
+}

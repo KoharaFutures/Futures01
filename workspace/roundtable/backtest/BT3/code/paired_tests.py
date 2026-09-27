@@ -77,9 +77,11 @@ def main() -> None:
     real = pr["vol_aware_barrier"]
     out = {}
 
-    for name, other in (("placebo_ensemble", "real vs placebo (R permuted)"),
-                        ("vol_pinned_control", "real vs volatility pinned"),
-                        ("barrier_off_leak", "real vs barrier removed")):
+    for name, other in (("placebo_ensemble", "neutral vs placebo (R permuted)"),
+                        ("vol_pinned_control", "neutral vs volatility pinned"),
+                        ("barrier_off_leak", "neutral vs barrier removed"),
+                        ("honest_arm_live_eligible_False",
+                         "neutral vs honest (is_live_eligible=False)")):
         o = pr[name]
         out[name] = {
             "comparison": other,
@@ -96,14 +98,14 @@ def main() -> None:
                         "workspace/roundtable/backtest/BT3/code/paired_tests.json")
     json.dump(out, open(dest, "w"), indent=1)
 
-    #: **Search size: 6.** Three arm comparisons x two statistics each, and that
+    #: **Search size: 8.** Four arm comparisons x two statistics each, and that
     #: is every test run in this burst - nothing was tried and discarded.
-    #: `sqrt(2*ln 6)` = 1.893 free t-units, against the programme-wide 5.46.
+    #: `sqrt(2*ln 8)` = 2.039 free t-units, against the programme-wide 5.46.
     #: Stated up front because PIPELINE §4 obligation 2 requires it with any
     #: number, and because a p-value of 0.029 against 1.893 free units is not a
     #: finding, while 7e-10 is.
-    print(f"search size: 6 tests (3 comparisons x 2 statistics); free_t = "
-          f"{math.sqrt(2 * math.log(6)):.3f}; programme-wide free_t = 5.46\n")
+    print(f"search size: 8 tests (4 comparisons x 2 statistics); free_t = "
+          f"{math.sqrt(2 * math.log(8)):.3f}; programme-wide free_t = 5.46\n")
     for k, v in out.items():
         print(f"{v['comparison']}")
         a = v["absorbing"]

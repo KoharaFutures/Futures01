@@ -1,0 +1,123 @@
+# EF4 burst 07 — the anti-overfitting audit: what was checked, and what was found
+
+The EDGE_BRIEF requires that each of these be hunted for and the result stated. Here is each
+one, what was done, and the answer. Two came back clean, three came back with numbers that
+change how my rows must be read, and two are unfixable properties of the substrate.
+
+| hazard | checked how | result |
+|---|---|---|
+| look-ahead bias / future-data leakage | full-pipeline prefix invariance | **clean, 5,274 comparisons, 0 mismatches** |
+| repainting indicators | same test (a repaint changes on a prefix) | **clean by the same evidence** |
+| unrealistic fills | same-bar target credit, tie resolution, gap accounting | **clean**, 3.5–4.2% same-bar targets, ties 100% stop-first |
+| understated costs and slippage | reconstructed gross vs `Trade.gross_r`; thin-book share | **found: the repo's "gross" is already net of slippage**, and the dispatch's cost figure was commission-only |
+| insufficient sample size | power bound per cell, trade-count ceiling per timeframe | **found and quantified: binding, and binding differently at 5m than at 30m** |
+| data-mining bias | declared *n* before measuring; placebo beside every reported row; the selection test | **found: see burst 06** |
+| parameter sensitivity | one fixed exit, never searched | **eliminated by design, not measured away** |
+| survivorship bias | roll audit on the raw series | **unfixable property of the substrate; quantified** |
+
+## 1. Look-ahead and repainting — clean, and this is the strongest result in the audit
+
+`code/audit_lookahead.py` → `out/audit_lookahead.json`.
+
+The ORB/ICT report states the reason this matters: *"Resampling cannot detect a bias whose
+sign is always favourable. Only auditing the fill model can."* A +0.354R cluster at t = 5.19
+in this repository survived a 60/40 split **and all three disjoint slices** and was a
+look-ahead in the author's own code. Out-of-sample testing is blind to it.
+
+The test that is not blind to it is prefix invariance: rebuild **everything** — `SymbolFrame`
+features, the condition library, the engine, the session rule — on `bars[0:k]`, and require
+every trade that closed strictly inside the prefix to be bit-identical to the same trade in
+the full run. Any quantity computed from the whole series (a percentile over all bars, a swing
+confirmed by later bars, a profile built from the future, a repainting pointer) makes the
+prefix run differ.
+
+`[measured: python3 code/audit_lookahead.py]`
+
+| cell | prefix 40% | prefix 60% | prefix 80% |
+|---|---|---|---|
+| MGC 30m | 230 trades, **0** mismatched | 355, **0** | 441, **0** |
+| MGC 15m | 350, **0** | 543, **0** | 693, **0** |
+| MCL 30m | 242, **0** | 347, **0** | 455, **0** |
+| MCL 15m | 367, **0** | 540, **0** | 711, **0** |
+
+**Total: 5,274 trade comparisons across 12 prefix runs, 0 mismatches**, comparing entry
+timestamp and price, initial stop, exit timestamp, price and reason, gross R, net R, MAE, MFE
+and risk points, at 1e-9 tolerance on floats and exact equality on timestamps and reasons.
+
+A clean pass is not a proof of no look-ahead — a bias that is a *function of the bar only*
+would pass — but a failure would have been a proof of one, and **this pipeline has never been
+checked this way end to end.** EF1's `prefix_invariance_report` checks the bar
+*classification*; this checks the whole stack including the feature builder, which is where
+the repo's known repainting risks live.
+
+## 2. Fill model — clean, and it is pessimistic in the direction it claims to be
+
+`code/audit_fills.py` → `out/audit_fills.json`. On Track A trades:
+
+| cell | trades | same-bar TARGET credit | entry bar touched **both** stop and target | stop won the tie | stop exits with **zero** slippage | stop exits filled **worse** than the stop | mean adverse fill |
+|---|---|---|---|---|---|---|---|
+| MGC 30m | 597 | 21 (3.5%) | 6 | **6 / 6** | **0** | 344 | 0.0196 R |
+| MGC 15m | 901 | 38 (4.2%) | 4 | **4 / 4** | **0** | 562 | 0.0280 R |
+
+The comparison that matters: the bug the ORB report found had **51% of its winners hitting
+target on the entry bar.** Here it is 3.5–4.2%, which is what a 1.5R target legitimately does
+inside one bar whose range reaches 1.5 ATR. Every same-bar tie was resolved stop-first, as
+`FillModel.stop_before_target_in_same_bar` claims. No stop exit filled at the level with zero
+slippage. 58% of stop exits filled *worse* than the stop, averaging 0.02–0.03R of extra loss
+— the gap-honest branch working.
+
+## 3. Costs — understated by the repo's own reporting convention, and by the dispatch's figure
+
+Two separate findings, both in burst 02:
+
+- **`Trade.gross_r` is not gross.** The engine charges slippage into the *fill price*
+  (`engine.py:352`, `:414`) and commission as dollars in `_close` (`:494-499`). So
+  `net_r − gross_r` is the commission alone, and any row quoting `gross_r` as "gross"
+  understates the true gross by the whole slippage term — which in this cell is 1.5–3.5× the
+  commission. Every gross figure EF4 reports is reconstructed from the fill geometry.
+- **The dispatch's "15.0% of R at 5m" is commission-only.** My commission-only figure for the
+  same configuration (MCL 5m, 0.5 ATR) is 14.1%, confirming the provenance. The **all-in**
+  figure is **33.7% in RTH and 53.2% thin**. Direction right, magnitude 2.4–3.8× too small.
+
+And the thin-book regime is the normal case, not the exception: **76–78% of this cell's bars
+are outside the contract's own RTH**, so `thin_book_extra_ticks = 1.0` applies to three
+quarters of trades. That is a direct consequence of the 18:00→16:00 rule and it has never
+been priced in this repository, because no prior run traded those bars.
+
+## 4. Parameter sensitivity — removed by construction rather than measured
+
+One exit geometry for all 19,188 arms in both tracks (burst 05). The repo's own catalogue
+offers 11 geometries; sweeping them would multiply *n* by 11 and add ~1.2 t-units to the
+threshold, for an axis BRIEF rule 3 says does not move expectancy anyway. **A sensitivity
+test on a parameter that was never searched is not needed; declaring that it was never
+searched is stronger than passing one.**
+
+The one parameter that *is* forced rather than chosen is the stop floor. `min_stop_ticks`
+silently widens any stop below 25 ticks (MGC) / 15 ticks (MCL)
+`[repo-verified: base.py:313-314]`, and 0.5 ATR at 5m is below both. **So a "0.5 ATR" arm at
+5m in this repository is not testing 0.5 ATR** — it is testing the floor, and nothing warns
+you. Choosing 1.0 ATR sidesteps it; the finding stands for anyone who does not.
+
+## 5. Survivorship / roll bias — an unfixable substrate property, now quantified
+
+`yahoo.py` applies `auto_adjust=False` and contains **no roll handling of any kind**; its own
+header warns that `MNQ=F` is not `MNQ1!` because of roll convention. That is **D40** wearing a
+new instrument. On this 58-day window the effect is small but it is not zero.
+
+`[measured: code/audit_fills.py]` MGC: median |open[i] − close[i−1]| = **0.1997 points = 2
+ticks**; bar-to-bar discontinuities above 4× that median number 73 at 5m (0.65% of bars),
+51 at 30m (2.7%). Clustered by ET hour at **18:00 (22–23 events)** — the session reopen, which
+is expected — and at **00:00 (17–18 events)**, which is not a session boundary and is worth a
+caveat rather than a theory.
+
+Series contiguity, MGC 5m `[measured: gap census over data/archive/MGC_5m.jsonl]`: the only
+recurring hole is **16:55 → 18:00 (65 minutes, 29 occurrences)** plus weekends (2,955-minute
+holes, 7 occurrences) and **one** anomalous 16:55 → 00:00 hole and **one** missing 5m bar at
+07:15. So the series is essentially contiguous and the 17:00–18:00 break is the real
+maintenance window — the programme's rule is one hour stricter than the exchange's.
+
+**A median 2-tick discontinuity between one bar's close and the next bar's open is itself a
+finding about every backtest in this repository**, because the engine fills entries at
+`bar.open` after computing the signal on the previous close. That 2 ticks is not slippage and
+is not in the cost model; it is the price of acting on a closed bar, and whether it is
+*biased* against the signal is measured in `code/audit_adverse_selection.py`.

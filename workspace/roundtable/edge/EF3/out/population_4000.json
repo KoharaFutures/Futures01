@@ -1,0 +1,374 @@
+{
+ "max_total": 4000,
+ "seed": 20260922,
+ "frame": "[60,240] base 60m",
+ "MES": {
+  "symbol": "MES",
+  "total": 6022,
+  "total_dead": 1110,
+  "dead_pct": 18.43,
+  "cause_census": {
+   "mtf_strongly_aligned@240m": 224,
+   "value_area_edge@240m": 200,
+   "mtf_aligned@240m": 176,
+   "lvn_rejection@240m": 134,
+   "poc_reversion@240m": 114,
+   "away_from_hvn@240m": 110,
+   "value_area_breakout@240m": 102,
+   "opening_range_fade@60m": 96,
+   "open_outside_value@240m": 54,
+   "opening_range_fade@240m": 32
+  },
+  "cells": {
+   "60|confirm|allhours": {
+    "n": 1042,
+    "dead": 24,
+    "dead_pct": 2.3,
+    "live": 1018,
+    "groups": {
+     "MEAN_REVERSION": 172,
+     "LIQUIDITY": 168,
+     "PULLBACK": 164,
+     "VOLUME_PROFILE": 150,
+     "REVERSAL": 148,
+     "MULTI_TIMEFRAME": 120,
+     "VWAP": 120
+    },
+    "dead_groups": {
+     "LIQUIDITY": 20,
+     "REVERSAL": 4
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 24
+    }
+   },
+   "60|confirm|rth": {
+    "n": 1042,
+    "dead": 24,
+    "dead_pct": 2.3,
+    "live": 1018,
+    "groups": {
+     "MEAN_REVERSION": 172,
+     "LIQUIDITY": 168,
+     "PULLBACK": 164,
+     "VOLUME_PROFILE": 150,
+     "REVERSAL": 148,
+     "MULTI_TIMEFRAME": 120,
+     "VWAP": 120
+    },
+    "dead_groups": {
+     "LIQUIDITY": 20,
+     "REVERSAL": 4
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 24
+    }
+   },
+   "60|noconfirm|allhours": {
+    "n": 1042,
+    "dead": 24,
+    "dead_pct": 2.3,
+    "live": 1018,
+    "groups": {
+     "MEAN_REVERSION": 172,
+     "LIQUIDITY": 168,
+     "PULLBACK": 164,
+     "VOLUME_PROFILE": 150,
+     "REVERSAL": 148,
+     "MULTI_TIMEFRAME": 120,
+     "VWAP": 120
+    },
+    "dead_groups": {
+     "LIQUIDITY": 20,
+     "REVERSAL": 4
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 24
+    }
+   },
+   "60|noconfirm|rth": {
+    "n": 1042,
+    "dead": 24,
+    "dead_pct": 2.3,
+    "live": 1018,
+    "groups": {
+     "MEAN_REVERSION": 172,
+     "LIQUIDITY": 168,
+     "PULLBACK": 164,
+     "VOLUME_PROFILE": 150,
+     "REVERSAL": 148,
+     "MULTI_TIMEFRAME": 120,
+     "VWAP": 120
+    },
+    "dead_groups": {
+     "LIQUIDITY": 20,
+     "REVERSAL": 4
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 24
+    }
+   },
+   "240|noconfirm|allhours": {
+    "n": 927,
+    "dead": 507,
+    "dead_pct": 54.69,
+    "live": 420,
+    "groups": {
+     "MULTI_TIMEFRAME": 164,
+     "VWAP": 144,
+     "REVERSAL": 136,
+     "VOLUME_PROFILE": 135,
+     "PULLBACK": 120,
+     "LIQUIDITY": 116,
+     "MEAN_REVERSION": 112
+    },
+    "dead_groups": {
+     "MULTI_TIMEFRAME": 164,
+     "VOLUME_PROFILE": 135,
+     "VWAP": 76,
+     "MEAN_REVERSION": 52,
+     "PULLBACK": 36,
+     "REVERSAL": 32,
+     "LIQUIDITY": 12
+    },
+    "dead_by_cause": {
+     "mtf_strongly_aligned@240m": 112,
+     "value_area_edge@240m": 100,
+     "mtf_aligned@240m": 88,
+     "lvn_rejection@240m": 67,
+     "poc_reversion@240m": 57,
+     "away_from_hvn@240m": 55,
+     "value_area_breakout@240m": 51,
+     "open_outside_value@240m": 27,
+     "opening_range_fade@240m": 16
+    }
+   },
+   "240|noconfirm|rth": {
+    "n": 927,
+    "dead": 507,
+    "dead_pct": 54.69,
+    "live": 420,
+    "groups": {
+     "MULTI_TIMEFRAME": 164,
+     "VWAP": 144,
+     "REVERSAL": 136,
+     "VOLUME_PROFILE": 135,
+     "PULLBACK": 120,
+     "LIQUIDITY": 116,
+     "MEAN_REVERSION": 112
+    },
+    "dead_groups": {
+     "MULTI_TIMEFRAME": 164,
+     "VOLUME_PROFILE": 135,
+     "VWAP": 76,
+     "MEAN_REVERSION": 52,
+     "PULLBACK": 36,
+     "REVERSAL": 32,
+     "LIQUIDITY": 12
+    },
+    "dead_by_cause": {
+     "mtf_strongly_aligned@240m": 112,
+     "value_area_edge@240m": 100,
+     "mtf_aligned@240m": 88,
+     "lvn_rejection@240m": 67,
+     "poc_reversion@240m": 57,
+     "away_from_hvn@240m": 55,
+     "value_area_breakout@240m": 51,
+     "open_outside_value@240m": 27,
+     "opening_range_fade@240m": 16
+    }
+   }
+  }
+ },
+ "MNQ": {
+  "symbol": "MNQ",
+  "total": 5904,
+  "total_dead": 1590,
+  "dead_pct": 26.93,
+  "cause_census": {
+   "opening_range_fade@60m": 296,
+   "mtf_strongly_aligned@240m": 272,
+   "oi_price_confirmation@60m": 264,
+   "mtf_aligned@240m": 232,
+   "oi_expanding@60m": 208,
+   "oi_expanding@240m": 104,
+   "oi_price_confirmation@240m": 102,
+   "value_area_breakout@240m": 96,
+   "lvn_rejection@240m": 96,
+   "poc_reversion@240m": 48,
+   "value_area_edge@240m": 48
+  },
+  "cells": {
+   "60|confirm|allhours": {
+    "n": 967,
+    "dead": 172,
+    "dead_pct": 17.79,
+    "live": 795,
+    "groups": {
+     "OPENING_RANGE": 156,
+     "LIQUIDITY": 152,
+     "BREAKOUT": 150,
+     "PULLBACK": 148,
+     "MULTI_TIMEFRAME": 136,
+     "MOMENTUM": 135,
+     "TREND": 90
+    },
+    "dead_groups": {
+     "BREAKOUT": 65,
+     "MOMENTUM": 51,
+     "OPENING_RANGE": 32,
+     "LIQUIDITY": 24
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 74,
+     "oi_price_confirmation@60m": 66,
+     "oi_expanding@60m": 52
+    }
+   },
+   "60|confirm|rth": {
+    "n": 967,
+    "dead": 172,
+    "dead_pct": 17.79,
+    "live": 795,
+    "groups": {
+     "OPENING_RANGE": 156,
+     "LIQUIDITY": 152,
+     "BREAKOUT": 150,
+     "PULLBACK": 148,
+     "MULTI_TIMEFRAME": 136,
+     "MOMENTUM": 135,
+     "TREND": 90
+    },
+    "dead_groups": {
+     "BREAKOUT": 65,
+     "MOMENTUM": 51,
+     "OPENING_RANGE": 32,
+     "LIQUIDITY": 24
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 74,
+     "oi_price_confirmation@60m": 66,
+     "oi_expanding@60m": 52
+    }
+   },
+   "60|noconfirm|allhours": {
+    "n": 967,
+    "dead": 172,
+    "dead_pct": 17.79,
+    "live": 795,
+    "groups": {
+     "OPENING_RANGE": 156,
+     "LIQUIDITY": 152,
+     "BREAKOUT": 150,
+     "PULLBACK": 148,
+     "MULTI_TIMEFRAME": 136,
+     "MOMENTUM": 135,
+     "TREND": 90
+    },
+    "dead_groups": {
+     "BREAKOUT": 65,
+     "MOMENTUM": 51,
+     "OPENING_RANGE": 32,
+     "LIQUIDITY": 24
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 74,
+     "oi_price_confirmation@60m": 66,
+     "oi_expanding@60m": 52
+    }
+   },
+   "60|noconfirm|rth": {
+    "n": 967,
+    "dead": 172,
+    "dead_pct": 17.79,
+    "live": 795,
+    "groups": {
+     "OPENING_RANGE": 156,
+     "LIQUIDITY": 152,
+     "BREAKOUT": 150,
+     "PULLBACK": 148,
+     "MULTI_TIMEFRAME": 136,
+     "MOMENTUM": 135,
+     "TREND": 90
+    },
+    "dead_groups": {
+     "BREAKOUT": 65,
+     "MOMENTUM": 51,
+     "OPENING_RANGE": 32,
+     "LIQUIDITY": 24
+    },
+    "dead_by_cause": {
+     "opening_range_fade@60m": 74,
+     "oi_price_confirmation@60m": 66,
+     "oi_expanding@60m": 52
+    }
+   },
+   "240|noconfirm|allhours": {
+    "n": 1018,
+    "dead": 451,
+    "dead_pct": 44.3,
+    "live": 567,
+    "groups": {
+     "TREND": 192,
+     "MOMENTUM": 150,
+     "MULTI_TIMEFRAME": 148,
+     "PULLBACK": 136,
+     "BREAKOUT": 132,
+     "LIQUIDITY": 132,
+     "OPENING_RANGE": 128
+    },
+    "dead_groups": {
+     "MULTI_TIMEFRAME": 148,
+     "MOMENTUM": 98,
+     "TREND": 84,
+     "OPENING_RANGE": 72,
+     "BREAKOUT": 37,
+     "PULLBACK": 12
+    },
+    "dead_by_cause": {
+     "mtf_strongly_aligned@240m": 136,
+     "mtf_aligned@240m": 116,
+     "oi_expanding@240m": 52,
+     "oi_price_confirmation@240m": 51,
+     "value_area_breakout@240m": 48,
+     "lvn_rejection@240m": 48,
+     "poc_reversion@240m": 24,
+     "value_area_edge@240m": 24
+    }
+   },
+   "240|noconfirm|rth": {
+    "n": 1018,
+    "dead": 451,
+    "dead_pct": 44.3,
+    "live": 567,
+    "groups": {
+     "TREND": 192,
+     "MOMENTUM": 150,
+     "MULTI_TIMEFRAME": 148,
+     "PULLBACK": 136,
+     "BREAKOUT": 132,
+     "LIQUIDITY": 132,
+     "OPENING_RANGE": 128
+    },
+    "dead_groups": {
+     "MULTI_TIMEFRAME": 148,
+     "MOMENTUM": 98,
+     "TREND": 84,
+     "OPENING_RANGE": 72,
+     "BREAKOUT": 37,
+     "PULLBACK": 12
+    },
+    "dead_by_cause": {
+     "mtf_strongly_aligned@240m": 136,
+     "mtf_aligned@240m": 116,
+     "oi_expanding@240m": 52,
+     "oi_price_confirmation@240m": 51,
+     "value_area_breakout@240m": 48,
+     "lvn_rejection@240m": 48,
+     "poc_reversion@240m": 24,
+     "value_area_edge@240m": 24
+    }
+   }
+  }
+ }
+}

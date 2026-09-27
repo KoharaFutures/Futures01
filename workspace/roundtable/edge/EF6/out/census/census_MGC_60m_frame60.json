@@ -1,0 +1,793 @@
+{
+ "symbol": "MGC",
+ "base_minutes": 60,
+ "frame_timeframes": [
+  60
+ ],
+ "eval_timeframes": [
+  60
+ ],
+ "bars": {
+  "total": 11297,
+  "evaluated": 11297,
+  "in_window": 10802,
+  "signal_eligible": 10801
+ },
+ "first_ts": "2024-10-06 19:00:00-04:00",
+ "last_ts": "2026-09-25 16:00:00-04:00",
+ "evaluable_bars_by_tf": {
+  "60": 11297
+ },
+ "condition_errors": {},
+ "straddle": {
+  "n_bars": 11297,
+  "minutes": 60,
+  "in_window": 10802,
+  "out_of_window": 495,
+  "straddle": 0,
+  "straddle_slots": {},
+  "pct_in_window": 95.62,
+  "eligible_signal_bars": 10801,
+  "pct_eligible_signal": 95.61,
+  "expressible": true
+ },
+ "fires": {
+  "ema_stack@60": {
+   "all": 8911,
+   "window": 8527,
+   "signal": 8527
+  },
+  "ema_fast_above_slow@60": {
+   "all": 9532,
+   "window": 9102,
+   "signal": 9107
+  },
+  "price_above_ema50@60": {
+   "all": 10761,
+   "window": 10298,
+   "signal": 10289
+  },
+  "price_above_ema200@60": {
+   "all": 10867,
+   "window": 10385,
+   "signal": 10390
+  },
+  "adx_trending@60": {
+   "all": 7563,
+   "window": 7225,
+   "signal": 7214
+  },
+  "di_direction@60": {
+   "all": 8355,
+   "window": 7984,
+   "signal": 7983
+  },
+  "slope_directional@60": {
+   "all": 7900,
+   "window": 7541,
+   "signal": 7553
+  },
+  "efficiency_high@60": {
+   "all": 3075,
+   "window": 2930,
+   "signal": 2932
+  },
+  "rsi_directional@60": {
+   "all": 9110,
+   "window": 8705,
+   "signal": 8708
+  },
+  "rsi_extreme_reversal@60": {
+   "all": 1494,
+   "window": 1422,
+   "signal": 1424
+  },
+  "macd_directional@60": {
+   "all": 8509,
+   "window": 8126,
+   "signal": 8132
+  },
+  "macd_hist_direction@60": {
+   "all": 8509,
+   "window": 8126,
+   "signal": 8132
+  },
+  "stoch_directional@60": {
+   "all": 8027,
+   "window": 7729,
+   "signal": 7674
+  },
+  "stoch_extreme@60": {
+   "all": 4204,
+   "window": 4002,
+   "signal": 4014
+  },
+  "above_vwap@60": {
+   "all": 7188,
+   "window": 6932,
+   "signal": 6925
+  },
+  "vwap_proximity@60": {
+   "all": 5523,
+   "window": 5371,
+   "signal": 5346
+  },
+  "vwap_band_extension@60": {
+   "all": 2754,
+   "window": 2687,
+   "signal": 2695
+  },
+  "vwap_band1_bounce@60": {
+   "all": 2660,
+   "window": 2577,
+   "signal": 2558
+  },
+  "vwap_reclaim@60": {
+   "all": 2941,
+   "window": 2889,
+   "signal": 2894
+  },
+  "relative_volume_high@60": {
+   "all": 4044,
+   "window": 3857,
+   "signal": 3870
+  },
+  "volume_surge@60": {
+   "all": 1244,
+   "window": 1239,
+   "signal": 1229
+  },
+  "volume_not_thin@60": {
+   "all": 10104,
+   "window": 9911,
+   "signal": 9675
+  },
+  "cvd_directional@60": {
+   "all": 10353,
+   "window": 9868,
+   "signal": 9872
+  },
+  "delta_confirms_bar@60": {
+   "all": 8568,
+   "window": 8190,
+   "signal": 8187
+  },
+  "delta_divergence@60": {
+   "all": 1773,
+   "window": 1736,
+   "signal": 1733
+  },
+  "structure_trend@60": {
+   "all": 7017,
+   "window": 6693,
+   "signal": 6701
+  },
+  "break_of_structure@60": {
+   "all": 3659,
+   "window": 3540,
+   "signal": 3533
+  },
+  "pullback_to_support@60": {
+   "all": 2456,
+   "window": 2356,
+   "signal": 2352
+  },
+  "fvg_nearby@60": {
+   "all": 405,
+   "window": 383,
+   "signal": 384
+  },
+  "range_position_extreme@60": {
+   "all": 1774,
+   "window": 1685,
+   "signal": 1687
+  },
+  "prior_day_sweep@60": {
+   "all": 1628,
+   "window": 1591,
+   "signal": 1585
+  },
+  "overnight_sweep@60": {
+   "all": 497,
+   "window": 497,
+   "signal": 497
+  },
+  "session_extreme_sweep@60": {
+   "all": 200,
+   "window": 136,
+   "signal": 134
+  },
+  "prior_day_breakout@60": {
+   "all": 5728,
+   "window": 5400,
+   "signal": 5402
+  },
+  "opening_range_breakout@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "opening_range_fade@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "initial_balance_break@60": {
+   "all": 1817,
+   "window": 1526,
+   "signal": 1530
+  },
+  "bollinger_extreme@60": {
+   "all": 1427,
+   "window": 1391,
+   "signal": 1380
+  },
+  "bollinger_mean_pull@60": {
+   "all": 3861,
+   "window": 3719,
+   "signal": 3699
+  },
+  "keltner_outside@60": {
+   "all": 2748,
+   "window": 2631,
+   "signal": 2616
+  },
+  "volatility_normal@60": {
+   "all": 8557,
+   "window": 8182,
+   "signal": 8167
+  },
+  "volatility_expanding@60": {
+   "all": 3698,
+   "window": 3541,
+   "signal": 3523
+  },
+  "volatility_compressed@60": {
+   "all": 4269,
+   "window": 4088,
+   "signal": 4115
+  },
+  "regime_trending@60": {
+   "all": 2477,
+   "window": 2351,
+   "signal": 2354
+  },
+  "regime_ranging@60": {
+   "all": 6817,
+   "window": 6535,
+   "signal": 6539
+  },
+  "regime_matches_direction@60": {
+   "all": 2477,
+   "window": 2351,
+   "signal": 2354
+  },
+  "mtf_aligned@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "mtf_strongly_aligned@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "mtf_not_conflicted@60": {
+   "all": 11297,
+   "window": 10802,
+   "signal": 10801
+  },
+  "avoid_lunch@60": {
+   "all": 10310,
+   "window": 9815,
+   "signal": 9814
+  },
+  "opening_drive_window@60": {
+   "all": 497,
+   "window": 497,
+   "signal": 497
+  },
+  "power_hour@60": {
+   "all": 496,
+   "window": 496,
+   "signal": 496
+  },
+  "after_opening_range@60": {
+   "all": 6877,
+   "window": 6382,
+   "signal": 6381
+  },
+  "poc_reversion@60": {
+   "all": 2377,
+   "window": 2296,
+   "signal": 2296
+  },
+  "value_area_edge@60": {
+   "all": 942,
+   "window": 922,
+   "signal": 913
+  },
+  "value_area_breakout@60": {
+   "all": 5758,
+   "window": 5447,
+   "signal": 5446
+  },
+  "lvn_rejection@60": {
+   "all": 242,
+   "window": 231,
+   "signal": 227
+  },
+  "away_from_hvn@60": {
+   "all": 8014,
+   "window": 7631,
+   "signal": 7628
+  },
+  "open_outside_value@60": {
+   "all": 2409,
+   "window": 2105,
+   "signal": 2104
+  },
+  "fib_golden_pocket@60": {
+   "all": 1071,
+   "window": 1036,
+   "signal": 1033
+  },
+  "fib_shallow_retrace@60": {
+   "all": 1118,
+   "window": 1065,
+   "signal": 1054
+  },
+  "fib_extension_reached@60": {
+   "all": 250,
+   "window": 245,
+   "signal": 246
+  },
+  "fib_sr_confluence@60": {
+   "all": 8157,
+   "window": 7801,
+   "signal": 7797
+  },
+  "imbalance_bar@60": {
+   "all": 624,
+   "window": 623,
+   "signal": 614
+  },
+  "imbalance_pullback@60": {
+   "all": 3828,
+   "window": 3558,
+   "signal": 3564
+  },
+  "no_recent_imbalance@60": {
+   "all": 9792,
+   "window": 9318,
+   "signal": 9325
+  },
+  "zone_touch@60": {
+   "all": 262,
+   "window": 251,
+   "signal": 251
+  },
+  "fresh_zone_approach@60": {
+   "all": 111,
+   "window": 109,
+   "signal": 105
+  },
+  "away_from_zone@60": {
+   "all": 10914,
+   "window": 10432,
+   "signal": 10431
+  },
+  "oi_price_confirmation@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "oi_expanding@60": {
+   "all": 0,
+   "window": 0,
+   "signal": 0
+  },
+  "outside_news_blackout@60": {
+   "all": 11281,
+   "window": 10786,
+   "signal": 10785
+  },
+  "no_imminent_release@60": {
+   "all": 11281,
+   "window": 10786,
+   "signal": 10785
+  },
+  "post_news_window@60": {
+   "all": 85,
+   "window": 85,
+   "signal": 69
+  },
+  "candle_reversal@60": {
+   "all": 2890,
+   "window": 2764,
+   "signal": 2766
+  },
+  "candle_engulfing@60": {
+   "all": 1520,
+   "window": 1443,
+   "signal": 1459
+  },
+  "candle_decisive_close@60": {
+   "all": 623,
+   "window": 586,
+   "signal": 593
+  },
+  "candle_close_strength@60": {
+   "all": 5363,
+   "window": 5109,
+   "signal": 5149
+  },
+  "inside_bar_compression@60": {
+   "all": 1820,
+   "window": 1676,
+   "signal": 1739
+  }
+ },
+ "directions": {
+  "ema_stack@60": {
+   "SHORT": 3665,
+   "LONG": 4862
+  },
+  "ema_fast_above_slow@60": {
+   "SHORT": 4073,
+   "LONG": 5034
+  },
+  "price_above_ema50@60": {
+   "SHORT": 4493,
+   "LONG": 5796
+  },
+  "price_above_ema200@60": {
+   "LONG": 6341,
+   "SHORT": 4049
+  },
+  "di_direction@60": {
+   "SHORT": 4325,
+   "LONG": 3658
+  },
+  "slope_directional@60": {
+   "SHORT": 3394,
+   "LONG": 4159
+  },
+  "rsi_directional@60": {
+   "SHORT": 3810,
+   "LONG": 4898
+  },
+  "rsi_extreme_reversal@60": {
+   "LONG": 463,
+   "SHORT": 961
+  },
+  "macd_directional@60": {
+   "LONG": 4116,
+   "SHORT": 4016
+  },
+  "macd_hist_direction@60": {
+   "LONG": 4116,
+   "SHORT": 4016
+  },
+  "stoch_directional@60": {
+   "LONG": 3849,
+   "SHORT": 3825
+  },
+  "stoch_extreme@60": {
+   "LONG": 1560,
+   "SHORT": 2454
+  },
+  "above_vwap@60": {
+   "SHORT": 3358,
+   "LONG": 3567
+  },
+  "vwap_band_extension@60": {
+   "LONG": 1455,
+   "SHORT": 1240
+  },
+  "vwap_band1_bounce@60": {
+   "LONG": 1294,
+   "SHORT": 1264
+  },
+  "vwap_reclaim@60": {
+   "SHORT": 1441,
+   "LONG": 1453
+  },
+  "cvd_directional@60": {
+   "SHORT": 4723,
+   "LONG": 5149
+  },
+  "delta_confirms_bar@60": {
+   "SHORT": 4107,
+   "LONG": 4080
+  },
+  "delta_divergence@60": {
+   "LONG": 627,
+   "SHORT": 1106
+  },
+  "structure_trend@60": {
+   "SHORT": 2892,
+   "LONG": 3809
+  },
+  "break_of_structure@60": {
+   "SHORT": 1416,
+   "LONG": 2117
+  },
+  "pullback_to_support@60": {
+   "LONG": 1143,
+   "SHORT": 1209
+  },
+  "fvg_nearby@60": {
+   "SHORT": 184,
+   "LONG": 200
+  },
+  "range_position_extreme@60": {
+   "SHORT": 550,
+   "LONG": 1137
+  },
+  "prior_day_sweep@60": {
+   "LONG": 716,
+   "SHORT": 869
+  },
+  "overnight_sweep@60": {
+   "LONG": 214,
+   "SHORT": 283
+  },
+  "session_extreme_sweep@60": {
+   "SHORT": 76,
+   "LONG": 58
+  },
+  "prior_day_breakout@60": {
+   "SHORT": 2276,
+   "LONG": 3126
+  },
+  "initial_balance_break@60": {
+   "SHORT": 699,
+   "LONG": 831
+  },
+  "bollinger_extreme@60": {
+   "LONG": 620,
+   "SHORT": 760
+  },
+  "bollinger_mean_pull@60": {
+   "LONG": 1634,
+   "SHORT": 2065
+  },
+  "keltner_outside@60": {
+   "LONG": 1028,
+   "SHORT": 1588
+  },
+  "regime_matches_direction@60": {
+   "LONG": 1472,
+   "SHORT": 882
+  },
+  "poc_reversion@60": {
+   "LONG": 1115,
+   "SHORT": 1181
+  },
+  "value_area_edge@60": {
+   "LONG": 424,
+   "SHORT": 489
+  },
+  "value_area_breakout@60": {
+   "SHORT": 2329,
+   "LONG": 3117
+  },
+  "lvn_rejection@60": {
+   "LONG": 118,
+   "SHORT": 109
+  },
+  "fib_golden_pocket@60": {
+   "LONG": 467,
+   "SHORT": 566
+  },
+  "fib_shallow_retrace@60": {
+   "SHORT": 598,
+   "LONG": 456
+  },
+  "fib_extension_reached@60": {
+   "LONG": 122,
+   "SHORT": 124
+  },
+  "imbalance_bar@60": {
+   "SHORT": 351,
+   "LONG": 263
+  },
+  "imbalance_pullback@60": {
+   "SHORT": 1964,
+   "LONG": 1600
+  },
+  "zone_touch@60": {
+   "LONG": 70,
+   "SHORT": 181
+  },
+  "fresh_zone_approach@60": {
+   "SHORT": 75,
+   "LONG": 30
+  },
+  "candle_reversal@60": {
+   "SHORT": 1668,
+   "LONG": 1098
+  },
+  "candle_engulfing@60": {
+   "LONG": 749,
+   "SHORT": 710
+  },
+  "candle_decisive_close@60": {
+   "SHORT": 255,
+   "LONG": 338
+  },
+  "candle_close_strength@60": {
+   "SHORT": 2698,
+   "LONG": 2451
+  }
+ },
+ "kinds": {
+  "ema_stack": "SIGNAL",
+  "ema_fast_above_slow": "SIGNAL",
+  "price_above_ema50": "SIGNAL",
+  "price_above_ema200": "SIGNAL",
+  "adx_trending": "FILTER",
+  "di_direction": "SIGNAL",
+  "slope_directional": "SIGNAL",
+  "efficiency_high": "FILTER",
+  "rsi_directional": "SIGNAL",
+  "rsi_extreme_reversal": "SIGNAL",
+  "macd_directional": "SIGNAL",
+  "macd_hist_direction": "SIGNAL",
+  "stoch_directional": "SIGNAL",
+  "stoch_extreme": "SIGNAL",
+  "above_vwap": "SIGNAL",
+  "vwap_proximity": "FILTER",
+  "vwap_band_extension": "SIGNAL",
+  "vwap_band1_bounce": "SIGNAL",
+  "vwap_reclaim": "SIGNAL",
+  "relative_volume_high": "FILTER",
+  "volume_surge": "FILTER",
+  "volume_not_thin": "FILTER",
+  "cvd_directional": "SIGNAL",
+  "delta_confirms_bar": "SIGNAL",
+  "delta_divergence": "SIGNAL",
+  "structure_trend": "SIGNAL",
+  "break_of_structure": "SIGNAL",
+  "pullback_to_support": "SIGNAL",
+  "fvg_nearby": "SIGNAL",
+  "range_position_extreme": "SIGNAL",
+  "prior_day_sweep": "SIGNAL",
+  "overnight_sweep": "SIGNAL",
+  "session_extreme_sweep": "SIGNAL",
+  "prior_day_breakout": "SIGNAL",
+  "opening_range_breakout": "SIGNAL",
+  "opening_range_fade": "SIGNAL",
+  "initial_balance_break": "SIGNAL",
+  "bollinger_extreme": "SIGNAL",
+  "bollinger_mean_pull": "SIGNAL",
+  "keltner_outside": "SIGNAL",
+  "volatility_normal": "FILTER",
+  "volatility_expanding": "FILTER",
+  "volatility_compressed": "FILTER",
+  "regime_trending": "FILTER",
+  "regime_ranging": "FILTER",
+  "regime_matches_direction": "SIGNAL",
+  "mtf_aligned": "SIGNAL",
+  "mtf_strongly_aligned": "SIGNAL",
+  "mtf_not_conflicted": "FILTER",
+  "avoid_lunch": "FILTER",
+  "opening_drive_window": "FILTER",
+  "power_hour": "FILTER",
+  "after_opening_range": "FILTER",
+  "poc_reversion": "SIGNAL",
+  "value_area_edge": "SIGNAL",
+  "value_area_breakout": "SIGNAL",
+  "lvn_rejection": "SIGNAL",
+  "away_from_hvn": "FILTER",
+  "open_outside_value": "FILTER",
+  "fib_golden_pocket": "SIGNAL",
+  "fib_shallow_retrace": "SIGNAL",
+  "fib_extension_reached": "SIGNAL",
+  "fib_sr_confluence": "FILTER",
+  "imbalance_bar": "SIGNAL",
+  "imbalance_pullback": "SIGNAL",
+  "no_recent_imbalance": "FILTER",
+  "zone_touch": "SIGNAL",
+  "fresh_zone_approach": "SIGNAL",
+  "away_from_zone": "FILTER",
+  "oi_price_confirmation": "SIGNAL",
+  "oi_expanding": "FILTER",
+  "outside_news_blackout": "FILTER",
+  "no_imminent_release": "FILTER",
+  "post_news_window": "FILTER",
+  "candle_reversal": "SIGNAL",
+  "candle_engulfing": "SIGNAL",
+  "candle_decisive_close": "SIGNAL",
+  "candle_close_strength": "SIGNAL",
+  "inside_bar_compression": "FILTER"
+ },
+ "groups": {
+  "ema_stack": "trend",
+  "ema_fast_above_slow": "trend",
+  "price_above_ema50": "trend",
+  "price_above_ema200": "trend",
+  "adx_trending": "trend",
+  "di_direction": "trend",
+  "slope_directional": "trend",
+  "efficiency_high": "trend",
+  "rsi_directional": "momentum",
+  "rsi_extreme_reversal": "momentum",
+  "macd_directional": "momentum",
+  "macd_hist_direction": "momentum",
+  "stoch_directional": "momentum",
+  "stoch_extreme": "momentum",
+  "above_vwap": "vwap",
+  "vwap_proximity": "vwap",
+  "vwap_band_extension": "vwap",
+  "vwap_band1_bounce": "vwap",
+  "vwap_reclaim": "vwap",
+  "relative_volume_high": "volume",
+  "volume_surge": "volume",
+  "volume_not_thin": "volume",
+  "cvd_directional": "orderflow",
+  "delta_confirms_bar": "orderflow",
+  "delta_divergence": "orderflow",
+  "structure_trend": "structure",
+  "break_of_structure": "structure",
+  "pullback_to_support": "structure",
+  "fvg_nearby": "structure",
+  "range_position_extreme": "structure",
+  "prior_day_sweep": "liquidity",
+  "overnight_sweep": "liquidity",
+  "session_extreme_sweep": "liquidity",
+  "prior_day_breakout": "liquidity",
+  "opening_range_breakout": "liquidity",
+  "opening_range_fade": "liquidity",
+  "initial_balance_break": "liquidity",
+  "bollinger_extreme": "meanreversion",
+  "bollinger_mean_pull": "meanreversion",
+  "keltner_outside": "meanreversion",
+  "volatility_normal": "volatility",
+  "volatility_expanding": "volatility",
+  "volatility_compressed": "volatility",
+  "regime_trending": "regime",
+  "regime_ranging": "regime",
+  "regime_matches_direction": "regime",
+  "mtf_aligned": "multitimeframe",
+  "mtf_strongly_aligned": "multitimeframe",
+  "mtf_not_conflicted": "multitimeframe",
+  "avoid_lunch": "time",
+  "opening_drive_window": "time",
+  "power_hour": "time",
+  "after_opening_range": "time",
+  "poc_reversion": "profile",
+  "value_area_edge": "profile",
+  "value_area_breakout": "profile",
+  "lvn_rejection": "profile",
+  "away_from_hvn": "profile",
+  "open_outside_value": "profile",
+  "fib_golden_pocket": "fibonacci",
+  "fib_shallow_retrace": "fibonacci",
+  "fib_extension_reached": "fibonacci",
+  "fib_sr_confluence": "fibonacci",
+  "imbalance_bar": "imbalance",
+  "imbalance_pullback": "imbalance",
+  "no_recent_imbalance": "imbalance",
+  "zone_touch": "supplydemand",
+  "fresh_zone_approach": "supplydemand",
+  "away_from_zone": "supplydemand",
+  "oi_price_confirmation": "openinterest",
+  "oi_expanding": "openinterest",
+  "outside_news_blackout": "news",
+  "no_imminent_release": "news",
+  "post_news_window": "news",
+  "candle_reversal": "candlestick",
+  "candle_engulfing": "candlestick",
+  "candle_decisive_close": "candlestick",
+  "candle_close_strength": "candlestick",
+  "inside_bar_compression": "candlestick"
+ },
+ "substrate": "data/archive",
+ "cell": "MGC_60m_frame60",
+ "frame_requested": [
+  60
+ ],
+ "base_expressible": true
+}

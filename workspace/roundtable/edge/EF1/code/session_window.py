@@ -110,8 +110,9 @@ __all__ = [
     "FLAT_ET_MINUTE", "REOPEN_ET_MINUTE", "BarWindow", "SessionGridError",
     "et_minute_of_day", "classify_bar", "classify_series", "in_forbidden_window",
     "SessionWindowEngine", "SessionWindowCounters", "FlatEvent",
-    "is_session_flat", "assert_hooks_reachable", "violations",
+    "is_session_flat", "assert_hooks_reachable", "violations", "flat_exit_keys",
     "prefix_invariance_report", "with_exit", "assert_distinct_ids",
+    "SessionWindowViolation", "session_end_indices",
 ]
 
 #: 16:00 ET, in minutes since ET midnight. The deadline.
@@ -132,6 +133,16 @@ class BarWindow(str, Enum):
     #: Starts inside [16:00, 18:00). No position may exist on it and none may
     #: be opened on it.
     IN_WINDOW = "IN_WINDOW"
+
+
+class SessionWindowViolation(AssertionError):
+    """The engine was about to emit a trade that breaks the session window.
+
+    Raised at emission rather than counted after the run. A count tells you
+    something broke; this tells you *which trade*, and it makes it impossible
+    for a later change to reintroduce a hole silently - which is exactly how
+    EF1's own first build shipped 33 violations on early-close sessions.
+    """
 
 
 class SessionGridError(ValueError):
@@ -194,6 +205,50 @@ def classify_series(bars: Sequence[Bar]) -> List[BarWindow]:
     return [classify_bar(b.ts, b.minutes) for b in bars]
 
 
+def session_end_indices(bars: Sequence[Bar]) -> Dict[int, str]:
+    """Bar indices that are a session's last chance to go flat before 16:00.
+
+    Component **1b**, and it exists because the first build of this rule shipped
+    33 violations. The per-bar rule can only fire on a bar that exists; on a
+    session that shuts before 15:00 there is no bar ending at 16:00 and no bar
+    starting inside the window, so neither branch ever gets a bar to act on and
+    the position runs straight through into the next session. Measured on
+    ``data/archive`` 60m: **9 such ET dates on MGC, 10 on MES and MNQ, 27 on
+    MCL** - the exchange's early closes (Black Friday, both Christmas Eves,
+    July 3rd, Juneteenth, Memorial Day, the day after Thanksgiving) plus, on
+    MCL, a two-month stretch in early 2026 carrying 1-5 bars a day.
+
+    A position open at 12:30 on Black Friday cannot be flattened at 16:00: the
+    market is shut. Real-world compliance is to be flat by the early close, and
+    a trader knows the early-close calendar weeks ahead.
+
+    **What this reads, precisely.** Timestamps only. No price at any index is
+    consulted, so the price-look-ahead invariant is untouched. What it is *not*
+    is a pure per-bar function: it needs a date's full timestamp list, so on a
+    prefix cut inside an early-close date the last entry can differ. That is
+    stated rather than buried, and
+    ``test_session_end_map_is_a_function_of_timestamps_only`` pins it down by
+    perturbing every price and asserting the map does not move.
+
+    Returns ``{bar_index: ET date iso}`` - a dict so the engine's per-bar test is
+    a hash lookup rather than a scan.
+    """
+    by_date: Dict[object, List[int]] = {}
+    kinds = classify_series(bars)
+    for i, b in enumerate(bars):
+        by_date.setdefault(to_et(b.ts).date(), []).append(i)
+    out: Dict[int, str] = {}
+    for day, idxs in by_date.items():
+        if any(kinds[i] in (BarWindow.ON_BOUNDARY, BarWindow.IN_WINDOW)
+               for i in idxs):
+            continue                      # the normal rule has a bar to act on
+        pre = [i for i in idxs
+               if et_minute_of_day(bars[i].ts) < FLAT_ET_MINUTE]
+        if pre:
+            out[pre[-1]] = day.isoformat()
+    return out
+
+
 def in_forbidden_window(ts: datetime) -> bool:
     """Whether an *instant* falls in [16:00, 18:00) ET.
 
@@ -220,6 +275,9 @@ class FlatEvent:
     fill_price: float           # after slippage
     slippage_points: float
     gapped_through_stop: bool
+    #: True when this was the session-end forced flat (component 1b) rather
+    #: than a 16:00 deadline the session actually reached.
+    forced_session_end: bool = False
 
 
 @dataclass
@@ -230,10 +288,14 @@ class SessionWindowCounters:
     entries_vetoed_signal_in_window: int = 0
     flats_on_boundary: int = 0
     flats_in_window: int = 0
+    #: Component 1b: the session shut before 16:00, so the flat happened at the
+    #: last bar it offered.
+    flats_forced_session_end: int = 0
     flats_gapped_through_stop: int = 0
     bars_on_boundary: int = 0
     bars_in_window: int = 0
     bars_interior: int = 0
+    bars_session_end: int = 0
     #: Fills whose bar starts more than two base bars after the signal bar
     #: closed - a stale entry, which the letter of the rule permits across the
     #: Friday-17:00-to-Sunday-18:00 break.
@@ -242,7 +304,8 @@ class SessionWindowCounters:
 
     @property
     def flats_total(self) -> int:
-        return self.flats_on_boundary + self.flats_in_window
+        return (self.flats_on_boundary + self.flats_in_window
+                + self.flats_forced_session_end)
 
     def to_dict(self) -> dict:
         return {
@@ -250,11 +313,13 @@ class SessionWindowCounters:
             "entries_vetoed_signal_in_window": self.entries_vetoed_signal_in_window,
             "flats_on_boundary": self.flats_on_boundary,
             "flats_in_window": self.flats_in_window,
+            "flats_forced_session_end": self.flats_forced_session_end,
             "flats_total": self.flats_total,
             "flats_gapped_through_stop": self.flats_gapped_through_stop,
             "bars_on_boundary": self.bars_on_boundary,
             "bars_in_window": self.bars_in_window,
             "bars_interior": self.bars_interior,
+            "bars_session_end": self.bars_session_end,
             "stale_fills": self.stale_fills,
         }
 
@@ -288,14 +353,25 @@ class SessionWindowEngine(BacktestEngine):
                  *, max_concurrent_per_strategy: int = 1,
                  allow_interior: bool = False,
                  veto_signals_in_window: bool = False,
-                 stale_fill_base_bars: int = 2):
+                 stale_fill_base_bars: int = 2,
+                 strict: bool = True):
         super().__init__(frame, cost_model,
                          max_concurrent_per_strategy=max_concurrent_per_strategy,
                          allow_overnight=True)
         self.allow_interior = bool(allow_interior)
         self.veto_signals_in_window = bool(veto_signals_in_window)
         self.stale_fill_base_bars = int(stale_fill_base_bars)
+        #: Audit every trade at the moment it is emitted rather than counting
+        #: violations after the run. A count tells you something broke; an
+        #: assertion tells you which trade, and makes it impossible for a later
+        #: change to reintroduce the early-close hole silently.
+        self.strict = bool(strict)
         self.counters = SessionWindowCounters()
+        #: Set for the duration of one ``_flat`` -> ``_close`` call so the
+        #: strict check knows the fill was at the bar's open.
+        self._filling_at_open = False
+        self._session_end = session_end_indices(frame.base.bars)
+        self.counters.bars_session_end = len(self._session_end)
         self._audit_grid()
 
     # ---- grid audit, up front -------------------------------------------
@@ -370,6 +446,15 @@ class SessionWindowEngine(BacktestEngine):
         kind = classify_bar(bar.ts, bar.minutes)
 
         if kind is BarWindow.OUTSIDE:
+            if i in self._session_end:
+                # Component 1b: the session shuts before 16:00 and does not
+                # reopen until 18:00, so this bar is the last chance to be flat.
+                # Real exits get it first, exactly as on a normal boundary bar.
+                trade = super()._manage(pos, i, bar, is_last=False)
+                if trade is not None:
+                    return trade
+                return self._flat(pos, i, bar, kind, raw=bar.close,
+                                  forced_session_end=True)
             return super()._manage(pos, i, bar, is_last=is_last)
 
         if kind is BarWindow.IN_WINDOW:
@@ -400,7 +485,7 @@ class SessionWindowEngine(BacktestEngine):
         return self._flat(pos, i, bar, kind, raw=bar.close)
 
     def _flat(self, pos: _OpenPosition, i: int, bar: Bar, kind: BarWindow,
-              *, raw: float) -> Trade:
+              *, raw: float, forced_session_end: bool = False) -> Trade:
         """Close ``pos`` at the flat, with market-order slippage applied once."""
         sign = pos.sign
         spec = self.spec
@@ -426,7 +511,9 @@ class SessionWindowEngine(BacktestEngine):
             fill = spec.round_to_tick(raw - sign * slip)
 
         c = self.counters
-        if kind is BarWindow.IN_WINDOW:
+        if forced_session_end:
+            c.flats_forced_session_end += 1
+        elif kind is BarWindow.IN_WINDOW:
             c.flats_in_window += 1
         else:
             c.flats_on_boundary += 1
@@ -435,10 +522,37 @@ class SessionWindowEngine(BacktestEngine):
         c.flat_events.append(FlatEvent(
             strategy_id=pos.strategy.strategy_id, entry_index=pos.entry_index,
             exit_index=i, exit_ts=bar.ts, bar_class=kind, raw_price=raw,
-            fill_price=fill, slippage_points=slip, gapped_through_stop=gapped))
+            fill_price=fill, slippage_points=slip, gapped_through_stop=gapped,
+            forced_session_end=forced_session_end))
 
         reason = ExitReason.STOP if gapped else ExitReason.SESSION_CLOSE
-        return self._close(pos, i, bar, fill, reason)
+        self._filling_at_open = (kind is BarWindow.IN_WINDOW)
+        try:
+            return self._close(pos, i, bar, fill, reason)
+        finally:
+            self._filling_at_open = False
+
+    # ---- the strict emission check ---------------------------------------
+    def _close(self, pos: _OpenPosition, i: int, bar: Bar, price: float,
+               reason: ExitReason, *, already_flat: bool = False) -> Trade:
+        trade = super()._close(pos, i, bar, price, reason,
+                              already_flat=already_flat)
+        if self.strict:
+            # The flat that fills at a window bar's OPEN is stamped at the
+            # deadline instant and is compliant; nothing else inside the window
+            # is. ``_filling_at_open`` is set by :meth:`_flat` immediately
+            # before the call, which is the only place the distinction is
+            # knowable - a Trade alone cannot say where in its bar it filled.
+            exempt = {(trade.strategy_id, i)} if self._filling_at_open else set()
+            bad = violations([trade], flat_exits=exempt)
+            if bad:
+                raise SessionWindowViolation(
+                    f"{self.frame.symbol}: the engine was about to emit a trade "
+                    f"that breaks the session window: {bad}. entry="
+                    f"{to_et(trade.entry_ts).isoformat()} exit="
+                    f"{to_et(trade.exit_ts).isoformat()} reason={reason.value} "
+                    f"bar_class={classify_bar(bar.ts, bar.minutes).value}")
+        return trade
 
 
 # --------------------------------------------------------------------------
@@ -567,21 +681,56 @@ def prefix_invariance_report(bars: Sequence[Bar], *,
     *i* it gives a different answer. Passing this is evidence the
     implementation reads only its own bar.
 
+    Two things are checked separately, because they have different guarantees
+    and collapsing them would hide the weaker one:
+
+    * ``classification_mismatches`` - ``classify_bar`` is a pure function of one
+      bar, so this must be **0**, always.
+    * ``session_end_mismatches_off_cut_date`` - the session-end map (component
+      1b) needs a date's full timestamp list, so a prefix cut *inside* an
+      early-close date can classify that date's last bar differently. Those are
+      counted separately as ``session_end_mismatches_on_cut_date``. Once the
+      prefix passes into the next date the day's bar list is complete and cannot
+      change, so **off-cut must be 0** - that is the real assertion, and it is
+      the exact statement of what component 1b costs.
+
     ``ks`` defaults to every prefix length, which is quadratic - pass a stride
     for a long series and say which coverage you used.
     """
-    full = classify_series(bars)
+    full_cls = classify_series(bars)
+    full_se = session_end_indices(bars)
     todo = list(range(len(bars) + 1)) if ks is None else list(ks)
-    mismatches: List[dict] = []
+    cls_bad: List[dict] = []
+    se_off: List[dict] = []
+    se_on = 0
     for k in todo:
-        pref = classify_series(bars[:k])
-        if pref != full[:k]:
-            for j, (a, b) in enumerate(zip(pref, full[:k])):
+        pref = bars[:k]
+        got = classify_series(pref)
+        if got != full_cls[:k]:
+            for j, (a, b) in enumerate(zip(got, full_cls[:k])):
                 if a != b:
-                    mismatches.append({"k": k, "index": j, "prefix": a.value,
-                                       "full": b.value})
+                    cls_bad.append({"k": k, "index": j, "prefix": a.value,
+                                    "full": b.value})
+        if not pref:
+            continue
+        se = session_end_indices(pref)
+        cut_date = to_et(pref[-1].ts).date().isoformat()
+        for idx in set(se) ^ {i for i in full_se if i < k}:
+            day = se.get(idx) or full_se.get(idx)
+            if day == cut_date:
+                se_on += 1
+            else:
+                se_off.append({"k": k, "index": idx, "date": day,
+                               "cut_date": cut_date})
     return {"n_bars": len(bars), "prefixes_checked": len(todo),
-            "mismatches": len(mismatches), "detail": mismatches[:20]}
+            "classification_mismatches": len(cls_bad),
+            "classification_detail": cls_bad[:20],
+            "session_end_mismatches_on_cut_date": se_on,
+            "session_end_mismatches_off_cut_date": len(se_off),
+            "session_end_detail": se_off[:20],
+            # Kept for callers that only want one number: the sum of the two
+            # things that must be zero.
+            "mismatches": len(cls_bad) + len(se_off)}
 
 
 # --------------------------------------------------------------------------

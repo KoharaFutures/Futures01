@@ -15,6 +15,7 @@ committed. Exit status is 1 if any changed path has no owner among them.
 from __future__ import annotations
 
 import fnmatch
+import pathlib
 import subprocess  # noqa: F401  (used for per-file diffs)
 import sys
 
@@ -127,6 +128,32 @@ def changed() -> list[tuple[str, str]]:
     return rows
 
 
+def duplicate_module_basenames() -> list[str]:
+    """Agent code dirs that share a module basename.
+
+    The per-agent `tests/test_<agent>_*.py` rule stops two agents owning one TEST file.
+    Nothing stopped two agents owning `code/window.py` - and BT5 hit exactly that: both
+    edge-finders insert their own `code/` at sys.path[0], first insertion wins,
+    sys.modules caches it, and pytest then aborts the whole collection.
+
+    The loud failure is the lucky one. If two agents each ship `session_window.py`,
+    both test files import ONE engine and pass, and the independent-implementation
+    argument this whole roundtable rests on is silently void. So this is checked by
+    basename across every agent code directory, not by whether the suite happens to run.
+    """
+    import collections
+    seen: dict[str, list[str]] = collections.defaultdict(list)
+    for d in pathlib.Path(ROOT).glob("*/*/code/*.py"):
+        if "__pycache__" in str(d):
+            continue
+        seen[d.name].append(str(d))
+    out = []
+    for name, paths in sorted(seen.items()):
+        if len(paths) > 1:
+            out.append(f"  SHARED NAME {name}\n              " + "\n              ".join(paths))
+    return out
+
+
 def main(argv: list[str]) -> int:
     args = argv[1:]
     allowed: set[str] = set()
@@ -143,6 +170,13 @@ def main(argv: list[str]) -> int:
 
     violations: list[str] = []
     ok = 0
+
+    dupes = duplicate_module_basenames()
+    if dupes:
+        print("MODULE-NAME COLLISIONS - two agents' code/ dirs share a basename.")
+        print("An import picks whichever sys.path entry came first, so tests that look")
+        print("independent may exercise one module. Rename with an agent prefix.\n")
+        print("\n".join(dupes) + "\n")
     for status, path in changed():
         if path in allowed:
             # A declared exception. Named on the command line and recorded in the commit

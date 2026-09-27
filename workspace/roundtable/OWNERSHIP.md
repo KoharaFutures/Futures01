@@ -186,3 +186,45 @@ This file was unmapped until 2026-09-27 and only surfaced when the audit's scan 
 `workspace/roundtable/` to all of `workspace/` — the same widening that exposed the shared role
 directories. An unmapped file in a tree whose whole premise is one-writer-per-file is a gap in the
 premise, not a detail.
+
+## Module names inside `code/` need the same prefix rule as tests — found by BT5, 2026-09-27
+
+`tests/test_<agent>_*.py` stops two agents owning one *test* file. **Nothing stopped two agents
+owning `code/window.py`**, and both EF6 and EF7 did. Each inserts its own `code/` at `sys.path[0]`,
+the first insertion wins, `sys.modules` caches it — and pytest then **aborted the entire
+collection**, so for a window no agent could discharge "run the full suite" at all. BT5 measured
+963 passed with that one file ignored; EF7 has since renamed to `ef7_window.py` and collection is
+back to 1,036 tests.
+
+**The loud failure was the lucky one.** EF1 named the real hazard: if two agents each ship a
+`session_window.py`, **both test files import one engine, both pass, and the
+independent-implementation argument this roundtable rests on is silently void.** Three agents
+independently measuring the same defect is worth something only if they are measuring three
+implementations.
+
+**So: every module under your `code/` carries your agent prefix** — `ef7_window.py`, not
+`window.py`. `check_ownership.py` now reports any basename shared across agent `code/` directories,
+on every run, whether or not the suite happens to collect. Prefer importing by explicit file path
+over `sys.path.insert`, which EF6 already does for exactly this reason.
+
+### What the check found on its first run
+
+Four basenames shared across eleven files, and one is the live version of the hazard:
+
+| basename | owners |
+|---|---|
+| `census.py` | EF2, EF4, EF5 |
+| `checks.py` | BT3, BT5 |
+| **`measure.py`** | **EF1, EF5, EF7** |
+| `population.py` | EF2, EF5, EF7 |
+
+**`measure.py` is shared by EF1 and EF7 — the two agents whose entire purpose is to be independent
+implementations of the same harness.** Nothing has gone wrong yet, because their tests import by
+explicit file path rather than by bare module name. But the guarantee was luck, not design: one
+`sys.path.insert` and one bare `import measure` in either test file, and both would exercise one
+module while reporting agreement. That agreement is the evidence this roundtable has leaned on four
+separate times.
+
+None of these are being fixed retroactively — renaming a module an agent has parked on would break
+its own imports for no benefit. The rule binds new modules, and the check reports the existing four
+on every run so nobody adds a fifth.

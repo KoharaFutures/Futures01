@@ -348,3 +348,12 @@ bearing for a catalogue with a sub-22-bar time stop.
 
 `zero_trade_strategies`: 6,234 of 7,890 (**79.0%**) never trade — consistent with the programme's
 82% figure, and a reminder that a null from this population is usually "the detector never fired".
+
+---
+
+## 6. Comparison with EF1 (and EF3, EF6)
+
+**Everything above this line was written and executed before I opened
+`workspace/roundtable/edge/EF1/`.** The only prior exposure is the three leaks declared in §0/§0a:
+15 grep-matched lines, a `ps` command line, and the coordinator's relay of EF3's measured facts —
+which arrived *after* §1–§5.7 were on disk and which I treated as specification, not source.

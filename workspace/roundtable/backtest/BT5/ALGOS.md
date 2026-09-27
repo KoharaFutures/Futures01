@@ -499,3 +499,19 @@ answer that does not depend on the method that was killed: *the mechanism is rea
 the findings live on, and it does not reach the findings.* `AVENUES.md`'s revisit rule turns on the
 stated reason, so this is an addition to the record rather than a change to it — and only discovery
 writes `AVENUES.md`.
+
+---
+
+## Standing-constraint compliance, each one checkable
+
+| constraint | how ALGO-1 satisfies it |
+|---|---|
+| **`csv/` read-only** | opened for reading only, via `load_csv` inside `toolkit.slice_series`. No write, no delete, no edit. `data/archive/` untouched. |
+| **`geo_trades.json` read, never written** | one `open(...)` with no mode argument, in `activity.join`. `checks.py::check_r_is_not_recomputed` re-reads the dump and asserts the 21,954 `r` values are unchanged. |
+| **D48 — `_id=None` on every `replace`, arm-id uniqueness** | **structurally unreachable here.** ALGO-1 constructs no `Strategy` and calls `dataclasses.replace` nowhere `[measured: grep -n "replace(" backtest/BT5/code/*.py → 0 hits; the only matches in the test file are `datetime.replace`]`. Arms are identified by the string key `(symbol, tf, arm, exitm)` read from the dump, and uniqueness is asserted by construction: 176 distinct keys over 21,954 rows, matching BT3's independent count. |
+| **D28 — never route a comparative claim through `T.ab`** | `T.ab` is never called `[measured: grep -n "T\.ab" → 0 hits]`. `toolkit` is imported for `disjoint_slices` and `slice_series` only. The tests used are **named**: a bar-level stratum-label permutation blocked within (cell, ET clock bucket), and an exact two-sided binomial sign test as a flagged secondary. |
+| **D38 — `measure_custom` silently zeroes custom conditions** | not reachable: ALGO-1 defines no condition and calls no `measure_*`. No `register_frame` dependency exists. |
+| **D42 — `placebo_shift` leaks** | not used. The control is a within-block label permutation, which R5 named directly. |
+| **A placebo beside every result** | the null *is* the placebo, and draw 0 of each ensemble is reported explicitly beside its observed value. |
+| **State the search size and the deflation threshold** | 24 tests, `free_t = 2.521`, largest observed `abs(z)` = 1.90. Stated at the top of the Result section, before any number. |
+| **Determinism** | seeded (`SEED = 20260927`); `checks.py::check_determinism`; and two independent process runs, one with an extra column added, produced **bit-identical** permutation p-values. |

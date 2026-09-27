@@ -1,0 +1,378 @@
+{
+ "MES_5m_RTH": {
+  "symbol": "MES",
+  "primary_tf": 5,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 5.774,
+  "trades_all": 4521,
+  "trades_floored_rows": 3006,
+  "exit_reasons_all": {
+   "STOP": 2149,
+   "SESSION_CLOSE": 673,
+   "BREAKEVEN": 643,
+   "TARGET": 820,
+   "TIME": 236
+  },
+  "exit_reasons_floored": {
+   "TARGET": 553,
+   "SESSION_CLOSE": 395,
+   "BREAKEVEN": 478,
+   "STOP": 1446,
+   "TIME": 134
+  },
+  "clock_close_share_all": 0.1489,
+  "clock_close_share_floored": 0.1314,
+  "stop_share_floored": 0.481,
+  "target_share_floored": 0.343,
+  "time_stop_share_floored": 0.0446,
+  "floored_rows": 67,
+  "long_share_universe": 0.515,
+  "long_share_per_row_median": 0.5,
+  "long_share_per_row_p10": 0.3836,
+  "long_share_per_row_p90": 0.7
+ },
+ "MES_5m_SESSION": {
+  "symbol": "MES",
+  "primary_tf": 5,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 5.774,
+  "trades_all": 12997,
+  "trades_floored_rows": 10999,
+  "exit_reasons_all": {
+   "STOP": 7000,
+   "BREAKEVEN": 2312,
+   "TARGET": 2107,
+   "TIME": 889,
+   "SESSION_CLOSE": 689
+  },
+  "exit_reasons_floored": {
+   "STOP": 5910,
+   "BREAKEVEN": 2032,
+   "TARGET": 1742,
+   "TIME": 763,
+   "SESSION_CLOSE": 552
+  },
+  "clock_close_share_all": 0.053,
+  "clock_close_share_floored": 0.0502,
+  "stop_share_floored": 0.5373,
+  "target_share_floored": 0.3431,
+  "time_stop_share_floored": 0.0694,
+  "floored_rows": 142,
+  "long_share_universe": 0.5319,
+  "long_share_per_row_median": 0.5255,
+  "long_share_per_row_p10": 0.375,
+  "long_share_per_row_p90": 0.6455
+ },
+ "MES_15m_RTH": {
+  "symbol": "MES",
+  "primary_tf": 15,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 5.771,
+  "trades_all": 2193,
+  "trades_floored_rows": 888,
+  "exit_reasons_all": {
+   "STOP": 831,
+   "SESSION_CLOSE": 773,
+   "BREAKEVEN": 196,
+   "TARGET": 393
+  },
+  "exit_reasons_floored": {
+   "SESSION_CLOSE": 321,
+   "TARGET": 142,
+   "BREAKEVEN": 92,
+   "STOP": 333
+  },
+  "clock_close_share_all": 0.3525,
+  "clock_close_share_floored": 0.3615,
+  "stop_share_floored": 0.375,
+  "target_share_floored": 0.2635,
+  "time_stop_share_floored": 0.0,
+  "floored_rows": 26,
+  "long_share_universe": 0.5315,
+  "long_share_per_row_median": 0.5326,
+  "long_share_per_row_p10": 0.48,
+  "long_share_per_row_p90": 0.6207
+ },
+ "MES_15m_SESSION": {
+  "symbol": "MES",
+  "primary_tf": 15,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 5.771,
+  "trades_all": 5055,
+  "trades_floored_rows": 3417,
+  "exit_reasons_all": {
+   "STOP": 2342,
+   "TARGET": 847,
+   "BREAKEVEN": 873,
+   "SESSION_CLOSE": 887,
+   "TIME": 106
+  },
+  "exit_reasons_floored": {
+   "STOP": 1572,
+   "TARGET": 556,
+   "BREAKEVEN": 582,
+   "SESSION_CLOSE": 638,
+   "TIME": 69
+  },
+  "clock_close_share_all": 0.1755,
+  "clock_close_share_floored": 0.1867,
+  "stop_share_floored": 0.4601,
+  "target_share_floored": 0.333,
+  "time_stop_share_floored": 0.0202,
+  "floored_rows": 77,
+  "long_share_universe": 0.5233,
+  "long_share_per_row_median": 0.5122,
+  "long_share_per_row_p10": 0.4062,
+  "long_share_per_row_p90": 0.6458
+ },
+ "MES_30m_RTH": {
+  "symbol": "MES",
+  "primary_tf": 30,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 5.771,
+  "trades_all": 1700,
+  "trades_floored_rows": 426,
+  "exit_reasons_all": {
+   "SESSION_CLOSE": 841,
+   "TARGET": 190,
+   "STOP": 538,
+   "BREAKEVEN": 131
+  },
+  "exit_reasons_floored": {
+   "TARGET": 46,
+   "SESSION_CLOSE": 226,
+   "STOP": 113,
+   "BREAKEVEN": 41
+  },
+  "clock_close_share_all": 0.4947,
+  "clock_close_share_floored": 0.5305,
+  "stop_share_floored": 0.2653,
+  "target_share_floored": 0.2042,
+  "time_stop_share_floored": 0.0,
+  "floored_rows": 14,
+  "long_share_universe": 0.5469,
+  "long_share_per_row_median": 0.5238,
+  "long_share_per_row_p10": 0.4688,
+  "long_share_per_row_p90": 0.6458
+ },
+ "MES_30m_SESSION": {
+  "symbol": "MES",
+  "primary_tf": 30,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 5.771,
+  "trades_all": 3290,
+  "trades_floored_rows": 1833,
+  "exit_reasons_all": {
+   "STOP": 1275,
+   "SESSION_CLOSE": 1031,
+   "BREAKEVEN": 512,
+   "TARGET": 460,
+   "TIME": 12
+  },
+  "exit_reasons_floored": {
+   "STOP": 616,
+   "SESSION_CLOSE": 625,
+   "BREAKEVEN": 329,
+   "TARGET": 257,
+   "TIME": 6
+  },
+  "clock_close_share_all": 0.3134,
+  "clock_close_share_floored": 0.341,
+  "stop_share_floored": 0.3361,
+  "target_share_floored": 0.3197,
+  "time_stop_share_floored": 0.0033,
+  "floored_rows": 57,
+  "long_share_universe": 0.4823,
+  "long_share_per_row_median": 0.4643,
+  "long_share_per_row_p10": 0.3333,
+  "long_share_per_row_p90": 0.5909
+ },
+ "MNQ_5m_RTH": {
+  "symbol": "MNQ",
+  "primary_tf": 5,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 12.27,
+  "trades_all": 6443,
+  "trades_floored_rows": 4372,
+  "exit_reasons_all": {
+   "SESSION_CLOSE": 628,
+   "TARGET": 1171,
+   "STOP": 3739,
+   "BREAKEVEN": 700,
+   "TIME": 205
+  },
+  "exit_reasons_floored": {
+   "STOP": 2697,
+   "TARGET": 808,
+   "BREAKEVEN": 453,
+   "SESSION_CLOSE": 327,
+   "TIME": 87
+  },
+  "clock_close_share_all": 0.0975,
+  "clock_close_share_floored": 0.0748,
+  "stop_share_floored": 0.6169,
+  "target_share_floored": 0.2884,
+  "time_stop_share_floored": 0.0199,
+  "floored_rows": 89,
+  "long_share_universe": 0.5862,
+  "long_share_per_row_median": 0.5556,
+  "long_share_per_row_p10": 0.3478,
+  "long_share_per_row_p90": 0.875
+ },
+ "MNQ_5m_SESSION": {
+  "symbol": "MNQ",
+  "primary_tf": 5,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 12.27,
+  "trades_all": 20683,
+  "trades_floored_rows": 18499,
+  "exit_reasons_all": {
+   "BREAKEVEN": 3029,
+   "STOP": 12173,
+   "TARGET": 3928,
+   "TIME": 928,
+   "SESSION_CLOSE": 625
+  },
+  "exit_reasons_floored": {
+   "TIME": 819,
+   "STOP": 11000,
+   "SESSION_CLOSE": 526,
+   "TARGET": 3424,
+   "BREAKEVEN": 2730
+  },
+  "clock_close_share_all": 0.0302,
+  "clock_close_share_floored": 0.0284,
+  "stop_share_floored": 0.5946,
+  "target_share_floored": 0.3327,
+  "time_stop_share_floored": 0.0443,
+  "floored_rows": 229,
+  "long_share_universe": 0.5608,
+  "long_share_per_row_median": 0.56,
+  "long_share_per_row_p10": 0.4286,
+  "long_share_per_row_p90": 0.6988
+ },
+ "MNQ_15m_RTH": {
+  "symbol": "MNQ",
+  "primary_tf": 15,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 12.186,
+  "trades_all": 2371,
+  "trades_floored_rows": 669,
+  "exit_reasons_all": {
+   "STOP": 1092,
+   "SESSION_CLOSE": 644,
+   "TARGET": 462,
+   "BREAKEVEN": 173
+  },
+  "exit_reasons_floored": {
+   "TARGET": 99,
+   "STOP": 405,
+   "BREAKEVEN": 59,
+   "SESSION_CLOSE": 106
+  },
+  "clock_close_share_all": 0.2716,
+  "clock_close_share_floored": 0.1584,
+  "stop_share_floored": 0.6054,
+  "target_share_floored": 0.2362,
+  "time_stop_share_floored": 0.0,
+  "floored_rows": 12,
+  "long_share_universe": 0.5979,
+  "long_share_per_row_median": 0.5814,
+  "long_share_per_row_p10": 0.5,
+  "long_share_per_row_p90": 0.6809
+ },
+ "MNQ_15m_SESSION": {
+  "symbol": "MNQ",
+  "primary_tf": 15,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 12.186,
+  "trades_all": 7583,
+  "trades_floored_rows": 5428,
+  "exit_reasons_all": {
+   "STOP": 4005,
+   "TARGET": 1577,
+   "TIME": 129,
+   "BREAKEVEN": 1146,
+   "SESSION_CLOSE": 726
+  },
+  "exit_reasons_floored": {
+   "TARGET": 1122,
+   "SESSION_CLOSE": 449,
+   "STOP": 2900,
+   "BREAKEVEN": 880,
+   "TIME": 77
+  },
+  "clock_close_share_all": 0.0957,
+  "clock_close_share_floored": 0.0827,
+  "stop_share_floored": 0.5343,
+  "target_share_floored": 0.3688,
+  "time_stop_share_floored": 0.0142,
+  "floored_rows": 103,
+  "long_share_universe": 0.5908,
+  "long_share_per_row_median": 0.5897,
+  "long_share_per_row_p10": 0.4,
+  "long_share_per_row_p90": 0.7805
+ },
+ "MNQ_30m_RTH": {
+  "symbol": "MNQ",
+  "primary_tf": 30,
+  "arm": "RTH",
+  "price_drift_pct_over_span": 12.186,
+  "trades_all": 1850,
+  "trades_floored_rows": 558,
+  "exit_reasons_all": {
+   "STOP": 752,
+   "BREAKEVEN": 60,
+   "SESSION_CLOSE": 817,
+   "TARGET": 221
+  },
+  "exit_reasons_floored": {
+   "SESSION_CLOSE": 172,
+   "STOP": 327,
+   "BREAKEVEN": 19,
+   "TARGET": 40
+  },
+  "clock_close_share_all": 0.4416,
+  "clock_close_share_floored": 0.3082,
+  "stop_share_floored": 0.586,
+  "target_share_floored": 0.1057,
+  "time_stop_share_floored": 0.0,
+  "floored_rows": 13,
+  "long_share_universe": 0.647,
+  "long_share_per_row_median": 0.6282,
+  "long_share_per_row_p10": 0.5417,
+  "long_share_per_row_p90": 0.8333
+ },
+ "MNQ_30m_SESSION": {
+  "symbol": "MNQ",
+  "primary_tf": 30,
+  "arm": "SESSION",
+  "price_drift_pct_over_span": 12.186,
+  "trades_all": 4338,
+  "trades_floored_rows": 2392,
+  "exit_reasons_all": {
+   "STOP": 2235,
+   "TARGET": 708,
+   "BREAKEVEN": 391,
+   "SESSION_CLOSE": 1001,
+   "TIME": 3
+  },
+  "exit_reasons_floored": {
+   "SESSION_CLOSE": 455,
+   "TARGET": 416,
+   "STOP": 1328,
+   "BREAKEVEN": 190,
+   "TIME": 3
+  },
+  "clock_close_share_all": 0.2308,
+  "clock_close_share_floored": 0.1902,
+  "stop_share_floored": 0.5552,
+  "target_share_floored": 0.2533,
+  "time_stop_share_floored": 0.0013,
+  "floored_rows": 58,
+  "long_share_universe": 0.6058,
+  "long_share_per_row_median": 0.6141,
+  "long_share_per_row_p10": 0.5238,
+  "long_share_per_row_p90": 0.8182
+ }
+}

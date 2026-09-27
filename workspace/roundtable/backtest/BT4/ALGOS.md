@@ -8,6 +8,10 @@ Ids per `REGISTRY.md`: `BT4-ALGO-<n>`, my own prefix. One entry per algorithm, a
 
 - **Implements:** `R4-M3` from `research/R4_group_audit.md:212-297`, with `R4-MT2`
   (`:1028-1057`), `R4-MT4` (`:1086-1134`) and `R4-REQ-1` as the supporting statements.
+  Now carries a programme defect number: **`D50`**
+  `[repo-verified: workspace/studies/DEFECTS.md:715-728]`. Its consequence for rule 2 is ruled in
+  **`ADJ-14`** `[repo-verified: manager/ADJUDICATIONS.md:1328-1461]`, whose §5 pre-registers the two
+  numbers §6 below delivers.
 - **Code:**
   - `backtest/BT4/code/daily_mtf_reduction.py` — the reduction and its 240m control
   - `backtest/BT4/code/regime_lag_at_1440.py` — the second channel, `regime_tf = 7200`

@@ -103,6 +103,13 @@ and the registry was incomplete.
 it is written**. A brief that says "build three things" and names none of them is a brief that
 guarantees an unresolvable citation.
 
+**And a fifth failure showed the rule itself was too narrow.** `RE:` assumed every message is about
+a registered *artifact*. Some are about an **event or a state** — a park, a handover, a stand-down —
+which no artifact id names. So **a bare agent name is now a valid `RE:` target**: `RE: EF2` for
+EF2's own park is unambiguous, since the name denotes exactly one agent. The accepted forms are now
+an id, a repo path, or an agent name — three kinds of unambiguous reference, which is all this check
+ever wanted.
+
 ## Every message carries what it is about
 
 A message whose subject must be inferred from its prose is how a mixup starts. So each file in

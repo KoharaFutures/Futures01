@@ -894,3 +894,56 @@ neither is a harder search:
    fixed in writing first, and each one spends its single shot. My Track A was exactly this attempt
    with n = 36; its result was that **three of six MGC 5m hypotheses were significantly
    *negative*.** That is what a pre-registered scalp study on this span can produce: rejections.
+
+---
+
+# Appendix — reproduction, and where the numbers live
+
+`out/run_<sym>_<tf>m_both.json` (~21 MB each) are **gzipped in place** as `.json.gz` and a
+`_summary.json` beside each carries every field any table above is computed from. Nothing was
+deleted. `code/trim_out.py` did it and says exactly what it kept.
+
+| artefact | produced by | what it holds |
+|---|---|---|
+| `out/power_bound.json` | `code/power.py` | span, sessions, √years, required Sharpe per cell |
+| `out/cost_in_r.json` | `code/cost_in_r.py` | all-in cost in R by cell × stop × thin-book |
+| `out/census.json` | `code/census.py` | 79 conditions × 8 cells, fire counts and verdicts |
+| `out/degeneracy.json` | `code/degeneracy.py` | always-on, duplicates, fires lost to the prohibition |
+| `out/or_resolvability.json` | `code/or_resolvability.py` | the opening-range object, per cell |
+| `out/population_size.json` | `code/population.py` | the declared *n* for each track |
+| `out/run_*_both*.json*` | `code/run_cell.py` | every arm, full sample + IS + OOS + 3 folds |
+| `out/placebo_*.json` | `code/run_placebo.py` | 20 controls per reported arm |
+| `out/mtf_arms.json` | `code/mtf_arms.py` | the 12 pre-registered alignment pairs |
+| `out/analysis_rule7.json` | `code/analyse.py` | the rule-7 replication |
+| `out/analysis_split.json` | `code/analyse2.py` | split sample, selection test, walk-forward |
+| `out/selection_control.json` | `code/selection_control.py` | random-10, matched-10, reverse-time |
+| `out/selection_direction.json` | `code/selection_direction.py` | the drift control |
+| `out/rank_final.json` | `code/rank_final.py` | the de-duplicated ranked lists |
+| `out/audit_lookahead.json` | `code/audit_lookahead.py` | prefix invariance, 5,274 comparisons |
+| `out/audit_fills.json` | `code/audit_fills.py` | fill model + gap census |
+| `out/audit_stale_fills.json` | `code/audit_stale_fills.py` | the weekend-gap stale fill |
+
+## Every claim's provenance, in one place
+
+Repo facts are marked `[repo-verified: path:line]` inline. The load-bearing ones:
+`engine.py:231` (one position per strategy), `:291-297` (fill at next open), `:351,:411`
+(thin-book), `:352,:414` (slippage into the fill price), `:363-370` (stop honoured, risk
+re-derived), `:398-403` (stop wins a tie), `:404-406` (time stop in primary bars),
+`:468-472` (the wrong session clock), `:494-499` (commission in `_close`);
+`base.py:154-155` (`Condition.label`), `:296-300` (VWAP_BAND inputs), `:301-306` (RANGE reads
+the opening range), `:313-314` (the silent stop floor), `:393` (`rth_only` default True),
+`:585,:606-623` (the memoised `_id`), `:670-703` (strict AND + direction agreement);
+`features.py:862-895` (the hard-coded 30-minute opening range), `:881-885` (the
+self-referential session extreme), `library.py:935-939` (profile reads the prior session);
+`timeutil.py:169-180` (`trading_day` rolls at 18:00).
+
+## What is NOT claimed here
+
+- **No profitability number above is a programme result until EF1 declares validation.** They are
+  measured on EF1's `SessionWindowEngine`, which changed once mid-study (§burst 07/7 shows the
+  change was a no-op in my cells), and EF1 owns the verdict on it.
+- **No number here transfers to MES or MNQ**, or between MGC and MCL, or between 5m, 15m and 30m.
+  Every table is per (symbol, timeframe) for that reason.
+- **No claim that any of the 8 candidate rows will make money.** Zero cleared their declared
+  threshold. The row-level statistics are reported so the parent session can see exactly how far
+  short they fall, not so they can be traded.

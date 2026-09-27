@@ -57,6 +57,10 @@ ID = re.compile(
       | D-[A-Z]+\d+                 # researcher-local defect note, e.g. D-L1, D-MTF3
       | X-\d+                       # cross-cutting avenue
       | (R[1-6]|BT[1-6]|EF[1-7]|DISC2?|MGR)-\d{2}   # a message, by its per-sender prefix
+      | (R[1-6]|BT[1-6]|EF[1-7]|DISC2?|MGR)        # the agent itself: a park, a
+                                    # handover, a state - messages that are about an
+                                    # AGENT rather than an artifact. Unambiguous: the
+                                    # name denotes exactly one agent.
       | round-1                     # the pre-registry round
       | none
     )$""",

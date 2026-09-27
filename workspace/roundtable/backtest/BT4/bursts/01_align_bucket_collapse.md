@@ -16,13 +16,18 @@ suite, one fidelity question asked. No fix applied to `futures_agents/`.
 4. Counted the stored results that ran on a 1440m frame, per store, in each store's native unit
    (`code/stores_at_1440.py`).
 5. Re-aggregated rule 2's own published per-cell statistics with the 1440m cells removed
-   (`code/rule2_leave_1440_out.py`). No new comparative test; no `T.ab`.
+   (`code/rule2_leave_1440_out.py`). No new comparative test; no `T.ab`. **This turned out to
+   discharge `ADJ-14` §5, a pre-registration written before I measured** — it asks BT4 for exactly
+   these two numbers and states the decision rule in advance. **z survives: narrowing (a) costs
+   nothing.**
 6. Found and measured a second channel nobody had counted: `regime_tf = 7200` at the daily frame,
    which reaches **every** 1440m strategy, not only the MULTI_TIMEFRAME ones
    (`code/regime_lag_at_1440.py`).
-7. Wrote `tests/test_bt4_align_bucket.py` — 17 checks that pin the current behaviour *and* the
-   invariant the fix must satisfy, the latter as `xfail(strict=False)` so the suite goes green today
-   and flips the moment `align_bucket` is corrected.
+7. Wrote `tests/test_bt4_align_bucket.py` — **16 checks that pin the current behaviour + 4
+   `xfail(strict=False)`** that pin the invariant a fix must satisfy, so the suite goes green today
+   and the four flip to `XPASS` the moment `align_bucket` is corrected.
+   **Full suite: `python -m pytest -q tests` → `1006 passed, 4 xfailed in 590.75s`, exit 0.** Nothing
+   else in the suite moved.
 
 ## Where I chose, and it matters for reading every number below
 
@@ -56,8 +61,9 @@ suite, one fidelity question asked. No fix applied to `futures_agents/`.
 | `mtf_aligned` ≡ `mtf_strongly_aligned` at 1440m | 2511/2511, 1859/1859, 1859/1859 |
 | `mtf_not_conflicted` pass rate | 99.12 / 99.30 / 99.62% |
 | rule 2 Stouffer, published | **−4.093** over 14 cells (reproduced exactly) |
-| rule 2 Stouffer, 1440m cells removed | **−3.053** over 11 cells |
+| rule 2 Stouffer, 1440m cells removed | **−3.053** over 11 cells (8 at 60m, 2 at 15m, 1 at 30m; 5 symbols) |
 | share of rule 2's treatment arm that is 1440m | **249/366 = 68.0%** (control arm 320/1151 = 27.8%) |
+| sign test across cells, before → after | p = 0.424 → 0.549 — **not significant either way** |
 | regime label at 1440m vs on-timeframe | differs on 20.3 / 18.1 / 17.5% of bars |
 | `volatility_normal` decision flips | 10.23 / 10.38 / 9.58% of bars |
 

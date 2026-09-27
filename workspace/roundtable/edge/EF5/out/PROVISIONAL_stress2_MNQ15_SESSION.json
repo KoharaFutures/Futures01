@@ -1,0 +1,62 @@
+{
+ "PROVISIONAL": "EF1 unvalidated; not publishable",
+ "cell": "MNQ 15m SESSION",
+ "cycles": 41,
+ "is_cycles": 24,
+ "oos_cycles": 17,
+ "price_drift": {
+  "full_first_close": 27534.0,
+  "full_last_close": 30889.25,
+  "full_pct": 12.186,
+  "is_pct": 5.829,
+  "oos_pct": 6.111,
+  "thirds_pct": [
+   9.248,
+   -1.69,
+   3.863
+  ]
+ },
+ "candidates_after_clone_collapse": 254,
+ "selected_on_IS_only": 31,
+ "selected_by_group": {
+  "MOMENTUM": 10,
+  "MULTI_TIMEFRAME": 7,
+  "REVERSAL": 4,
+  "VOLUME_PROFILE": 10
+ },
+ "IS_paired": {
+  "n_pairs": 31,
+  "reals_above": 29,
+  "real_mean_exp_r": 0.1657,
+  "placebo_mean_exp_r": -0.05186,
+  "mean_diff_r": 0.21756,
+  "sign_z": 4.849
+ },
+ "OOS_paired_CLEAN": {
+  "n_pairs": 31,
+  "reals_above": 24,
+  "real_mean_exp_r": 0.24518,
+  "placebo_mean_exp_r": -0.01414,
+  "mean_diff_r": 0.25932,
+  "sign_z": 3.053
+ },
+ "IS_direction": {
+  "long_n": 524,
+  "long_exp_r": 0.19783,
+  "short_n": 339,
+  "short_exp_r": 0.09142
+ },
+ "OOS_direction": {
+  "long_n": 474,
+  "long_exp_r": 0.31919,
+  "short_n": 306,
+  "short_exp_r": 0.1797
+ },
+ "full_direction": {
+  "long_n": 998,
+  "long_exp_r": 0.25547,
+  "short_n": 645,
+  "short_exp_r": 0.1333
+ },
+ "note": "selection touched only the IS cycles; the OOS_paired_CLEAN row is the only holdout number in EF5 with no selection leak"
+}

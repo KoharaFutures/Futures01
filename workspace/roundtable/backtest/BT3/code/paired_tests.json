@@ -1,28 +1,4 @@
 {
- "placebo_ensemble": {
-  "comparison": "neutral vs placebo (R permuted)",
-  "absorbing": {
-   "test": "McNemar exact (paired binomial on discordant seeds)",
-   "n_pairs": 200,
-   "a_only": 25,
-   "b_only": 11,
-   "n_discordant": 36,
-   "p_two_sided": 0.028816719655878842
-  },
-  "taken": {
-   "test": "exact sign test (two-sided binomial, ties dropped)",
-   "n_pairs": 200,
-   "a_greater": 82,
-   "b_greater": 118,
-   "ties": 0,
-   "median_diff": -19,
-   "p_two_sided": 0.013130355940531578
-  },
-  "absorbing_rate_real": 13.0,
-  "absorbing_rate_other": 6.0,
-  "taken_median_real": 1.011,
-  "taken_median_other": 1.0
- },
  "vol_pinned_control": {
   "comparison": "neutral vs volatility pinned",
   "absorbing": {
@@ -31,7 +7,11 @@
    "a_only": 15,
    "b_only": 71,
    "n_discordant": 86,
-   "p_two_sided": 7.076057190944837e-10
+   "p_two_sided": 7.076057190944837e-10,
+   "mid_p": 5.668296834895796e-10,
+   "z": 6.164378347944263,
+   "z_mid_p": 6.199388468186845,
+   "clears": true
   },
   "taken": {
    "test": "exact sign test (two-sided binomial, ties dropped)",
@@ -40,36 +20,18 @@
    "b_greater": 103,
    "ties": 4,
    "median_diff": -1,
-   "p_two_sided": 0.520422195881701
+   "p_two_sided": 0.520422195881701,
+   "mid_p": 0.4983444554748434,
+   "z": 0.6426947382889574,
+   "z_mid_p": 0.6770969318174487,
+   "clears": false
   },
   "absorbing_rate_real": 13.0,
   "absorbing_rate_other": 41.0,
   "taken_median_real": 1.011,
-  "taken_median_other": 0.991
- },
- "barrier_off_leak": {
-  "comparison": "neutral vs barrier removed",
-  "absorbing": {
-   "test": "McNemar exact (paired binomial on discordant seeds)",
-   "n_pairs": 200,
-   "a_only": 23,
-   "b_only": 20,
-   "n_discordant": 43,
-   "p_two_sided": 0.7607916425613439
-  },
-  "taken": {
-   "test": "exact sign test (two-sided binomial, ties dropped)",
-   "n_pairs": 200,
-   "a_greater": 66,
-   "b_greater": 133,
-   "ties": 1,
-   "median_diff": -17,
-   "p_two_sided": 2.3437999954114107e-06
-  },
-  "absorbing_rate_real": 13.0,
-  "absorbing_rate_other": 11.5,
-  "taken_median_real": 1.011,
-  "taken_median_other": 1.073
+  "taken_median_other": 0.991,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
  },
  "honest_arm_live_eligible_False": {
   "comparison": "neutral vs honest (is_live_eligible=False)",
@@ -79,7 +41,11 @@
    "a_only": 26,
    "b_only": 0,
    "n_discordant": 26,
-   "p_two_sided": 2.9802322387695312e-08
+   "p_two_sided": 2.9802322387695312e-08,
+   "mid_p": 2.2351741790771484e-08,
+   "z": 5.5425940578029405,
+   "z_mid_p": 5.592737248927689,
+   "clears": true
   },
   "taken": {
    "test": "exact sign test (two-sided binomial, ties dropped)",
@@ -88,11 +54,153 @@
    "b_greater": 108,
    "ties": 2,
    "median_diff": -5,
-   "p_two_sided": 0.22690555254948622
+   "p_two_sided": 0.22690555254948622,
+   "mid_p": 0.21437407792413946,
+   "z": 1.208368495030014,
+   "z_mid_p": 1.2416273717279007,
+   "clears": false
   },
   "absorbing_rate_real": 13.0,
   "absorbing_rate_other": 0.0,
   "taken_median_real": 1.011,
-  "taken_median_other": 0.998
+  "taken_median_other": 0.998,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
+ },
+ "barrier_off_leak": {
+  "comparison": "neutral vs barrier removed",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 23,
+   "b_only": 20,
+   "n_discordant": 43,
+   "p_two_sided": 0.7607916425613439,
+   "mid_p": 0.7061897348851289,
+   "z": 0.3044413848756484,
+   "z_mid_p": 0.3769782952549202,
+   "clears": false
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 66,
+   "b_greater": 133,
+   "ties": 1,
+   "median_diff": -17,
+   "p_two_sided": 2.3437999954114107e-06,
+   "mid_p": 2.0406934616738597e-06,
+   "z": 4.721267018973737,
+   "z_mid_p": 4.749352129467178,
+   "clears": true
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 11.5,
+  "taken_median_real": 1.011,
+  "taken_median_other": 1.073,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
+ },
+ "placebo_global": {
+  "comparison": "neutral vs placebo GLOBAL (ordering control, not signal-layer)",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 25,
+   "b_only": 11,
+   "n_discordant": 36,
+   "p_two_sided": 0.028816719655878842,
+   "mid_p": 0.024445285787805915,
+   "z": 2.1859847691340306,
+   "z_mid_p": 2.250057652800731,
+   "clears": false
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 82,
+   "b_greater": 118,
+   "ties": 0,
+   "median_diff": -19,
+   "p_two_sided": 0.013130355940531578,
+   "mid_p": 0.012028392267260468,
+   "z": 2.4802139795179396,
+   "z_mid_p": 2.5113102765166886,
+   "clears": true
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 6.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 1.0,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
+ },
+ "placebo_by_symbol_tf_reason": {
+  "comparison": "neutral vs placebo stratified (symbol, tf, reason)",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 22,
+   "b_only": 12,
+   "n_discordant": 34,
+   "p_two_sided": 0.12144948495551944,
+   "mid_p": 0.10549028194509447,
+   "z": 1.5487181661695,
+   "z_mid_p": 1.6188000938580105,
+   "clears": false
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 100,
+   "b_greater": 99,
+   "ties": 1,
+   "median_diff": 3,
+   "p_two_sided": 0.9999999999999997,
+   "mid_p": 0.9718257604953715,
+   "z": 3.478645530839709e-16,
+   "z_mid_p": 0.03531851400952249,
+   "clears": false
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 8.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 0.984,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
+ },
+ "placebo_by_strategy_reason": {
+  "comparison": "neutral vs placebo stratified (strategy, reason)",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 20,
+   "b_only": 12,
+   "n_discordant": 32,
+   "p_two_sided": 0.21532714972272515,
+   "mid_p": 0.18904140358790755,
+   "z": 1.2390495470070841,
+   "z_mid_p": 1.3134201729749884,
+   "clears": false
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 69,
+   "b_greater": 128,
+   "ties": 3,
+   "median_diff": -19,
+   "p_two_sided": 3.163712225210374e-05,
+   "mid_p": 2.7861972819971612e-05,
+   "z": 4.161350397301446,
+   "z_mid_p": 4.19027243089284,
+   "clears": true
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 9.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 1.066,
+  "free_t": 2.2293078072747154,
+  "n_tests": 12
  }
 }

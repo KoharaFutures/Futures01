@@ -279,3 +279,119 @@ agent's *vocabulary* and *method* before you start; do not read its *verdicts* f
 before you have written your own. Two independent audits that agree are evidence; one audit plus
 one agent anchored on it is one audit wearing two names. If you do read ahead, declare it and mark
 which verdicts were formed afterwards — a declared anchor is usable, an undeclared one is not.
+
+---
+
+# The other knob: `free_t` is half the story, and the span is the other half (2026-09-27)
+
+`DISC2` found the residue nobody held, and I verified every number in it. It does not rescue a
+single existing result, and it changes how the programme's central null should be read.
+
+**Deflation has two inputs, and this programme has only ever turned one.** `free_t` grows with the
+number of things searched; the *t* a real edge produces grows with how long you watched it. Lo
+(2002): `t ≈ SR × sqrt(years)`.
+
+Every published `scan_reports/` result rests on a **274-session / 322-calendar-day** span.
+`sqrt(322/365.25) = 0.939`, so the span contributes essentially **nothing**:
+
+| threshold | annualised Sharpe needed, on the published 322-day span |
+|---|---|
+| `free_t = 5.46` (programme-wide search) | **5.82** |
+| largest *t* ever found here, 3.923 | 4.18 |
+| `free_t = 1.177` (one pre-registered hypothesis) | 1.25 |
+
+**A sustained Sharpe of 5.82 is not a thing that exists in futures.** So on this span, clearing the
+programme-wide threshold was close to arithmetically impossible regardless of what was true about
+the market. That is a property of the experiment, not a discovery about trading.
+
+**What the span is worth, if it moves:**
+
+| span | Sharpe needed to clear `free_t = 5.46` |
+|---|---|
+| 0.88 years (published) | 5.82 |
+| 10 years | **1.73** |
+| 25.7 years | **1.08** |
+
+`DISC2` measured 25.7 years as reachable — ~6,460 daily bars per market across ten sectors, **~29×
+the published calendar span**, zero code change, `yahoo.py:86` already caps daily lookback at 25
+years. A required Sharpe of 1.08 is an ordinary number.
+
+**Two things this does NOT mean, and both matter.**
+
+1. **It rescues nothing already measured.** The direction is *unfavourable* for the existing
+   results: *t* = 3.923 needed a Sharpe of 4.18 on its span, which makes it look **more** like an
+   artefact, not less. Every verdict in `scan_reports/` stands.
+2. **A longer span is not free.** `yahoo.py` applies `auto_adjust=False` and contains **no roll
+   handling of any kind** — its own header warns `MNQ=F` is not `MNQ1!` because of roll
+   convention. An unadjusted front month gaps at every roll and a momentum rule reads that gap as a
+   return. That is **D40** wearing a new instrument, and D40 is why the grain CSVs are excluded.
+   `DISC2` computed no statistic for exactly this reason, which was the right call. **The roll
+   audit is the gate on all of it.** The second cost is 28 missing `ContractSpec` entries — the
+   fields that decide whether a thin market is tradeable at all, and D40 measured this repo's own
+   thin markets at 9.2% of one R in fees against 0.17% for NQ.
+
+**The one actionable consequence available today.** `toolkit.free_t` is
+`sqrt(2·ln(max(2, trials)))`, so the code's own floor for a **single pre-registered hypothesis is
+1.177**, not 5.46 — worth about 4.3 t-units, and never once used. Every study in this programme has
+paid the search penalty for a population it generated. A hypothesis fixed in writing *before*
+looking faces a threshold four t-units lower. Carry `DISC2`'s own counter with it: the literature's
+survivors are the output of a large undocumented collective search, so the honest `n` for a
+borrowed idea is not 1 either.
+
+**How to quote the null from now on.** Not "nothing clears deflation" alone, which invites the
+reading that the market was searched and found empty. Say: *nothing clears deflation **on a
+0.88-year span at a search width of ~3M**, where clearing it would have required a Sharpe near 6.*
+
+---
+
+# Data policy correction #2: the "~6,000 bars before the published span" is a 60-MINUTE fact
+# (2026-09-27, from R5)
+
+**My ruling over-generalised and R5 caught it.** The policy said `data/archive/` extends the span
+"~6,000 bars per symbol **before** everything the programme has ever searched." **That is true at
+60 minutes and false at 1 minute.** Verified:
+
+```
+csv/raw MGC_1m :  5,000 bars   2026-09-17T07:31Z -> 2026-09-22T23:03Z
+archive MGC_1m :  6,881 bars   2026-09-20T22:10Z -> 2026-09-25T20:59Z
+archive bars BEFORE csv/raw starts:  0
+union: 9,069 unique minutes over 8 calendar days (~6.6 CME trading days)
+```
+
+Yahoo caps 1-minute lookback at 7 days (`yahoo.py`), so the archive's 1m series **starts inside**
+`csv/raw`'s span and ends about three sessions after it. It adds recency, not history. The total
+futures 1-minute substrate in this repository is **~6.6 trading days**.
+
+The policy's own condition 2 already said "verify equivalence for your own symbol **and
+timeframe** rather than generalising the 60m table" — so the rule anticipated this, and my headline
+sentence violated it anyway. **Any claim about span depth must name the timeframe it was measured
+at.**
+
+Related, and it kills a substitute before anyone reaches for it: the only deep 1-minute store here
+is `data/MGC_1m.csv`, 465,232 rows over 2019-01-01 → 2020-05-14 — an **Oanda CFD**, a different
+instrument and a different era, whose `volume` is integer in 100% of rows, consistent with a tick
+count rather than contracts. It is not MGC futures 1-minute data.
+
+# D-candidate: `BarSeries.append` silently collapses two bars sharing a timestamp
+
+R5 found a **fifth** mechanism by which this repo can manufacture a false null, and it is the same
+shape as D38, D42, D44 and D48 — silent, and with a signature indistinguishable from a real result.
+
+`BarSeries.append` raises on a duration mismatch and raises on out-of-order input, but on an
+**equal** timestamp it replaces without a word:
+
+```python
+if b.ts == last.ts:
+    # Same bucket: replace (a developing bar being finalised).
+    self._bars[-1] = b
+    return
+```
+
+It also never enforces contiguity. The intent is legitimate — finalising a developing bar — but the
+consequence is not: **any two constructed bar boundaries snapped into the same minute collapse into
+one bar, with no warning and no count.** For MAIN-01's volume-bar construction that makes the fine
+end of the bar-size range a **correctness** failure rather than an accuracy one, and the resulting
+attenuated-or-zero difference reads exactly like "the clock makes no difference."
+
+Anyone constructing a non-wall-clock series must compute the collision-free floor first and assert
+the appended length equals the intended length. It is exact arithmetic and needs no tape.

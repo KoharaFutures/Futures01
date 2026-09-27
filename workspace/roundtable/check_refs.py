@@ -36,7 +36,7 @@ ID = re.compile(
     r"""^(
         MAIN-\d{2}(/S\d+)?          # MAIN-01, MAIN-01/S2
       | (I|II|III|X)-\d+            # avenue: I-12, X-4
-      | DISC-LEAD-\d+
+      | DISC2?-LEAD-\d+
       | D\d+                        # programme-wide defect
       | (R[1-6]|BT[1-6]|DISC2?)-      # issuer-prefixed:
         (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[ABM]-?\d+)

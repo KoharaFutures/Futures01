@@ -86,7 +86,7 @@ These are inventory measurements taken to size the work. None of them answers `M
 them **change the shape of the task**, and one **corrects a substrate statement that is currently
 load-bearing in two places**.
 
-### 2.1 The futures 1-minute substrate is ~6.5 sessions in total, and that is the whole of it
+### 2.1 The futures 1-minute substrate is ~6.6 trading days in total, and that is the whole of it
 
 Every constructed-bar route needs 1-minute source data on the instrument the published findings
 were measured on. What exists:
@@ -117,11 +117,12 @@ So at 1 minute the archive does not extend the searched span backwards at all; i
 sessions to the front edge and duplicates 2,812 minutes of what is already frozen.
 
 **Consequence, and it is the single most important line in this scope.** The total futures
-1-minute substrate in this repository is **9 calendar days / ~6.5 RTH sessions per symbol**. The
+1-minute substrate in this repository is **9 calendar days / ~6.6 CME trading days per symbol** (9,069 minutes / ~1,380 minutes per
+Globex day; ~7 calendar trading dates, of which the RTH content is ~2,700 minutes). The
 only deep 1-minute store is a **different instrument in a different era** whose `volume` column
 discovery already measured as integer in 100.0% of 465k rows — consistent with a *tick count*
 rather than contract volume `[repo-verified: discovery/MAIN_TASKS.md §"What it would take to know",
-first bullet]`. So a constructed volume-bar series can be measured either on ~6.5 sessions of the
+first bullet]`. So a constructed volume-bar series can be measured either on ~6.6 trading days of the
 right instrument or on 352 sessions of the wrong one. **No approximation-error result can rescue
 either of those.** I think this kills the construction half of `MAIN-01` before the
 approximation-error gate is even reached — see §5.
@@ -531,7 +532,7 @@ distinct triggers, in the order they can fire:
 
 | # | trigger | fires in | verdict |
 |---|---|---|---|
-| **K1** | The futures 1-minute substrate is under ~10 sessions per symbol, and the only deep 1m store is a different instrument in a different era with a differently-defined `volume` column. | **S0** | `CLOSED-EMPTY` — construction half. **§2.1 measures 6.5 sessions, so this trigger is already very likely met.** |
+| **K1** | The futures 1-minute substrate is under ~10 trading days per symbol, and the only deep 1m store is a different instrument in a different era with a differently-defined `volume` column. | **S0** | `CLOSED-EMPTY` — construction half. **§2.1 measures ~6.6 CME trading days, so this trigger is already very likely met.** |
 | **K2** | S1a's collision-free floor (target size > every boundary minute's volume) sits above the size that yields ~50 bars/session — i.e. every constructible series is either silently lossy or too coarse for an intraday finding. | **S1a** | `CLOSED-EMPTY` — "the defensible range and the useful range do not overlap", which is exactly `BOARD.md` §7 pre-registration 1. |
 | **K3** | S1b's early/late bracket differs, on ATR at every admissible size, by more than the effect being hunted — so the two brackets cannot agree about the confound's sign. | **S1b** | `CLOSED-EMPTY` — the approximation cannot resolve the question. This is the board's named gate. |
 | **K4** | S2 finds no activity footprint **and** S3 finds no per-bar-statistic or return-distribution difference beyond S1b's envelope. | **S2 + S3** | Closed with a **null**, which is a stronger close than K1–K3: it closes the *question*, not merely the method. |
@@ -559,7 +560,7 @@ on the approximation error the board named.** I would not authorise S1c, S4 or S
 
 `BOARD.md` §7 pre-registration 1 predicts `CLOSED-EMPTY` because "the defensible range and the
 useful range do not overlap" — an *approximation-error* argument. My sizing says the task dies
-**one gate earlier and for a different reason**: there are **9 calendar days / ~6.5 RTH sessions**
+**one gate earlier and for a different reason**: there are **9 calendar days / ~6.6 CME trading days**
 of futures 1-minute data in this repository, total, across both stores, and the only deep 1-minute
 store is an Oanda CFD from 2019–20 whose `volume` column is integer in 100% of 465k rows
 (§2.1, §2.2). The published findings `MAIN-01` proposes to re-examine span 274 days at 60m/240m and
@@ -632,7 +633,7 @@ results. I checked ten and found five live hazards.
 
 | hazard | checked | finding |
 |---|---|---|
-| **insufficient sample size** | yes | **LIVE, and it is the task's binding constraint.** ~6.5 futures RTH sessions of 1m data (§2.1). Also: the 5m cell artefact's own `floor: 15`, `free_t: 4.357` on 13,235 screened `[measured: §2.3]` — the deflation threshold is already unmet there before any reclocking. |
+| **insufficient sample size** | yes | **LIVE, and it is the task's binding constraint.** ~6.6 CME trading days of futures 1m data (§2.1). Also: the 5m cell artefact's own `floor: 15`, `free_t: 4.357` on 13,235 screened `[measured: §2.3]` — the deflation threshold is already unmet there before any reclocking. |
 | **data-mining bias / parameter sensitivity** | yes | **LIVE.** Bar size is a free parameter with no natural value — R1's own note `[repo-verified: research/R1_flow_auction.md:1238-1240]`. Any size sweep enters `R-3`'s denominator and must be counted. S1's job is to *narrow* the admissible range on correctness grounds before anyone sweeps it. |
 | **look-ahead / future-data leakage** | yes | **LIVE and specific to this construction.** A snapped boundary is decided using the *whole* minute's volume, which is not known at that minute's open. Any signal evaluated at a snapped bar's close therefore consumes end-of-minute information — a leakage channel that does not exist on the wall-clock grid and that must be checked, not assumed away. Named in S5; it also touches S3 if indicators are evaluated bar-by-bar. |
 | **unrealistic fills** | yes | **LIVE.** "A bar's close is not a moment" on a non-time bar `[repo-verified: research/R1_flow_auction.md:1238-1240]`, so next-bar-open entry means something different and the fill model must be re-audited rather than inherited. The repo's own recorded lesson applies: "resampling cannot detect a bias whose sign is always favourable; only auditing the fill model can" `[repo-verified: scan_reports/2026-09-24_ORB-and-ICT.md:125-126; discovery/MAIN_TASKS.md cites it as :117-133]`. |
@@ -679,3 +680,13 @@ Plus one correction the manager should hear because it is load-bearing in a file
   This is a general hazard for the whole roundtable while files are live, and `REGISTRY.md`'s "say
   the id and the path you read it at, so the owner can tell whether you read the current version"
   is the mitigation.
+- **One precision correction to my own `R5-01`, recorded here because `msgs/` is write-once and the
+  parent has already committed it** (`5f8fd91`). `R5-01` §2 says the substrate is "~6.5 **RTH**
+  sessions per symbol". The exact statement is **9,069 unique minutes = ~6.6 CME trading days**
+  (~1,380 minutes per Globex day), across ~7 calendar trading dates, of which the *RTH* content is
+  only ~2,700 minutes. "RTH" in that sentence is loose — the repo's own prose is loose the same way
+  (`MAIN_TASKS.md` calls 465,232 minutes "352 RTH sessions", i.e. ~1,322 minutes per "session") —
+  and `BOARD.md`'s "5,000 bars ≈ 4 trading sessions" uses the trading-day convention, which is the
+  one I intend. **The load-bearing numbers in `R5-01` are exact and unchanged:** 5,000 / 6,881 /
+  overlap 2,812 / union 9,069 / span 2026-09-17 → 2026-09-25. §2.1 above carries the corrected
+  wording. Nothing in the conclusion moves.

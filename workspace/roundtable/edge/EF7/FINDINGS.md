@@ -357,3 +357,121 @@ bearing for a catalogue with a sub-22-bar time stop.
 `workspace/roundtable/edge/EF1/`.** The only prior exposure is the three leaks declared in §0/§0a:
 15 grep-matched lines, a `ps` command line, and the coordinator's relay of EF3's measured facts —
 which arrived *after* §1–§5.7 were on disk and which I treated as specification, not source.
+
+I have now read `EF1/FINDINGS.md`, `EF1/code/session_window.py`, `EF3/code/ef3_session.py` and
+`EF6/code/session_engine.py`.
+
+### 6.1 Where we agree, independently — eleven items
+
+| # | claim | EF1 | EF7 (me) |
+|---|---|---|---|
+| 1 | arm C violation count | **0**, saturation, 5 timeframes, control violates 78× | **0** over 10,010 saturating trades **and** 51,825 population trades; control violates on the same fixture |
+| 2 | the rule is emphatically **not** inert | closes **59.6–86.3%** of positions | closes **52.8–69.2%** (probe, 60m base) and **59.0–67.4%** (population) |
+| 3 | the flat count *is* "would otherwise have run on", with no counterfactual, because the shipped ladder runs first | yes, `super()._manage` first | yes, `super()._manage(is_last=False)` first. Same reasoning, arrived at separately |
+| 4 | flat priced as a **market order** (`is_stop=True`), thin-book flag fires on MGC/MCL and not MES/MNQ | yes | yes, and the 1-tick market-vs-limit delta is asserted |
+| 5 | entry veto tests the **fill** bar, not the signal bar | yes | yes |
+| 6 | the veto is 0 on MGC/MCL and non-zero on MES/MNQ, because `rth_only` + the RTH close times | MES 683, MNQ 424 | MES 1,053, MNQ 405 (probe); 4,057 / 4,184 (population). Same sign, same mechanism |
+| 7 | the early-close hole is real and a pure per-bar rule misses it | **EF1-D3**, shipped 33 violations then fixed | **EF7-D1**, found *before* writing the fix (`bursts/02`, dated before the code) |
+| 8 | a stale fill can cross a weekend and must **not** be vetoed, only counted | `stale_fills`, found the ~50 h Friday→Sunday case | **EF7-D4**, 3,150 min worst on MCL and MNQ, same decision |
+| 9 | `TIME` exits are arithmetically inert under this rule | yes | **0 of 51,825** on all four symbols, reached before the coordinator relayed it |
+| 10 | the brief's "every prior evaluation was flat by its contract's RTH close" is **false**, via `exit_at_session_close` | **EF1-F2** | **EF7-D3** — and I add the arm-A hold split: 99.1% of MGC arm-A trades come from the `False` half, median hold 14 h, max 5.58 days, 62.8% already span the window |
+| 11 | 20 of ~11,300 60m bars per symbol are stamped `:30`, on half-day sessions | yes | **EF7-D5**, same count, same five dates, plus: 0 overlapping consecutive bars, and it is a *latent* straddle hazard |
+
+Item 7 is the one the independence rule was for. EF1 found the same defect by shipping 33 violations
+and then fixing them; I found it by measuring the substrate before writing any rule. Two routes, one
+defect, and the agreement is evidence rather than one audit wearing two names.
+
+### 6.2 Where we differ on **design**, with the reason
+
+| topic | EF1 | EF7 | my reading |
+|---|---|---|---|
+| how a cycle end is detected | per-bar `classify_bar` **plus** `session_end_indices`, which groups bars by `trading_day` and needs a whole day's timestamp list | one rule: `cycle_key(bars[i+1].ts) != cycle_key(bars[i].ts)` | **mine is tighter on prefix invariance.** EF1 states its own limit honestly — "on a prefix cut inside an early-close date the last entry can differ", i.e. any index in the cut day. Mine can differ only at index *k−1*, which is where the engine already closes `END_OF_DATA`. Both read timestamps only, no prices |
+| daily grid | `_audit_grid` **raises** `SessionGridError`; 1440m is 100% straddling | my first build **counted** it and carried on | **EF1 is right and I have adopted it.** Reproduced on my own clock: MGC 4008/4008, MES 1863/1863, MNQ 1863/1863, MCL 1/1 daily bars straddle 16:00. Counting a violation you could refuse to produce is the weaker design |
+| a flat on a post-deadline bar | fills at the bar's **open**, gap and all, and skips `super()` because the bar's high/low are post-deadline | my first build filled at the **close** | **EF1 is right and I have adopted it.** Unreachable in my design (the veto closes it), and "unreachable" is a claim about today's data |
+| exit reason | reuses `ExitReason.SESSION_CLOSE`, with `FlatEvent` records alongside | new `WindowExitReason.SESSION_WINDOW` | **mine, narrowly.** Unambiguous inside EF1's engine (the shipped exit cannot fire), but an arm-A-vs-arm-C `exit_reasons` census reads `SESSION_CLOSE` on both sides meaning two different things |
+| enforcement | strict emission check: audits and **raises** per trade | post-hoc `trade_violations` | **EF1's is stronger.** Mine is equal in force at test time and weaker in a production run. Not adopted: it would need my detector to know the fill was at the open, which is EF1's `_filling_at_open` flag |
+| hook-coupling guard | `assert_hooks_reachable()`, source-level | behavioural only | roughly equal. My known-answer tests fail if either hook stops being called — no flat fires, nothing is vetoed. A source check catches a *bypass*; a behavioural check catches a *break*. Both are worth having and I did not add the first |
+
+### 6.3 Where we disagree on a **number** — three, all stated with the command
+
+**(a) `exit_at_session_close=False` share on MGC.** EF1 reports MGC 84 of 184 at `(60,240)`; I measure
+**58 of 184**. MNQ agrees exactly (both 90 of 185).
+`[measured: generate_strategies(sym, tfs, max_total=400, seed=20260922) — identical with tfs as a
+tuple and as a list, so container type is not the cause]`
+
+| tfs | MGC | MCL | MES | MNQ |
+|---|---|---|---|---|
+| `[60]` | 98/184 (53.3%) | 78/167 (46.7%) | 102/190 (53.7%) | 75/185 (40.5%) |
+| `[60, 240]` | **58/184 (31.5%)** | 57/167 (34.1%) | 90/190 (47.4%) | 90/185 (48.6%) |
+
+The share depends strongly on the `timeframes` argument, which is the likely source. Neither of us
+changes the *conclusion* — "roughly half" holds across the range 31.5–53.7% — but the MGC cell should
+be re-run. **For EF1.**
+
+**(b) early-ending cycles on MCL: EF1-H4 counts 27, I count 35.** MGC 17, MES 19 and MNQ 19 agree
+exactly. I tested and **rejected** the obvious explanation: only **1** of my 35 MCL early cycle ends
+has a 16:00 bar available (which EF1's rule routes to its `IN_WINDOW` branch instead), so that
+accounts for 1 of the 8. The rest is unexplained and the definitions differ — EF1 counts trading days
+needing a *forced* flat and excludes the truncated last day; I count cycles whose last bar ends before
+16:00. Neither party's violation count is affected (both 0). **Flagged, not resolved. For EF1.**
+
+**(c) EF3's "`rth_only=True` caps the hold at 6.5 hours".** I measure **12 hours on MES** and entries
+at 00:00 and 18:00 ET in a population where `rth_only` is `True` on every strategy. The cause is
+EF7-D4: a signal formed on an RTH bar fills at whatever the next *printed* bar is, which across a
+half-day close plus a weekend is up to 52.5 hours later and in a later cycle. 6.5 h is the correct
+*nominal* cap; the realised cap is about double it. **For EF3.**
+
+### 6.4 One disagreement on a **prescription**, and it is load-bearing
+
+The coordinator relayed: *"EF3 says the right fix is `timeutil.MARKET_HOLIDAYS_2025_2027`, **not**
+inspecting a neighbouring bar."* EF3's own file repeats it: the successor-timestamp clause is "the
+stopgap" and "the right fix is an exchange calendar ... which is exact AND prefix-invariant."
+
+**On this substrate the holiday table cannot do the job, for two independently sufficient reasons.**
+`[measured: futures_agents/timeutil.py MARKET_HOLIDAYS_2025_2027]`
+
+1. **It contains 30 dates and covers 2025–2027 only.** `is_market_holiday(date(2024,11,28))` is
+   **`False`**. The archive starts 2024-10-06, and **2024-11-27 is the first of the nine dates EF3
+   itself lists** — so the table misses the very case that motivated it.
+2. **It contains no early closes at all.** It is a *full-holiday* table by its own docstring
+   (`timeutil.py:204-206`). All five half-day sessions return `False`:
+   2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24. Those are exactly the dates that carry
+   the `:30` off-grid bars and the 13:00/13:30 early cycle ends — **the majority of the cases the
+   clause exists for**, since my measured early-end times are 14:00, 13:30, 13:00, 15:00, 11:00 and
+   00:00, not "the next day is a holiday".
+
+A third, from EF1 and which I did not need to re-derive: it cannot cover MCL's multi-week vendor
+hole. **EF1 reached the same verdict by a different route** ("a hard-coded exchange early-close
+table — elegant, and *incomplete on this substrate*"), so this is two independent rejections.
+
+And a fourth, which is about correctness rather than coverage: **a holiday table answers the wrong
+question.** Several CME holidays are *shortened* sessions, not closures — the cycle exists, the market
+trades into it, and the specification permits holding there. A table that says "tomorrow is a holiday"
+would force a flat at 23:00 the previous evening and close a position the rule allows, i.e. it is
+**stricter than the specification**. The successor-cycle-key test has neither failure mode: it fires
+exactly when the data contains no further bar in this cycle, whatever the reason.
+`test_h2_holiday_flat_needs_no_holiday_table` pins both cases — next bar inside the same cycle (no
+flat) versus next bar in a later cycle (flat) — and asserts the table returns `True` for both, so it
+cannot tell them apart.
+
+**Verified on my own rule, no holiday table consulted:** all nine holiday-eve 23:00 ET bars are
+flagged as cycle ends on **every symbol where the bar exists** (MES 9/9, MNQ 9/9, MGC 8/8 — no 23:00
+bar on 2026-04-02 — MCL 7/7), and no trade is carried past any of them
+(`test_h2_holiday_eve_2300_bar_ends_its_cycle`, `test_h2_no_trade_spans_a_holiday_eve_boundary`).
+
+### 6.5 EF6 and EF3, briefly
+
+**EF6** reached my mechanism exactly and stated it in the same words —
+*"if the **next** bar is out of window, this bar is the last"* (`EF6/code/session_engine.py:19-22`).
+That is a third independent arrival at the successor-timestamp rule.
+
+**EF3** also implements my mechanism — `trading_day(bars[i+1].ts) != trading_day(bars[i].ts)`
+(`ef3_session.py:20`) — while describing it as a stopgap. So **three of the four implementations
+converge on the successor-timestamp test**, and the only disagreement is whether it is the right
+answer or a placeholder. §6.4 is my case that it is the right answer.
+
+EF3's structural choice — make its engine a **subclass** of EF1's so `enforce_session_gap=False`
+reproduces EF1 exactly — is better than two parallel implementations for *its* purpose, which was to
+add one clause to an existing rule. It is the wrong choice for **mine**: a subclass of EF1 cannot be
+an independent check on EF1, and it is the independence that makes the eleven agreements in §6.1 mean
+anything. I am keeping the parallel implementation for that reason and for no other.

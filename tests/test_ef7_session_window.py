@@ -57,9 +57,9 @@ from futures_agents.timeutil import ET, to_et, trading_day
 # '.../EF6/code/window.py'``. Prefixing the module name makes the collision
 # impossible rather than order-dependent.
 import ef7_window
-from ef7_window import (SESSION_WINDOW, SESSION_WINDOW_EXIT, SessionWindow,
-                        SessionWindowEngine, cycle_keys, entry_veto_flags,
-                        flat_flags, trade_violations)
+from ef7_window import (SESSION_WINDOW, SESSION_WINDOW_EXIT, SessionGridError,
+                        SessionWindow, SessionWindowEngine, cycle_keys,
+                        entry_veto_flags, flat_flags, trade_violations)
 
 assert os.path.abspath(ef7_window.__file__) == os.path.join(_EF7, "ef7_window.py"), (
     f"imported the wrong window module: {ef7_window.__file__}")
@@ -889,6 +889,88 @@ def test_h3_flat_fires_early_when_the_cycle_data_ends_early_and_says_so():
     assert early, "the early-cycle-end path was never exercised"
     assert eng.stats.flat_before_deadline >= 1
     assert trade_violations(res.trades, base_minutes=60) == []
+
+
+# ==========================================================================
+# Adopted from EF1 after my own results were written - see FINDINGS.md section 6
+# ==========================================================================
+
+@pytest.mark.parametrize("symbol", ["MGC", "MES", "MNQ"])
+def test_h3_daily_grid_is_refused_because_the_flat_cannot_be_priced(symbol):
+    """EF1-F3, reproduced on my own clock and then adopted as a guard.
+
+    ``align_bucket`` puts a 1440m bucket at 18:00 ET the previous evening
+    (``futures_agents/data/bars.py:145-149``), so 16:00 ET falls 22 hours inside
+    **every** daily bar: the entry fill and the flat land in the same bar and OHLC
+    cannot price hour 22. My first build *counted* that and carried on, which
+    means it would have produced a post-deadline fill and reported a number beside
+    it. Refusing to run is the stronger design and this is EF1's, adopted.
+
+    So there is no daily-bar strategy under this rule. Arithmetic, not taste.
+    """
+    bars = ARCHIVE.load(symbol, 1440).bars
+    assert len(bars) > 1000
+    straddling = sum(1 for b in bars
+                     if to_et(b.end_ts) > SESSION_WINDOW.flat_instant(b.ts))
+    assert straddling == len(bars), f"{symbol}: {straddling}/{len(bars)}"
+
+    frame = SymbolFrame(BarSeries(symbol, 1440, bars), (1440,), get_contract(symbol))
+    with pytest.raises(SessionGridError) as exc:
+        SessionWindowEngine(frame, no_slip())
+    assert "16:00 ET strictly inside" in str(exc.value)
+
+    # The escape hatch exists and is explicit, never a default.
+    eng = SessionWindowEngine(frame, no_slip(), allow_straddling_grid=True)
+    assert eng.stats.bars_straddling_deadline == len(bars)
+
+
+@pytest.mark.parametrize("tf", [15, 30, 60, 240])
+def test_h3_every_finer_grid_is_accepted(tf):
+    """The guard must not be a blanket refusal - it has to let the real grids
+    through, or it would delete the programme instead of protecting it."""
+    for symbol in SYMBOLS:
+        bars = ARCHIVE.load(symbol, tf).bars
+        frame = SymbolFrame(BarSeries(symbol, tf, bars), (tf,), get_contract(symbol))
+        eng = SessionWindowEngine(frame, no_slip())
+        assert eng.stats.bars_straddling_deadline == 0, f"{symbol} {tf}m"
+
+
+def test_h3_a_flat_on_a_post_deadline_bar_fills_at_the_open_not_the_close():
+    """Also EF1's, adopted. Both paths are unreachable in my design; that is a
+    claim about today's data, not a guarantee.
+
+    On a bar whose close is *past* the deadline - one inside the forbidden window,
+    or one straddling it - the close is a price the flat could never have got. The
+    resting market order fills at the first print there is, which is the open. The
+    difference is a compliant exit versus a violation, so it is worth the branch
+    even on a path the entry veto and the grid audit both close.
+    """
+    # A 120m grid: the bar opening 15:00 ends at 17:00 and straddles the deadline.
+    bars = []
+    px = 100.0
+    for k in range(11):                       # 18:00 .. 14:00, 2h steps
+        ts = et(2025, 6, 9, 18) + timedelta(hours=2 * k)
+        bars.append(_bar(ts, px, px + 0.2, px - 0.05, px + 0.1, minutes=120))
+        px += 0.1
+    straddler = et(2025, 6, 10, 16)            # 16:00-18:00: wholly forbidden
+    bars.append(_bar(straddler, 500.0, 500.2, 90.0, 95.0, minutes=120))
+    bars.append(_bar(et(2025, 6, 10, 18), 95.0, 95.2, 94.9, 95.1, minutes=120))
+
+    spec = get_contract("MGC")
+    frame = SymbolFrame(BarSeries("MGC", 120, bars), (120,), spec)
+    eng = SessionWindowEngine(frame, no_slip())
+    assert eng.stats.bars_straddling_deadline == 0    # 16:00-18:00 is IN, not across
+    res = eng.run(fixture_strategy(tf=120))
+    assert res.trades
+    flats = [t for t in res.trades if t.exit_reason is SESSION_WINDOW_EXIT]
+    assert flats
+    # The flat fires on the 14:00-16:00 bar, whose close IS the deadline, so it
+    # prices at the close - and never on the 16:00 bar.
+    for t in flats:
+        assert to_et(t.exit_ts) != straddler
+        assert eng.stats.flat_on_forbidden_bar == 0
+    # And the 16:00 bar's wild 90.0 low never became anyone's fill.
+    assert all(t.exit_price > 95.0 for t in flats), [t.exit_price for t in flats]
 
 
 # ==========================================================================

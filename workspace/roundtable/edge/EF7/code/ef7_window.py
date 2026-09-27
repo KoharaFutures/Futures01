@@ -71,10 +71,19 @@ from futures_agents.strategies.base import Strategy
 from futures_agents.timeutil import ET, is_rth, to_et
 
 __all__ = [
-    "WindowExitReason", "SESSION_WINDOW_EXIT", "SessionWindow", "SESSION_WINDOW",
+    "SessionGridError", "WindowExitReason", "SESSION_WINDOW_EXIT", "SessionWindow", "SESSION_WINDOW",
     "cycle_keys", "flat_flags", "entry_veto_flags", "WindowStats",
     "SessionWindowEngine",
 ]
+
+
+class SessionGridError(ValueError):
+    """The base grid cannot express a 16:00 ET flat at all.
+
+    Raised up front by :meth:`SessionWindowEngine._audit_grid` rather than
+    discovered as a violation at bar 9,000. Adopted from EF1 (`EF1-F3`) - see
+    that method's docstring for why raising beats counting here.
+    """
 
 
 class WindowExitReason(str, Enum):
@@ -274,6 +283,9 @@ class WindowStats:
     """What the rule did, counted. A rule with no counters cannot be audited."""
 
     flat_exits: int = 0
+    #: Base bars that contain 16:00 ET strictly inside them. Non-zero only when
+    #: ``allow_straddling_grid=True``; otherwise the engine refuses to run.
+    bars_straddling_deadline: int = 0
     #: Flats that fired on a bar whose own close is at or after the deadline.
     #: Must be 0 on this substrate; non-zero means a straddling bucket.
     flat_on_late_bar: int = 0
@@ -293,6 +305,7 @@ class WindowStats:
 
     def to_dict(self) -> dict:
         return {
+            "bars_straddling_deadline": self.bars_straddling_deadline,
             "flat_exits": self.flat_exits,
             "flat_on_late_bar": self.flat_on_late_bar,
             "flat_on_forbidden_bar": self.flat_on_forbidden_bar,
@@ -345,17 +358,67 @@ class SessionWindowEngine(BacktestEngine):
     def __init__(self, frame: SymbolFrame, cost_model: Optional[CostModel] = None,
                  *, max_concurrent_per_strategy: int = 1,
                  window: SessionWindow = SESSION_WINDOW,
-                 flat_is_market_order: bool = True):
+                 flat_is_market_order: bool = True,
+                 allow_straddling_grid: bool = False):
         super().__init__(frame, cost_model,
                          max_concurrent_per_strategy=max_concurrent_per_strategy,
                          allow_overnight=True)
         self.window = window
         self.flat_is_market_order = bool(flat_is_market_order)
+        self.allow_straddling_grid = bool(allow_straddling_grid)
         self.stats = WindowStats()
         bars = frame.base.bars
         # Pure per-bar, no successor: safe to precompute once.
         self._keys: List[Optional[date]] = [window.cycle_key(b.ts) for b in bars]
         self._stop_at: int = len(bars)
+        self._audit_grid()
+
+    # ---- grid audit, before any number is produced ----------------------
+    def _audit_grid(self) -> None:
+        """Refuse a base grid on which the flat cannot be priced at all.
+
+        **Adopted from EF1 (`EF1-F3`) after my own results were written**, and it
+        is a genuine gap in my first build: I *counted* a straddling bar
+        (``WindowStats.flat_on_late_bar``) and carried on, which means the run
+        would have produced a post-deadline fill and reported a number beside it.
+        Counting a violation you could have refused to produce is the weaker of
+        the two designs, so this raises.
+
+        The case that matters is the daily grid. ``align_bucket`` puts a 1440m
+        bucket at 18:00 ET the previous evening
+        (``futures_agents/data/bars.py:145-149``), so 16:00 ET falls **22 hours
+        inside every daily bar** - the entry fill and the flat land in the same
+        bar and OHLC cannot price hour 22. Independently reproduced on my own
+        clock: `[measured: MGC 4008/4008, MES 1863/1863, MNQ 1863/1863, MCL 1/1
+        daily bars straddle 16:00 ET]`. So **there is no daily-bar strategy under
+        this rule**, which is arithmetic rather than a preference.
+
+        Every finer grid is clean: 15m/30m/60m/240m have **zero** straddling bars
+        on all four symbols, even though the 60m grid is not uniformly on the hour
+        (20 bars per symbol are stamped ``:30``, on the five half-day sessions).
+        That is why the rule classifies per bar and never assumes the grid.
+        """
+        bars = self.frame.base.bars
+        straddling = 0
+        first: Optional[Bar] = None
+        for b in bars:
+            fi = self.window.flat_instant(b.ts)
+            if fi is not None and to_et(b.end_ts) > fi:
+                straddling += 1
+                if first is None:
+                    first = b
+        self.stats.bars_straddling_deadline = straddling
+        if straddling and not self.allow_straddling_grid:
+            raise SessionGridError(
+                f"{self.frame.symbol}: {straddling} of {len(bars)} base bars "
+                f"({self.base_minutes}m) contain 16:00 ET strictly inside them, "
+                f"first {to_et(first.ts).isoformat()} -> "
+                f"{to_et(first.end_ts).isoformat()}. The close of such a bar is a "
+                "post-deadline price, so the 16:00 flat cannot be priced from its "
+                "OHLC. A 1440m grid is 100% straddling by construction. Use a "
+                "finer base series, or pass allow_straddling_grid=True and accept "
+                "that the flat is then priced at the bar's adverse extreme."
+            )
 
     # ---- run -----------------------------------------------------------
     def run_many(self, strategies: Sequence[Strategy], *, start: int = 0,
@@ -409,13 +472,27 @@ class SessionWindowEngine(BacktestEngine):
         return pos
 
     # ---- components 1 and 3: the flat, and its fill ---------------------
-    def _flat_fill(self, pos: _OpenPosition, bar: Bar) -> Tuple[float, float]:
-        """(fill price, slippage in points) for the market-on-close flat."""
+    def _flat_fill(self, pos: _OpenPosition, bar: Bar,
+                   *, raw: Optional[float] = None) -> Tuple[float, float]:
+        """(fill price, slippage in points) for the market flat.
+
+        ``raw`` is the pre-slippage reference price and defaults to ``bar.close``,
+        which is the right one on the normal case: the flat fires on the bar whose
+        close *is* 16:00. The caller overrides it to ``bar.open`` on the two
+        degenerate bars where the close is a **post-deadline** price - a bar
+        inside the forbidden window, or one straddling the deadline. Filling at
+        the close there would report a price the order could never have got, and
+        it is the difference between a compliant exit and a violation. **Adopted
+        from EF1** after my own results were written; both paths are unreachable
+        in my design (the entry veto closes the first, ``_audit_grid`` the
+        second), and "unreachable" is a claim about today's data, not a guarantee.
+        """
         atr_pct = self._atr_percentile(pos.signal)
         thin = not is_rth(bar.ts, self.spec.rth_open, self.spec.rth_close)
         slip = self.costs.slippage_price(is_stop=self.flat_is_market_order,
                                          atr_percentile=atr_pct, thin=thin)
-        return self.spec.round_to_tick(bar.close - pos.sign * slip), slip
+        base = bar.close if raw is None else raw
+        return self.spec.round_to_tick(base - pos.sign * slip), slip
 
     def _manage(self, pos: _OpenPosition, i: int, bar: Bar,
                 *, is_last: bool) -> Optional[Trade]:
@@ -432,19 +509,27 @@ class SessionWindowEngine(BacktestEngine):
             return trade
 
         if self._flat_at(i) is True:
-            fill, slip = self._flat_fill(pos, bar)
             st = self.stats
-            st.flat_exits += 1
-            st.flat_slippage_points += slip
+            raw: Optional[float] = None
             if self._keys[i] is None:
+                # Inside the forbidden window: the close is post-deadline, so the
+                # resting market order fills at the first print there is - the
+                # open - gap and all. Unreachable while the entry veto holds.
                 st.flat_on_forbidden_bar += 1
+                raw = bar.open
             else:
                 fi = self.window.flat_instant(bar.ts)
                 end = to_et(bar.end_ts)
                 if fi is not None and end > fi:
+                    # Straddles the deadline: same reasoning. Unreachable unless
+                    # allow_straddling_grid was passed.
                     st.flat_on_late_bar += 1
+                    raw = bar.open
                 elif fi is not None and end < fi:
                     st.flat_before_deadline += 1
+            fill, slip = self._flat_fill(pos, bar, raw=raw)
+            st.flat_exits += 1
+            st.flat_slippage_points += slip
             return self._close(pos, i, bar, fill, SESSION_WINDOW_EXIT)
 
         if is_last:

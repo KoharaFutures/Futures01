@@ -41,7 +41,82 @@ quality of the strategies in it.
 
 ## What was measured anyway, and what it returned
 
-EF4 completed the only cell that ran end to end (scalp, MGC + MCL, 5m/15m/30m):
+### The index complex at scalp timeframes — EF5, 21,060 strategies
+
+**The largest t-statistic anywhere in EF5's search is 3.82 and it belongs to a placebo.** Largest
+real t: 3.116. **No ranked top 10 is publishable for MES or MNQ.**
+
+| | count |
+|---|---|
+| declared strategies | 21,060 |
+| **never fire at all** | **60–82% per cell** |
+| could possibly reach a 20-trade floor | **1,452 of 21,060 (6.9%)** |
+| arm-cells where rank 1 is a placebo | **7 of 12** |
+| arm-cells holding ≤ 8 qualifiers, so no ten exist | **3** |
+| qualifying universes with negative expectancy net of costs | **7 of 12** |
+| arm-cells where the **placebo universe beats the real one** | 3 (all MNQ RTH) |
+
+So for most of this population the null is **"the detector never fired"**, not "we measured
+absence" — separated per cell, with a positive control firing 3,096 times through the same
+evaluator and a cross-check that VOID carriers are a strict subset of zero-signal strategies
+(0 violations, 12/12 cells).
+
+**One cell had real rules beating their own placebos: MNQ 15m with `rth_only=False`** (sign z +3.41,
+Wilcoxon +2.82). EF5 stressed it four ways. It **survives** a leak-free chronological holdout
+(OOS +0.2452R vs placebo −0.0141R, z +3.05, no decay) and a direction-matched drift control. It
+**fails** two:
+
+- **Effective sample size.** Mean pairwise trade-ledger Jaccard **0.0874** → `n_eff = 8.56` of 31.
+  Deflated sign z = **2.17 against a threshold of 2.229** — it does not clear, at the most generous
+  denominator available.
+- **The tape.** Across contiguous thirds: +9.25% tape → z +4.38; **−1.69% tape → z +0.19**;
+  +3.86% → z +2.69. **The one down-tape third has none of the effect.**
+
+**And MULTI_TIMEFRAME tops that cell for a reason that is not a multi-timeframe finding.** Its eight
+real rows are **0.59–0.82 long** on a **+12.186%** tape, and `mtf_aligned` fires when timeframes
+agree — which in a persistently rising market *is* long. A direction-count-preserving shuffle reaches
+ranks 7/9/11/14, and the effect vanishes in the down third. MES is the counter-example at 0.478–0.563
+long, inside EF4's random baseline. **Reporting that cell as "multi-timeframe alignment works on MNQ
+scalp" is precisely the error a top-10 table invites.**
+
+**It also reproduced the programme's central negative inside its own best cell:** select the top 10
+in sample, read out of sample → **+0.2202R against the whole qualifying universe's +0.2980R.**
+Selecting is worse than not selecting, on the overnight regime nobody had measured.
+
+**EF5 found and retracted a leak in its own first holdout** — it gated on `t ≥ 0` over the *full*
+span then read expectancy on the last 40% of it, and withdrew a sign z of 6.19.
+
+### Two corrections to figures this programme was using
+
+1. **Cost is not "15.0% of R at 5m".** Measured per symbol and geometry: **MES 5m median 21.0%**,
+   reaching **39.4%** at the tightest geometry, against **MNQ 5m 4.78%** — a **4.4× difference inside
+   one index complex**, because MNQ's larger min-stop makes its R worth far more dollars against an
+   identical fee.
+2. **The 86.3% clock-close rate does not transfer to scalp.** I relayed EF1's 60m/240m figure to EF5
+   as though it applied. In its cells the clock share is **2.8%–30.8%** and the **stop is the dominant
+   exit in 11 of 12 arm-cells** (26.5–61.7%). So a ranked list there ranks strategies, not entry
+   signals on a clock exit — **except MES 30m RTH at 53.1%**, where the warning holds verbatim, and
+   that cell has 7 qualifiers anyway.
+
+### Two more structurally-zero configurations, bringing the count to seven
+
+- **`volatility_compressed` under `rth_only=True` is VOID at MES 15m** — 0 of 1,066 RTH bars, because
+  `atr_percentile` is taken over the whole 24-hour history and an RTH bar is essentially never in its
+  bottom 30%. BREAKOUT nails that condition into `base_filters`, so **all 138 MES 15m BREAKOUT
+  strategies take zero trades.** EF5's measurement alone; needs replication.
+- **`session_extreme_sweep` is VOID under this programme's own session rule.** All **48** fires across
+  both symbols and three timeframes fall between **16:00 and 16:55 ET** — inside the forbidden window.
+  A dead member of a required group, with a different cause from the previously recorded one.
+
+### The hazard EF5 flags rather than clears
+
+**No roll audit inside its 57 days.** `yahoo.py` has `auto_adjust=False` and no roll handling, so a
+roll gap would read as a return — and **MNQ's +12.19% drift is doing real work in its conclusions.**
+It names the cheapest possible follow-up: check ES/NQ front-month roll dates against its 41 cycles.
+
+---
+
+EF4 completed the other scalp cell (MGC + MCL, 5m/15m/30m):
 
 | | MGC | MCL |
 |---|---|---|

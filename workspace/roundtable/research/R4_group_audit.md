@@ -825,3 +825,475 @@ Three things follow, and the third is the one that changes how a 4-hour result r
 | `volatility_compressed` | FILTER | **MISNAMED** — names Bollinger width, reads ATR percentile; verdicts disagree 24–30% at 60m and **37–49% at 240m**; base filter of BREAKOUT |
 
 **Group verdict: MISNAMED**, with one VOID conjunction the combinator emits.
+
+---
+
+# Group 6 — `regime` (3 conditions) → **DEGRADED**, with a directional VOID on the index micros at 4h
+
+## R4-R1 — all three accept `tf` and none reads it
+
+```
+library.py:749-754   def _reg_trend(snap, tf):  r = snap.regime.regime      # tf never referenced
+library.py:757-762   def _reg_range(snap, tf):  r = snap.regime.regime      # tf never referenced
+library.py:765-774   def _reg_dir(snap, tf):    r = snap.regime.regime      # tf never referenced
+```
+
+`[repo-verified: futures_agents/strategies/library.py:749-774 — the parameter is named `tf` in all
+three and appears in none of the three bodies]`
+
+`snap.regime` is `regime_at(base_index)`, which reads `self.regime_tf` — **one timeframe chosen for
+the whole frame** `[repo-verified: features.py:928-943]` by `_default_regime_tf`'s preference list
+`(15, 30, 5, 60, 10, 3, 1)` with a fallthrough to `self.timeframes[-1]`
+`[repo-verified: features.py:820-826]`.
+
+Measured directly, holding the frame fixed at `[5,15,60,240]` and varying **only** the binding:
+
+| symbol | bind=5 | bind=60 | bind=240 |
+|---|---|---|---|
+| MGC `regime_trending` | 981 | 981 | 981 |
+| MGC `regime_ranging` | 3,297 | 3,297 | 3,297 |
+| MGC `regime_matches_direction` | 981 | 981 | 981 |
+| MNQ | 1,246 / 2,804 / 1,246 | identical | identical |
+| MES | 1,097 / 2,913 / 1,097 | identical | identical |
+| MCL | 1,076 / 2,996 / 1,076 | identical | identical |
+
+`[measured: census, 12 cells — one series, one frame, three bindings, four symbols; counts
+bit-identical across bindings in all 12]`
+
+**The binding is fully inert for this group**, which is a stronger statement than I could make for
+`volatility_normal` (whose counts differ by 11–35 bars across bindings, entirely because
+`Condition.evaluate` returns `no()` when `snap.tf(tf) is None`
+`[repo-verified: base.py:125-126]` and `volatility_normal` can fire from bar 0 while
+`regime_trending` cannot fire until the regime has 60 bars).
+
+Which series the regime is read off in the corpus is `R4-M3`'s table: on-timeframe at 15m/30m/60m,
+3× coarser at 5m, **the daily series at 240m**, and the mislabelled daily copy at 1440m. So R1's
+D-R1 is confirmed as a defect and **its illustrative direction is wrong for the corpus** — the error
+is coarser-not-finer at the rows where it exists, and absent at three of six rows.
+
+## R4-R2 — `regime_matches_direction` adds no gate over `regime_trending`, and 26% of TREND strategies carry both
+
+Both gate on `regime in ("TREND_UP", "TREND_DOWN")` `[repo-verified: library.py:752-754, 767-773]`.
+Measured: **identical fire counts in all 23 corpus cells** `[measured: census, 23/23]`. The only
+difference is that `regime_trending` returns `FLAT` and `regime_matches_direction` returns LONG/SHORT.
+
+**And unlike the MACD pair, this co-occurrence is reachable and common**, because one is a base
+FILTER and the other a SIGNAL, so the one-per-group rule does not separate them:
+
+| template | strategies generated | carrying `regime_matches_direction` **and** `regime_trending` |
+|---|---|---|
+| TREND | 366 | **96 = 26.2%** |
+
+`[measured: python3, generate_strategies('MCL',[5,15,60,240],max_total=400,groups=['TREND'])]`
+
+TREND has `regime_trending` in `base_filters` and `regime` in `optional_groups`
+`[repo-verified: combinator.py:170-176]`. So in 26% of TREND strategies one of the three optional
+signal slots is spent on a condition whose gate the base filter has **already applied**, contributing
+only a direction vote while appearing in the strategy's identity as a distinct confluence member. Any
+confluence count on those strategies is one higher than the number of independent readings made.
+`GLOBAL_EXCLUSIVE` does not list the pair `[repo-verified: combinator.py:390-398]`.
+
+## R4-R3 — `regime_matches_direction` is directionally VOID on MES at 240m, and near-VOID on MNQ
+
+This is the finding I would not have got without testing per symbol *and* per timeframe, and it is
+not in R1's file.
+
+| cell | fires | LONG | **LONG share** |
+|---|---|---|---|
+| **MES 240m** | 188 | **188** | **100.0%** |
+| **MNQ 240m** | 206 | 194 | **94.2%** |
+| MES 1440m | 284 | 252 | 88.7% |
+| MNQ 1440m | 270 | 234 | 86.7% |
+| MGC 1440m | 467 | 325 | 69.6% |
+| MGC 240m | 209 | 91 | 43.5% |
+| MCL 240m | 152 | 87 | 57.2% |
+| all 5m/15m/30m/60m cells | 387–1,246 | — | 45.5–64.7% |
+
+`[measured: census, 23 corpus cells, LONG/SHORT split recorded per cell]`
+
+**On MES at 240m this SIGNAL can only ever say LONG.** Not "mostly" — 188 of 188. The mechanism is
+`R4-M3`: at 240m the regime is read off the **daily** series, and over this `csv/raw` window the
+daily index-complex regime is `TREND_UP` on every bar it is trending at all. `Strategy.evaluate`
+requires every signal to agree on direction and returns `None` otherwise
+`[repo-verified: base.py:676-684]`, so:
+
+> **A MES 240m TREND or MOMENTUM strategy carrying `regime_matches_direction` cannot take a short.**
+> Its `allowed_directions` include SHORT `[repo-verified: combinator.py TEMPLATES → directions]`, its
+> generated identity says LONG and SHORT, and its SHORT arm is **VOID**.
+
+It is per-symbol: MGC at the same timeframe is 43.5% LONG and MCL 57.2%. It is per-timeframe: MES at
+60m is 61.0%. And it is the index complex specifically, which `BRIEF.md` already warns is one
+correlated family — so MES and MNQ agreeing here is **not** corroboration, it is the same fact twice.
+**Verdict: VOID on the SHORT half, MES 240m; DEGRADED-toward-VOID, MNQ 240m and both at 1440m.**
+
+## R4-R4 — `regime_ranging`'s pass rate falls 11 points at 240m for a warm-up reason
+
+62–66% at 5m/15m/30m/60m → **50–52% at 240m on all four symbols** `[measured: census]`. The cause is
+`R4-V3`: on 21.5–22.0% of 240m bars the regime is the default `"UNKNOWN"`, which `regime_ranging`
+correctly refuses. `regime_ranging` is a **base filter in MEAN_REVERSION**, so every
+MEAN_REVERSION strategy at 4h is vetoed on a fifth of its bars by daily-regime warm-up. R1 measured a
+13-point swing from changing the frame's timeframe list; this is a different 11-point swing from
+changing the *timeframe row*, and both are invisible in any report.
+
+| condition | kind | verdict |
+|---|---|---|
+| `regime_trending` | FILTER | **DEGRADED** — timeframe-inert (measured bit-identical across 3 bindings), reads the frame's `regime_tf` |
+| `regime_ranging` | FILTER | **DEGRADED** — same, plus an 11-point pass-rate drop at 240m from daily-regime warm-up |
+| `regime_matches_direction` | SIGNAL | **DEGRADED** — no gate beyond `regime_trending`, co-occurs with it in 26% of TREND strategies; **VOID on the SHORT half at MES 240m** |
+
+The *arithmetic* of all three faithfully reports what `classify_regime` returned, and each
+description says "Regime classifier says …", which is honest. The degradation is entirely in **which
+series the classifier ran on** — invisible at the call site, not chosen by the strategy, and not
+recorded in any report.
+
+---
+
+# Group 7 — `multitimeframe` (3 conditions) → **DEGRADED**, **VOID in a frame of one**, and **contentless at the two highest corpus rows**
+
+This is where my verdicts diverge most from R1's, and the divergence is about **which configuration**
+is broken rather than whether one is.
+
+## R4-MT1 — neither signal is VOID in any frame the corpus builds; both are VOID in a frame of one
+
+`agreeing_timeframes(from_tf=tf)` counts only timeframes at or above `tf`, **and only those whose
+`structure_trend` is UPTREND or DOWNTREND** — `if v: votes.append(v)`
+`[repo-verified: futures_agents/features.py:752-770]`. Both signals return `no()` when `voting < 2`
+`[repo-verified: library.py:793-800, 822-824]`.
+
+Measured at the corpus's own bindings (`tfs = FRAMES[primary]`, bound at `primary`), all four symbols:
+
+| symbol | 5m | 15m | 30m | 60m | 240m | 1440m |
+|---|---|---|---|---|---|---|
+| MGC `mtf_aligned` | 1,415 | 1,309 | 683 | 1,785 | **303** | 1,153 |
+| MNQ | 1,606 | 1,397 | 736 | 1,365 | **201** | 908 |
+| MES | 1,338 | 879 | 540 | 1,517 | **284** | 976 |
+| MCL | 1,791 | 1,442 | 783 | 1,703 | **316** | — |
+
+`[measured: census, 23 corpus cells]`
+
+**Not one zero.** R1's D-MTF1 states that "a MULTI_TIMEFRAME strategy whose primary timeframe is the
+top of its frame can never emit a signal — it is a structurally zero-trade strategy, exactly the shape
+of round 1's `openinterest` finding" `[repo-verified: R1_group_audit.md:480-486]`. **I disagree that
+this describes anything in the corpus**, for the reason in `R4-M3`: `FRAMES` always appends higher
+timeframes to the primary, and every harness filters on `s.primary_tf == tf`, so no generated strategy
+is ever bound to the top of its own frame. R1 measured `build_symbol_frame(5m, [5,15,60,240])` bound
+at `tf=240`, and I reproduce its zeros exactly in that configuration (0 at bind=240 on all four
+symbols, `[measured: census, 12 "one frame three bindings" cells]`) — the arithmetic is right and the
+configuration is not one that occurs. **CONTRADICTED as to blast radius; CONFIRMED as to mechanism.**
+
+**The configuration that *is* VOID is a frame of one, and it is VOID on every symbol and every
+timeframe:**
+
+| cell family | `mtf_aligned` | `mtf_strongly_aligned` | `mtf_not_conflicted` |
+|---|---|---|---|
+| `tfs = [tf]`, 23 cells (4 symbols × {5,15,30,60,240,1440}) | **0 / N in all 23** | **0 / N in all 23** | **100.0% in all 23** |
+
+`[measured: census, 23 frame-of-one cells: MGC/MNQ/MES/MCL at 5m, 15m, 30m, 60m, 240m, 1440m]`
+
+So `multitimeframe` is **VOID** in a single-timeframe frame, and since `multitimeframe` is required by
+MULTI_TIMEFRAME and `mtf_aligned`/`mtf_strongly_aligned` are its **only** SIGNALs
+`[measured: CONDITION_GROUPS, 2 of 3 are SIGNAL]`, **MULTI_TIMEFRAME is a structurally zero-trade
+template in any single-timeframe frame.** And `mtf_not_conflicted` — PULLBACK's base filter — becomes
+literally unconditional there, because one timeframe cannot hold both UPTREND and DOWNTREND.
+
+**Is that reachable?** `TIMEFRAMES = (1, 2, 3, 5, 10, 15, 30, 60, 120, 240, 1440)` but `FRAMES` has
+only `{5, 15, 30, 60, 240, 1440}` `[repo-verified: config.py:302, scout.py:58-67]`, and `scout.rank`
+resolves its frame as `FRAMES.get(timeframe, [timeframe])` `[repo-verified: scout.py:230-233]` — the
+fallback is a frame of one for 1m, 2m, 3m, 10m and 120m. **That particular branch is unreachable**,
+because `scout.rank`'s `suffix` dict covers only `{1440, 240, 60, 15, 5}` and raises `KeyError` first
+`[repo-verified: scout.py:219]` — note it does not even cover 30m, which *is* a `FRAMES` key. And I
+checked every `build_symbol_frame` call site in the repository: **all but three pass `FRAMES[tf]` or a
+multi-element list**, the exceptions being two lines in `backtest/BT2/code/test_algo1.py` (a unit test)
+`[measured: grep -rn "build_symbol_frame(" --include=*.py . → 40 call sites]`. So the frame-of-one
+VOID has **not** contaminated any published result. It is a live hazard with no guard, and stating it
+as VOID-per-cell is the useful form.
+
+## R4-MT2 — `mtf_strongly_aligned` has zero independent content at 240m and 1440m, and it is provable
+
+| cell | `mtf_aligned` | `mtf_strongly_aligned` | aligned-not-strong | strong-not-aligned |
+|---|---|---|---|---|
+| MGC 5m [5,15,60] | 1,415 | 1,213 | 202 | **0** |
+| MGC 15m | 1,309 | 1,064 | 245 | **0** |
+| MGC 30m | 683 | 629 | 54 | **0** |
+| MGC 60m [60,240,1440] | 1,785 | 1,471 | 314 | **0** |
+| **MGC 240m [240,1440]** | **303** | **303** | **0** | **0** |
+| **MGC 1440m [1440,7200]** | **1,153** | **1,153** | **0** | **0** |
+| **MNQ 240m / 1440m** | 201 / 908 | **201 / 908** | 0 / 0 | 0 / 0 |
+| **MES 240m / 1440m** | 284 / 976 | **284 / 976** | 0 / 0 | 0 / 0 |
+| **MCL 240m** | 316 | **316** | 0 | 0 |
+
+`[measured: python3 over csv/raw, both conditions evaluated at every bar of every corpus frame, four symbols]`
+
+At the two highest corpus rows the two conditions are **identical on 100% of bars, on every symbol.**
+With exactly two timeframes voting, "at least a 0.4 weighted majority" and "unanimous among the
+voters" are the same statement: two agreeing voters give `|a| = sum(w_agree)/sum(w_all) ≥ 0.569` in
+every corpus frame, and two disagreeing voters give `|a| ≤ 0.14`. So the split is structural, not a
+sampling result. The docstring's stated purpose — "needs a condition that can tell three-of-three from
+two-of-three" `[repo-verified: library.py:812-819]` — **is unreachable wherever fewer than three
+timeframes vote**, which is every 240m and 1440m strategy in the corpus.
+
+I also checked the opposite direction, because `alignment()` and `agreeing_timeframes()` use
+**different denominators** — `agreeing_timeframes` excludes non-directional timeframes from `voting`
+while `alignment` keeps them in `den` `[repo-verified: features.py:742-750 vs :760-770]` — which
+could in principle let `mtf_strongly_aligned` fire where `mtf_aligned` does not. **It never does:
+strong-not-aligned = 0 in all 23 corpus cells**, and the log-weights make it impossible in these
+frames. A check that came back clean.
+
+## R4-MT3 — `mtf_strongly_aligned`'s description is false on 3 of 4 of its firings
+
+New, and a consequence of the same denominator asymmetry. The description is "**Every** timeframe from
+this one up agrees - maximum linkage" `[repo-verified: library.py:810-811]`. The arithmetic requires
+`agree == voting`, and `voting` **excludes every timeframe whose `structure_trend` is not UPTREND or
+DOWNTREND** `[repo-verified: features.py:764-766]`. So it fires when every *trending* timeframe agrees,
+ignoring the flat ones entirely.
+
+| cell | `mtf_strongly_aligned` fires | **of which ≥1 timeframe ≥ primary is NOT directional** |
+|---|---|---|
+| MGC 5m | 1,213 | **1,020 = 84.1%** |
+| MGC 15m | 1,064 | **848 = 79.7%** |
+| MGC 30m | 629 | **408 = 64.9%** |
+| MGC 60m | 1,471 | **1,097 = 74.6%** |
+| MNQ 5m / 15m / 30m / 60m | 1,429 / 1,168 / 663 / 1,114 | 1,167 / 914 / 458 / 890 = **81.7 / 78.3 / 69.1 / 79.9%** |
+| MES 5m / 15m / 30m / 60m | 1,183 / 750 / 513 / 1,269 | 990 / 659 / 416 / 920 = **83.7 / 87.9 / 81.1 / 72.5%** |
+| MCL 5m / 15m / 30m / 60m | 1,620 / 1,149 / 741 / 1,470 | 1,176 / 834 / 526 / 1,102 = **72.6 / 72.6 / 71.0 / 75.0%** |
+| all 240m and 1440m cells | 201–1,153 | **0** (only two timeframes, both must vote to reach `voting ≥ 2`) |
+
+`[measured: python3, per bar comparing agreeing_timeframes(from_tf) against the count of timeframes ≥ from_tf whose structure_trend is directional]`
+
+So at 5m, 15m, 30m and 60m — **four of the six corpus rows, on all four symbols — between 65% and 88%
+of "every timeframe agrees" firings occur with at least one timeframe not agreeing.** It is not
+wrong arithmetic; it is a description that promises unanimity over the frame and delivers unanimity
+over a subset the reader cannot see. **MISNAMED**, and materially: this is the condition that exists
+specifically to grade linkage strength, and its grade ignores the abstentions.
+
+## R4-MT4 — `mtf_not_conflicted` ignores `tf`, and at 1440m it vetoes nothing at all
+
+```
+library.py:834-841
+def _mtf_ok(snap, tf):
+    trends = {s.structure_trend for s in snap.tfs.values()}
+    conflicted = "UPTREND" in trends and "DOWNTREND" in trends
+```
+
+`tf` is accepted and never read; `snap.tfs.values()` is **every** timeframe in the frame
+`[repo-verified: futures_agents/strategies/library.py:834-841]`. Measured across three bindings of one
+fixed frame `[5,15,60,240]`: 2,739 / 2,763 / 2,774 (MGC), 2,978 / 2,978 / 2,979 (MNQ), 2,347 / 2,347 /
+2,349 (MES), 2,758 / 2,794 / 2,794 (MCL) `[measured: census, 12 cells]`. The residual 0–35-bar spread
+is **not** a timeframe effect — it is `Condition.evaluate` returning `no()` on bars where the bound
+timeframe has no completed bar yet `[repo-verified: base.py:125-126]`, which is 12 base bars at
+bind=60 and 48 at bind=240 on a 5m base. **Timeframe-inert. CONFIRMED** — and this is the defect
+`mtf_aligned`'s own docstring records as found and fixed for the two signals via `from_tf=tf`; the
+filter never got it `[repo-verified: library.py:784-791]`.
+
+**And its pass rate is a property of the frame, which is what makes it a confound on a whole
+template.** `mtf_not_conflicted` is PULLBACK's **base filter** `[repo-verified: combinator.py:185]` —
+unconditional on every PULLBACK strategy:
+
+| frame | MGC | MNQ | MES | MCL |
+|---|---|---|---|---|
+| [5] and every other frame of one | **100.0%** | 100.0% | 100.0% | 100.0% |
+| [5,15,60] @5m | 70.6% | 66.6% | 65.7% | 63.5% |
+| [15,60,240] @15m | 64.3% | 67.5% | 62.3% | 70.6% |
+| [60,240,1440] @60m | 62.6% | 59.3% | 64.4% | 69.0% |
+| [5,15,60,240] @5m | 55.5% | 59.6% | 47.0% | 55.9% |
+| [240,1440] @240m | 79.6% | 84.8% | 81.2% | 82.9% |
+| **[1440,7200] @1440m** | **99.1%** | **99.3%** | **99.6%** | — |
+| [1,5,15] @1m | 60.2% | 65.7% | 66.8% | 65.1% |
+
+`[measured: census, 47 cells]`
+
+The pass rate ranges from **47.0% to 100%** on the same conditionless question, purely as a function of
+how many timeframes the runner put in the frame. Adding a timeframe adds another chance of an
+UPTREND/DOWNTREND pair. So the strictness of PULLBACK's unconditional veto is set by the harness, not
+by the strategy, and no report records which frame was used. **CONFIRMED**, with two additions:
+
+1. **At 1440m it passes 99.1–99.6% — it vetoes 22 bars (MGC), 13 (MNQ) and 7 (MES) out of 2,511 / 1,859 / 1,859.** A base filter that
+   differs from no filter on one bar in 150 is not conditioning on anything. The cause is `R4-M3`:
+   `FRAMES[1440] = [1440, 7200]` holds the **same daily series twice**, so the only bars on which the
+   two can disagree are inside the 2–4-bar alignment lag. **VOID as a filter at 1440m**, on all three
+   symbols that have daily data.
+2. **At 240m it passes 79.6–84.8%, the loosest of the multi-timeframe rows**, again because only two
+   timeframes can conflict.
+
+| condition | kind | verdict |
+|---|---|---|
+| `mtf_aligned` | SIGNAL | **CLEAN** arithmetic; **VOID in a frame of one** (23/23 cells); alive in all 23 corpus cells |
+| `mtf_strongly_aligned` | SIGNAL | **MISNAMED** (R4-MT3: "every timeframe" ignores abstentions, 65–88% of firings) + **DEGRADED** (zero independent content at 240m and 1440m) + **VOID in a frame of one** |
+| `mtf_not_conflicted` | FILTER | **DEGRADED** — timeframe-inert; **VOID as a filter at 1440m** (passes 99.1–99.6%) and unconditional in a frame of one |
+
+**Group verdict: DEGRADED**, VOID in two named configurations.
+
+## What this does to `BRIEF.md` rule 2
+
+Rule 2 says multi-timeframe agreement "measured detectably *worse* than requiring none (z = −4.09)",
+and notes that "on a two-timeframe frame, 'majority' and 'unanimous' are the same statement (D17)".
+**D17 is confirmed here and is stronger than stated**: it is not only that the two statements
+coincide, it is that at the 240m and 1440m rows the *entire corpus* is a two-voter frame, so the
+grading condition has no content there at all; and at the four finer rows the "unanimous" condition
+ignores abstentions on 65–88% of its firings; and at 1440m the higher timeframe is the same series
+lagged 2–4 sessions (`R4-M3`). **Whether multi-timeframe alignment helps is not answered by that
+measurement** — what was measured is this implementation. I reach the same conclusion R1 does at
+`R1_group_audit.md:503-506`, by three mechanisms it did not use, and I want to be explicit that this
+is *not* a defence of the hypothesis: it is a statement that the null was measured against a
+misconfigured treatment arm.
+
+---
+
+# Final tally — 7 groups, 31 conditions
+
+## Per-condition verdict split
+
+| group | group verdict | CLEAN | DEGRADED | MISNAMED | VOID (per cell) |
+|---|---|---|---|---|---|
+| `trend` (8) | **CLEAN** | **8** | — | — | — |
+| `momentum` (6) | **MISNAMED** | 3 | 1 | 2 | — |
+| `meanreversion` (3) | **CLEAN** | **3** | — | — | — |
+| `volatility` (3) | **MISNAMED** | — | 1 | 2 | 1 (in conjunction) |
+| `regime` (3) | **DEGRADED** | — | 3 | — | 1 (directional half) |
+| `multitimeframe` (3) | **DEGRADED** | 1 | 2 | 1 | 3 (frame of one) |
+| `candlestick` (5) | **CLEAN** | **5** | — | — | — |
+
+**Primary verdict, one per condition (a condition is counted once, at its worst unconditional verdict;
+VOID verdicts are conditional on a named cell and are listed separately below):**
+
+| verdict | n | conditions |
+|---|---|---|
+| **CLEAN** | **20** | all 8 `trend`; `rsi_directional`, `macd_directional`, `stoch_directional`; all 3 `meanreversion`; all 5 `candlestick`; `mtf_aligned` |
+| **DEGRADED** | **6** | `macd_hist_direction`; `volatility_normal`; `regime_trending`, `regime_ranging`, `regime_matches_direction`; `mtf_not_conflicted` |
+| **MISNAMED** | **5** | `rsi_extreme_reversal`, `stoch_extreme` (wrong group); `volatility_compressed` (wrong field), `volatility_expanding` (wrong quantile); `mtf_strongly_aligned` (description ignores abstentions) |
+| **PROXY** | **0** | — none of my 31 names an object the data does not contain. My surface has no participant-information group, which is the whole reason R1's round-1 rate was never going to replicate here |
+| **DEAD** | **0** | superseded by VOID, which is per-cell and honest |
+
+**Group verdicts: 3 CLEAN, 2 MISNAMED, 2 DEGRADED.** So **20 of 31 conditions are clean** and
+**2 of 7 groups have a name that does not describe the arithmetic.**
+
+## VOID configurations found — per symbol and per timeframe, never in general
+
+| # | configuration | cause | scope |
+|---|---|---|---|
+| 1 | **BREAKOUT + `volatility_expanding`** | `atr_percentile <= 0.30 AND >= 0.70`, same field, same `tf` — empty by arithmetic | **all symbols, all timeframes**; 14 of 84 generated BREAKOUT strategies on the corpus path |
+| 2 | **MULTI_TIMEFRAME in a single-timeframe frame** | `agreeing_timeframes` can reach at most 1 vote; both SIGNALs return `no()` | 0 fires in **23 of 23** frame-of-one cells (4 symbols × 6 timeframes). Not reachable in the published corpus |
+| 3 | **`mtf_not_conflicted` at 1440m** | `FRAMES[1440] = [1440, 7200]` and 7200m is the daily series relabelled — the two can disagree only inside the 2–4-bar alignment lag | passes **99.1% MGC / 99.3% MNQ / 99.6% MES**; MCL has no daily CSV |
+| 4 | **`regime_matches_direction` SHORT half, MES 240m** | regime read off the daily series (`regime_tf = 1440`); daily index-complex regime is `TREND_UP` throughout this window | **188 of 188 firings LONG on MES 240m**; 194/206 MNQ 240m. **Not** MGC (43.5%) or MCL (57.2%) |
+| 5 | **`mtf_not_conflicted` in a frame of one** | one timeframe cannot hold UPTREND and DOWNTREND | passes 100.0% in **23 of 23** frame-of-one cells |
+
+Also recorded, not VOID but adjacent: **23–27% of `volatility_normal`'s passes at 240m are the string
+`"NORMAL"` from `RegimeSnapshot`'s field default**, not a volatility measurement, on all four symbols
+(`R4-V3`).
+
+## Which templates require a group I found broken
+
+Measured from `TEMPLATES`, not inherited `[measured: python3, required_groups / base_filters per template]`.
+
+**Through a REQUIRED group** — a strategy of that template cannot exist without a member of it:
+
+| template | required group of mine | its verdict | what that makes every published row of this template |
+|---|---|---|---|
+| **MOMENTUM** | `momentum` | **MISNAMED** | 1 of its 6 required options is an exact duplicate of another, and **2 of 6 are mean-reversion conditions**. A MOMENTUM strategy whose `momentum` condition is `stoch_extreme` (35–54% of bars) is a fade filed under MOMENTUM — **and per `R4-M1` its other declared requirement, `volume`, is not enforced, so 24 of 40 generated MNQ MOMENTUM strategies contain no volume condition at all** |
+| **MULTI_TIMEFRAME** | `multitimeframe` | **DEGRADED** | at 240m and 1440m `mtf_strongly_aligned` has **zero** content distinct from `mtf_aligned` (identical on 100% of bars, 4 symbols); at 5m–60m `mtf_strongly_aligned` fires with a non-agreeing timeframe present on **65–88%** of its firings; at 1440m the higher timeframe is the daily series lagged 2–4 sessions |
+| **TREND** | `trend` | CLEAN | — but its base filters `regime_trending` (DEGRADED) and `volatility_normal` (DEGRADED) are not, and **26% of TREND strategies carry `regime_matches_direction` on top of the identical `regime_trending` base filter** |
+| **PULLBACK** | `trend`, `meanreversion` | both CLEAN | — but its base filter `mtf_not_conflicted` is DEGRADED and timeframe-inert, with a pass rate of **47.0%–100%** set by the frame |
+| **REVERSAL** | `meanreversion` | CLEAN | — |
+| **MEAN_REVERSION** | `meanreversion` | CLEAN | — but its base filter `regime_ranging` is DEGRADED, and at 240m it vetoes a fifth of bars on daily-regime warm-up |
+| **FIBONACCI** | `trend` | CLEAN | — |
+
+**So 2 of the 13 templates require a group I judge broken** (MOMENTUM, MULTI_TIMEFRAME), and 5 more
+require only clean groups of mine.
+
+**Through a BASE FILTER** — unconditional, the strategy does not choose it:
+
+| template(s) | base filter of mine | verdict |
+|---|---|---|
+| **all except BREAKOUT — 12 of 13** | `volatility_normal` | **DEGRADED** — measured on the frame's regime timeframe, not the strategy's; 23–27% of its 240m passes are a dataclass default |
+| **BREAKOUT** | `volatility_compressed` | **MISNAMED** — names Bollinger width, reads ATR percentile; verdict differs on **24–30% of 60m bars and 37–49% of 240m bars** |
+| **TREND** | `regime_trending` | **DEGRADED** — timeframe-inert (bit-identical across 3 bindings) |
+| **MEAN_REVERSION** | `regime_ranging` | **DEGRADED** — same, plus an 11-point 240m pass-rate drop |
+| **PULLBACK** | `mtf_not_conflicted` | **DEGRADED** — ignores `tf`; pass rate 47.0%–100% by frame composition; **VOID as a filter at 1440m** |
+
+**All 13 of 13 templates carry a DEGRADED or MISNAMED condition from my seven groups in a slot the
+strategy cannot avoid** — 12 via `volatility_normal`, BREAKOUT via `volatility_compressed`. That is a
+property of the base-filter lists, not of any strategy, and it is the single most consequential line
+here. It is also the same conclusion R1 reached from the same two conditions; I reproduce it because it
+is the one claim in this audit that every published row depends on.
+
+---
+
+# Comparison against `R1_group_audit.md` — agreements and disagreements, reported separately
+
+Per the coordinator's correction. **Read the DECLARED ANCHOR section first: I saw R1's verdicts before
+forming mine, so the agreements below are corroboration of a reading, not an independent replication.**
+
+## Per-condition verdicts: 30 of 31 agree, 1 is stricter
+
+| R1's verdict | my verdict | n | conditions |
+|---|---|---|---|
+| CLEAN | CLEAN | 19 | all 8 `trend`; `rsi_directional`, `macd_directional`, `stoch_directional`; all 3 `meanreversion`; all 5 `candlestick` |
+| CLEAN (w/ DEAD-at-top caveat) | CLEAN (w/ VOID-in-frame-of-one) | 1 | `mtf_aligned` — same verdict, different cell named |
+| DEGRADED | DEGRADED | 5 | `macd_hist_direction`, `volatility_normal`, `regime_trending`, `regime_ranging`, `regime_matches_direction`, `mtf_not_conflicted` (6 listed, `regime_matches_direction` additionally VOID on one half) |
+| MISNAMED | MISNAMED | 4 | `rsi_extreme_reversal`, `stoch_extreme`, `volatility_compressed`, `volatility_expanding` |
+| **DEGRADED** | **MISNAMED + DEGRADED** | **1** | **`mtf_strongly_aligned`** — see `R4-MT3` |
+
+**All 7 group verdicts agree**: `trend` CLEAN, `momentum` MISNAMED, `meanreversion` CLEAN,
+`volatility` MISNAMED, `regime` DEGRADED, `multitimeframe` DEGRADED, `candlestick` CLEAN.
+
+The one stricter verdict: R1 filed `mtf_strongly_aligned` DEGRADED for having no independent content at
+the top bindings. I add that its **description is false on 65–88% of its firings** at four of six
+corpus rows on all four symbols — "every timeframe from this one up agrees" is computed over only the
+*directional* timeframes, because `agreeing_timeframes` drops abstentions from `voting`
+`[repo-verified: features.py:764-766]`. A reader is actively misled about what agreed, which is R1's
+own bar for MISNAMED `[repo-verified: R1_group_audit.md:24]`.
+
+## Three CONTRADICTIONS — same lines read, different conclusion
+
+| # | R1's claim | where | what I find |
+|---|---|---|---|
+| 1 | "any two-condition confluence that happened to draw **both** MACD conditions was counting one reading twice and calling it agreement" | `R1_group_audit.md:396-399` | **Structurally impossible.** One condition per group, and no template lists a group in both required and optional. Measured 0 co-occurrences on 4 symbols. The duplication's real cost is a **byte-identical twin rule set with a second `strategy_id`** — denominator inflation, not false confluence. `R4-MO1` |
+| 2 | "a MULTI_TIMEFRAME strategy whose primary timeframe is the top of its frame can never emit a signal — **structurally zero-trade**, exactly the shape of round 1's `openinterest` finding" | `R1_group_audit.md:480-486` | **Not a configuration the corpus builds.** `FRAMES` always appends higher timeframes and every harness filters `s.primary_tf == tf`; both signals fire in **all 23** corpus cells (201–1,791 times). The VOID configuration is a **frame of one**, 0/N in 23 of 23 cells, and it is unreachable via `scout.rank` (its `suffix` dict raises first) and absent from all 40 `build_symbol_frame` call sites. `R4-MT1` |
+| 3 | "a 4h TREND strategy in a `[5,15,60,240]` frame is gated by the **15-minute** regime" | `R1_group_audit.md:607-609` | The defect is real; **its direction in the corpus is the opposite and its scope is half.** `FRAMES` gives `regime_tf` = the strategy's own timeframe at 15m/30m/60m, **coarser** at 5m (15), **the daily series** at 240m, and the mislabelled daily copy at 1440m. A 4h TREND strategy is gated by the **daily** regime, never the 15-minute one. `R4-M3` |
+
+## Four REFINEMENTS — R1's verdict stands, a load-bearing part of its consequence does not
+
+| # | R1's statement | refinement |
+|---|---|---|
+| 4 | template map lists `volume` as "required by **MOMENTUM, BREAKOUT**" (`:1114`, `:1157`) | **Not enforced.** `_signal_pools` filters to SIGNAL, `volume` has 0 of 3, and the empty pool is dropped. `R4-M1`. R1 has since verified and accepted this |
+| 5 | D-M2: a `rsi_extreme_reversal` MOMENTUM strategy is a mean-reversion strategy "**with a `volume` filter on it**" (`:426`) | No volume filter in **24 of 40** generated MNQ MOMENTUM strategies and 15 of 25 MCL. MOMENTUM is the one template without `volume_not_thin` in `base_filters` `[repo-verified: combinator.py:219]` |
+| 6 | D-V2: "MGC and MES did not **in this sample**" (`:793`) | Not sampling — `profiles.groups_for` gives MGC and MES no BREAKOUT template at all. On the corpus path (`groups=ALL_GROUPS`) all four symbols produce it: **84 BREAKOUT, 28 VOID = one third**, not 60/20. `R4-M2` |
+| 7 | D-MTF2: `mtf_strongly_aligned` identical to `mtf_aligned` "at `tf=60`" | Correct for R1's frame. In the corpus the 100%-identity rows are **240m and 1440m**, and at 60m the two differ on 248–314 bars. And it is **provable, not measured**: two agreeing voters give `\|a\| ≥ 0.569` and two disagreeing give `\|a\| ≤ 0.14` in every corpus frame. `R4-MT2` |
+
+## Findings absent from R1's file
+
+`R4-M1` (required group silently dropped), `R4-M2` (per-symbol template profile),
+`R4-M3` (**`align_bucket` ignores `minutes` above 1440, so `FRAMES[1440]`'s "weekly" timeframe is the
+daily series lagged 2–4 sessions** — the largest single item here), `R4-C1` (the CLV duplicate is a
+*reachable* cross-group false confluence and is not in `GLOBAL_EXCLUSIVE`, while the two provable
+same-group duplicates are also not in it), `R4-MT3` (the abstention bug in `mtf_strongly_aligned`),
+`R4-MT4`'s second half (`mtf_not_conflicted` VOID as a filter at 1440m), `R4-R3` (`regime_matches_direction`
+is 188/188 LONG on MES 240m), `R4-V3` (23–27% of `volatility_normal`'s 240m passes are a dataclass
+default), `R4-V1`'s 240m half (correlation collapses to −0.06/−0.10; MCL 2.3% vs 41.3%), `R4-T2`
+(the deadband silently voids five conditions when ATR is unavailable), and the prefix-invariance test
+over all 31 conditions.
+
+---
+
+# Anti-overfitting and validity checks on this audit itself
+
+| risk | how I checked | what I found |
+|---|---|---|
+| **look-ahead / repainting** | **Direct prefix-invariance test**, not inspection: rebuild the frame from `bars[:i+1]`, evaluate all 31 conditions at bar `i`, compare verdict **and** direction against the full series. 3 cells (MGC 60m, MNQ 5m, MCL 60m), 16 probes | **all 31 prefix-invariant at every probe.** No repainting, no future-data read |
+| **future-data leakage in my own measurements** | every census used `SymbolFrame.iter_snapshots()`, the same path a backtest uses; no measurement reads a bar after the one being evaluated | clean |
+| **silent-exception masking** | `reset_condition_errors()` before every cell; `CONDITION_ERRORS` read after | **empty in all 47 cells** — no condition is the "raised on every bar, recorded as 0% trigger rate" failure `base.py:129-147` warns about |
+| **data-mining bias / multiple comparisons** | **no expectancy, no z, no t, no Sharpe, no P&L, no trade is simulated anywhere in this file.** Every number is a fire count, a pass rate, a correlation, an availability count or a generated-strategy count. Nothing was selected on outcome | **not applicable by construction.** No deflation to apply; `free_t` does not enter |
+| **parameter sensitivity** | I varied **no** threshold. Where one is part of a finding (`p <= 0.30`, `0.4` alignment, `>= 60` regime bars, `0.05` deadband) it is quoted exactly as the repo sets it | n/a |
+| **survivorship** | none of the 7 groups was selected on outcome; **all 31 conditions audited**, including the 20 that came back CLEAN | clean — which is why 20 CLEAN verdicts are reportable |
+| **insufficient sample** | 47 cells; every table per-cell, **nothing pooled**. Thin cells flagged rather than aggregated (`candle_decisive_close` 69 fires on MGC 240m; `mtf_aligned` 201 on MNQ 240m — both above `toolkit.FLOOR = 20` and both small-sample) | flagged, not hidden |
+| **per-symbol independence** | **4 contracts, every table per-symbol, never pooled.** 4 findings are symbol-specific: `regime_matches_direction` 100% LONG on MES 240m and 43.5% on MGC; `volatility_normal` 93–95% at 240m on MGC/MNQ/MES and 79.7% on MCL; `volatility_compressed`'s described field fires on 2.3% of MCL 240m bars and 24.4% of MGC's; MCL has no daily CSV so three of my 1440m rows have three symbols not four | **nothing pooled across symbols.** Where MES and MNQ agree I say so is *not* corroboration (`BRIEF.md`: one index complex) |
+| **per-timeframe independence** | 6 timeframes individually (frame-of-one), 6 corpus frame groups, the dispatch's 1m+5m+15m group, and one frame read at three bindings. **5 findings change verdict with timeframe** | **nothing pooled across timeframes.** `mtf_strongly_aligned` has content at 5m–60m and none at 240m–1440m; `volatility_compressed`'s error is 24–30% at 60m and 37–49% at 240m; `regime_ranging` drops 11 points at 240m; `mtf_not_conflicted` is a real filter at 5m–60m and VOID at 1440m; MTF signals are alive in every corpus frame and VOID in every frame of one |
+| **multi-timeframe *groups*, not only single timeframes** | the dispatch asks whether alignment helps. I did not answer that — it needs expectancy, which I am not permitted to compute — but I established that **the treatment arm is misconfigured at 240m and 1440m (two voters, one of them a lagged copy of the other) and misdescribed at 5m–60m (abstentions dropped)**, which is a prerequisite for the question being answerable at all | the question is **open**, not settled negative |
+| **unrealistic fills / costs / slippage** | **not applicable** — no trade, no fill, no cost model anywhere in this file |
+| **my own anchoring bias** | **the largest specific risk here and it is not fully mitigated.** I read R1's verdicts first. Mitigations: my census uses a different cell design (47 cells vs R1's 5, corpus frames rather than an illustrative frame); I looked for and found 10 findings R1 does not have; I recorded 3 contradictions and 4 refinements of its stated consequences; and I re-derived every verdict from source with my own line citations | **declared, not eliminated.** 30 of 31 agreements should be read as one audit plus one confirmation, not two audits |
+| **confirmation bias toward "broken"** | R1 warned its round-1 3-of-3 rate was a biased sample. My surface contains **no** participant-information group, so the prior should be *lower*, not higher | **20 of 31 CLEAN and 3 of 7 groups CLEAN.** The two cleanest groups (`trend` 8/8, `candlestick` 5/5) are the two I checked hardest for a naming defect and found none |
+
+**One limitation I cannot remove, restated because it is easy to misread this file.** This audit
+answers "does the arithmetic do what the group name claims". It does **not** answer "is the object
+worth trading", and nothing here raises or lowers the prior on any strategy. `trend` is the cleanest
+group in my surface and four of its eight members fire on 84–96% of bars.

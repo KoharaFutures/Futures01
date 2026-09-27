@@ -183,11 +183,20 @@ class PreflightRow:
     last_ts: str
     rth_only: bool
     gate: str
+    #: Bars the scope gate alone leaves, i.e. the denominator the gate acts on.
+    eligible_bars: int
     admissible_bars: int
     admissible_days: int
     #: Admissible bars divided by the number of qualifying prints in the span -
     #: how many entry opportunities one print actually creates on this grid.
     bars_per_event: Optional[float]
+    #: Of the admissible bars, how many are anchored on a print that landed
+    #: OUTSIDE this contract's own session. On MCL an 08:30 CPI print is out of
+    #: session (RTH opens 09:00) yet the 09:00 bar sits 30 minutes after it, so
+    #: the gate admits an in-session bar off an out-of-session print. Whether
+    #: that should count is a modelling choice, not an implementation detail, so
+    #: it is reported rather than silently included.
+    admissible_from_out_of_session_print: int
 
 
 def _gate_passes(gate: Condition, snap, tf: int) -> bool:
@@ -216,6 +225,7 @@ def preflight(symbol: str, tf: int, gates: Dict[str, Condition], *,
                 if (not rth_only)
                 or is_rth(bars[i].ts, spec.rth_open, spec.rth_close)]
 
+    clock = EventClock(symbol, min_impact=min_impact)
     out: List[PreflightRow] = []
     for label, gate in gates.items():
         hits = []
@@ -226,13 +236,27 @@ def preflight(symbol: str, tf: int, gates: Dict[str, Condition], *,
             if _gate_passes(gate, snap, int(tf)):
                 hits.append(i)
         days = {to_et(bars[i].ts).date() for i in hits}
+        # Which side of the session the anchoring print was on. Only meaningful
+        # for a gate anchored on a past print; for the avoidance gate it counts
+        # the same thing about whichever print is nearest behind.
+        out_of_session = 0
+        for i in hits:
+            r = clock.read_bar(bars[i].ts)
+            if r.prev_name is None:
+                continue
+            # Recover the print's own timestamp from the reading.
+            when = to_et(bars[i].ts) - timedelta(minutes=r.since_prev)
+            if not is_rth(when, spec.rth_open, spec.rth_close):
+                out_of_session += 1
         out.append(PreflightRow(
             symbol=symbol.upper(), tf=int(tf), store=store, bars=len(bars),
             first_ts=to_et(bars[0].ts).isoformat(),
             last_ts=to_et(bars[-1].ts).isoformat(),
             rth_only=rth_only, gate=label,
+            eligible_bars=len(eligible),
             admissible_bars=len(hits), admissible_days=len(days),
             bars_per_event=(round(len(hits) / n_events, 3) if n_events else None),
+            admissible_from_out_of_session_print=out_of_session,
         ))
     return _census_dict(row), out
 

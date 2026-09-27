@@ -40,7 +40,7 @@ from futures_agents.schema import Direction                             # noqa: 
 from futures_agents.strategies.base import (Condition, ConditionKind,    # noqa: E402
                                             ConditionResult, ExitModel,
                                             Strategy, StrategyFilters)
-from futures_agents.timeutil import ET, is_rth                          # noqa: E402
+from futures_agents.timeutil import ET, UTC, is_rth                     # noqa: E402
 
 import algo1                                                            # noqa: E402
 import event_gate as G                                                  # noqa: E402
@@ -415,6 +415,43 @@ def test_medium_impact_events_are_invisible_to_the_library_and_visible_here():
 # ==========================================================================
 # Structural zeros - known, not discovered
 # ==========================================================================
+
+@pytest.mark.parametrize("symbol", ["MGC", "MCL"])
+def test_the_two_stores_are_the_same_series_on_the_overlap(symbol):
+    """BRIEF.md's data-policy ruling, condition 2, for MY symbols and timeframe.
+
+    The ruling permits measuring on ``data/archive`` where the two stores are
+    verified to agree for the symbol *and* timeframe in use. The parent verified
+    60m for all four contracts; this re-verifies the two ALGO-1 runs on, because
+    "someone checked" is not the same artefact as a test that fails if it stops
+    being true. Timestamps are compared after normalising to UTC - the trap the
+    ruling records is that ``csv/raw`` stamps are ``+00:00`` and
+    ``data/archive`` stamps are ``-04:00``, so a naive string match compares bars
+    four hours apart.
+    """
+    csv_bars = {b.ts.astimezone(UTC): b for b in algo1.load_series(symbol, TF).bars}
+    arc_bars = {b.ts.astimezone(UTC): b
+                for b in algo1.load_series(symbol, TF, store="archive").bars}
+    common = sorted(set(csv_bars) & set(arc_bars))
+    assert len(common) > 4900, f"{symbol}: only {len(common)} overlapping bars"
+    worst = max(abs(csv_bars[t].close - arc_bars[t].close) for t in common)
+    assert worst == 0.0, f"{symbol}: closes differ by up to {worst}"
+    # And the archive must genuinely extend the span BEFORE csv/raw starts,
+    # which is the only reason to prefer it.
+    assert min(arc_bars) < min(csv_bars)
+    assert len(arc_bars) - len(common) > 5000
+
+
+def test_the_archive_store_doubles_the_in_session_event_count():
+    """The reason ALGO-1 reports both stores rather than picking one.
+
+    Not a performance number: a count of calendar prints against a bar clock.
+    """
+    for symbol in ("MGC", "MCL"):
+        small = census(symbol, algo1.load_series(symbol, TF).bars)
+        big = census(symbol, algo1.load_series(symbol, TF, store="archive").bars)
+        assert big.event_days_in_rth > 1.8 * small.event_days_in_rth, symbol
+
 
 def test_the_after_gate_can_never_fire_on_a_daily_bar():
     """A daily bar is stamped at midnight ET, so ``since`` is never in (15, 60].

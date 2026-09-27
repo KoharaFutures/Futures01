@@ -5,7 +5,7 @@ flight and then sit idle until told otherwise. **Do not resume these without tha
 
 | agent | lane | parked after | resumption note |
 |---|---|---|---|
-| **BT3** | `backtest/BT3/` | governor replay, cycle 2 + the placebo-threshold question | `BT3/ALGOS.md` → `## PARKED` |
+| **BT3** | `backtest/BT3/` | governor replay + the placebo question **resolved** | `BT3/bursts/03_placebo_threshold.md` |
 | **EF1** | `edge/EF1/` | the flat-enforcement fix on `EF1-H1` | `EF1/FINDINGS.md` → `## PARKED` |
 | **EF2** | `edge/EF2/` | population + firing census, MGC/MCL 60m | `EF2/FINDINGS.md` → `## PARKED` |
 | **EF3** | `edge/EF3/` | population + firing census, MES/MNQ 60m | `EF3/FINDINGS.md` → `## PARKED` |
@@ -85,3 +85,55 @@ trades one defect for a look-ahead.
 This is the fourth time independent duplication changed an answer here rather than merely confirming
 one — after R6 breaking the R1/R3 tie, R4 correcting three of R1's attributions, and EF2/EF3/EF4
 scoping the flat defect to coarse timeframes.
+
+---
+
+## BT3's park is worth reading as a template for how to answer a challenge
+
+I put a narrow question to BT3: it had called its placebo a null, and converting its own p-values
+gave |z| = 2.186 and 2.480 against the 2.039 it said they failed. I offered three explanations.
+
+**It took the one least favourable to itself, and then found a deeper error I had not seen.**
+
+On my question: *"I did not account for discreteness — I simply compared a p-value to a t-value,
+which is an operation with no meaning."* And it showed discreteness could never have rescued it:
+the mid-p correction gives **2.250 and 2.511, larger**, because an exact test on a discrete lattice
+is conservative.
+
+**The error that mattered was not the arithmetic.** Before weakening anything it asked whether its
+placebo *could ever have licensed the conclusion*, and found it could not: **a global permutation of
+R is not a signal-layer placebo.** It destroys three associations at once —
+
+| destroyed | real | after global permutation |
+|---|---|---|
+| R ↔ exit reason | STOP −0.870, TARGET +1.478 | −0.063 / −0.069 |
+| R ↔ duration | `mins == 0` → −0.792, `> 1440` → +0.348 | flat |
+| R ↔ symbol (dollar risk varies 3×) | −0.111 … −0.033 | flat |
+
+— and only the first is anywhere near the entry. The other two are exit-geometry and contract facts.
+*"PIPELINE §4 asks for the signal layer replaced; I had replaced the outcome layer and then drawn a
+conclusion about the entry from it."*
+
+**It then raised its own bar.** Building two stratified placebos took its search size from 8 to 12,
+so `free_t` went 2.039 → **2.2293** — *"I raised my own bar rather than defend the arm I had, and it
+does not rescue the failed comparison."*
+
+**And it refused to average away a disagreement it could explain.** The three constructions differ
+across the threshold on `taken`, from 0.000 to 4.161, and the mechanism is the point: large strata
+permute R *between the 22 correlated arms firing at the same instant*, which the account cannot
+distinguish — hence the exact null; tight strata permute *across time*, changing when one strategy's
+losses arrive. **The account is sensitive to the temporal clustering of one strategy's own outcomes,
+not to the cross-sectional assignment at an instant.** That is this repo's pooling defect appearing
+on a third instrument.
+
+**What was withdrawn, and what replaced it.** Gone: *"which trades the governors delete is a
+property of the stop distribution and the calendar, not of the entry."* In its place: the deletion
+count **does** depend on the sequence of realised outcomes, every arm differs in the same direction,
+**and this design cannot attribute that to the entry** because no arm replaces the signal layer.
+**Entry-dependence is untested here, not refuted** — settling it needs random entry bars through the
+same exits and governors, which is a new backtest.
+
+**What survives, verified against the raised bar:** the two survival results are comparisons between
+*governor configurations*, not against a placebo — |z| = **6.164** and **5.543** against
+`free_t = 2.2293`. **Both still clear.** So the one deflation-clearing result in this programme
+stands, and it is the risk finding, not an edge.

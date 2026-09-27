@@ -103,3 +103,68 @@ brief's "~11,300 hourly bars per symbol" does not extend to the finer frames:
 Consequence for a card: a 15m or 5m read on any symbol rests on ~2 months of history, which is
 **shorter than the 0.88-year published span** that BRIEF.md already shows was too short to clear
 anything. Combined with rule 7 (sub-hourly is a graveyard), a sub-hourly card should say both.
+
+## N5 — the vendor stamps a live timestamp on a stale price at the Sunday reopen, and it is invisible in the clean path
+
+**basis: 8c8bdab, 2026-09-27. Measured this turn at 18:15 ET, 15 minutes after the Globex reopen.**
+
+CALLOUT.md warns that the archive is not real-time. The failure at a session reopen is worse than
+staleness, because it comes dressed as freshness:
+
+```
+MGC=F 5m  2026-09-27 18:00-04:00   o=h=l=c=4321.200195   volume 0
+MNQ=F 5m  2026-09-27 18:00-04:00   o=h=l=c=30889.25      volume 0
+MGC=F quote  lastPrice 4321.2001953125 == previousClose   regularMarketTime 18:05:10 ET
+MNQ=F quote  lastPrice 30889.25        == previousClose   regularMarketTime 18:05:14 ET
+```
+
+`lastPrice == previousClose` **exactly**, on two uncorrelated contracts, with a timestamp ten minutes
+old at the time of reading. That is a carry-forward, not a coincidence, and `marketState` reads
+`REGULAR` on a Sunday evening. **A desk that trusts `regularMarketTime` and quotes `lastPrice` has
+just quoted Friday's close as a live level** — the one error CALLOUT.md says costs money.
+
+**Two things make this worth a note rather than a shrug.**
+
+1. **`YahooFeed.fetch` does not protect you.** It reported `-1 forming` and dropped the 18:15 bar,
+   which is correct, but it **kept** the 18:00 stub: the 15m snapshot's last row is the zero-volume
+   zero-range bar. So the stub survives into the clean path and is the newest bar a caller sees.
+   It was the only such bar in five days of 15m data on either symbol, so a contiguity or gap check
+   will not flag it — only `volume == 0 AND high == low` will. `resolve.py` drops it, by that test,
+   everywhere (rule 1 in its docstring).
+2. **This is `SERIES_AUDIT.md` §5 arriving live.** The audit recorded 3.5–4.0% zero-volume bars on
+   every 60m micro series and judged them "the thin overnight hour, not a hole", which was right for
+   history. At a reopen the same shape is a *placeholder*, and the audit's benign reading would wave
+   it through. The discriminator is the conjunction with `h == l`: on MGC daily, 334 of 355
+   zero-volume bars were also rangeless, which the audit itself noted and called synthetic. That is
+   the same object.
+
+**Consequence I am adopting:** no entry is ever quoted from a bar or quote failing
+`volume > 0 or high != low`, and the newest bar I hold is reported as the newest bar that *passes*
+it. Both symbols got `NO TRADE` this turn on exactly this ground.
+
+## N6 — five of the nine shipped exit models cannot be executed at this account size, and three more only at rule 4's stop floor
+
+Falls straight out of N3's $240 budget and is worth stating because `STRATEGY_CATALOGUE.md` §3
+presents all nine as the exit dimension the programme searched.
+
+The tightest stop BRIEF.md rule 4 permits is ~0.5 ATR. Measured this turn: ATR14(60m) is **16.45 on
+MGC** and **95.71 on MNQ**, so rule 4's floor is $82/contract on MGC and $96/contract on MNQ.
+
+| exit models | scale-out | contracts for an exact integer split | risk at rule 4's floor | vs $240 budget |
+|---|---|---|---|---|
+| **0, 2, 4, 7, 8** (five) | three tiers — .5/.3/.2 or .4/.3/.3 | **10** | MGC $820 · MNQ $960 | **4×. Also above `max_dollar_risk` $500.** |
+| — same, rounded to 5 lots | 2/1.5/1.5 is not integer | 5 | MGC $410 · MNQ $480 | **~2×. Unreachable.** |
+| **1, 5, 6** (three) | two tiers — .6/.4 or .5/.5 | 2 | MGC $164 · MNQ $192 | fits, but **only at the stop floor** |
+| **3** (one) | single target | 1 | MGC $82 · MNQ $96 | fits — and `D8` records it cannot trade |
+
+**So at a $240 full-health budget, the three-tier exit models are structurally unreachable on both
+symbols, the two-tier ones survive only with a stop at or very near rule 4's minimum, and the one
+single-target model is the one D8 says cannot trade.** This is the same class as `D49`
+(`FIXED_TICKS` and `RANGE` have zero carriers) and `D19` (session control confounded with target
+kind): a dimension the programme treats as searched, which this account cannot reach. It is also
+why `CALL-0001` carries one target and not three — not a simplification, an arithmetic limit.
+
+Worth the manager's attention as a D-candidate: **the exit dimension was searched at a position size
+the shipped `AccountConfig` never permits.** I have not measured whether the ~3M population's
+expectancies depend on the scale-outs, so I am not claiming the results are wrong — only that their
+exits are not executable here.

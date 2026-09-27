@@ -172,6 +172,37 @@ def pointer_lag(frame: SymbolFrame, hi: int, lo: int) -> collections.Counter:
     return collections.Counter(a - b for a, b in zip(frame._align[lo], frame._align[hi]))
 
 
+def reconstruct_7200_pointer(series) -> List[int]:
+    """The `7200` alignment pointer, rebuilt from the daily series and the clock.
+
+    This is the step that makes the reduction non-circular. Rather than reading
+    `frame._align[7200]` — which was computed from the second series — the
+    pointer is derived from the daily bars alone:
+
+    * `resample` stamps each "7200m" bar at `align_bucket(ts, 7200)`, which the
+      collapse makes equal to `align_bucket(ts, 1440)`, the CME trading-day start;
+    * `Bar.end_ts` is `ts + minutes`, so the copy's end is that start **plus five
+      days** — a mislabelled duration over a one-session bar;
+    * `_build_alignment` advances a pointer while `tf_bars[j].end_ts <= bar.end_ts`.
+
+    So if this reconstruction equals `frame._align[7200]` exactly, the confirming
+    channel contains no information that is not in the daily series plus the
+    calendar, and "the higher timeframe" is a *derived* object, not a second
+    observation of the market.
+    """
+    from datetime import timedelta
+    ends = [align_bucket(b.ts, 7200) + timedelta(minutes=7200) for b in series.bars]
+    ptr: List[int] = []
+    k, j = -1, 0
+    for b in series.bars:
+        end = b.end_ts
+        while j < len(ends) and ends[j] <= end:
+            k = j
+            j += 1
+        ptr.append(k)
+    return ptr
+
+
 # --------------------------------------------------------------------------
 # Part 3 — why `mtf_not_conflicted` passes 99%+, and what a longer lag does
 # --------------------------------------------------------------------------
@@ -233,6 +264,14 @@ def run_symbol(sym: str, fname: str) -> Dict[str, object]:
         if tv[7200][i] == daily_frame_trend[j]:
             same_as_history += 1
 
+    # Non-circular leg: rebuild the confirming channel from the daily series and
+    # the clock, then re-derive all three conditions from that alone.
+    rebuilt_ptr = reconstruct_7200_pointer(daily)
+    ptr_match = sum(1 for a, b in zip(rebuilt_ptr, frame._align[7200]) if a == b)
+    lagged_from_primary = [daily_frame_trend[j] if j >= 0 else None for j in rebuilt_ptr]
+    want_indep = reference_from_one_series(tv[1440], lagged_from_primary)
+    indep = {n: sum(1 for a, b in zip(got[n], want_indep[n]) if a == b) for n in got}
+
     return {
         "symbol": sym,
         "bars": len(daily),
@@ -240,6 +279,12 @@ def run_symbol(sym: str, fname: str) -> Dict[str, object]:
         "bucket_collapse": bucket_collapse(daily),
         "resample_identity": resample_identity(daily),
         "pointer_lag_1440_minus_7200": dict(sorted(pointer_lag(frame, 7200, 1440).items())),
+        "primary_pointer_is_the_identity":
+            f"{sum(1 for i, j in enumerate(frame._align[1440]) if i == j)}/{len(daily)}",
+        "confirm_pointer_rebuilt_from_the_daily_series_and_the_clock":
+            f"{ptr_match}/{len(rebuilt_ptr)}",
+        "reduction_match_no_second_series_read":
+            {n: f"{indep[n]}/{len(got[n])}" for n in indep},
         "confirm_tf_snapshot_is_a_historical_value_of_the_primary":
             f"{same_as_history}/{checked}",
         "condition_fires_at_1440m": fires,

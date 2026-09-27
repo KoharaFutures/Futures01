@@ -28,7 +28,11 @@
    "resample_identity": {
     "daily_bars": 2511,
     "resampled_7200_bars": 2510,
-    "ohlcv_and_ts_identical_in_order": "0/2510",
+    "ohlcv_identical_in_order": "2510/2510",
+    "ts_identical_in_order": "0/2510",
+    "bars_per_7200_bucket": {
+     "1": 2511
+    },
     "minutes_label_on_the_7200_copy": 7200,
     "expected_constituents_per_bucket": 5
    },
@@ -47,7 +51,7 @@
    "reduction_match_vs_one_series_reference": {
     "mtf_aligned": "2511/2511",
     "mtf_strongly_aligned": "2511/2511",
-    "mtf_not_conflicted": "22/2511"
+    "mtf_not_conflicted": "2511/2511"
    },
    "aligned_equals_strongly_aligned": "2511/2511",
    "not_conflicted_pass_pct": 99.12,
@@ -207,7 +211,11 @@
    "resample_identity": {
     "daily_bars": 1859,
     "resampled_7200_bars": 1858,
-    "ohlcv_and_ts_identical_in_order": "0/1858",
+    "ohlcv_identical_in_order": "1858/1858",
+    "ts_identical_in_order": "0/1858",
+    "bars_per_7200_bucket": {
+     "1": 1859
+    },
     "minutes_label_on_the_7200_copy": 7200,
     "expected_constituents_per_bucket": 5
    },
@@ -226,7 +234,7 @@
    "reduction_match_vs_one_series_reference": {
     "mtf_aligned": "1859/1859",
     "mtf_strongly_aligned": "1859/1859",
-    "mtf_not_conflicted": "13/1859"
+    "mtf_not_conflicted": "1859/1859"
    },
    "aligned_equals_strongly_aligned": "1859/1859",
    "not_conflicted_pass_pct": 99.3,
@@ -386,7 +394,11 @@
    "resample_identity": {
     "daily_bars": 1859,
     "resampled_7200_bars": 1858,
-    "ohlcv_and_ts_identical_in_order": "0/1858",
+    "ohlcv_identical_in_order": "1858/1858",
+    "ts_identical_in_order": "0/1858",
+    "bars_per_7200_bucket": {
+     "1": 1859
+    },
     "minutes_label_on_the_7200_copy": 7200,
     "expected_constituents_per_bucket": 5
    },
@@ -405,7 +417,7 @@
    "reduction_match_vs_one_series_reference": {
     "mtf_aligned": "1859/1859",
     "mtf_strongly_aligned": "1859/1859",
-    "mtf_not_conflicted": "7/1859"
+    "mtf_not_conflicted": "1859/1859"
    },
    "aligned_equals_strongly_aligned": "1859/1859",
    "not_conflicted_pass_pct": 99.62,
@@ -551,7 +563,7 @@
   "best_reduction_match_over_all_lags": {
    "mtf_aligned": "3441/5000 at lag 23",
    "mtf_strongly_aligned": "3441/5000 at lag 23",
-   "mtf_not_conflicted": "128/5000 at lag 24"
+   "mtf_not_conflicted": "4107/5000 at lag 15"
   },
   "condition_fires": {
    "mtf_aligned": 1065,

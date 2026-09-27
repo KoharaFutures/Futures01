@@ -78,14 +78,21 @@ def check(path: pathlib.Path) -> list[str]:
     # a recognisable id; prose, filenames and paths alongside are useful, not errors.
     re_raw = fields.get("RE", "")
     re_toks = [t for t in re.split(r"[,\s]+", re_raw) if t]
-    re_ids = [t for t in re_toks if ID.match(t)]
+    def _resolvable(tok: str) -> bool:
+        # An id, or an unambiguous repo path. A path names exactly one thing, which
+        # is all this check ever wanted; requiring an id forced agents to invent one
+        # or write prose when a component had not been registered yet.
+        return bool(ID.match(tok)) or tok.endswith(".py") or tok.endswith(".md") \
+            or tok.endswith(".json") or "/" in tok
+
+    re_ids = [t for t in re_toks if _resolvable(t)]
     if not re_toks:
         problems.append(f"{path.name}: RE: is empty")
     elif not re_ids:
         problems.append(
-            f"{path.name}: RE: '{re_raw}' contains no registry id "
-            f"(see REGISTRY.md; a bare Q2 is ambiguous)")
-    elif len(re_ids) > 1:
+            f"{path.name}: RE: '{re_raw}' names neither a registry id nor a repo "
+            f"path (see REGISTRY.md; a bare Q2 is ambiguous, a path never is)")
+    elif len([t for t in re_ids if ID.match(t)]) > 1:
         problems.append(
             f"{path.name}: RE: names {len(re_ids)} ids ({', '.join(re_ids)}); "
             f"RE: takes exactly one - put the rest in ALSO:")

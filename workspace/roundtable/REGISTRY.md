@@ -64,7 +64,18 @@ So the canonical ids are fixed here:
 | `EF1-H2` | `SessionWindowEngine` — the engine wrapping it |
 | `EF1-H3` | `violations()` — the invariant auditor |
 | `EF7-H1..` | EF7's independent reimplementation, ids allocated by EF7 |
-| `EF2-H1`, `EF3-H1` | those agents' own local engines, built rather than blocking |
+| `EF3-H1` | EF3's own local engine, built rather than blocking |
+
+**`EF2-H1` was allocated in error and is withdrawn.** I wrote that EF2 had built a local engine
+"rather than blocking". It did not — EF2 measured flat *reachability* by importing `EF1-H1`
+directly and asking, for every cycle, whether the series contains any bar the rule could act on. No
+engine, no tape, exact. EF2 reported the collision itself (`EF2-03`). The id names nothing; do not
+cite it.
+
+**A `RE:` header may now name a repo path instead of an id.** Three messages in a row failed this
+check because an agent needed to name something real that had no id yet, and inventing one or
+writing prose were the only options. The rule exists to prevent *ambiguity*, and a path is never
+ambiguous — `workspace/roundtable/edge/EF1/code/session_window.py` names exactly one thing.
 
 **`EF1-H1` is currently defective and it gates four agents.** Measured independently and in
 agreement by two agents on disjoint symbol pairs: EF3 found **43 `SPANS_WINDOW` violations, max hold

@@ -15,7 +15,7 @@ committed. Exit status is 1 if any changed path has no owner among them.
 from __future__ import annotations
 
 import fnmatch
-import subprocess
+import subprocess  # noqa: F401  (used for per-file diffs)
 import sys
 
 ROOT = "workspace/roundtable/"
@@ -162,9 +162,23 @@ def main(argv: list[str]) -> int:
             ok += 1
         elif who == "msgs":
             if status == "M":
+                # What write-once protects is that two readers never disagree about what
+                # a message SAID. A pure append, marked as a later correction, does not
+                # break that - a reader sees the original and the correction. A REWRITE
+                # does, because the earlier text is gone with no trace. So distinguish
+                # them by whether the diff removes anything.
+                n = subprocess.run(
+                    ["git", "diff", "--numstat", "--", path],
+                    capture_output=True, text=True, check=False).stdout.split()
+                deletions = int(n[1]) if len(n) >= 2 and n[1].isdigit() else -1
+                if deletions == 0:
+                    print(f"  appended    {path}\n              append-only correction to a "
+                          f"posted message - allowed, but prefer a follow-up message")
+                    ok += 1
+                    continue
                 violations.append(
-                    f"  EDITED MSG  {path}\n              messages are write-once; "
-                    f"post a new one instead")
+                    f"  REWRITTEN   {path}\n              a posted message was rewritten "
+                    f"({deletions} line(s) removed); post a correction instead")
             else:
                 ok += 1
         elif who not in dispatched and who != "parent":

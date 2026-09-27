@@ -142,6 +142,27 @@ below.
 MNQ and MES reproduce the shape (2-session not-conflicted 100.00% / 99.89%, lag-60 83.55% / 84.21%).
 MES and MNQ are one index complex, so that is not corroboration.
 
+### 2b — what `D50` is **not**: it does not create look-ahead, and that is worth stating
+
+The repository's first invariant is that a higher-timeframe bar is visible only once it has closed. A
+collapsed confirming series is exactly the shape of thing that could break it, so I checked rather
+than assumed:
+
+| | MGC | MNQ | MES |
+|---|---|---|---|
+| bars where the confirm pointer **leads** the primary | **0** | **0** | **0** |
+| bars where it **equals** the primary | **0** | **0** | **0** |
+| bars where `confirm_bar.end_ts > base_bar.end_ts` | **0** | **0** | **0** |
+
+`[measured: PYTHONPATH=. python3, SymbolFrame._align[1440] vs _align[7200] over csv/raw/*_1d.csv]`
+
+The mislabelled `end_ts` errs in the **conservative** direction: `ts + 7200 min` is *later* than the
+honest close, so `_build_alignment` holds the pointer back rather than releasing it early. The
+confirming channel is always strictly 1–4 bars behind and never once shows the primary's own present
+or future bar. **`D50` is a mislabelling defect, not a leakage defect** — it makes the arm measure the
+wrong thing, and it does not make any 1440m expectancy figure optimistic through look-ahead. Anyone
+triaging `D50` should know that, because the two classes of defect warrant very different urgency.
+
 ### 3 — the control, which is what makes the reduction a claim
 
 Same reduction at MGC 240m, frame `[240, 1440]`, where 1440 is a genuine daily series. Given 25
@@ -174,10 +195,11 @@ and `[measured: … code/tf1440_census.py]` as the blind cross-check.
 | store | native unit | at 1440m | of |
 |---|---|---|---|
 | **`workspace/chrono/ledgers/`** | strategies / trades / month-buckets | **23,309 strategies, 130,070 trades, 295 month-buckets** (MGC 7,875/56,670/117; MES 7,697/34,027/89; MNQ 7,737/39,373/89) | **3 of the 6 ledgers.** The whole chronology study's long-span arm |
-| `workspace/bigscan/all_rows.json` | floored strategy rows | 94 (1.9%) | 4,957; **20 of 108 cell files** (MES/MGC/MNQ/QQQ/SPY × 30/90/180/274d) |
+| `workspace/bigscan/all_rows.json` | floored strategy rows | 94 (1.9%) | 4,957; **20 of 108 cell files** — but only **12 are futures**: MES/MGC/MNQ × 30/90/180/274d. The other 8 are QQQ and SPY, equity ETFs `[measured: ls workspace/bigscan/cells \| grep 1440m]` |
 | `workspace/focus/all_rows.json` | floored strategy rows | 95 (2.7%) | 3,564; **4 of 39 cell files** (MES/MGC × 180/274d) |
 | `workspace/studies/out/g_multi_timeframe.json` | floored rows in the study's cells | **569 (31.3%)** | 1,818; **3 of 23 cells** |
-| `g_liquidity`, `g_momentum`, `g_opening_range`, `g_trend`, `g_vwap` | study cells | **3 of 23 cells each** | the same MGC/MES/MNQ 1440 cells. **6 of the 21 studies** carry a 1440m cell |
+| `g_liquidity`, `g_momentum`, `g_opening_range`, `g_trend`, `g_vwap` | study cells | **3 of 23 cells each** | the same MGC/MES/MNQ 1440 cells |
+| **the 21-study programme as a whole** | study payloads carrying a 1440m arm | **17 of 22** | only `g_breakout`, `g_fibonacci`, `g_mean_reversion`, `g_pullback` and `g_volume_profile` have none. `g_volume_profile`'s absence is corroborated independently — the deep-scan report records "VOLUME_PROFILE cannot produce a strategy at 4h or daily at all" (`:236`) |
 | `workspace/studies/out/x_robustness.json` | disjoint-period cells | **MGC daily and MNQ daily** | 24 cells — **and these are the two cells the study singles out as positive** |
 | `workspace/studies/out/x_session.json` | toggle cells | `MES_1440_274`, `MGC_1440_274` | 10 toggle cells |
 | `rank_persistence{,_realised,_disjoint,_nested,_mixed_league}` | cells | 3 each (`MGC/MES/MNQ_1440`) | 13–59 cells |
@@ -185,7 +207,15 @@ and `[measured: … code/tf1440_census.py]` as the blind cross-check.
 | `scan_reports/2026-09-23_MGC-MES-NQ_deep-scan.md` | published cells | 4 (`MES_1440m_{274,180}d`, `MGC_1440m_{274,180}d`) | 31 cells in its inventory |
 | `csv/raw/MCL_1d.csv` | — | **absent** | so every 1440m row here is MGC, MES, MNQ, QQQ or SPY, and MES/MNQ/QQQ/SPY are one index complex |
 
-**The biggest by far is the chronology study**, and it is the one whose *entire long-span arm* is
+**A correction to my own first count, recorded because the direction matters.** My first pass looked
+only for `g_*` payloads with a cell key shaped `SYM/tf/window/confirm` and reported "**6 of 21**
+studies". That undercounted by eleven. The `x_*` studies name their daily arms differently —
+`MES_1440_274`, `('MGC', 1440)`, `MES-1440m-<id>`, or just "MNQ daily" in prose — so one cell-key
+pattern misses them, and the honest sweep walks every dict key as well as every `cell`/`arm`/`name`/`id`
+value. **17 of the 22 payloads carry a 1440m arm, not 6 of 21.** The error was in the
+under-reporting direction, which for a contamination count is the dangerous one.
+
+**The biggest single store is the chronology study**, and it is the one whose *entire long-span arm* is
 1440m: the 117/89/89-month depth that made a transition matrix possible at all exists only on the
 daily files. Its published conclusion is **negative** ("no chronological chaining of strategy groups
 exists, on any symbol" — `BRIEF.md`), and an inert confirming timeframe cannot manufacture a

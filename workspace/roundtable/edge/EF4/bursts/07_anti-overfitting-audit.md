@@ -179,3 +179,34 @@ aimed at unreachable flats is a no-op here by construction. It is also the cheap
 verification that an exact-zero difference is a *real* zero rather than a D48 collision — the
 two arms were run in separate engine instantiations with separately built frames, not as two
 arms of one `run_many`, so there is no shared-id path by which they could have collapsed.
+
+## 8. Adverse selection at the fill — checked, and there is none
+
+`code/audit_adverse_selection.py` → `out/audit_adverse_selection.json`.
+
+The engine's honest rule is that a signal on bar *i*'s close fills at bar *i+1*'s open, then pays
+0.5 ticks of modelled slippage (1.5 thin). What is *not* modelled is whether the open itself sits
+systematically away from the close in the direction the signal wanted — which a momentum-style
+trigger should suffer, because it fires after the move has begun. If it does, the true cost is
+larger than the cost model says and the gap is not slippage; it is the price of acting on a closed
+bar.
+
+| cell | median bar-to-bar discontinuity | mean | mean signal→fill move (ticks, + = favourable) | in R | share of fills adverse |
+|---|---|---|---|---|---|
+| MGC 5m | **1.00 tick** | 1.73 | −0.155 | −0.0220 R | 42.9% |
+| MGC 15m | 1.00 | 2.05 | +0.057 | −0.0072 R | 38.2% |
+| MGC 30m | 1.00 | 2.55 | −0.451 | −0.0290 R | 42.9% |
+| MCL 5m | 1.00 | 1.22 | +1.249 | −0.0083 R | 37.7% |
+| MCL 15m | 1.00 | 1.55 | +2.427 | +0.0014 R | 36.4% |
+| MCL 30m | 1.00 | 2.01 | +3.759 | +0.0069 R | 35.9% |
+
+**Clean. Fewer than half of all fills are adverse in every cell (35.9–42.9%), and the R-space
+effect is −0.029 R at worst and +0.007 R at best — not one-signed across cells.** So there is no
+systematic adverse-selection cost hiding outside the cost model, and the mean-vs-median split on
+the tick column (median exactly 1 tick, mean 1.2–2.6) is the fat tail of a few large reopen gaps,
+not a drift.
+
+One substrate fact worth recording on its own: **the median discontinuity between one bar's close
+and the next bar's open is exactly 1 tick on both contracts at all three timeframes.** Every
+backtest in this repository fills entries at `bar.open` after computing the signal on the previous
+close, so that 1 tick is inside every result here — unmodelled, and, as the table shows, unbiased.

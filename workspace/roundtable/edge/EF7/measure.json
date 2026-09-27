@@ -1,0 +1,656 @@
+{
+  "max_total": 400,
+  "seed": 20260922,
+  "symbols": {
+    "MCL": {
+      "bars": 10934,
+      "bars_in_forbidden_window": 474,
+      "cycle_ends_in_series": 979,
+      "first_bar": "2024-10-06T19:00:00-04:00",
+      "last_bar": "2026-09-25T16:00:00-04:00",
+      "populations": {
+        "default": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 388,
+              "SESSION_CLOSE": 995,
+              "STOP": 1650,
+              "TARGET": 432,
+              "TIME": 15
+            },
+            "max_minutes_held": 8280.0,
+            "mean_net_r": -0.12363,
+            "median_minutes_held": 120.0,
+            "sum_net_r": -430.2276,
+            "trades": 3480,
+            "violations": 1041
+          },
+          "A_violations_detail": {
+            "exit_in_window": 70,
+            "spans_window": 971
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 497,
+              "END_OF_DATA": 5,
+              "STOP": 1970,
+              "TARGET": 561,
+              "TIME": 144
+            },
+            "max_minutes_held": 9960.0,
+            "mean_net_r": -0.15663,
+            "median_minutes_held": 360.0,
+            "sum_net_r": -497.6147,
+            "trades": 3177,
+            "violations": 1762
+          },
+          "B_violations_detail": {
+            "exit_in_window": 87,
+            "spans_window": 1675
+          },
+          "C_entries_overnight": 284,
+          "C_flat_exits": 1868,
+          "C_flat_share_of_trades": 0.5588,
+          "C_median_flat_minutes_held": 180.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 99,
+              "SESSION_WINDOW": 1868,
+              "STOP": 1220,
+              "TARGET": 156
+            },
+            "max_minutes_held": 840.0,
+            "mean_net_r": -0.13875,
+            "median_minutes_held": 120.0,
+            "sum_net_r": -463.845,
+            "trades": 3343,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 291,
+            "entries_vetoed": 0,
+            "flat_before_deadline": 18,
+            "flat_exits": 1868,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 50.24237
+          },
+          "seconds": 173.1,
+          "strategies": 167
+        },
+        "rth_off": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 815,
+              "SESSION_CLOSE": 1908,
+              "STOP": 3546,
+              "TARGET": 1030,
+              "TIME": 17
+            },
+            "max_minutes_held": 8280.0,
+            "mean_net_r": -0.12429,
+            "median_minutes_held": 120.0,
+            "sum_net_r": -909.2859,
+            "trades": 7316,
+            "violations": 1689
+          },
+          "A_violations_detail": {
+            "entry_in_window": 329,
+            "exit_in_window": 303,
+            "spans_window": 1057
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 994,
+              "END_OF_DATA": 5,
+              "STOP": 3757,
+              "TARGET": 1186,
+              "TIME": 184
+            },
+            "max_minutes_held": 10140.0,
+            "mean_net_r": -0.1361,
+            "median_minutes_held": 180.0,
+            "sum_net_r": -833.758,
+            "trades": 6126,
+            "violations": 2052
+          },
+          "B_violations_detail": {
+            "entry_in_window": 141,
+            "exit_in_window": 103,
+            "spans_window": 1808
+          },
+          "C_entries_overnight": 3998,
+          "C_flat_exits": 2112,
+          "C_flat_share_of_trades": 0.3067,
+          "C_median_flat_minutes_held": 180.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 613,
+              "SESSION_WINDOW": 2112,
+              "STOP": 3399,
+              "TARGET": 762
+            },
+            "max_minutes_held": 1260.0,
+            "mean_net_r": -0.13826,
+            "median_minutes_held": 120.0,
+            "sum_net_r": -952.0624,
+            "trades": 6886,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 278,
+            "entries_vetoed": 536,
+            "flat_before_deadline": 39,
+            "flat_exits": 2112,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 56.587126
+          },
+          "seconds": 88.1,
+          "strategies": 167
+        }
+      },
+      "rth_close": "14:30",
+      "rth_open": "09:00",
+      "store": "data/archive",
+      "symbol": "MCL",
+      "timeframe": 60
+    },
+    "MES": {
+      "bars": 11287,
+      "bars_in_forbidden_window": 493,
+      "cycle_ends_in_series": 1000,
+      "first_bar": "2024-10-06T19:00:00-04:00",
+      "last_bar": "2026-09-25T16:00:00-04:00",
+      "populations": {
+        "default": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 395,
+              "END_OF_DATA": 11,
+              "SESSION_CLOSE": 29,
+              "STOP": 1407,
+              "TARGET": 599,
+              "TIME": 203
+            },
+            "max_minutes_held": 8220.0,
+            "mean_net_r": 0.04282,
+            "median_minutes_held": 360.0,
+            "sum_net_r": 113.2252,
+            "trades": 2644,
+            "violations": 1562
+          },
+          "A_violations_detail": {
+            "entry_in_window": 278,
+            "exit_in_window": 176,
+            "spans_window": 1108
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 398,
+              "END_OF_DATA": 11,
+              "STOP": 1421,
+              "TARGET": 611,
+              "TIME": 203
+            },
+            "max_minutes_held": 8220.0,
+            "mean_net_r": 0.04214,
+            "median_minutes_held": 360.0,
+            "sum_net_r": 111.4123,
+            "trades": 2644,
+            "violations": 1583
+          },
+          "B_violations_detail": {
+            "entry_in_window": 278,
+            "exit_in_window": 182,
+            "spans_window": 1123
+          },
+          "C_entries_overnight": 14,
+          "C_flat_exits": 1349,
+          "C_flat_share_of_trades": 0.5282,
+          "C_median_flat_minutes_held": 180.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 83,
+              "SESSION_WINDOW": 1349,
+              "STOP": 929,
+              "TARGET": 193
+            },
+            "max_minutes_held": 720.0,
+            "mean_net_r": -0.01026,
+            "median_minutes_held": 120.0,
+            "sum_net_r": -26.196,
+            "trades": 2554,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 258,
+            "entries_vetoed": 1053,
+            "flat_before_deadline": 30,
+            "flat_exits": 1349,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 557.176192
+          },
+          "seconds": 171.8,
+          "strategies": 190
+        },
+        "rth_off": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 763,
+              "END_OF_DATA": 11,
+              "SESSION_CLOSE": 396,
+              "STOP": 3093,
+              "TARGET": 1099,
+              "TIME": 263
+            },
+            "max_minutes_held": 8220.0,
+            "mean_net_r": -0.07655,
+            "median_minutes_held": 180.0,
+            "sum_net_r": -430.6151,
+            "trades": 5625,
+            "violations": 1662
+          },
+          "A_violations_detail": {
+            "entry_in_window": 280,
+            "exit_in_window": 180,
+            "spans_window": 1202
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 837,
+              "END_OF_DATA": 11,
+              "STOP": 3229,
+              "TARGET": 1182,
+              "TIME": 267
+            },
+            "max_minutes_held": 8280.0,
+            "mean_net_r": -0.07838,
+            "median_minutes_held": 240.0,
+            "sum_net_r": -433.1324,
+            "trades": 5526,
+            "violations": 1773
+          },
+          "B_violations_detail": {
+            "entry_in_window": 280,
+            "exit_in_window": 186,
+            "spans_window": 1307
+          },
+          "C_entries_overnight": 3830,
+          "C_flat_exits": 1768,
+          "C_flat_share_of_trades": 0.2812,
+          "C_median_flat_minutes_held": 240.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 512,
+              "SESSION_WINDOW": 1768,
+              "STOP": 3108,
+              "TARGET": 900
+            },
+            "max_minutes_held": 1260.0,
+            "mean_net_r": -0.07901,
+            "median_minutes_held": 180.0,
+            "sum_net_r": -496.7869,
+            "trades": 6288,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 264,
+            "entries_vetoed": 1079,
+            "flat_before_deadline": 52,
+            "flat_exits": 1768,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 741.023284
+          },
+          "seconds": 115.0,
+          "strategies": 190
+        }
+      },
+      "rth_close": "16:00",
+      "rth_open": "09:30",
+      "store": "data/archive",
+      "symbol": "MES",
+      "timeframe": 60
+    },
+    "MGC": {
+      "bars": 11297,
+      "bars_in_forbidden_window": 495,
+      "cycle_ends_in_series": 1001,
+      "first_bar": "2024-10-06T19:00:00-04:00",
+      "last_bar": "2026-09-25T16:00:00-04:00",
+      "populations": {
+        "default": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 198,
+              "SESSION_CLOSE": 17,
+              "STOP": 1044,
+              "TARGET": 245,
+              "TIME": 409
+            },
+            "max_minutes_held": 8040.0,
+            "mean_net_r": -0.00321,
+            "median_minutes_held": 840.0,
+            "sum_net_r": -6.1394,
+            "trades": 1913,
+            "violations": 1259
+          },
+          "A_violations_detail": {
+            "exit_in_window": 68,
+            "spans_window": 1191
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 203,
+              "STOP": 1056,
+              "TARGET": 245,
+              "TIME": 409
+            },
+            "max_minutes_held": 8040.0,
+            "mean_net_r": -0.00835,
+            "median_minutes_held": 840.0,
+            "sum_net_r": -15.9649,
+            "trades": 1913,
+            "violations": 1276
+          },
+          "B_violations_detail": {
+            "exit_in_window": 68,
+            "spans_window": 1208
+          },
+          "C_entries_overnight": 196,
+          "C_flat_exits": 1483,
+          "C_flat_share_of_trades": 0.692,
+          "C_median_flat_minutes_held": 240.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 11,
+              "SESSION_WINDOW": 1483,
+              "STOP": 609,
+              "TARGET": 40
+            },
+            "max_minutes_held": 300.0,
+            "mean_net_r": -0.04146,
+            "median_minutes_held": 180.0,
+            "sum_net_r": -88.8498,
+            "trades": 2143,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 0,
+            "entries_vetoed": 0,
+            "flat_before_deadline": 0,
+            "flat_exits": 1483,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 399.550006
+          },
+          "seconds": 153.8,
+          "strategies": 184
+        },
+        "rth_off": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 563,
+              "SESSION_CLOSE": 414,
+              "STOP": 2378,
+              "TARGET": 588,
+              "TIME": 632
+            },
+            "max_minutes_held": 8040.0,
+            "mean_net_r": 0.01779,
+            "median_minutes_held": 300.0,
+            "sum_net_r": 81.3703,
+            "trades": 4575,
+            "violations": 2084
+          },
+          "A_violations_detail": {
+            "entry_in_window": 243,
+            "exit_in_window": 137,
+            "spans_window": 1704
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 661,
+              "STOP": 2510,
+              "TARGET": 635,
+              "TIME": 650
+            },
+            "max_minutes_held": 8040.0,
+            "mean_net_r": 0.01859,
+            "median_minutes_held": 420.0,
+            "sum_net_r": 82.8402,
+            "trades": 4456,
+            "violations": 2149
+          },
+          "B_violations_detail": {
+            "entry_in_window": 239,
+            "exit_in_window": 123,
+            "spans_window": 1787
+          },
+          "C_entries_overnight": 3628,
+          "C_flat_exits": 2510,
+          "C_flat_share_of_trades": 0.4832,
+          "C_median_flat_minutes_held": 360.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 298,
+              "SESSION_WINDOW": 2510,
+              "STOP": 2051,
+              "TARGET": 335
+            },
+            "max_minutes_held": 1260.0,
+            "mean_net_r": 0.00746,
+            "median_minutes_held": 240.0,
+            "sum_net_r": 38.7599,
+            "trades": 5194,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 196,
+            "entries_vetoed": 665,
+            "flat_before_deadline": 46,
+            "flat_exits": 2510,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 667.394806
+          },
+          "seconds": 119.4,
+          "strategies": 184
+        }
+      },
+      "rth_close": "13:30",
+      "rth_open": "08:20",
+      "store": "data/archive",
+      "symbol": "MGC",
+      "timeframe": 60
+    },
+    "MNQ": {
+      "bars": 11291,
+      "bars_in_forbidden_window": 497,
+      "cycle_ends_in_series": 1004,
+      "first_bar": "2024-10-06T19:00:00-04:00",
+      "last_bar": "2026-09-25T16:00:00-04:00",
+      "populations": {
+        "default": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 210,
+              "SESSION_CLOSE": 172,
+              "STOP": 812,
+              "TARGET": 339,
+              "TIME": 117
+            },
+            "max_minutes_held": 8580.0,
+            "mean_net_r": 0.07496,
+            "median_minutes_held": 240.0,
+            "sum_net_r": 123.6897,
+            "trades": 1650,
+            "violations": 929
+          },
+          "A_violations_detail": {
+            "entry_in_window": 165,
+            "exit_in_window": 103,
+            "spans_window": 661
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 258,
+              "STOP": 877,
+              "TARGET": 387,
+              "TIME": 119
+            },
+            "max_minutes_held": 8580.0,
+            "mean_net_r": 0.08058,
+            "median_minutes_held": 420.0,
+            "sum_net_r": 132.2347,
+            "trades": 1641,
+            "violations": 1024
+          },
+          "B_violations_detail": {
+            "entry_in_window": 156,
+            "exit_in_window": 78,
+            "spans_window": 790
+          },
+          "C_entries_overnight": 16,
+          "C_flat_exits": 884,
+          "C_flat_share_of_trades": 0.5755,
+          "C_median_flat_minutes_held": 180.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 31,
+              "SESSION_WINDOW": 884,
+              "STOP": 491,
+              "TARGET": 130
+            },
+            "max_minutes_held": 240.0,
+            "mean_net_r": 0.09938,
+            "median_minutes_held": 120.0,
+            "sum_net_r": 152.6463,
+            "trades": 1536,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 118,
+            "entries_vetoed": 405,
+            "flat_before_deadline": 20,
+            "flat_exits": 884,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 368.697489
+          },
+          "seconds": 137.8,
+          "strategies": 185
+        },
+        "rth_off": {
+          "A_equals_C": false,
+          "A_shipped": {
+            "exit_reasons": {
+              "BREAKEVEN": 393,
+              "SESSION_CLOSE": 319,
+              "STOP": 1633,
+              "TARGET": 656,
+              "TIME": 131
+            },
+            "max_minutes_held": 8580.0,
+            "mean_net_r": 0.03602,
+            "median_minutes_held": 180.0,
+            "sum_net_r": 112.8209,
+            "trades": 3132,
+            "violations": 986
+          },
+          "A_violations_detail": {
+            "entry_in_window": 173,
+            "exit_in_window": 104,
+            "spans_window": 709
+          },
+          "B_equals_C": false,
+          "B_overnight_no_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 446,
+              "STOP": 1726,
+              "TARGET": 737,
+              "TIME": 136
+            },
+            "max_minutes_held": 8580.0,
+            "mean_net_r": 0.04661,
+            "median_minutes_held": 240.0,
+            "sum_net_r": 141.9242,
+            "trades": 3045,
+            "violations": 1109
+          },
+          "B_violations_detail": {
+            "entry_in_window": 164,
+            "exit_in_window": 79,
+            "spans_window": 866
+          },
+          "C_entries_overnight": 1444,
+          "C_flat_exits": 976,
+          "C_flat_share_of_trades": 0.3036,
+          "C_median_flat_minutes_held": 180.0,
+          "C_violations_detail": {},
+          "C_window_rule": {
+            "exit_reasons": {
+              "BREAKEVEN": 273,
+              "SESSION_WINDOW": 976,
+              "STOP": 1470,
+              "TARGET": 496
+            },
+            "max_minutes_held": 1260.0,
+            "mean_net_r": 0.05093,
+            "median_minutes_held": 120.0,
+            "sum_net_r": 163.725,
+            "trades": 3215,
+            "violations": 0
+          },
+          "C_window_stats": {
+            "end_of_data_exits": 0,
+            "entries_flat_same_bar": 112,
+            "entries_vetoed": 418,
+            "flat_before_deadline": 30,
+            "flat_exits": 976,
+            "flat_on_forbidden_bar": 0,
+            "flat_on_late_bar": 0,
+            "flat_slippage_points": 409.886689
+          },
+          "seconds": 59.0,
+          "strategies": 185
+        }
+      },
+      "rth_close": "16:00",
+      "rth_open": "09:30",
+      "store": "data/archive",
+      "symbol": "MNQ",
+      "timeframe": 60
+    }
+  }
+}

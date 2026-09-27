@@ -715,8 +715,34 @@ zero**, because the combinator can emit no carrier for them. **[verified here]**
 `run_many` keys results, open positions, pending orders and the skip guard all by that id, so a pair
 built without `_id=None` collapses into one row and **the between-arm difference measures exactly
 zero** — indistinguishable from "this axis does nothing", which is the shape of this programme's own
-settled findings. **Scope: no published result is affected.** All nine existing `replace` call sites
-on a `Strategy` pass `_id=None` explicitly. A forward hazard with no guard, not a retraction.
+settled findings. **Scope: no published result is affected by the stale-id mode.** All nine existing `replace` call
+sites on a `Strategy` pass `_id=None` explicitly.
+
+### AMENDED 2026-09-27 — there is a SECOND mode, and `_id=None` does not protect against it
+
+**[verified here]** `strategy_id` hashes `"|".join(sorted(c.label for c in self.conditions))`
+(`base.py:606-623`), and `Condition.label` is just the condition's `name`, or `name@tf`
+(`base.py:152-155`). **So identity is a hash of condition NAMES, not of condition behaviour.** Two
+strategies whose signals compute entirely different things collide if their names and filter sets
+match.
+
+EF4 hit this at scale in its own placebo construction: placebos named `placebo_s{seed}` collided
+across **every base arm sharing a filter set** — **400 to 540 collisions per cell**. Each cell's
+~700 controls would have collapsed to ~20 shared `BacktestResult`s **with no symptom**, and every
+real-versus-placebo comparison would silently have been against *another strategy's* control. It
+also found a second, smaller instance: its direction control's random-40 group overlapping its own
+top 10.
+
+**So the guidance in this entry was necessary and insufficient, and this is the correction:**
+
+> **`_id=None` is not the guard. A fresh id can still be a colliding id.** The guard is an
+> **arm-id uniqueness assertion at emission** — assert that the ids of the arms you are about to run
+> are pairwise distinct, and fail loudly if not. EF4 caught both of its collisions that way and
+> nothing else would have.
+
+Anyone generating synthetic arms — placebos, controls, probes — must give each a name that differs,
+not merely a cleared `_id`. The failure signature is the same exact-zero difference as the first
+mode, so it is equally indistinguishable from a real null.
 
 ## D49 — `StopKind.RANGE` is `StopKind.ATR` — mechanism real, **blast radius zero** (R1; scoped by EF2)
 

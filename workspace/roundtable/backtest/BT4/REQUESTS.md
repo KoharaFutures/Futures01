@@ -59,7 +59,7 @@ chronology ledgers.
 | call sites of `align_bucket` in the library | **1** — `bars.py:341`, inside `resample` `[repo-verified]` |
 | live requests above 1440 anywhere in the repo | **2**, both the same map: `futures_agents/scout.py:66` and `workspace/chrono/ledger.py:28` `[measured: grep -rn "7200" --include=*.py . → 2 live sites; grep for 10080/43200/525600 → 0]` |
 | frames affected | `FRAMES[1440]` only. `{tf: [m for m in FRAMES[tf] if m > 1440]}` = `{1440: [7200]}` |
-| stored results that would change | **every 1440m row**: 23,309 chrono strategies / 130,070 trades / 295 month-buckets; 94 bigscan rows (20 cell files); 95 focus rows (4 cell files); 3 cells in each of 6 of the 21 studies; 2 `x_robustness` cells; 2 `x_session` cells; 3 cells in each of 5 `rank_persistence` payloads; 4 published cells in the deep-scan report |
+| stored results that would change | **every 1440m row**: 23,309 chrono strategies / 130,070 trades / 295 month-buckets; 94 bigscan rows (20 cell files); 95 focus rows (4 cell files); **17 of the 22 payloads of the 21-study programme**, only `g_breakout`, `g_fibonacci`, `g_mean_reversion`, `g_pullback` and `g_volume_profile` being clean; 3 cells in each of 5 `rank_persistence` payloads; 4 published cells in the deep-scan report `[measured: code/stores_at_1440.py]` |
 | stored results that would **not** change | everything at 5m/15m/30m/60m/240m — i.e. ~98% of every ranking corpus |
 | the test that already pins both states | `tests/test_bt4_align_bucket.py` — 16 passing checks on today's behaviour and 4 `xfail(strict=False)` that become `XPASS` the moment the fix lands |
 

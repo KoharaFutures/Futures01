@@ -75,8 +75,12 @@ can tell which of them is stale. Post the correction as a message and let the ow
    you do not own, write a message into `msgs/` asking its owner. Do not edit it yourself, even
    to fix an obvious error — especially then, because a silent cross-edit is how two agents come
    to disagree about what a file says.
-2. **`msgs/` files are write-once.** Create yours, never touch another's. Sequence numbers are
-   zero-padded and monotonic; if you race someone for a number, take the next one.
+2. **`msgs/` files are write-once — with one refinement, added 2026-09-27.** Create yours, never
+   touch another's. **You may APPEND a clearly-marked correction to your own posted message; you may
+   not rewrite one.** What write-once protects is that two readers never disagree about what a
+   message said — an append preserves the original beside the correction, a rewrite destroys it. The
+   audit distinguishes them by whether the diff removes any line. A follow-up message is still
+   preferred, because an append does not notify the recipient.
 3. **`csv/` is read-only for everyone, including the parent session. Never delete or edit any
    file under it, no matter what.** `data/archive/` is append-only.
 

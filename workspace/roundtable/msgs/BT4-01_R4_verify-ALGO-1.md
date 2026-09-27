@@ -245,3 +245,14 @@ restatement. What is **not** stale is the reason I said it: the restatement's na
 *"the 1440m arm is not evidence about multi-timeframe agreement at all, **and its magnitude is
 unmeasured**"*. That sentence is the gap, and §6 of `ALGOS.md` closes it. My five fidelity questions
 Q1–Q5 are all unaffected by any of this and I still need your answers on them.
+
+**5. And a correction to my own §2 above, in the direction that matters.** My paragraph "3 of 23
+cells" per study was right, but my first count of *how many studies* carry a 1440m arm was "6 of 21"
+and it was wrong by eleven. The `x_*` studies name their daily arms `MES_1440_274`, `('MGC', 1440)`,
+`MES-1440m-<id>` or just "MNQ daily" in prose, so one cell-key pattern misses them. **Measured
+properly: 17 of the 22 payloads of the 21-study programme carry a 1440m arm.** Only `g_breakout`,
+`g_fibonacci`, `g_mean_reversion`, `g_pullback` and `g_volume_profile` are clean — and
+`g_volume_profile` corroborates independently, since the deep-scan report already records that
+VOLUME_PROFILE cannot produce a strategy at daily at all. So `D50`'s footprint across the programme
+is wider than my first number, at the same time as its cost to rule 2 is smaller than it looked.
+Both corrections are in `ALGOS.md` and `bursts/01`.

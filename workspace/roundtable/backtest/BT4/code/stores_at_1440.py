@@ -93,6 +93,49 @@ def main() -> int:
                     total=sum(v["all"] for v in by.values()),
                     detail=f"{len(dly)} of {len(by)} cells at 1440m: {sorted(dly)}"))
 
+    # --- 4b. the 21-study programme, payload by payload ---------------------
+    # A first pass of this counted only `g_*` files with a `cell` field shaped
+    # `SYM/tf/window/confirm` and reported "6 of 21". That was wrong and
+    # undercounted by eleven: the `x_*` studies name their daily arms
+    # differently (`MES_1440_274`, `('MGC', 1440)`, `MES-1440m-<id>`, or just
+    # "MNQ daily" in prose), so a single cell-key pattern misses them. The
+    # correct sweep walks every dict key AND every cell/arm/name/id value.
+    PROGRAMME = (["d_dead_groups"]
+                 + [f"g_{x}" for x in ("breakout", "fibonacci", "liquidity",
+                                       "mean_reversion", "momentum", "multi_timeframe",
+                                       "opening_range", "pullback", "reversal",
+                                       "supply_demand", "trend", "volume_profile",
+                                       "vwap")]
+                 + [f"x_{x}" for x in ("conditions", "confluence", "costs", "exits",
+                                       "regime", "robustness", "session", "timeframes")])
+
+    def names(o, acc):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if isinstance(k, str):
+                    acc.add(k)
+                if k in ("cell", "arm", "name", "id") and isinstance(v, str):
+                    acc.add(v)
+                names(v, acc)
+        elif isinstance(o, list):
+            for v in o:
+                names(v, acc)
+
+    with_arm, without = [], []
+    for sid in PROGRAMME:
+        p = f"workspace/studies/out/{sid}.json"
+        if not os.path.exists(os.path.join(REPO, p)):
+            continue
+        acc = set()
+        names(j(p), acc)
+        found = sorted(s for s in acc if "1440" in s or " daily" in s.lower())
+        (with_arm if found else without).append((sid, len(found), found[:3]))
+    out.append(dict(store="the 21-study programme (workspace/studies/out/{d,g,x}_*.json)",
+                    unit="study payloads carrying a 1440m arm",
+                    at_1440=len(with_arm), total=len(with_arm) + len(without),
+                    detail="WITH: " + ", ".join(f"{s}({n})" for s, n, _ in with_arm)
+                           + "  ||  WITHOUT: " + ", ".join(s for s, _, _ in without)))
+
     # --- 5. the 14 other per-group studies ---------------------------------
     gdir = os.path.join(REPO, "workspace/studies/out")
     grp = []

@@ -120,9 +120,17 @@ def saturate(symbol: str, tf: int, *, direction: Direction) -> dict:
     ctrl = BacktestEngine(frame, costs).run(stub)
     ctrl_v = violations(ctrl.trades)
 
-    #: One 18:00->16:00 cycle is 22 hours. Trade stamps are bar OPEN times, so
-    #: the largest hold the rule can produce is 22h minus one base bar.
-    cap = 22 * 60 - tf
+    #: One 18:00->16:00 cycle is 22 hours = 1320 minutes, and that is the cap.
+    #:
+    #: A first cut used ``22*60 - tf``, reasoning that trade stamps are bar OPEN
+    #: times so the exit stamp is the ON_BOUNDARY bar's open, 16:00 minus one
+    #: bar. That is right for an ON_BOUNDARY flat and **wrong for the IN_WINDOW
+    #: gap flat**, whose exit stamp is 16:00 itself. It reported MNQ 240m's
+    #: legitimate 20:00 -> 16:00 hold of 1200 minutes as over-cap. The assertion
+    #: was too tight, not the rule - recorded because an over-tight check in a
+    #: gate is as misleading as a loose one, and this one would have had me
+    #: withdraw a cell that was fine.
+    cap = 22 * 60
     over = [t for t in tr if t.minutes_held > cap]
 
     return {
@@ -140,7 +148,7 @@ def saturate(symbol: str, tf: int, *, direction: Direction) -> dict:
         "hold_minutes": {
             "median": statistics.median(holds) if holds else None,
             "max": max(holds) if holds else None,
-            "cap_22h_minus_one_bar": cap,
+            "cap_22h": cap,
             "trades_over_cap": len(over),
             "over_cap_detail": [
                 {"entry": to_et(t.entry_ts).isoformat(),
@@ -177,7 +185,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                       f"rule={r['closed_by_the_rule']:5d} "
                       f"1b={r['counters']['flats_forced_session_end']:3d} "
                       f"gap={r['counters']['flats_in_window']:3d} "
-                      f"maxhold={h['max']:6.0f}m/cap{h['cap_22h_minus_one_bar']} "
+                      f"maxhold={h['max']:6.0f}m/cap{h['cap_22h']} "
                       f"over={h['trades_over_cap']:3d} "
                       f"| control viol={r['control_shipped_engine']['violations']:5d} "
                       f"maxhold={r['control_shipped_engine']['max_hold_minutes']:.0f}m",

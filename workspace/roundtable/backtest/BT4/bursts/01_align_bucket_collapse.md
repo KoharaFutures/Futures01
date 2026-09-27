@@ -87,3 +87,29 @@ Full tables are in `../ALGOS.md`; raw payload in `code/daily_mtf_reduction.json`
 ALGO-1 is **ASKED**, not FAITHFUL. `VERIFY.md` holds five numbered questions and
 `msgs/BT4-01_R4_verify-ALGO-1.md` is out to R4. No number from this burst should be quoted as
 verified until that comes back.
+
+## A correction to my own count, added at the end of the burst
+
+My first census looked only for `g_*` study payloads with a cell key shaped `SYM/tf/window/confirm`
+and reported **"6 of 21 studies"** carry a 1440m arm. That undercounted by eleven. The `x_*` studies
+name their daily arms differently — `MES_1440_274`, `('MGC', 1440)`, `MES-1440m-<id>`, or just
+"MNQ daily" in prose — so a single cell-key pattern misses them.
+
+**The measured figure is 17 of the 22 payloads.** Clean: `g_breakout`, `g_fibonacci`,
+`g_mean_reversion`, `g_pullback`, `g_volume_profile` — and `g_volume_profile`'s absence corroborates
+independently, because the deep-scan report already records "VOLUME_PROFILE cannot produce a strategy
+at 4h or daily at all" (`scan_reports/2026-09-23_MGC-MES-NQ_deep-scan.md:236`).
+
+`[measured: PYTHONPATH=. python3 workspace/roundtable/backtest/BT4/code/stores_at_1440.py]`
+
+The error was in the **under**-reporting direction, which for a contamination count is the dangerous
+one, and the fix is in the script rather than only in the prose so it cannot drift back.
+
+## And a second one, in the other direction
+
+`ADJ-14` §4's restatement of rule 2 says the surviving evidence is "the **60-minute** frames the
+corpus built". Measured, the 11 surviving cells are **8 at 60m, 2 at 15m, 1 at 30m, across five
+symbols**. So that restatement is over-narrow by three cells and two timeframes, and the exact
+qualifier is *"the frames whose members are distinct series"*. Filed as `BT4-REQ-3`. Both corrections
+are recorded here because a burst that only ever finds errors in the direction of its own thesis is
+not auditing anything.

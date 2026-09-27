@@ -472,6 +472,13 @@ Full detail in `bursts/07_anti-overfitting-audit.md`.
 | **data-mining bias** | *n* declared before measuring; placebo beside every reported row; random-10, trade-matched-10, reverse-time and direction controls on the selection test | **FOUND — §7** |
 | **parameter sensitivity** | one fixed exit for all 19,188 arms, never searched | **removed by construction, not measured away** |
 | **survivorship / roll bias** | gap census on the raw series | **unfixable substrate property, quantified** (§5c) |
+| **adverse selection at the fill** (not on the brief's list; checked anyway) | signed signal-close → fill-open move, per cell | **CLEAN** — 35.9–42.9% of fills adverse, R effect −0.029 to +0.007 and not one-signed |
+
+One substrate fact fell out of the last check and belongs in the record: **the median
+discontinuity between one bar's close and the next bar's open is exactly 1 tick** on both contracts
+at all three timeframes. Every backtest in this repository fills entries at `bar.open` after
+computing the signal on the previous close, so that tick is inside every result here — unmodelled,
+and measurably unbiased.
 
 The prefix-invariance pass is the one worth reading twice. The ORB/ICT report records that this
 repository once produced a **+0.354 R cluster at t = 5.19** that survived a 60/40 split **and all

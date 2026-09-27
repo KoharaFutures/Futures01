@@ -1720,3 +1720,51 @@ unlocks *n*, a multi-series frame unlocks *m*, and an aggressor flag unlocks *k*
 track's honest contribution to that arithmetic is: **sequence support unlocks 1 family fully
 and degrades 4 more in Class III — it is not the answer for my class.** The answer for my
 class is not a data primitive at all. It is a constructor parameter.
+
+---
+
+# Appendix — claim-marker census
+
+The manager's cover note said he would read the ratio between the three markers, so here it is
+measured rather than asserted.
+
+`[measured: for f in R3_path_operation.md R3_operating_vocabulary.md; do grep -o
+"\[general knowledge\]" $f | wc -l; grep -o "\[repo-verified:" $f | wc -l; grep -o
+"\[measured:" $f | wc -l; done]`
+
+| file | `[general knowledge]` | `[repo-verified: path:line]` | `[measured: cmd → result]` |
+|---|---|---|---|
+| `R3_path_operation.md` | 64 | **188** | 60 |
+| `R3_operating_vocabulary.md` | 2 | **74** | 33 |
+| **total** | **66** | **262** | **93** |
+
+262 path-cited repo claims and 93 measured commands against 66 general-knowledge claims. The
+general-knowledge claims are concentrated in the "How it is operated" and "How it dies" fields
+of the R3-D1 catalogue, which is where DIVISION §4 requires them and marks them as such.
+
+**What I ran, in full** (DIVISION §8 compliance). Every command was a read, a `grep`, a
+`dataclasses.fields` inspection, one `json.load` of an existing artefact, or
+`generate_strategies('MGC', [5,15,60,240], max_total=400)` — used once, for reachability, and
+`max_total` was 400. **I ran no `run_backtest`, no `run_portfolio`, no sweep, and produced no
+expectancy or z-score of my own.** Every comparative statistic quoted in this file is cited
+from an existing artefact with its path. **I made no write of any kind under `csv/`**; the only
+`csv/` access was `head -1 csv/raw/MGC_1h.csv`.
+
+## Things I deliberately did not do
+
+- **I did not re-derive the win-rate/payoff cancellation** (`BRIEF.md` rule 3, DIVISION §5.9).
+  It is labelled once as Channel 1 in Part B-3 and eight axes are assigned to it in R3-D4
+  without re-argument.
+- **I did not re-argue any of the eight settled rules.** Where my Channel-3 analysis touches
+  rule 3 I state explicitly what I am and am not claiming (Part B-3): rule 3 is a statement
+  about gross geometry and remains correct; the cost channel is a second, monotone effect the
+  rule leaves on the table, and it is a drag rather than an edge.
+- **I did not audit another track's surface.** I read `features.py:921-926` and `:246, 316-325`
+  only to close a look-ahead question about *my* code (`engine.py`'s trail and slippage
+  scaler), and I say so at A-11 point 6 with the caveat that `_align`'s construction is R1's.
+  I touched no `vwap`, `profile`, `orderflow`, `volume`, `liquidity` or `imbalance` condition
+  (DIVISION §5.3, §5.4).
+- **I did not annex a family.** III-15's curve and carry half is R2's (DIVISION §5.6) and I
+  claim only the operational half, saying so in the entry.
+- **I did not re-derive the 79 conditions or the 19 groups** (DIVISION §5.8). Appendix A is
+  cited.

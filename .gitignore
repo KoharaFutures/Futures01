@@ -35,3 +35,24 @@ workspace/studies/merged.json
 # Worker run logs, at any nesting depth. The existing workspace/*/log/ rule
 # misses workspace/<x>/<worker>/logs/; results are kept, transcripts are not.
 workspace/**/logs/
+
+# Desk console: personal account state and its journal database. The risk
+# CONFIG is deliberately NOT ignored - it is a shared, reviewable document.
+# The account file holds real equity and drawdown history and is not.
+desk-account.json
+**/desk-account.json
+desk/data/
+
+# Desk runtime outputs. The journal database and scratch files are rebuildable
+# and stay out of the repository.
+data/*.sqlite3
+data/*.sqlite3-*
+data/futures_agents.sqlite3*
+
+# The bar archive is the exception and IS tracked. Yahoo serves 1-minute bars
+# for seven days only, so once a bar rolls off that window it cannot be
+# re-fetched from the vendor at any price - and the session container that
+# downloaded it is ephemeral. The archive is append-only, so these files grow
+# and never rewrite history.
+!data/archive/
+!data/archive/*.jsonl

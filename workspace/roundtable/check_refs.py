@@ -40,6 +40,11 @@ ID = re.compile(
       | D\d+                        # programme-wide defect
       | (R[123]|BT[123]|DISC)-      # issuer-prefixed:
         (Q\d+|REQ-\d+|ALGO-\d+|D\d+[a-z]?|[AB]-\d+)
+      | MGR-(T\d+|Q\d+|REQ-\d+)    # manager task / question / request
+      | ADJ-\d+                     # manager adjudication
+      | R-\d+                       # board rule
+      | D-[A-Z]+\d+                 # researcher-local defect note, e.g. D-L1, D-MTF3
+      | X-\d+                       # cross-cutting avenue
       | round-1                     # the pre-registry round
       | none
     )$""",

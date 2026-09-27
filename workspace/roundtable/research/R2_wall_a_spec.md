@@ -373,15 +373,46 @@ broken condition. That is the D38-shaped confusion running in reverse.
         return ptr[min(max(0, base_index), len(ptr) - 1)]
 ```
 
-### The two ways to get this wrong, both of which produce plausible numbers
+### The four ways to get this wrong — measured, with the fixture that exposes each
 
-1. **`ts` instead of `end_ts`.** Off by exactly one partner bar length, always in the leaking
-   direction. On `MGC_1h` × `MCL_1h` that is a one-hour peek. It will not fail any sanity check: the
-   series still looks aligned, the bar counts are unchanged, and the strategy's equity curve simply
-   gets better. **This is the single highest-value assertion in the whole test plan.**
-2. **`bisect` on nearest.** `bisect_left` on a timestamp list followed by "take index *j*" rather
-   than *j−1* selects the partner bar that *starts* at or after the primary bar's close. Same leak,
-   arrived at differently. The two-pointer form above cannot express it.
+**I prototyped the A3 loop and all four wrong variants against real on-disk pairs before writing this
+section, and the result corrected my own first draft.** Round 1 and this file's first draft both said
+*"`ts` instead of `end_ts` ... this is the single highest-value assertion in the whole test plan"*. **That
+is false on the fixture I had named**, and a developer who followed it would have shipped a green test
+suite over a leaking implementation.
+
+`[measured: python3 -c "build_symbol_frame on each pair; run the A3 two-pointer with the correct rule
+and with each wrong rule; count bars where partner.end_ts > primary.end_ts" →]`
+
+| wrong rule | what a developer would call it | `MGC_1d`×`SPY_1d` (equal grid) | `MGC_1h`×`MCL_1h` (equal grid) | `MGC_1d`×`SPY_1h` (finer partner) | `MGC_1h`×`SPY_1d` (coarser partner) |
+|---|---|---|---|---|---|
+| **CORRECT** `p.end_ts <= b.end_ts` | — | **0** | **0** | **0** | **0** |
+| **BAD-1** `p.ts <= b.ts` | "align the opens" | 0 | 0 | 0 | **4,534** |
+| **BAD-2** `p.ts <= b.end_ts` | "the partner bar covering this instant" | **1,962** of 2,511 | **4,434** of 5,000 | 0 | **4,743** |
+| **BAD-3** `p.end_ts <= b.ts` | "be extra safe" | 0 | 0 | 0 | 0 |
+| **BAD-4** `bisect_left(...)`, take *j* not *j−1* | "nearest bar" | **3** of 2,511 | **364** of 5,000 | **2,509** of 2,511 | **4,780** |
+
+**Four things follow, and three of them change the test plan.**
+
+1. **BAD-2 is the dangerous realistic one, not BAD-1.** It leaks **78% of bars** at equal grid, and it
+   is what a developer writes when thinking *"the partner bar that covers this instant"* — which
+   admits a partner bar that has **begun but not closed**. That is the textbook definition of
+   look-ahead on this axis. T3.1 catches it on any equal-grid fixture.
+2. **BAD-1 cannot leak unless the partner is coarser than the primary.** Algebraically: `p.ts <= b.ts`
+   ⟺ `p.end_ts <= b.end_ts + (p.minutes − b.minutes)`, so it is *stricter* than correct whenever
+   `p.minutes <= b.minutes` and looser only when the partner is coarser. **So A2's coarser-partner
+   guard is also a backstop for BAD-1**, which §2 did not realise — that guard is doing two jobs, not
+   one, and §2's framing of it as purely statistical understates it. **A red-first test for BAD-1
+   therefore requires `allow_coarser_partners=True`**; on a default-configured frame it is unreachable.
+3. **BAD-4 leaks on every pair but only 3 of 2,511 bars at equal grid.** A sampled test would miss it:
+   100 sampled bars of 2,511 find it with probability ≈ 11%. It is *correct by accident* at equal grids
+   with identical stamps, because `bisect_left` lands on the exact match. On a finer partner it leaks
+   **2,509 of 2,511**. **This is the measured justification for "sweep every base bar, not a sample"** —
+   the instruction is not pedantry, it is the difference between an 11% and a 100% detection rate.
+4. **BAD-3 never leaks** — comparing the partner's close to the primary's *open* is strictly
+   conservative. It is wrong (it discards a partner bar that closed inside the primary bar and was
+   legitimately available) but it is wrong in the safe direction, so it degrades information rather
+   than manufacturing it. Worth knowing so a reviewer does not reject it as a leak.
 
 ### How to test — five tests, and the first two are copies of existing ones
 
@@ -392,8 +423,11 @@ the axis swapped.
 
 - **T3.1 `test_no_partner_bar_ends_after_the_base_bar_it_is_aligned_to`** — for every base bar *i*
   and every partner *p*, with `k = frame.partner_index(i, p)`, assert `k == -1 or
-  p_bars[k].end_ts <= base_bars[i].end_ts`. Sweep every bar, not a sample. This is the test that
-  catches failure mode 1.
+  p_bars[k].end_ts <= base_bars[i].end_ts`. **Sweep every bar, not a sample** (reason 3 above).
+  **Parameterise it over three fixtures**, because no single one exposes all four bugs: an equal-grid
+  pair (`MGC_1d`×`SPY_1d`) catches BAD-2 and BAD-4; a finer partner (`MGC_1d`×`SPY_1h`) catches BAD-4
+  at full strength; and a coarser partner (`MGC_1h`×`SPY_1d`, with `allow_coarser_partners=True`) is
+  the **only** fixture that can catch BAD-1. A one-fixture T3.1 is a test that passes over a leak.
 - **T3.2 `test_partner_index_is_the_LAST_such_bar`** — additionally assert `k + 1 == len(p_bars) or
   p_bars[k+1].end_ts > base_bars[i].end_ts`. T3.1 alone passes for `k = 0` forever; this one pins
   it to the newest.
@@ -1174,7 +1208,7 @@ is not evidence.
 | T2.4 | coarser partner rejected by default, allowed on opt-in | A2 | no |
 | T2.5 | finer partner accepted | A2 | no |
 | T2.6 | `test_partner_free_construction_is_byte_identical` | A2 | no |
-| **T3.1** | **`test_no_partner_bar_ends_after_the_base_bar_it_is_aligned_to`** | **A3** | **yes — patch `end_ts`→`ts` and watch it fail** |
+| **T3.1** | **`test_no_partner_bar_ends_after_the_base_bar_it_is_aligned_to`**, over **three** fixtures (§3) | **A3** | **yes — but red-first against BAD-2 (`p.ts <= b.end_ts`), not BAD-1. Patching `end_ts`→`ts` on an equal-grid fixture leaves the suite GREEN over a leak; measured, §3** |
 | T3.2 | `test_partner_index_is_the_LAST_such_bar` | A3 | yes |
 | T3.3 | `test_partner_index_is_monotone_nondecreasing` | A3 | no |
 | T3.4 | `-1` before the partner series starts (`MGC_1d`×`MES_1d`) | A3 | no |
@@ -1222,6 +1256,50 @@ checked and what I found, not a clean bill on things I could not test.
 
 ## 12. Is this handable to a developer? — and what I could not pin down
 
+### 12.0 The design is validated, not merely specified — two prototypes run against on-disk data
+
+Both were run **without editing `futures_agents/`**: the A3 loop and the REDIRECT dispatch were
+reproduced in a throwaway script over real frames, which is enough to falsify the two claims the whole
+spec rests on.
+
+**Claim 1 — `ConditionFn` need not change; an existing condition accepts a partner snapshot unchanged.
+CONFIRMED.**
+
+`[measured: python3 -c "mgc = build_symbol_frame(load_csv('csv/raw/MGC_1d.csv','MGC',1440),[1440]);
+spy = ...SPY...; al = <the A3 two-pointer>; cond = CONDITIONS['regime_trending']; for i: a =
+cond.fn(mgc.snapshot(i), 1440).triggered; b = cond.fn(spy.snapshot(al[i]), 1440).triggered" →
+2,311 bars evaluated past warm-up; both trending **53**; neither **1,596**; MGC-only **367**;
+SPY-only **295**]`
+
+`CONDITIONS['regime_trending'].fn` — a shipped library function, not a modified copy — was called on a
+**SPY** `FeatureSnapshot` and returned a valid `ConditionResult`. Nothing was patched, subclassed or
+wrapped. **The redirect works because a partner snapshot *is* a snapshot**, which is the entire
+argument of §9.3 and is now measured rather than reasoned.
+
+**And the binding carries new information:** the partner's answer **disagrees with the primary's on
+662 of 2,311 bars = 28.6%**. So `regime_trending@1D:SPY` is not a noisy copy of
+`regime_trending@1D` — which is the failure mode that would have made the first binding worthless
+before any backtest, and it is now ruled out cheaply.
+
+**One constraint this hands the first measurement, and it is a hard one.** Both series are trending on
+only **53 of 2,311 bars (2.3%)**. So a host strategy AND-ed with `regime_trending@1D:SPY` *and* its own
+trend filter has a ceiling near 53 bars before the host's own signal is even consulted — the same
+ceiling arithmetic BT2 applied to the event gate (`backtest/BT2/ALGOS.md:248-261`), and it should be
+computed **before** the run, not discovered after. At n ≈ 53 nothing can clear `free_t = 5.46`
+(it would need a per-trade mean-R/SD of 5.46/√53 = **0.75**), so the first binding's honest deliverable
+is the ceiling plus a paired, explicitly underpowered comparison — exactly the shape I ruled for
+BT2-ALGO-1 in `msgs/06_R2_BT2_re-verify-ALGO-1.md` §2/Q6.
+
+**Claim 2 — the A3 two-pointer is look-ahead-free on real data. CONFIRMED, and it corrected §3.**
+
+`[measured: as §3's table → CORRECT rule: 0 violations of T3.1, T3.2 and T3.3 across all 2,511
+`MGC_1d`×`SPY_1d` bars and all 5,000 `MGC_1h`×`MCL_1h` bars]`. The same prototype run over the four
+wrong variants produced §3's table and **falsified this file's own first-draft claim** that patching
+`end_ts`→`ts` would fail the test. It does not, on an equal-grid fixture. §3 is rewritten with the
+measured leak counts and the fixture each bug needs; that correction is the single most useful thing
+the prototype produced, because the original instruction would have produced a green suite over a
+leaking implementation.
+
 **Handable.** A1-A8 each have a file, a verified line, a before/after signature, a body where the
 body is where the error would be, a stated consequence of skipping, and named tests. §10 is the
 order to write them in. Two edits (A3, A6) are called out as the ones that decide whether the change
@@ -1249,7 +1327,14 @@ is a capability or a defect.
    shipped or dropped without touching anything else. If dropped, II-3 must be run at daily by
    convention instead of by construction, and that convention has to be written into whatever runs
    it.
-5. **The content-window subtlety in §9.1's caveat.** A daily `MGC` bar and a daily `SPY` bar share a
+5. **Whether the first binding is worth running at all, given the 2.3% AND-overlap.** §12.0 measures
+   53 of 2,311 bars where both MGC and SPY are trending. That is a ceiling, not an expectancy, and I did
+   not compute what it becomes once the host strategy's own signal and `rth_only` are applied — that
+   needs a run I may not do. **It may be that the honest deliverable of the first partner binding is the
+   ceiling arithmetic and nothing else**, exactly as it turned out to be for BT2-ALGO-1. I would rather
+   flag that now than have it discovered as a disappointment. The plumbing tests (T1-T9) do not depend
+   on it and are the real deliverable of Wall A.
+6. **The content-window subtlety in §9.1's caveat.** A daily `MGC` bar and a daily `SPY` bar share a
    timestamp but not a content window. I am confident it is conservative (the partner's information
    is strictly earlier) and I could not fully characterise it without reading raw session boundaries
    bar by bar, which needs a measurement I did not run. Stated as a reporting caveat.

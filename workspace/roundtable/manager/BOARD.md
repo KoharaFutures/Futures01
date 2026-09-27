@@ -22,7 +22,7 @@ These are decided. Each cites where it was ruled, so nobody re-litigates one in 
 | R-3 | **State the search size and the deflation threshold.** Six parameterisations means six. Programme-wide `free_t = 5.46`; largest t ever found here 3.923. | `PIPELINE.md` §4 |
 | R-4 | **Never route a comparative claim through `T.ab`** — it inflates z ~3.3× (D28). Name the paired test you used. | `PIPELINE.md` §4 |
 | R-5 | **Never report a number from an UNVERIFIED algorithm.** An unverified result is not weak, it is unknown: nobody can say what was measured. | `PIPELINE.md` §4 |
-| R-6 | **A Tier-1 exit/filter result from an unpaired sweep is NOT reportable.** D15: only 93 of 8,317 shipped rule sets exist with two different exits, so an unpaired exit comparison is confounded with the entry. Paired re-emission of the same rule sets, or nothing. | ADJ-5 |
+| R-6 | **A Tier-1 exit/filter result from an unpaired sweep is NOT reportable.** D15: only 93 of 8,317 shipped rule sets exist with two different exits, so an unpaired exit comparison is confounded with the entry. Paired re-emission of the same rule sets, or nothing. **Amended (ADJ-11a): a paired re-emission that does not pass `_id=None` on every `replace` and assert arm-id uniqueness at emission is not a paired re-emission** — `D48` makes both arms collide into one `BacktestResult` with a measured between-arm difference of exactly zero. | ADJ-5, ADJ-11a |
 | R-7 | **`csv/raw/` is mandatory for any number placed beside a published `scan_reports/` figure.** `data/archive/` is permitted for a number that is **labelled with its substrate** and **never pooled with a `csv/raw` number inside one statistic** — and only after `MGR-T6` lands. Before then, archive numbers are `PROVISIONAL-SUBSTRATE`. | ADJ-6 |
 | R-8 | **Any trade dump intended for later operating-layer work records `entry_price`, `initial_stop` and `symbol`.** Three keys; without them account sizing is a re-run, not a read, and the link dies the moment the slicing or the snapshot changes. | ADJ-9d |
 | R-9 | **An agent wanting a `D<n>` describes the defect and does not name a number.** "Next free" is a read of a file another agent may be about to change; it nearly collided this turn. | ADJ-9 numbering note |
@@ -102,28 +102,65 @@ sessions, 2019-01-01 → 2020-05-14, **Oanda CFD not futures, not poolable with 
 `MGR-T<n>` is this board's task id. Status vocabulary: **DONE** / **IN FLIGHT** / **OPEN** (ready to
 dispatch) / **QUEUED** (dependency unmet) / **GATED** (work may proceed, output not reportable).
 
+> **Status as of 2026-09-27 00:15 ET.** R1, R2 and R3 ran **in parallel with this board being
+> written** and all three delivered before it was finished, along with BT2's and BT3's first bursts
+> and nine further requests. The table below is reconciled against what is actually on disk, so
+> several rows were **DONE before they were ever dispatched**. That is the pipeline working, not a
+> bookkeeping failure — but it is why §3's statuses matter more than §4's prose.
+
 | id | task | holder | anchor id (use in `RE:`) | depends on | status |
 |---|---|---|---|---|---|
-| `MGR-T1` | Rule on BT1's four fidelity questions for `BT1-ALGO-1` | R1 | `BT1-ALGO-1` | — | **DONE** 22:3x ET, `msgs/03` |
-| `MGR-T10` | **Rule on BT3's eight fidelity questions for `BT3-ALGO-1`** | **R3** | `BT3-ALGO-1` | — | **OPEN — highest priority on the board** |
-| `MGR-T2` | Wall A minimum-change spec (edits A1–A8) | R2 | `R2-D3` | — | **IN FLIGHT** |
+| `MGR-T1` | Rule on BT1's four fidelity questions for `BT1-ALGO-1` | R1 | `BT1-ALGO-1` | — | **DONE** — `msgs/03_R1_BT1…`, **DIVERGENT** on the direction half |
+| `MGR-T2` | Wall A minimum-change spec (edits A1–A8) | R2 | `R2-D3` | — | **DONE** — `research/R2_wall_a_spec.md` |
+| `MGR-T3` | Paired re-emission design for `R3-D5` Tier-1 items | R3 | `R3-D5` | — | **DONE** — `research/R3_pairing_design.md`; **and it found `D48`** |
+| `MGR-T5` | Condition-group audit — R1's surface: `structure`, `supplydemand`, `fibonacci` (12) | R1 | `DISC-LEAD-05` | — | **IN FLIGHT** — `research/R1_group_audit.md`; **already yielded `D49`** |
+| `MGR-T10` | Rule on the residual of BT3's eight fidelity questions | R3 | `BT3-ALGO-1` | — | **DONE** — `msgs/10_R3_BT3_re-verify-ALGO-1-questions.md` covers Q1, Q3, Q5, Q7, Q8(b); `msgs/03_R3_BT3…` had covered Q2, Q4, Q6, Q8(a). **All eight ruled.** |
+| `MGR-T18` | Apply the two items that block `BT3-ALGO-1`'s reportability: the one-line `volatility=row["vol"]` fix (Q4, DIVERGENT) and the intra-timestamp look-ahead from 2,900 zero-duration trades | BT3 | `BT3-ALGO-1` | `MGR-T10` (done) | **OPEN — now the gate on every BT3 number** |
+| `MGR-T17` | **Re-read `x_exits`' stop-kind comparison against `D45` and `D49`** | **R3** | `D49` | — | **OPEN — highest-value re-read available** |
 | `MGR-T14` | Fix `absorption_bar`'s direction rule; re-ask fidelity | BT1 | `BT1-ALGO-1` | `MGR-T1` | **OPEN** |
-| `MGR-T6` | Reconcile `data/archive/` against `csv/raw/` bar-for-bar on the overlap | BT1 | `BT1-REQ-1` | — | **OPEN** |
-| `MGR-T16` | Fix D44 (circular block bootstrap), 1 line + 1 test | parent | `D44` | — | **OPEN** |
-| `MGR-T8` | Tier-0 item 8: `mode="block"` vs `mode="iid"` on the R series | BT3 | `R3-D5` | `MGR-T10`, `MGR-T16` | **GATED** — not reportable until D44 is fixed |
-| `MGR-T9` | Tier-0 item 7: account-governor replay over `geo_trades.json` | BT3 | `R3-D5` | `MGR-T10` | **GATED** — no stateful number until R3 rules |
-| `MGR-T11` | Direct per-trade serial-dependence test (lag-1..10 / runs / Ljung-Box) | BT3 | `BT3-REQ-1` | `MGR-T10` | **QUEUED** |
-| `MGR-T3` | Paired re-emission design for `R3-D5` Tier-1 items 1–6 | R3 | `R3-D5` | `MGR-T10` | **QUEUED** |
-| `MGR-T5` | Condition-group audit — R1's surface: `structure`, `supplydemand`, `fibonacci` (12) | R1 | `DISC-LEAD-05` | — | **IN FLIGHT** (`research/R1_group_audit.md`) |
-| `MGR-T13` | Time-of-day vs 20-bar-trailing volume normalisation, as a question about the corpus | R1 | `R1-REQ-2` | — | **OPEN** |
-| `MGR-T7` | Condition-group audit — R2's surface: `time` (4) **+ the Axis C consolidation** | R2 | `R2-Q1` | `MGR-T2` | **QUEUED** |
-| `MGR-T15` | Event gate on MGC/MCL — the symbols where the HIGH calendar is not empty | BT2 | `R2-Q1` | `MGR-T6` for substrate | **IN FLIGHT** |
+| `MGR-T6` | Reconcile `data/archive/` against `csv/raw/` bar-for-bar on the overlap | BT1 | `BT1-REQ-1` | — | **OPEN — priority raised.** `BT2-REQ-3` is the second track to hit the substrate wall |
+| `MGR-T16` | Fix `D44` (circular block bootstrap), 1 line + 1 test | parent | `D44` | — | **OPEN** |
 | `MGR-T12` | Extract BT1's D38 registration guard to `roundtable/lib/registry_guard.py` | parent | `R1-REQ-1` | — | **OPEN** |
-| `MGR-T4` | Condition-group audit — R3's surface: 7 groups, 31 conditions | R3 | `DISC-LEAD-05` | `MGR-T13`, `MGR-T3` | **QUEUED** |
-| `MAIN-01` | **Mode SCOPE** — what sub-task breakdown does `MAIN-01` need, at what granularity | R1 | `MAIN-01` | `MGR-T1` | **OPEN** |
+| `MGR-T13` | Time-of-day vs 20-bar-trailing volume normalisation, as a question about the corpus | R1 | `R1-REQ-2` | — | **OPEN** |
+| `MGR-T15` | Event gate on MGC/MCL — the symbols where the HIGH calendar is not empty | BT2 | `R2-Q1` | `MGR-T6` for substrate | **IN FLIGHT** — `BT2-ALGO-1` ruled **FAITHFUL**, so BT2 may measure |
+| `MGR-T8` | Tier-0 item 8: `mode="block"` vs `mode="iid"` on the R series | BT3 | `R3-D5` | `MGR-T16` | **GATED** — may run; **not reportable** until `D44` is fixed |
+| `MGR-T9` | Tier-0 item 7: account-governor replay over `geo_trades.json` | BT3 | `R3-D5` | `MGR-T10` | **GATED** — no stateful number until Q1/Q3 are ruled |
+| `MGR-T11` | Direct per-trade serial-dependence test (lag-1..10 / runs / Ljung-Box) | BT3 | `BT3-REQ-1` | `MGR-T10` | **QUEUED** |
+| `MGR-T7` | Condition-group audit — R2's surface: `time` (4) **+ the Axis C consolidation** | R2 | `R2-Q1` | `MGR-T2` (done) | **OPEN** |
+| `MGR-T4` | Condition-group audit — R3's surface: 7 groups, 31 conditions | R3 | `DISC-LEAD-05` | `MGR-T13` | **QUEUED** |
+| `MAIN-01` | **Mode SCOPE** — what sub-task breakdown does it need, at what granularity | R1 | `MAIN-01` | `MGR-T1` (done) | **OPEN** |
 
 **Shape:** 1 main task carrying **0 allocated sections** (by design, §2) and one open Mode-SCOPE
-request; **16 standalone tasks** — 1 done, 3 in flight, 6 open, 2 gated, 4 queued.
+request; **19 standalone tasks** — 4 done, 2 in flight, 8 open, 2 gated, 3 queued.
+
+**Reconciled at 00:25 ET against what is on disk.** Four of these were completed by agents running in
+parallel with the board being written, including two (`MGR-T2`, `MGR-T3`) that were done before they
+were ever dispatched. `MGR-T3`'s output found `D48`, which then amended the gate that made `MGR-T3`
+necessary — the tightest feedback loop this pipeline has produced so far, and an argument for
+dispatching one section at a time rather than a whole main task.
+
+### Requests received after this board was laid out — triaged, not ruled
+
+Nine arrived while I was ruling the first eight. **Two got numbers immediately** because they bear on
+gates set earlier in the same file: `R3-REQ-1` → **`D48`** (a `replace`d strategy inherits its `_id`,
+so **both arms of a paired comparison collide into one result and the measured difference is exactly
+zero** — a false null indistinguishable from the finding, and it defeats the `R-6` gate itself), and
+R1's `StopKind.RANGE` finding → **`D49`**. **The other seven are `RECEIVED`** with a preliminary triage
+line each in ADJ-11c, **none blocking its filer**:
+
+| `R2-REQ-1` | `R2-REQ-2` | `R2-REQ-3` | `R3-REQ-2` | `R3-REQ-3` | `BT2-REQ-1` | `BT2-REQ-2` | `BT2-REQ-3` |
+|---|---|---|---|---|---|---|---|
+| likely `D48` family | likely `D46` instance | numbers next turn | **do not start building before I rule** | accepted, no ruling needed | likely a `D<n>` | likely a missing primitive | raises `MGR-T6` |
+
+**`RECEIVED` is a promise.** If any of these is still `RECEIVED` two turns from now, that is a failure
+of mine and not a backlog.
+
+> **Numbering irregularity, recorded rather than tidied.** `MGR-T3`…`MGR-T13` were allocated inside
+> `ADJUDICATIONS.md` while I was ruling, before the board was laid out, so the table above is in
+> dependency order and the ids are not sequential. `MGR-T4` is the R3-surface audit and `MGR-T6` is
+> the store reconciliation — **not** what a reader guessing from position would assume. Renumbering
+> would break the `ADJUDICATIONS.md` citations that are the only record of why each task exists, so
+> the ids stand. Read the table, not the numbers.
 
 > **Numbering irregularity, recorded rather than tidied.** `MGR-T3`…`MGR-T13` were allocated inside
 > `ADJUDICATIONS.md` while I was ruling, before the board was laid out, so the table above is in
@@ -286,9 +323,29 @@ apply**, never applied by me.
 
 ## 6. What is blocking what, in one place
 
+**Which `VERIFY.md` questions are open, by number.** Added after R3 and BT3 raced: BT3 posted eight
+questions at 02:12 and R3 ruled at 02:16 **from the code**, having checked `msgs/` when it held only
+`01` and `02`. R3 handled that correctly — it ruled rather than leave BT3 blocked, and invited a re-ask
+"on the difference only" — but four *inferred* choices got ruled while two of BT3's eight did not,
+because they ask for the finding's **intent** and cannot be answered from a code read. So the board
+now tracks question numbers, not just algorithm status:
+
+| algorithm | verdict | open question numbers | note |
+|---|---|---|---|
+| `BT1-ALGO-1` | **DIVERGENT** (direction half) | none | all four ruled; `absorption_present` is FAITHFUL and may proceed |
+| `BT2-ALGO-1` | **FAITHFUL** | none | eleven choices ruled; BT2 may measure, with four narrowing amendments |
+| `BT3-ALGO-1` | **DIVERGENT** (one material, one reporting) | **none — all eight now ruled** | R3 closed the race itself, across two messages, and said so explicitly: `03` covered Q2/Q4/Q6/Q8(a) from the code, `10` covered Q1/Q3/Q5/Q7/Q8(b). **Q1 ruled PER_STRATEGY**, which confirms §7 pre-registration 3. Reportability now gates on `MGR-T18`, not on a question |
+
+**The lesson survives the race being resolved.** R3 closed it unprompted, but only because it noticed
+its own `03` had not reached BT3's posted list — and `msgs/` is write-once, so it needed a second
+message to do it. **The board tracking question numbers is what makes that visible without depending
+on the ruler noticing.** Keep the column.
+
 | blocked | by | consequence if it stays blocked |
 |---|---|---|
-| every number BT3 can produce | `MGR-T10` (R3's fidelity ruling) | two of the cheapest real measurements in the programme stay unreportable |
+| every **stateful** number BT3 can produce | `MGR-T18` — the Q4 `volatility=row["vol"]` fix and the intra-timestamp look-ahead from 2,900 zero-duration trades | two of the cheapest real measurements in the programme stay unreportable. **`MGR-T10` is discharged**: all eight fidelity questions are ruled |
+| every paired re-emission, all tracks | `D48` discipline (`_id=None` + arm-id assert) | **a false null indistinguishable from the finding.** This defeats `R-6` itself, which is why `R-6` is amended |
+| the interpretation of `x_exits`' stop-kind verdict | `MGR-T17` | a settled negative finding keeps two named, measured, artefactual candidate explanations (`D45`, `D49`) and nobody has checked which |
 | `MGR-T8`'s reportability | `MGR-T16` (D44 fix) | the block arm's drawdown/streak/p05 statistics are biased by construction; BT3 flagged rather than silently corrected |
 | every archive-substrate number, all three backtesters | `MGR-T6` | rare-signal algorithms stay under `FLOOR = 20`; the only never-searched out-of-sample data in the repo stays unused |
 | `MGR-T4` (R3-surface audit) | `MGR-T13` | `volatility` and `regime` cannot be classified without knowing which volume norm they read |

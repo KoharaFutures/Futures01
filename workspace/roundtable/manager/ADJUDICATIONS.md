@@ -774,3 +774,170 @@ Until `REGISTRY.md` and that regex are extended by their owner (the parent sessi
 `msgs/05`), every message header this turn cites the registry-legal **anchor** id of the task
 (`BT1-REQ-1`, `R3-D5`, `DISC-LEAD-05`, `MAIN-01`, …) and names the `MGR-T<n>` in the body only.
 Nobody should put an `MGR-T` id in a `RE:` or `ALSO:` line before that lands.
+
+---
+
+## ADJ-11 — The parallel round landed while I was ruling. **D48 and D49 allocated**; nine new requests triaged
+
+**2026-09-27 00:15 ET.** R1, R2 and R3 were dispatched in parallel with this turn and all three
+delivered before I finished, along with BT2's and BT3's first bursts. **Nine further requests arrived
+after `BOARD.md` was laid out.** Two need a number immediately because they bear on gates I created
+earlier in this same file; the other seven are triaged here and ruled next turn. Triaging in writing
+rather than ruling badly at speed is the choice, and it is recorded as a choice.
+
+### ADJ-11a — `R3-REQ-1`: `dataclasses.replace` inherits the cached `_id`. **Allocated D48, and it is the most urgent thing on this page**
+
+**This defeats the gate I set in ADJ-5, which makes it the highest-priority allocation of the turn.**
+ADJ-5 ruled that every Tier-1 item must be run as a **paired re-emission** or not reported. R3 then
+specified that pairing and discovered the pairing **silently cannot work by default**:
+
+`Strategy._id` is a real dataclass field `[repo-verified: base.py:585]` and `strategy_id` memoises
+into it via `object.__setattr__` `[repo-verified: base.py:622]`. `dataclasses.replace` copies every
+field including `_id`, and **`generate_strategies` has already read it** — its dedupe is
+`seen.setdefault(st.strategy_id, st)` `[repo-verified: combinator.py:719]` — so every strategy it
+returns arrives with `_id` populated. Therefore
+`[measured: replace(S[0], exit=replace(S[0].exit, trail_atr_mult=2.0)).strategy_id == S[0].strategy_id
+→ True]`.
+
+**Why this is worse than a nuisance, and why it is not covered by D43.** `run_many` keys `results`,
+`open_pos`, `pending` and the in-position skip guard **all by `strategy_id`**
+`[repo-verified: engine.py:277-283, 304-309]`. A colliding pair produces **one** `BacktestResult`
+whose trades are a path-dependent interleaving of both arms' exits, so **the measured difference
+between arms is exactly zero.** Every item on R3's list is a "does this axis do anything" test, which
+makes the failure mode **indistinguishable from the result**: a false null that looks like the answer.
+D43 repaired what goes *into* the hash; this defeats the hash by never recomputing it.
+
+**D48, as allocated (text for `DEFECTS.md`'s owner):**
+
+> **D48 — `dataclasses.replace` on a `Strategy` inherits the memoised `_id`, so both arms of a paired
+> comparison collide into one result.** `Strategy._id` is a dataclass field
+> `[repo-verified: strategies/base.py:585]`; `strategy_id` memoises into it
+> `[repo-verified: base.py:622]`; `generate_strategies` reads it during dedupe
+> `[repo-verified: combinator.py:719]`, so every returned strategy already carries `_id`. A later
+> `replace(...)` therefore claims the original's id
+> `[measured: replace(S[0], exit=replace(S[0].exit, trail_atr_mult=2.0)).strategy_id ==
+> S[0].strategy_id → True; adding _id=None → ids differ]`. **`run_many` keys `results`, `open_pos`,
+> `pending` and the in-position skip guard by `strategy_id`
+> `[repo-verified: backtest/engine.py:277-283, 304-309]`, so a colliding pair yields one
+> `BacktestResult` interleaving both arms and a measured between-arm difference of exactly zero — a
+> false null that is indistinguishable from the finding being tested.** Third instance of the family
+> holding the `ExitModel.label` fix and **D43**; D43 does **not** fix it. **The library is not wrong,
+> only sharp**: the combinator itself uses the correct idiom at `combinator.py:694`
+> (`replace(x, symbol=s, _id=None)`). Discipline: **`_id=None` on every `replace`, plus an assert on
+> arm-id uniqueness at emission** (`research/R3_pairing_design.md` §2). Found by R3 (`R3-REQ-1`,
+> finding `R3-A-13`). Status: open, worked around.
+
+**Ruling with teeth:** **`R-6` is amended — a paired re-emission that does not pass `_id=None` and
+assert arm-id uniqueness at emission is not a paired re-emission, and its output is not reportable.**
+R3 asked only for the number and explicitly did not request a code change; I am not ordering one
+either, because the combinator already demonstrates the correct idiom and a library change here has
+test surface. **The discipline is the fix and the assert is what makes it auditable.**
+
+### ADJ-11b — `StopKind.RANGE` is `StopKind.ATR`. **Allocated D49**
+
+From `msgs/05_R1_R3_stopkind-RANGE.md`, found by R1 while auditing `liquidity` for `MGR-T5` — not by
+looking for it. R1 correctly declined to allocate and correctly declined to rule, since `StopKind` is
+R3's.
+
+`base.py:301-309`'s `RANGE` branch falls through to `dist = self.stop_mult * a` when
+`snap.opening_range` is `None`, which is **byte-identical to the ATR branch at `:285-289`**. The
+fall-through is not a rare guard: `or_minutes = 30` is hard-coded `[repo-verified: features.py:865]`
+and the range accumulates only over bars with `0 <= minutes_since_open < 30`
+`[repo-verified: features.py:891-895]`, while the 1h grid is 4,992 bars at `:00` plus 8 strays at
+`:30` and MGC's RTH opens at 08:20 — so `minutes_since_open` near the open takes only
+`{−20, 40, 70, 100}` and **never lands in `[0, 30)`**.
+
+| cell | `snap.opening_range is None` | `RANGE` behaves as |
+|---|---|---|
+| **MGC 1h** | **5000 / 5000** | **`ATR`, on 100% of bars** |
+| MNQ 1h / MES 1h | 4990 / 5000 | `ATR` on 99.8% |
+| MCL 1h | 3291 / 5000 | `ATR` on 65.8% |
+| MGC 5m / MNQ 5m / MES 5m / MCL 5m | 3127–3290 / 5000 | `ATR` on 62.5–65.8% |
+
+**D49, as allocated (text for `DEFECTS.md`'s owner):**
+
+> **D49 — `StopKind.RANGE` silently becomes `StopKind.ATR` because the opening range is almost never
+> constructed.** The `RANGE` branch falls through to `dist = stop_mult * atr`
+> `[repo-verified: strategies/base.py:301-309]`, byte-identical to the ATR branch `[:285-289]`, when
+> `snap.opening_range` is `None`. With `or_minutes = 30` hard-coded
+> `[repo-verified: features.py:865]` and accumulation gated on `0 <= minutes_since_open < 30`
+> `[repo-verified: features.py:891-895]`, MGC's 08:20 RTH open against a `:00` 1h grid makes that
+> window unreachable: **`opening_range` is `None` on 5,000 of 5,000 MGC 1h bars**, 99.8% of MNQ/MES
+> 1h, 65.8% of MCL 1h and 62.5–65.8% at 5m
+> `[measured, R1: python3 over csv/raw, SymbolFrame._session_state[i][1] is None, 5,000 bars/cell]`.
+> **Consequence: any comparison of `RANGE` against `ATR` on those cells compared a parameterisation
+> against itself — the two arms differ only by `stop_mult`, and the expected difference is exactly
+> zero by construction.** Shares its root cause with **D30** (the opening range is never constructed
+> at 60m/240m) but is a distinct harm — a silent aliasing of two stop kinds rather than a
+> non-firing condition — and the measurement extends to 5m, which D30 does not cover. With **D45**,
+> `StopKind`'s five nominal kinds realise **three** distinct mechanisms on MGC 1h, one of which is
+> itself a mixture, **and the count differs by symbol and timeframe**. Found by R1 (`MGR-T5`
+> `liquidity` audit, `R1_group_audit.md` D-L1/D-L3; handed to R3 in
+> `msgs/05_R1_R3_stopkind-RANGE.md`). Status: open.
+
+**Ruling on the vocabulary question, since `R3-Q1` asked it and two findings have now overtaken the
+answer.** R3 asked whether `StopKind` holds four mechanisms rather than five. **The answer is that the
+question has no single number**: on MGC 1h five nominal kinds realise three mechanisms; on MCL 1h
+`RANGE` is genuinely distinct on 34% of bars. **So the honest form is per-symbol and per-timeframe,
+and R1's refusal to state one number is right and should be adopted rather than resolved.** R3 applies
+this in its own file.
+
+**And the consequence I am escalating rather than leaving as a footnote.** D45 and D49 together mean
+`x_exits`' "no stable best stop width — the ordering reverses by timeframe"
+`[repo-verified: DEFECTS.md:210]` now has **two** independent candidate mechanisms that are
+measurement artefacts rather than market facts — one stop kind partly collapsing to a fixed-tick floor,
+another wholly collapsing to ATR, both at rates that **vary by symbol and timeframe**, which is
+precisely the pattern "the ordering reverses by timeframe" describes. **That is no longer an open
+obligation I can leave unassigned.** It goes on the board as **`MGR-T17` — re-read `x_exits`' stop-kind
+comparison against D45 and D49** and it is the highest-value re-read available, because it is the first
+time in this programme that a settled negative finding has a named, measured, artefactual explanation.
+
+### ADJ-11c — The other seven requests: triaged, not ruled
+
+Stated as triage so nobody reads silence as refusal. **Each is `RECEIVED` on `BOARD.md`; none is
+blocking its filer.** My preliminary read, to be confirmed or overturned next turn:
+
+| request | subject | preliminary triage |
+|---|---|---|
+| `R2-REQ-1` | `BacktestResult` records no partner provenance, so two environments collide on one `strategy_id` | **Likely a `D<n>`, and likely the same family as `D48`** — an id that does not distinguish two things it is being used to distinguish. If so it should be an instance under `D48` rather than its own number. Needs reading before I rule. |
+| `R2-REQ-2` | `Condition.warmup_bars` declared and never consumed | **Likely an instance of `D46`** (documented inputs the code does not read) rather than a new number. |
+| `R2-REQ-3` | two defects in the news conditions, **described not numbered** | Filed correctly under `R-9`. Numbers next turn. |
+| `R3-REQ-2` | an exogenous-entry replay harness, "the only route to trade-level pairing" | **The most consequential of the seven** — if pairing at trade level genuinely requires new harness code, `R-6`'s cost estimate is wrong and the Tier-1 queue needs re-planning. Do not start building it before I rule. |
+| `R3-REQ-3` | R3's round-1 dispatch told it to write `OPEN_QUESTIONS.md` directly; it switched to `msgs/` | **Accepted, no ruling needed.** `OWNERSHIP.md` already declares this the live exception and instructs exactly the switch R3 made. Recording it was right. |
+| `BT2-REQ-1` | `features.py`'s news lookback is 2 days back against 45 forward | Likely a `D<n>`; it is an asymmetry that would silently truncate `minutes_since_high_impact`. |
+| `BT2-REQ-2` | no flatten-before-the-print exit, and `II-11` as operated needs one | Likely a named missing primitive for `R2-D3`, not a defect. |
+| `BT2-REQ-3` | the event family may be unmeasurable at 60m; finer frames are ~2 months | **Cross-links `R-7` and `MGR-T6`** — this is the second track to hit the sample-substrate wall, which raises `MGR-T6`'s priority. |
+
+**What ADJ-11 costs.** Triaging seven requests instead of ruling them leaves seven agents partly
+blocked on my next turn, and two of the triage lines above ("likely an instance of `D46`", "likely the
+same family as `D48`") are guesses I have labelled as guesses. The alternative was ruling nine requests
+at the speed I ruled the first eight and getting some of them wrong silently, which is worse — `R-9`
+and `R-11` both exist because this turn's careful rulings caught things a fast ruling would have
+missed. **The `RECEIVED` status on the board is a promise, and if it is still `RECEIVED` two turns from
+now that is a failure of mine, not a backlog.**
+
+### ADJ-11d — Two process notes, because both are cheap to fix and expensive to rediscover
+
+**1. R3 and BT3 raced, and the fidelity loop ran open-loop on one side.** BT3 posted its eight
+questions at 02:12; R3 ruled at 02:16 **from the code**, having checked `msgs/` when it held only `01`
+and `02` `[repo-verified: msgs/03_R3_BT3_re-verify-ALGO-1.md, opening paragraph]`. R3 handled it
+correctly — it ruled rather than leave BT3 blocked, and invited a re-ask "on the difference only". But
+the outcome is that **four choices R3 inferred are ruled, and two of BT3's eight — Q1 (the population
+unit, where 176 independent accounts and one pooled account disagree 24×) and Q3 (exposure keyed by
+symbol or strategy) — are not**, because those ask for the *finding's intent* and cannot be answered
+from a code read. **`MGR-T10` therefore survives, narrowed to the residual**, and the fix is mine: the
+board must carry **which `VERIFY.md` question numbers are open**, so a researcher ruling from code can
+see what it has not covered. Added to `BOARD.md` §6.
+
+**2. `check_refs.py` still has no manager issuer, so `R-12` stands.** The parent touched `REGISTRY.md`
+and `check_refs.py` at 02:10 but the `ID` regex is unchanged — issuer alternation is still
+`(R[123]|BT[123]|DISC)-` with no `T` kind
+`[measured: sed -n '/^ID = re.compile/,/^)/p' check_refs.py]`. Every message I posted this turn cites a
+registry-legal anchor id, and `check_refs.py` passes `13 checked, 4 pre-registry, every one
+resolvable`. **Nobody may put an `MGR-T` id in a `RE:`/`ALSO:` header yet.** Re-requested in
+`msgs/06`.
+
+**3. `R-9` propagated within the hour, which is the cheapest evidence that these rules travel.**
+`R2-REQ-3` is titled "two defects in the library's news conditions, **described not numbered (per
+`R-9`)**" — a rule written in `ADJUDICATIONS.md` this turn, cited by name by another agent before the
+turn ended. That is the board working as a shared artefact rather than as my notes.

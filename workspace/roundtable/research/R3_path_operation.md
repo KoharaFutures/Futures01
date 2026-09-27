@@ -1018,7 +1018,7 @@ means placing the stop beyond the obvious cluster rather than inside it `[genera
 **How it dies.** A stop inside the noise floor converts a valid idea into a coin flip; a stop
 beyond the noise floor but inside the liquidity cluster gets swept.
 **Expressibility here.** **EXPRESSIBLE for placement, EXPRESSIBLE-NEVER-VARIED for
-trailing — PENDING Q2 on whether there are five mechanisms or four.** Five `StopKind`s
+trailing — **R3-Q1 RESOLVED in round 2; see the vocabulary file's row R1 and CORRECTION 7. The answer is neither four nor five: on MGC/MES/MNQ at 1h the five nominal kinds realise three mechanisms, and the count is per-cell.** Five `StopKind`s
 `[repo-verified: base.py:187-192]` — though `VWAP_BAND` may be a re-scaled volatility band
 rather than a distinct mechanism; asked as Q2 in `OPEN_QUESTIONS.md` because
 `indicators/volume.py` is R1's surface — a per-contract noise floor
@@ -1531,7 +1531,7 @@ a fresh sample. Any of them run as an unpaired sweep will produce a confounded a
 | # | rule | how | evidence it is reachable |
 |---|---|---|---|
 | 7 | **Replay the path-dependent governors** over stored trades: daily loss limit, daily giveback, `max_trades_per_day`, consecutive-loss stand-down, equity-curve on/off | sort the stored trades by `ts`, apply the rule, compare the surviving R series against the full one | 21,954 trades with `ts` and `r` at `workspace/strategy_research/scratch/geo_trades.json` `[measured: json.load → 21954 rows; keys include 'ts','r','symbol','tf','exitm','reason','session','regime','vol','mae','mfe','mins']`. A second copy at `geo_trades_6040.json`. Parameter values are already specified at `config.py:367-372` |
-| 8 | **Test whether streak-based sizing can work at all** — i.e. is the R series serially dependent? | `bootstrap_paths(r, runs, length, mode="block")` versus `mode="iid"` on the same series | `[repo-verified: montecarlo.py:84-110]` — both modes already implemented. `[measured: grep -rn 'mode="block"' --include=*.py . → the docstring at montecarlo.py:91 only; zero call sites]`. This is the precondition for every Channel-4b streak rule, and `risk_of_ruin` cannot reach it `[repo-verified: montecarlo.py:209-231 — no `mode` parameter]` |
+| 8 | **NARROWED round 2 — a *precondition check* on the R series, not a verdict on streak sizing.** Do the two resamplers disagree at a 10-trade block scale? | `bootstrap_paths(r, runs, length, mode="block")` versus `mode="iid"` on the same series | `[repo-verified: montecarlo.py:84-110]` — both modes already implemented. `[measured: grep -rn 'mode="block"' --include=*.py . → the docstring at montecarlo.py:91 only; zero call sites]`. This is *a* precondition check for Channel-4b streak rules — it compares two resamplers and so detects dependence only indirectly and only at the chosen block scale; the **direct** test is a per-trade lag-1..10 autocorrelation / runs / Ljung-Box **per strategy**, which is the manager's `MGR-T11`. `risk_of_ruin` cannot reach either `[repo-verified: montecarlo.py:209-231 — no `mode` parameter]`. **And the instrument is defective: `mode="block"` is not circular — see CORRECTION 5 and `D44`.** |
 
 ## Tier 3 — one field or a handful of lines (6 items, for the round-2 build order)
 
@@ -1734,9 +1734,13 @@ first. Full detail and the search method are in R3-D5.
    The parameter values are already specified `[repo-verified: config.py:367-372]`. Cost: one
    script over one file.
 2. **Test whether the R series is serially dependent** — `bootstrap_paths(..., mode="block")`
-   versus `mode="iid"` `[repo-verified: montecarlo.py:84-110]`. This single measurement decides
-   whether *any* streak-based sizing or equity-curve rule can work, and **no call site in the
-   repo has ever passed `mode="block"`** `[measured: grep -rn 'mode="block"' → docstring only]`.
+   versus `mode="iid"` `[repo-verified: montecarlo.py:84-110]`. **NARROWED round 2:** this is a
+   *precondition check*, not a verdict — it compares two resamplers and so detects dependence
+   only indirectly and only at the chosen block scale. The sentence I originally wrote here
+   ("decides whether *any* streak-based sizing or equity-curve rule can work") is too strong;
+   BT3 caught it and the manager backed BT3. The **direct** test is `MGR-T11`. See CORRECTION 5.
+   **No call site in the repo has ever passed `mode="block"`** `[measured: grep -rn
+   'mode="block"' → docstring only]`, which is why `D44` went undetected until item 2 ran.
    Cost: one function call.
 
 **Tier 1 — zero new code, configuration only (6):**
@@ -2073,3 +2077,142 @@ locked in a gain. Every exit study in this repo reads the exit-reason histogram 
 per-reason mean R, and that mean moves with the mixing weight even when nothing real has
 changed. **So D5 item 13's four-line `ExitReason.TRAIL` fix is a hard prerequisite for item 4,
 not a nicety**: without it an item-4 result is not weak, it is unattributable.
+
+## CORRECTION 4 — Tier 0 item 1 is not zero-backtest for the integer floor. The floor moves to Tier 2
+
+BT3 asked this as its Q7 and it is a real error of mine, not a labelling quibble. Tier 0 item 1
+names **five** governors — daily loss limit, daily giveback, `max_trades_per_day`,
+consecutive-loss stand-down, equity-curve on/off — and every one of them needs only `ts` and `r`,
+both of which the artefact carries. So its Tier-0 billing is correct **for those five**.
+
+**`contracts_for` was never in that list.** I introduced the integer-contract floor in B-3(c) and
+R3-D4 and then allowed it to be read as part of item 1. It needs `risk_points`, and
+`geo_trades.json` carries **no price, no point distance and no dollar figure** among its 17 keys
+`[measured: sorted(keys) → no price field]`. So the one result I called my strongest
+non-cancelling finding is the one part of item 1 that is *not* free.
+
+**Ruling: the integer-contract floor is re-filed at Tier 2.** It needs either a verified
+reproduction of the generating study or the manager's new board rule `R-8` (any trade dump
+intended for operating-layer work records `entry_price`, `initial_stop` and `symbol`) applied at
+dump time. BT3's `stops.py` did the former and **matched 21,954 of 21,954 stored trades on
+`(cell, arm, exitm, entry_ts, direction)` at worst `|Δr| = 0.000e+00`** — which is worth more than
+the field it recovered, because it is the first thing in this repo to *prove* that the generating
+study is deterministic. It also has a shelf life: the recovery works only while the generating
+script, the slicing and the frozen `csv/raw` snapshot all still agree, so it is a repair and not a
+substitute for `R-8`.
+
+One methodological point of BT3's worth preserving, because it is the kind of choice that gets
+"simplified" later: `risk_points = |entry_price − initial_stop|`, **not** `stop_mult × atr(signal
+bar)`. The entry gaps and slips away from the signal bar and the engine honours the original stop
+level rather than re-deriving it `[repo-verified: engine.py:354-361]`, so the modelled and
+realised distances are different numbers and a live `contracts_for` would size off the realised
+one. Using the modelled distance would have made the floor look *less* binding on precisely the
+gappy trades where it binds most.
+
+## CORRECTION 5 — Tier 0 item 2's claim was too strong, and the instrument it uses is defective (`D44`)
+
+Two corrections in one, both from BT3, both of which I accept.
+
+**(a) The claim.** I wrote that `mode="block"` versus `mode="iid"` "decides whether *any*
+streak-based sizing or equity-curve rule can work". **It does not.** It compares two resamplers,
+which detects serial dependence only *indirectly* and only at the chosen block scale. BT3's
+objection is the right one — an indirect null read as a direct null becomes settled by repetition,
+and this repo has the history to justify the worry. The wording is narrowed in both places it
+appears above. The **direct** test is a per-trade lag-1..10 autocorrelation / runs / Ljung-Box run
+**per strategy** with correlated-variant inflation accounted for, which is the manager's
+`MGR-T11`; note `workspace/chrono/analyse.py:92-103` already has `corr` and `fisher_z` but applies
+them to a strategy group's **monthly expectancy**, which is a different object from a per-trade R
+sequence and is not the precondition for streak sizing.
+
+**(b) The instrument.** `bootstrap_paths(mode="block")` draws `r_values[start:start+block]` with
+**no wrap-around** `[repo-verified: futures_agents/backtest/montecarlo.py:103-107]`, so element *i*
+is reachable from only `min(i+1, block)` distinct starts and the first `block − 1` elements are
+under-sampled on a linear ramp — index 0 at **0.122×** its due frequency against a **1.123×** tail,
+while `iid` over the same series is flat within `[0.988, 1.011]` `[measured by BT3;` allocated
+**`D44`** by the manager in `msgs/06_manager_parent_defects-and-registry.md``]`. **The block arm
+silently discounts the beginning of every sequence.** Item 2 was its first use anywhere in the
+repo, which is why nothing had found it. The fix is one line
+(`path.extend(r_values[(start + k) % n] for k in range(block))`) and until it lands `MGR-T8` is
+GATED: the measurement may run, the number is not reportable.
+
+**What item 2 provisionally returned, and why the *shape* of its answer is the interesting part.**
+BT3 measured the two units and they give **opposite** answers: pooled in `ts` order, `block` is
+much more severe than `iid`; across the 155 per-strategy series it is *less* severe (median Δ p95
+drawdown −1.11R, streak shorter in 104 of 155). The explanation is the same one that decides the
+POOLED-versus-PER_STRATEGY question for item 1: **one timestamp carries up to 74 trades**
+`[measured: 21,954 trades over 3,325 distinct timestamps]`, so a 10-element block in timestamp
+order is often ten correlated arms on a single bar — the block samples *across strategies*, not
+*along time*. **The pooled dependence is pooling.** At the unit a streak rule would actually run
+on, no positive serial dependence is detectable at a 10-trade block scale, which points Channel
+4b's streak sub-case negative — subject to `D44` and to `MGR-T11` being the test that settles it.
+
+Two independent instruments — the governor replay and the bootstrap — now both say the pooled unit
+fabricates structure. That agreement is worth more than either result alone and it is the
+strongest empirical support R3-B-4 ("`run_portfolio` does not simulate a portfolio") has.
+
+## CORRECTION 6 — `R3_operating_vocabulary.md` P2 moves from `INEXPRESSIBLE-ARCH` to `EXPRESSIBLE-MIS-SPECIFIED`
+
+Applied in that file, on BT3's measurement and the manager's ruling in
+`msgs/09_manager_BT3_requests-ruling.md`. `max_correlated_positions = 1` is expressible; the
+*grouping* is too fine for it. The four symbols sit in four distinct `correlation_group`s, so the
+cap degenerates into the per-symbol check that already precedes it
+`[repo-verified: risk/manager.py:245-252]` and fires **zero** times in every arm BT3 ran. The
+caveat travels with the revision: that zero is a property of a population of four symbols in four
+groups and is **not** evidence the cap would be inert on a population containing MES **and** ES.
+And `BRIEF.md`'s D14/D41 claim is about rule-set overlap between sampler populations while
+`correlation_group` is about price co-movement for sizing — different objects, so neither
+contradicts the other and there is no defect in either.
+
+## CORRECTION 7 — R3-Q1 is resolved, and III-10's stop vocabulary is smaller than the enum says. Per cell, not globally
+
+R1 answered R3-Q1 in `msgs/04_R1_R3_re-VWAP-BAND.md` and then handed me a second finding in
+`msgs/05_R1_R3_stopkind-RANGE.md`. Both are on my ground (`StopKind` is mine under DIVISION §5.3),
+so I verified the second independently before accepting it. Full resolved verdict is in
+`R3_operating_vocabulary.md` row R1; the part that changes III-10 is here.
+
+**(a) `VWAP_BAND` is not a re-scaled ATR stop — neither of my two hypotheses was right.** It is an
+*entry-relative width* drawn from a volume-weighted σ band on `(H+L+C)/3`, so it is genuinely its
+own mechanism. But σ is **exactly zero on the first bar of every CME trading day by construction**
+(`pv2/vol − mean² = tp² − tp² = 0`) with no warm-up guard, so on a large minority of bars the band
+width is zero and `stop_price` falls onto the `min_stop_ticks` floor — i.e. **`VWAP_BAND` silently
+becomes `FIXED_TICKS` on 6–34% of bars.** R1's measurement; allocated **`D45`** and described by the
+manager as the highest-consequence defect of that turn.
+
+**(b) `StopKind.RANGE` collapses into `StopKind.ATR`, and on three of four symbols at 1h the collapse
+is total and arithmetically forced.** Verified by me:
+
+- The fall-through is **byte-identical** to the ATR branch: both compute `dist = self.stop_mult * a`
+  and **neither adds `pad`** `[repo-verified: base.py:284-288 (ATR) vs base.py:301-309 (RANGE)]`.
+  Both then pass through the same `dist = max(dist, min_dist)` tail, so a RANGE stop with
+  `snap.opening_range is None` is not merely similar to an ATR stop at the same `stop_mult` — it is
+  the same number.
+- The window it needs cannot be reached on an hourly grid when the RTH open is off the hour.
+  `or_minutes = 30` is hard-coded `[repo-verified: features.py:865]` and accumulation requires
+  `0 <= minutes_since_open < 30` `[repo-verified: features.py:891-895]`. RTH opens are MGC 08:20,
+  MES 09:30, MNQ 09:30, MCL 09:00 `[measured: get_contract(s).rth_open]`.
+  `[measured: for each symbol, {h : 0 <= 60h − open_minutes < 30} → MGC ∅, MES ∅, MNQ ∅, MCL {9}]`,
+  and `[measured: csv/raw/{MGC,MNQ,MCL}_1h.csv are 5000/5000 bars at minute `:00`]`. **So on MGC,
+  MES and MNQ at 1h, `StopKind.RANGE` is `StopKind.ATR` on every bar, by arithmetic rather than by
+  accident.** MCL opens on the hour and is the one 1h cell where RANGE is genuinely distinct.
+
+**Consequence for III-10 and for R3-D4's "Stop kind (ATR vs structure)" row.** The five-member enum
+realises **three** distinct mechanisms on MGC/MES/MNQ at 1h — ATR, STRUCTURE, and a VWAP_BAND that is
+itself a band/fixed-tick mixture — with RANGE a byte-identical alias of ATR and FIXED_TICKS absent
+from the catalogue entirely. **And the count is per-symbol and per-timeframe, not a property of the
+enum**, so I am not stating a single number for "how many stop mechanisms exist". That is the correct
+form of the answer and it is the form my own independence rule demands.
+
+**One discrepancy I am reporting rather than adjudicating.** R1's table gives MES 1h and MNQ 1h as
+2/5000 bars in-window, attributed to two holiday half-sessions at 09:30 ET, which requires `:30`
+hourly bars to exist. My count of `csv/raw` finds the 1h grid **100% at `:00`** for the three files I
+checked, and the arithmetic says a `:00` grid can never be in-window for a 09:30 open. So on
+`csv/raw` the figure should be **0/5000, not 2/5000**, which makes R1's finding *stronger* than
+stated for MES and MNQ. R1's `:30` bars may come from a different data path. Raised with R1 in
+`msgs/11_R3_R1_re-stopkind-RANGE.md`; it does not change any conclusion either way.
+
+**And it hands the pairing design something it did not have: a known-answer calibration test.** On
+MGC/MES/MNQ at 1h, a `RANGE`-versus-`ATR` pair at matched `stop_mult` has a true difference of
+**exactly zero**, because the two arms are the same function of the same inputs. That makes it the
+only configuration in this repository where trade-level pairing is provably available, and therefore
+the right test to run *first* through any paired harness — any non-zero result is a harness bug, not
+a finding. Specified as §9 of `research/R3_pairing_design.md`.

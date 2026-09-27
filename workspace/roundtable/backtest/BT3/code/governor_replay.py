@@ -711,10 +711,20 @@ def main() -> None:
     # distance, every timestamp and every exposure clash identical, so a
     # governor effect that survives the permutation is not reading the
     # signal - it is reading the calendar and the stop distribution.
+    # It is run over the *same seed ensemble* as the primary arm, because a
+    # single placebo run against a 200-seed distribution is not a control - the
+    # ordering spread is larger than most effects here.
+    placebos = []
+    for s in range(1, N_ORDER_SEEDS + 1):
+        srt = sort_stream(rows, seed=s)
+        perm = [float(r["r"]) for r in srt]
+        random.Random(90000 + s).shuffle(perm)
+        placebos.append(replay(srt, label=f"PLACEBO seed={s}",
+                               live_eligible=True, r_override=perm))
     rng = random.Random(20260927)
     perm = [float(r["r"]) for r in pooled]
     rng.shuffle(perm)
-    placebo = replay(pooled, label="POOLED placebo (R permuted)",
+    placebo = replay(pooled, label="ANCHOR placebo (R permuted)",
                      live_eligible=True, r_override=perm)
 
     # ---- PER_STRATEGY: 176 fresh accounts ------------------------------
@@ -793,6 +803,8 @@ def main() -> None:
                                         order_ctrl),
         "barrier_off_leak": pack_dist("vol_aware=True barrier=False",
                                       order_leak),
+        "placebo_ensemble": pack_dist("PLACEBO (R permuted), same 200 seeds",
+                                      placebos),
         "seeds": [pack(v) for v in order_runs],
     }
     report["placebo"] = pack(placebo)
@@ -844,7 +856,8 @@ def main() -> None:
               f"median_contracts={v['median_contracts']}")
     print(f"stage 6: {report['stage6']}\n")
 
-    for k in ("vol_aware_barrier", "vol_pinned_control", "barrier_off_leak"):
+    for k in ("vol_aware_barrier", "vol_pinned_control", "barrier_off_leak",
+              "placebo_ensemble"):
         d = report["primary"][k]
         print(f"PRIMARY {d['arm']:<34s} taken% median={d['taken_pct_median']:6.3f} "
               f"[p05 {d['taken_pct_p05']:.3f}, p95 {d['taken_pct_p95']:.3f}]  "

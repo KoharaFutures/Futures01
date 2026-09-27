@@ -194,3 +194,50 @@ of 23.0 points, which on micro gold is $230 a contract. That number was entirely
 my own comparison, and it is exactly the shape of mistake that gets written into a report as a
 vendor discrepancy. Normalise both sides to UTC before you compare anything across the two
 stores, and if a cross-store difference looks large, suspect your own alignment first.
+
+---
+
+# D48 — scope correction (2026-09-27)
+
+`D48` says `dataclasses.replace` on a `Strategy` inherits the memoised `_id`, so a paired
+comparison built that way collides into one `BacktestResult` and the between-arm difference
+measures exactly zero. **The mechanism is real and I verified it:**
+
+```
+original exit targets: (1.5, 3.0, 5.0)   strategy_id: MGC-60m-510cb40223fb
+replaced exit targets: (3.0,)            strategy_id: MGC-60m-510cb40223fb   <- identical
+```
+
+`_id: Optional[str] = None` is a dataclass *field* (`base.py:585`) that `strategy_id` memoises
+into (`:611-623`), and `replace()` copies fields — so once the id has been read even once, every
+later `replace` carries the stale one forward.
+
+**But no published result is affected, and the round-2 framing risks implying otherwise.** I
+checked every `dataclasses.replace` call site on a `Strategy` in this repository — nine of them,
+across `newstrats/placebo.py` (×2), `newstrats/rank.py`, `w2/mtf2.py` (×2), `w2/mtf3.py`,
+`w2/w2rank.py`, `w3_rth.py` and `scratch/w4b_placebo.py` — and **every one passes `_id=None`
+explicitly.** So this is a trap that every author so far has remembered to step over, not a
+defect that corrupted anything already measured. No retraction is owed.
+
+**What it actually is: a forward-looking hazard with no guard.** Nothing in the code or the test
+suite stops the next author forgetting it, the failure is silent, and its signature — an
+exact-zero difference between two arms — is indistinguishable from this programme's own settled
+finding that operating axes do not move expectancy. That makes it the **fourth** mechanism by
+which a "no effect" conclusion here could be an artefact rather than a result, and it lands
+precisely where R3's paired re-emission design is about to build. It needs a regression test, not
+a retraction.
+
+# Wording the programme owes, per the manager's R1-Q2 ruling
+
+"**2,975,629 strategies were tested**" overstates what happened. `openinterest` carriers were
+generated into the population and could never trade, and they are a subset of the 82% of generated
+strategies that never trade at all. The honest form is:
+
+> **≥ 2,975,629 candidates were *generated*, of which an unmeasured subset could not trade.**
+
+The deflation verdict is unchanged, and the bound was already on disk before anyone asked:
+`RANKING_FINDINGS.md:66-72` records that discounting the non-traders gives an effective search of
+~495k and `free_t = 5.15`, still uncleared. `free_t = sqrt(2·ln n)` is logarithmic, so removing
+91% of the denominator only moves the threshold to 5.00, and *n* would have to fall to about
+**2,197** before it met the largest t ever found here (3.923). Quote 5.46 with its 495k/5.15
+companion, not alone.

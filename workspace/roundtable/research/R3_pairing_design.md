@@ -503,11 +503,11 @@ the answer is decision-relevant regardless of which way it comes out.
 |---|---|---|---|---|
 | **1** | **6 — switch the time stop off** | **cleanly**, gate-identical | 1 **and** 2, with a computable 3 | The only route to identifying the largest exit effect in the repo. D12's session-close result (z=+3.52) is **unidentifiable** on the shipped population — D19 shows it is an exact alias for anchored targets `[repo-verified: DEFECTS.md:236-241]`. The time stop is the same *class* of axis (a forced exit at `bar.close` paying zero slippage) and it **is** separable: `time_stop_bars=None` is a one-field change nothing else aliases, and it is `None` in **0 of 11** catalogue exits `[measured]`. Per §5.3 it simultaneously bounds the A-7 zero-slippage defect, which contaminates every exit result the repo has published. **Two findings from one test, and one of them is retroactive.** |
 | **2** | **7 — vary `StrategyFilters` scope** | **cleanly**, gate-different, unit-identical | **2 — the only reachable one** | My D4 labelled 33 axes and found 11 in Channel 2 — the channel that changes expectancy by construction — and concluded Channel 2 "is almost entirely unreachable here, which is why it has never shown up as a survivor." **Item 7 is the reachable one.** It also puts BRIEF rule 6 ("no hours filter improves expectancy") on the *shipped* population for the first time; it currently rests on bespoke re-emission outside the generator (D23, D24 and the D24 correction), precisely because of R3-A-5. And `days_of_week` is virgin — no study in the repo has ever varied it. **D43 made this testable and nobody has used it** `[repo-verified: DEFECTS.md:640-652]`. |
-| **3** | **2 — `mode="block"` vs `mode="iid"`** | **needs no pairing at all** | gates all of 4b | The only one of the seven **entirely outside** the D15 problem: two resampling modes over one stored R series, no exit varied, no entry sampled, nothing to confound. It gates every streak and equity-curve rule (Channel 4b, 1 of its 3 members) and it **retroactively licenses or invalidates the repo's ruin machinery**, which *assumes* i.i.d. — `risk_of_ruin` has no `mode` parameter at all `[repo-verified: montecarlo.py:209-231]` and **zero call sites in the repo have ever passed `mode="block"`** `[measured: grep -rn 'mode="block"' --include=*.py → the docstring at montecarlo.py:91 only]`. Decision-relevant either way. BT3 already has `block_vs_iid.py` on disk. |
-| **4** | **4 — turn the trailing stop on** | **cleanly**, gate-identical | 1 in shape, 3 via exit-mix | Closes the largest never-executed gap in the engine — implementation present at `engine.py:451-462` since it was written, run **zero** times, because `trail_atr_mult` is `None` in **11 of 11** catalogue exits `[measured]`. Brackets A-7 from the opposite side to item 6 (§5.3). Prior is a Channel-1 null, so the *expected* answer changes little; a positive would be large and is unlikely. **Hard prerequisite: the `ExitReason.TRAIL` fix (§5.1), without which the result cannot be attributed.** |
-| **5** | **8 — `StopKind.FIXED_TICKS`** | **not on R.** Needs the re-based unit of §5.4 | 1, plus a control role | **Promoted from last by BT3's ALGO-1 — see §6.2.** Its D5 purpose (a control for B-2) stands; its new and larger purpose is as the control arm for the integer floor. Costs a post-processing step, and `stop_mult` is overloaded to a tick count. |
-| **6** | **3 — "half off at 1R, breakeven, trail the rest"** | **cleanly**, gate-identical — but **not as a pair** | 1 and 3 | The single most-operated discretionary futures exit recipe in existence `[general knowledge]`, accepted by the validator today, and **never once constructed** `[measured: the literal passes `__post_init__`; and trail=None 11/11, scale_out sums to 1.0 11/11, time_stop_bars never None 11/11]`. But it changes **three axes at once** (four, if `targets_r` rides along), so a single pair against the shipped exit is unattributable: a difference could be any of them or their interaction. **It is not a peer of items 4/5/6 — it is their factorial closure.** See §6.1. |
-| **7** | **5 — leave a residual runner** | **cleanly**, gate-identical | 1 in shape, 3 via exit-mix | Genuinely never generated: **all 11** catalogue `scale_out` ladders sum to exactly 1.0 `[measured]` while the validator permits sums below 1 `[repo-verified: base.py:235-236]`. Ranked last because its effect is bounded by the residual fraction (0.2 in the D5 literal) and because **it cannot be interpreted without item 6**: the residual's fate is decided by whichever of stop / trail / time / session fires, and the time stop is present in 11 of 11 controls, so in the control arm the runner is very often just a TIME exit. Also needs the 1-rung stratum of §3. |
+| ~~3~~ **VACATED — see §6.3** | **2 — `mode="block"` vs `mode="iid"`** | **needs no pairing at all** | gates all of 4b | The only one of the seven **entirely outside** the D15 problem: two resampling modes over one stored R series, no exit varied, no entry sampled, nothing to confound. It gates every streak and equity-curve rule (Channel 4b, 1 of its 3 members) and it **retroactively licenses or invalidates the repo's ruin machinery**, which *assumes* i.i.d. — `risk_of_ruin` has no `mode` parameter at all `[repo-verified: montecarlo.py:209-231]` and **zero call sites in the repo have ever passed `mode="block"`** `[measured: grep -rn 'mode="block"' --include=*.py → the docstring at montecarlo.py:91 only]`. Decision-relevant either way. BT3 already has `block_vs_iid.py` on disk. |
+| **3** (was 4) | **4 — turn the trailing stop on** | **cleanly**, gate-identical | 1 in shape, 3 via exit-mix | Closes the largest never-executed gap in the engine — implementation present at `engine.py:451-462` since it was written, run **zero** times, because `trail_atr_mult` is `None` in **11 of 11** catalogue exits `[measured]`. Brackets A-7 from the opposite side to item 6 (§5.3). Prior is a Channel-1 null, so the *expected* answer changes little; a positive would be large and is unlikely. **Hard prerequisite: the `ExitReason.TRAIL` fix (§5.1), without which the result cannot be attributed.** |
+| **4** (was 5) | **8 — `StopKind.FIXED_TICKS`** | **not on R.** Needs the re-based unit of §5.4 | 1, plus a control role | **Promoted from last by BT3's ALGO-1 — see §6.2.** Its D5 purpose (a control for B-2) stands; its new and larger purpose is as the control arm for the integer floor. Costs a post-processing step, and `stop_mult` is overloaded to a tick count. |
+| **5** (was 6) | **3 — "half off at 1R, breakeven, trail the rest"** | **cleanly**, gate-identical — but **not as a pair** | 1 and 3 | The single most-operated discretionary futures exit recipe in existence `[general knowledge]`, accepted by the validator today, and **never once constructed** `[measured: the literal passes `__post_init__`; and trail=None 11/11, scale_out sums to 1.0 11/11, time_stop_bars never None 11/11]`. But it changes **three axes at once** (four, if `targets_r` rides along), so a single pair against the shipped exit is unattributable: a difference could be any of them or their interaction. **It is not a peer of items 4/5/6 — it is their factorial closure.** See §6.1. |
+| **6** (was 7) | **5 — leave a residual runner** | **cleanly**, gate-identical | 1 in shape, 3 via exit-mix | Genuinely never generated: **all 11** catalogue `scale_out` ladders sum to exactly 1.0 `[measured]` while the validator permits sums below 1 `[repo-verified: base.py:235-236]`. Ranked last because its effect is bounded by the residual fraction (0.2 in the D5 literal) and because **it cannot be interpreted without item 6**: the residual's fate is decided by whichever of stop / trail / time / session fires, and the time stop is present in 11 of 11 controls, so in the control arm the runner is very often just a TIME exit. Also needs the 1-rung stratum of §3. |
 
 ### 6.1 Items 3, 4, 5 and 6 should be one 2³ factorial, not four separate tests
 
@@ -590,3 +590,119 @@ Per my mandate, stating which hazards I actually checked rather than listing the
   was too generous. Corrected here.
 - **Trade-level pairing is blocked on the exogenous-entry harness, `R3-REQ-2`.** Everything in
   this file is designed to work without it.
+
+### 6.3 CORRECTION — item 2 is vacated from the ranking. BT3 answered it while I was writing this
+
+I ranked item 2 third on the grounds that it was unanswered and outside the pairing problem.
+**Both halves of that were stale before I finished the file.** BT3 ran it as part of its ALGO-1
+burst and reported in `msgs/04_BT3_R3_verify-ALGO-1.md`. Two results, and the second is the one
+that matters for a ranking:
+
+1. **Provisionally answered, negative, at the unit that counts.** The two units disagree in
+   direction: pooled in `ts` order, `block` is much more severe than `iid` (p95 max DD 1642→1764R);
+   across the 155 per-strategy series it is *less* severe (median Δ p95 DD −1.11R, streak shorter
+   in 104 of 155, longer in 32). The explanation is the one that also decides item 1's population
+   unit: **one timestamp carries up to 74 trades**, so a 10-element block in timestamp order is
+   often ten correlated arms on a single bar — the block samples *across strategies*, not *along
+   time*. **The pooled dependence is pooling.** At the per-strategy unit there is no positive
+   serial dependence detectable at a 10-trade block scale, which points Channel 4b's streak
+   sub-case negative.
+2. **The instrument is defective — `D44`.** `bootstrap_paths(mode="block")` draws
+   `r_values[start:start+block]` with no wrap-around `[repo-verified: montecarlo.py:103-107]`, so
+   index 0 appears at 0.122× its due frequency against a 1.123× tail while `iid` over the same
+   series is flat within `[0.988, 1.011]`. **The block arm systematically discounts the beginning
+   of every sequence.** Item 2 was its first use anywhere in the repo, which is why nobody had
+   found it. `MGR-T8` is GATED behind the one-line fix (`MGR-T16`), so the number exists and is
+   **not reportable**.
+
+**And my framing of the item was too strong**, which BT3 caught and the manager backed: comparing
+two resamplers detects dependence only indirectly and only at the chosen block scale, so it is a
+**precondition check**, not a verdict on whether streak sizing can work. The direct test — per-trade
+lag-1..10 autocorrelation / runs / Ljung-Box, per strategy — is now `MGR-T11`. Narrowed in
+`R3_path_operation.md` CORRECTION 5.
+
+**Consequence for this file.** Item 2 is no longer a ranked candidate: it is a completed
+measurement awaiting one line of repair, and the question it was a proxy for has become a board
+task. Items 4, 8, 3 and 5 each move up one place, as marked in the §6 table. **The 2³ factorial
+(§6.1) is unaffected and remains the first thing to build**, and item 7 remains the highest-value
+item that is genuinely unanswered and genuinely needs this file's pairing machinery.
+
+One thing item 2's result does *not* change: it says nothing about items 3–8, because it is a
+statement about the R series of already-generated trades and every one of those items changes which
+trades exist. It is not a partial answer to any of them.
+
+---
+
+## 9. The known-answer calibration test — run this through the harness before any of the seven
+
+Everything above specifies a harness and then asks it to measure differences that are expected to be
+near zero. **That is the worst possible situation to be in without a calibration test**, because
+R3-A-13's silent merge, a mis-built pair key, a mis-keyed side table and a genuinely null axis all
+produce the same output: no difference. A harness that returns zero is uninformative unless you have
+first shown it returns zero *when it should* and non-zero *when it should not*.
+
+R1's `msgs/05_R1_R3_stopkind-RANGE.md` handed me a configuration that supplies exactly this, and it is
+the only one in the repository.
+
+### 9.1 The positive control: a pair whose true difference is exactly zero
+
+`StopKind.RANGE`'s fall-through when `snap.opening_range is None` is **byte-identical** to the ATR
+branch — both compute `dist = self.stop_mult * a`, neither adds `pad`, and both pass through the same
+`max(dist, min_dist)` tail `[repo-verified: base.py:284-288 vs 301-309]`. And the window RANGE needs
+is **arithmetically unreachable** on an hourly grid when the RTH open is off the hour: `or_minutes = 30`
+is hard-coded `[repo-verified: features.py:865]`, accumulation requires `0 <= minutes_since_open < 30`
+`[repo-verified: features.py:891-895]`, and `[measured: {h : 0 <= 60h − open_minutes < 30} → MGC ∅,
+MES ∅, MNQ ∅, MCL {9}; csv/raw/{MGC,MNQ,MCL}_1h.csv are 5000/5000 bars at minute :00]`.
+
+**So on MGC, MES or MNQ at 60m:**
+
+```
+A = replace(ctrl, exit=replace(ctrl.exit, stop_kind=StopKind.RANGE, stop_mult=m), _id=None)
+B = replace(ctrl, exit=replace(ctrl.exit, stop_kind=StopKind.ATR,   stop_mult=m), _id=None)
+```
+
+place **the same stop price on every bar**, therefore pass the same entry gates
+(base.py:717-722), therefore emit the same signals, therefore hold for the same durations, therefore
+never fork under `engine.py:304-309`. **The true difference is exactly zero at the trade level**, and
+this is the **only** configuration in this repository where §4's fork does not apply — because it is
+the only one where the two arms are the same function.
+
+### 9.2 What it tests, and what each failure mode looks like
+
+| observation | diagnosis |
+|---|---|
+| **one row instead of two** | **R3-A-13**: `_id=None` was omitted, the arms merged. This is the failure the test exists to catch, and note that it presents as a *missing arm*, not as a zero difference — which is why the `assert` of §1.1 must be on arm-id uniqueness and not on the result count alone. |
+| two rows, **identical trade lists, difference exactly 0.0** | **PASS.** The pair key links the arms, the emission is correct, and the harness's zero is a real zero rather than a rounding of noise. |
+| two rows, **different trade counts** | the arms are not the same function — so either the cell is wrong (MCL, or a non-60m timeframe), or `stop_mult` was not matched, or something else in `ExitModel` was perturbed by the `replace`. |
+| two rows, same trade count, **non-zero difference** | a harness bug: the arms have been mixed, mislabelled, or the statistic is reading the wrong row. **Any non-zero result here is a defect, never a finding.** |
+
+It also calibrates the *statistic*: run the §4.4 rule-set-level paired test over all 314 MGC pairs and
+it must return an exact zero with zero variance. A test that returns a small non-zero "difference"
+with a plausible-looking spread is reading noise it invented, and you would otherwise discover that
+only by believing a null on item 5 or item 6.
+
+### 9.3 The negative control that must accompany it
+
+A test that only ever returns zero cannot distinguish a working harness from a dead one. So pair 9.1
+with the same emission on **MCL at 60m**, where MCL's 09:00 RTH open lands on the hourly grid so
+`minutes_since_open = 0` is reachable and `snap.opening_range` is populated on a real fraction of bars.
+There `RANGE` and `ATR` are genuinely different functions and the harness **must** report a non-zero
+difference. **Zero on MGC and non-zero on MCL, from the same code path with only the symbol changed,
+is the pass condition.** Neither alone is sufficient.
+
+This is also, incidentally, a clean demonstration of the independence rule the whole programme runs
+on: the same two arms are the same strategy on one symbol and two different strategies on another,
+purely because of where the RTH open falls relative to the bar grid. MNQ's answer really is not MCL's.
+
+### 9.4 One consequence for anything already published that compared RANGE with ATR
+
+Not my finding to chase and I am recording it rather than pursuing it. `x_exits` reported "no stable
+best stop width — the ordering reverses by timeframe" `[repo-verified: DEFECTS.md:210]`. On MGC, MES
+and MNQ at 60m a `RANGE`-versus-`ATR` comparison differs **only by `stop_mult`**, so any such
+comparison measured the multiplier and not the mechanism, and its expected difference at matched
+multiplier is zero by construction. The catalogue does contain a RANGE exit (`RANGEx1->1/2/3.5R`
+`[measured: expand_exit_models(...) → 11 exits, one with stop_kind=RANGE]`), so the configuration was
+reachable by the shipped population. Whether any published result rests on it is a re-read of
+`x_exits`, which the manager has already recorded as an open obligation on account of `D45`. **The two
+defects point at the same re-read**, which is worth saying because it makes that obligation cheaper to
+discharge than either alone suggested.

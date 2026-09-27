@@ -57,12 +57,33 @@ MULTI_TIMEFRAME, OPENING_RANGE, PULLBACK, REVERSAL, SUPPLY_DEMAND, TREND, VOLUME
 **Stops:** ATR, STRUCTURE, FIXED_TICKS, VWAP_BAND, RANGE.
 **Targets:** R_MULTIPLE, ANCHOR_ATR, ANCHOR_STRUCTURE.
 
-**Data:** `csv/raw/`, 48 files, ending 2026-09-22. **READ ONLY — never delete or edit any file
-under `csv/`, no matter what.** MGC and MCL are the only genuinely independent, clean contracts.
-MES/MNQ/NQ/ES are one index complex (they share 0.5–0.8% of rule sets — D14/D41), so agreement
-between them is *not* corroboration. The grain CSVs splice contract months (D40) — excluded.
+**Data, and a correction to an earlier version of this brief.** Two stores now exist:
 
-**There is no live data feed.** Egress to every market-data vendor is blocked at the proxy.
+- `csv/raw/` — 48 files, ending 2026-09-22. **READ ONLY. Never delete or edit any file under
+  `csv/`, no matter what.** This is the snapshot every published result in `scan_reports/` was
+  measured on, so it stays frozen for reproducibility.
+- `data/archive/` — 29 JSONL series, ~157,000 bars, added 2026-09-26 by the live-callout
+  session. **Newest bar 2026-09-25T16:00-04:00**, and ~11,300 hourly bars per symbol (60m back
+  to 2024-10-06) against the 274 days the `csv/raw` hourly files carry. Append-only.
+
+**An earlier version of this brief said "there is no live data feed; egress to every
+market-data vendor is blocked at the proxy." That is now false and was corrected on 2026-09-27.**
+Yahoo Finance is reachable: `futures_agents/data/yahoo.py`, verified by the 157k-bar pull above.
+Treat any claim in this repo's older prose about unreachable data as suspect and check it.
+
+Vendor caveats already measured, which you should not rediscover the hard way: futures need the
+`=F` suffix; every interval has a hard lookback cap (1m exists for 7 days only) and asking for
+more returns an empty frame *with no error*; Yahoo has no native 3m or 4h bar, so our 240m
+framework is resampled from a finer interval; **MCL has no daily history on this vendor** (one
+row, not an error) and full-size `CL=F` is NOT a substitute — across 109 overlapping hourly bars
+the closes differ 0.95 cents on average and 4 cents at worst, fine for context and not fine for
+an entry or a stop. `MNQ=F` is not TradingView's `MNQ1!` — different vendor, different roll
+convention, not interchangeable in a backtest.
+
+**Contract independence is unchanged by any of this.** MGC and MCL are the only genuinely
+independent, clean contracts. MES/MNQ/NQ/ES are one index complex (they share 0.5–0.8% of rule
+sets — D14/D41), so agreement between them is *not* corroboration. The grain CSVs splice
+contract months (D40) — excluded.
 
 ## Known-broken machinery — read before trusting any number a tool here prints
 

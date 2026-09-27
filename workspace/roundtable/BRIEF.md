@@ -520,3 +520,48 @@ cross-checking against `EF6-H2`: the gate was **arm-blind**, scoring the `rth_on
 an RTH-only denominator, so it deleted precisely the carriers the session rule exists to make
 measurable; and it was reading a superseded mask after the prose had been corrected but not the code.
 Neither moved a threshold; both changed whether the thing being reported had ever been measured.
+
+---
+
+# The roll and scale audit has landed. Read this before using any long series (2026-09-27)
+
+**`workspace/studies/SERIES_AUDIT.md`** — all 29 `data/archive/*.jsonl` and all 48 `csv/raw/*.csv`,
+77 series, measured **absolutely** per the independence clause above. Tool:
+`workspace/roundtable/lib/scale_audit.py`. This supersedes the `CORRECTION 2026-09-27 (BT6)` block
+earlier in this file, which said the span route's price was "now known" but not yet paid.
+
+**Eligibility, binding on every agent:**
+
+| substrate | ruling |
+|---|---|
+| `data/archive/MGC_1440m.jsonl` bars **0–383** | **NOT ELIGIBLE.** Confirmed splice, 10.145× at index 383/384, disjoint ranges. Only one step in 4,007 exceeds 100%, so truncation removes it. **No other series of the 77 is spliced.** |
+| **any MGC daily row, either store, unadjusted** | **NOT ELIGIBLE.** Fails the roll audit: intraday sum **−2.0079** against a gap sum of **+2.9584** on a total of +0.9461; large gaps 304 up / 194 down, **p < 0.0001**; a **3.5× excess** of large gaps in the six active COMEX gold months. **Present in `csv/raw/MGC_1d` too**, so it is the vendor's roll convention, not the splice and not the archive. |
+| `data/archive/CL_1440m.jsonl` | **NOT ELIGIBLE** unless the negative-price region is excluded **by name** and the exclusion reported. `close_min = −37.63` on 2020-04-20; `log(c/o)` is undefined there. It is the substitute someone will reach for, because MCL daily is one bar. |
+| **MES / MNQ daily, 7.40 years** | **ELIGIBLE.** Roll-clean, splice-free, gap sums −8% and +11% of total, large gaps sign-neutral (p = 0.12, 0.75). |
+| all four micros at 5m–240m | **ELIGIBLE**, unchanged. No splice, no roll signature. |
+| the grain contracts | **NOT ELIGIBLE**, second independent reason: `MZC_1m` is **88.7% rangeless**, `MZC_5m` 62.9%, `MZC_1h` 26.3% + 11.3% zero-volume — `D45`'s degeneracy on most bars, not on the first bar of a session. |
+| `QQQ` / `SPY` intraday volume | **NOT ELIGIBLE** as a volume input: 58–59% of their 1h and 5m bars have `volume == 0` against 0.0% daily. |
+
+**The span route, restated with the substrate that actually exists.** Not 25.7 years and not Sharpe
+1.08. **7.40 roll-clean years, on MES and MNQ:**
+
+| threshold | Sharpe needed on 7.40 years (√y 2.720) | was, on the published 0.88 y |
+|---|---|---|
+| `free_t` 5.46 (programme-wide) | **2.01** | 5.82 |
+| `free_t` 3.505 (n ≈ 465, what a genuine top-10 needs) | **1.29** | 3.73 |
+| `free_t` 1.177 (one pre-registered hypothesis) | **0.43** | 1.25 |
+
+**Carry the catch with the number, always.** MES and MNQ are **one index complex** (`D14`/`D41`), so
+this is **one independent observation, not two**. The two genuinely independent clean contracts are
+MGC and MCL: MGC daily fails the roll audit, `MCL_1440m` is one bar, `CL_1440m` is disqualified.
+**There is no roll-clean long daily series for either independent contract.** A roll-adjusted MGC
+daily series would be eligible and building one is new work, not a read.
+
+**And one new hazard that is not about span.** `engine.py:290,355` fills every entry at the next
+bar's open — correct discipline — but **`open[i+1]` is not `close[i]` on 57–80% of boundaries where
+no time passes**: MGC 60m mean +0.50 bp over 10,793 contiguous boundaries summing to **+0.5386,
+which is 112% of that series' entire log return**; MGC daily median **+3.81 bp**. It is not a
+look-ahead and not a net cost — a gap up is a worse long fill and a better short fill — it is a
+**direction-dependent asymmetry in measured expectancy set by the data feed**, worth ~1–1.5% of one R
+at 60m and more at 1440m. No `close[i]`-referenced stop, target or band here is a tradeable
+transition price. D-candidate, with the manager.

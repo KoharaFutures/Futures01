@@ -986,3 +986,118 @@ position at all, and the trades it did record there are same-bar artefacts.
 
 It also explains a number nobody had accounted for: `csv/raw`'s hourly grid admits afternoon and
 evening entries freely, so those strategies generated signals the engine then closed instantly.
+
+---
+
+# The roll and scale audit landed — 77 series measured absolutely, 2026-09-27
+
+Full report: `workspace/studies/SERIES_AUDIT.md`. Tool: `workspace/roundtable/lib/scale_audit.py`.
+Raw: `workspace/studies/out/series_audit.json`. All 29 `data/archive/*.jsonl` and all 48
+`csv/raw/*.csv`, read-only on `csv/`. **[verified here]**
+
+## The MGC splice candidate above is confirmed, bounded, and it is the smaller problem
+
+BT6's figures reproduce exactly and the disjoint-range test classifies the break as a **splice**
+rather than a jump (pre `[131.70, 188.90]`, post `[1050.80, 5318.40]`, ratio 10.145×). **Only one
+step in 4,007 exceeds 100% and it is this one**, so the file holds one splice: dropping bars 0–383
+removes it and leaves 3,624 bars over 14.41 years. **No other series of the 77 contains a splice.**
+The two segments carry different defect signatures (pre 20.1% rangeless / 0.3% zero-volume, post
+13.1% / 9.8%), which is independent evidence they are different instruments.
+
+**But the truncated series still cannot be used, for the reason the roll audit was supposed to find.**
+Decomposing the total log return into intraday (`close/open`) and boundary-gap (`open[i+1]/close[i]`)
+components:
+
+| series | span | total | intraday | gaps | even-month gap | odd-month gap |
+|---|---|---|---|---|---|---|
+| **MGC_1440m post-splice** | 14.41 y | +0.9461 | **−2.0079 (−212%)** | **+2.9584 (+313%)** | **+13.3 bp** | +3.1 bp |
+| `csv/raw/MGC_1d` | 9.98 y | +1.1777 | −0.5411 (−46%) | +1.7215 (+146%) | +11.1 bp | +2.6 bp |
+| MES_1440m | 7.40 y | +0.9736 | +1.0490 (+108%) | −0.0753 (−8%) | +0.2 bp | −1.0 bp |
+| MNQ_1440m | 7.40 y | +1.3680 | +1.2110 (+89%) | +0.1569 (+11%) | +1.2 bp | +0.5 bp |
+
+Buying every MGC daily open and selling every close over 14.4 years **loses 87%** while the price
+rises 158%. Large gaps (>0.75%) in the post-splice segment run **304 up / 194 down, sign test
+p < 0.0001**, and cluster in exactly the six active COMEX gold delivery months — Feb 58, Apr 75,
+Jun 65, Aug 65, Oct 70, Dec 55 against Jan 16, Mar 29, May 20, Jul 21, Sep 11, Nov 13, a **3.5×
+even-month excess**. That is the roll, measured. **The same pattern is in `csv/raw/MGC_1d`**, so it is
+the vendor's roll convention in both stores, not an archive defect and not the splice.
+
+**MES and MNQ daily pass** — gap sums at −8% and +11% of total, large gaps sign-neutral (p = 0.12 and
+0.75), no month-parity structure. **The span route is therefore 7.40 roll-clean years on one index
+complex**, not 25.7: required Sharpe 2.01 at `free_t` 5.46, **1.29** at the `free_t` 3.505 a genuine
+465-wide selection needs, **0.43** for a single pre-registered hypothesis. And MES/MNQ are `D14`/`D41`
+one complex, so that is **one independent observation**. MGC daily fails the roll audit, MCL daily is
+one bar, `CL_1440m` is disqualified below — **there is no roll-clean long daily series for either
+independent contract.**
+
+## D-candidate (awaiting a number, per R-9) — the bars are not contiguous, and the engine fills on it
+
+`engine.py:290,355` fills every entry at the next bar's open — correct look-ahead discipline,
+documented at `engine.py:8`, and a price this repository has executed ~3M times. **On this vendor's
+data `open[i+1]` is usually not `close[i]`, even across boundaries where no time passes at all.**
+Measured on contiguous boundaries only — consecutive bars exactly one bar-width apart, no session
+break, no weekend, no halt:
+
+| series | `open == prior close` exactly | mean gap | median gap | sum over contiguous boundaries |
+|---|---|---|---|---|
+| MGC 60m | 2,292 / 11,296 (20.3%) | **+0.50 bp** | +0.00 bp | **+0.5386**, against a total return of +0.4816 |
+| MCL 60m | 3,279 / 10,933 (30.0%) | +0.25 bp | +0.00 bp | +0.2604 |
+| MES 60m | 4,874 / 11,286 (43.2%) | −0.14 bp | +0.00 bp | −0.1505 |
+| MGC 5m | 2,360 / 11,215 (21.0%) | +0.01 bp | +0.00 bp | +0.0142 |
+| MGC 1440m post-splice | 48 / 3,623 (1.3%) | **+7.50 bp** | **+3.81 bp** | +2.3484 |
+
+**On MGC 60m, 112% of the series' entire log return accrues at boundaries where zero time elapses.**
+On MGC daily the *median* contiguous gap is +3.81 bp — over half of all boundaries open above the
+previous close, which is a bias rather than noise.
+
+This is **not** a look-ahead and **not** a net cost: a gap up is a worse long fill and a better short
+fill. It is a **direction-dependent asymmetry in measured expectancy whose size is set by the data
+feed**, on a programme whose central negative is about signs. It also means no `close[i]`-referenced
+price here — a stop, a target, a band — is a tradeable transition price; anything computed on
+`close[i]` and filled at `open[i+1]` works across a discontinuity 57–80% of the time. Size is roughly
+**1–1.5% of one R at 60m** and materially more at 1440m: small per trade, systematic across all of
+them, never accounted for.
+
+**Distinct from the null-signature family** (D38, D42, D44, D48, D51, D57): those produce "no
+difference". This produces a sign.
+
+## D-candidate (awaiting a number, per R-9) — `CL_1440m` carries a negative price
+
+```
+close_min = -37.63   2020-04-20      bars with close <= 0: 1;  bars with low <= 0: 2
+largest close step:  18.27 -> -37.63  = -305.97%;  next boundary gap -62.80%
+14 bars with 0 < close < 20
+```
+
+The real WTI settlement of April 2020, faithfully recorded, and arithmetically fatal to everything
+this library computes: `log(c/o)` undefined, percentage return meaningless, `atr_percentile` and every
+band unbounded, `max(close)/min(close)` nonexistent. The audit tool had to skip those steps itself.
+
+**Why it matters beyond one bar.** Board fact 5(b): `MCL_1440m.jsonl` is one line, so MCL has no daily
+history, and `CL_1440m` (6,192 bars, 24.64 years) is the obvious substitute someone will reach for.
+`BRIEF.md` already rules full-size `CL=F` out on price grounds (0.95¢ mean, 4¢ worst). **This adds an
+arithmetic ground.** Also 881 large gaps with no month structure — crude's roll spread flips sign with
+the curve, so **a sign test cannot detect its roll** (467 up / 414 down, p = 0.08) — with single gaps of
++31.07%, +26.34% and −20.37%. Not eligible to carry a statistic unless the negative-price region is
+excluded **by name** and the exclusion reported.
+
+## Two exclusions gain a second, independent reason; one benign pattern recorded so it is not re-found
+
+**The grains, already excluded by `D40` for splicing contract months, are mostly flat bars:**
+`MZC_1m` 567/639 rangeless (**88.7%**), `MZS_1m` 87.3%, `MZW_1m` 84.2%, `MZC_5m` 62.9%, `MZC_1h`
+26.3% rangeless and 11.3% zero-volume. A rangeless bar has zero range, so ATR, every band half-width,
+`range_position`, the opening range and the `D45` noise-floor clamp all degenerate on it — **`D45`'s
+mechanism on 26–89% of bars rather than on the first bar of a session.**
+
+**`QQQ` and `SPY` intraday have no volume:** 58.2–59.4% of `QQQ_1h`, `QQQ_5m`, `SPY_1h`, `SPY_5m` bars
+have `volume == 0`, against 0.0% on their daily files. Any volume condition read off them reads a
+vendor artefact.
+
+**Benign, and recorded so nobody files it as a defect:** the 3.5–4.0% zero-volume rate on *every* 60m
+micro-futures series (MGC 440/11,297, MCL 433/10,934, MES 420/11,287, MNQ 418/11,291, and ES/NQ/MES/MNQ
+in `csv/raw` at 3.5–3.7%) is uniform across four contracts and two stores — the thin overnight hour,
+not a hole. 334 of MGC daily's 355 zero-volume bars are also rangeless: synthetic no-trade bars.
+
+**And the clock is sound.** **77 of 77 series have zero OHLC ordering violations, zero duplicate
+timestamps and zero non-monotonic timestamps.** What is broken is the price scale, the roll and the bar
+contiguity — not the bar arithmetic.

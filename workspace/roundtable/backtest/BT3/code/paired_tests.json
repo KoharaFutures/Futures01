@@ -1,0 +1,74 @@
+{
+ "placebo_ensemble": {
+  "comparison": "real vs placebo (R permuted)",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 25,
+   "b_only": 11,
+   "n_discordant": 36,
+   "p_two_sided": 0.028816719655878842
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 82,
+   "b_greater": 118,
+   "ties": 0,
+   "median_diff": -19,
+   "p_two_sided": 0.013130355940531578
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 6.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 1.0
+ },
+ "vol_pinned_control": {
+  "comparison": "real vs volatility pinned",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 15,
+   "b_only": 71,
+   "n_discordant": 86,
+   "p_two_sided": 7.076057190944837e-10
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 93,
+   "b_greater": 103,
+   "ties": 4,
+   "median_diff": -1,
+   "p_two_sided": 0.520422195881701
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 41.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 0.991
+ },
+ "barrier_off_leak": {
+  "comparison": "real vs barrier removed",
+  "absorbing": {
+   "test": "McNemar exact (paired binomial on discordant seeds)",
+   "n_pairs": 200,
+   "a_only": 18,
+   "b_only": 12,
+   "n_discordant": 30,
+   "p_two_sided": 0.361594608053565
+  },
+  "taken": {
+   "test": "exact sign test (two-sided binomial, ties dropped)",
+   "n_pairs": 200,
+   "a_greater": 89,
+   "b_greater": 110,
+   "ties": 1,
+   "median_diff": -4,
+   "p_two_sided": 0.15608547576770987
+  },
+  "absorbing_rate_real": 13.0,
+  "absorbing_rate_other": 10.0,
+  "taken_median_real": 1.011,
+  "taken_median_other": 1.023
+ }
+}

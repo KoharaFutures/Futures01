@@ -13,16 +13,47 @@ Nothing here touches `data/archive/` (BRIEF's 2026-09-27 data ruling, condition 
   III-14 and R3-D5 Tier 2 item 7 — all in `research/R3_path_operation.md`. Plus
   `R3_operating_vocabulary.md` axes S1, S2, S7, S8, P1, P2, P4, P5, P6, P7 and A3.
 - **Code:**
-  - `backtest/BT3/code/stops.py:1-175` — reconstructs the per-trade stop distance the
-    artefact does not carry, and proves the reconstruction.
-  - `backtest/BT3/code/governor_replay.py:1-596` — the replay. `replay()` at `:260-388`,
-    `static_integer_floor()` at `:390-424`, `floor_by_volatility()` at `:426-456`,
-    `measure_stage6()` at `:458-476`, ordering at `:160-186`.
-  - `backtest/BT3/code/checks.py:1-140` — five assertions, all passing
+  - `backtest/BT3/code/stops.py` — reconstructs the per-trade stop distance the artefact does
+    not carry, and proves the reconstruction.
+  - `backtest/BT3/code/governor_replay.py` — the replay. `replay()`, `static_integer_floor()`,
+    `floor_by_volatility()`, `absorbing_boundary()`, `measure_stage6()`, ordering at
+    `order_key`/`sort_stream`.
+  - `backtest/BT3/code/paired_tests.py` — exact McNemar and exact sign test over the shared
+    200-seed ensemble. Named, per PIPELINE §4 obligation 3.
+  - `backtest/BT3/code/checks.py` — five assertions, all passing
     `[measured: python3 code/checks.py → "all checks passed"]`.
-  - Output: `code/algo1_report.json`, `code/stops_cache.json`.
-- **Fidelity:** **ASKED** — `msgs/04_BT3_R3_verify-ALGO-1.md`, eight questions. No stateful
-  number below is reportable as a result until R3 answers Q1 and Q3.
+  - `tests/test_bt3_governor_replay.py` — 7 tests inside the repo suite
+    `[measured: python3 -m pytest -q tests → 824 passed]`.
+  - Output: `code/algo1_report.json`, `code/paired_tests.json`, `code/stops_cache.json`.
+- **Fidelity:** **DIVERGENT → corrected → RE-ASKED.**
+  - Cycle 1: asked in `msgs/04_BT3_R3_verify-ALGO-1.md`. R3 ruled **DIVERGENT** in
+    `msgs/03_R3_BT3_re-verify-ALGO-1.md` — one material divergence (a suppressed stage-7
+    governor), one look-ahead I had missed, one biased tiebreak, and four choices ruled
+    FAITHFUL. R3 ruled from the code and the artefact directly because my question had not
+    landed when it looked.
+  - Cycle 2: all five of R3's ranked items applied. **Everything below is the corrected
+    version**, and the numbers in cycle 1 are superseded. Re-asked in
+    `msgs/06_BT3_R3_verify-ALGO-1-v2.md`.
+
+### What R3 ruled DIVERGENT, and what I changed
+
+| # | R3's finding | what I did |
+|---|---|---|
+| 1 | **Material divergence.** `volatility="NORMAL"` was pinned, suppressing stage 7's ×0.70 for HIGH/EXTREME (`manager.py:177-179`). Stage 7 is IN scope, the artefact carries `vol`, and 27.9% of the stream is HIGH or EXTREME — so the replay *understated* the floor's bite, which is the claim it exists to test. | `volatility=row["vol"]` is now primary; `vol_aware=False` retained as the held-constant control arm. **The static floor deletion rate rises from 35.38% to 41.19%.** |
+| 2 | **Intra-timestamp look-ahead I had missed.** 2,900 of 21,954 rows have `mins == 0.0` (mean R **−0.79**) and one timestamp carries 74 rows, so flushing exits at `<= ts` let the governors assess row #40 at instant *T* holding the realised outcomes of rows #1–39 that entered *and exited* at *T*. Directionally biased: it drove de-risk and OBSERVATION_ONLY *within* the instant. | Implemented R3's **barrier**: the whole timestamp group is assessed against the state as of *T−*, all approved opens are applied, then exits at `<= T` are realised. Opens within the group stay visible to later rows in the group — the concurrency caps must count simultaneous positions; only *outcomes* are hidden. `barrier=False` retained to price the leak. |
+| 3 | **The "arbitrary" tiebreak was biased.** `sorted(set(symbol)) == ['MCL','MES','MGC','MNQ']` hands the first slot to exactly the two symbols that survive the floor, so a `symbol`-second key front-loads the account with affordable trades. And `taken_pct` is not one quantity with 5 noisy draws — it mostly encodes *whether and when the account died*, so the distribution is bimodal and 5 seeds is two anecdotes. | **Seeded order is now primary over 200 permutations**; lexicographic kept as a labelled reproducibility anchor only. Report per-arm death rate, death date range and `taken` before death. |
+| 4 | `order_key` sorted on the **ISO string**, and offsets vary (`-05:00`/`-04:00`), so it was absolute-time-correct by accident of the data rather than by construction. | `key=parse_ts`. |
+| 5 | `AccountState.equity_curve` is seeded in `__post_init__` with a **wall-clock** stamp while every later point is stamped at `when=ts`, so it is not monotonic in time for a replay. | Noted in the code and here: **never compute a drawdown, Sharpe or time-to-recovery off `st.equity_curve`.** ALGO-1 tracks peak/min/max-drawdown itself inside `flush`. A comment also records that `close_position`-by-symbol is only unambiguous because stage 3 stays in scope. |
+
+R3 also confirmed four choices FAITHFUL (the $50,000 fresh-account start and the $240 budget;
+`trading_day` as the day unit; the concurrency attribution, whose veto counts partition the
+stream with no residue; and `pnl = r × dollar_risk` charging cost exactly once), and confirmed
+independently that `mins` recovers the absolute exit instant to within 3 seconds so DST-spanning
+trades are attributed to the right trading day. Two of its checks caught things I should
+report rather than bury: `proposal.session` and `proposal.regime` are **read by nothing** in
+`assess`, and the artefact's `session` label is on a different clock from its `ts` (row 0 is
+20:00 ET labelled `POST_CLOSE`; 20:00 ET is `ASIA`) — so **no ALGO-1 result may be cut by
+`session`.**
 
 ### My reading of the finding
 
@@ -92,16 +123,26 @@ a known defect at three levels here, so ALGO-1 refuses to produce one number ove
   is reported as a diagnostic of pooling, never as a result. No z-statistic is attached to
   either: the 176 are correlated variants and D28 applies.
 
-**4. Same-timestamp ordering, and it is not a detail.** 21,954 trades share 3,325 distinct
-timestamps and one timestamp carries **74** of them `[measured]`. With
-`max_concurrent_positions = 2` and one position per symbol, the within-timestamp order decides
-*which* tied trades survive. Primary order is a fixed lexicographic tiebreak
-`(ts, symbol, tf, base, arm, exitm, dir)` — deterministic, reproducible, and arbitrary. So I
-measured the arbitrariness: five seeded permutations of the within-timestamp order move the
-pooled survival rate over **[0.537%, 1.685%]**, a **3.1× spread**
-`[measured: order sensitivity taken_pct = [1.203, 0.788, 0.588, 0.537, 1.685]]`. The pooled
-reading is tiebreak-dominated. The per-strategy reading is not affected, because a single
-strategy is never in a tie with itself.
+**4. Same-timestamp ordering, and it is not a detail. [CORRECTED after R3's ruling.]**
+21,954 trades share 3,325 distinct timestamps and one timestamp carries **74** of them
+`[measured]`. With `max_concurrent_positions = 2` and one position per symbol, the
+within-timestamp order decides *which* tied trades survive.
+
+My first version made a fixed lexicographic key `(ts, symbol, tf, ...)` primary and ran five
+seeds as a sensitivity. **R3 ruled that DIVERGENT and was right.** `sorted(set(symbol)) ==
+['MCL','MES','MGC','MNQ']`, so the "arbitrary" key handed the first slot at every contested
+instant to MCL then MES — precisely the two symbols that *survive* the integer floor (MCL 60m
+loses 10.2%, MES 60m 9.4%, against MGC 240m's 99.4%). It front-loaded the account with the
+trades it could afford. `str(tf)` sorting `'240'` before `'60'` has the same shape of problem.
+**No fixed key on a field correlated with sizeability is neutral**, so the repair is not a
+better key.
+
+**Now: the seeded order is primary, over 200 permutations, and the lexicographic run is kept
+only as a labelled reproducibility anchor.** And `taken_pct` is no longer the primary
+statistic, because R3 showed it is not one quantity measured with noise — it mostly encodes
+*whether and when the account died* (see choice 16), so its distribution is bimodal and
+reporting a mean over it would be reporting a mixture. The primary statistics are the
+per-arm death rate, the death date range, and `taken` before death.
 
 **5. What a "day" is.** `futures_agents.timeutil.trading_day`, imported not reimplemented —
 CME 18:00 ET → 17:00 ET, so an 18:30 Sunday bar is Monday `[repo-verified: timeutil.py:168-180]`.
@@ -117,11 +158,25 @@ but the maximum is 20,640 minutes (14 days), so a trade's loss can land on a day
 start. This is what makes the daily governors genuinely path-dependent rather than a
 per-day partition of the file.
 
-**7. Event order at a tie.** Exits are flushed **before** the entry at the same instant, which
-frees the symbol slot. That is the engine's own order: `_manage` at step 2, signal generation at
-step 3 of the same bar `[repo-verified: engine.py:296-303]`. `mins` can be 0.0, so this case is
-real. Choosing the other way would refuse more trades; I took the engine's order over the
-pessimistic one because fidelity to the engine is the point.
+**7. Event order at a tie. [CORRECTED — this was a look-ahead and R3 caught it.]**
+My first version flushed exits at `<= ts`, justified by the engine's manage-then-signal order
+`[repo-verified: engine.py:296-303]`. **That justification is right for exits from prior bars
+and wrong for exits at the entry instant**, and the difference is not cosmetic: **2,900 of
+21,954 rows have `mins == 0.0`** — same-bar exits, 2,600 STOP / 263 TARGET / 37 END_OF_DATA,
+**mean R −0.79** — and one timestamp carries 74 rows. So the governors were assessing row #40
+at instant *T* while the account already held the **realised outcomes** of rows #1–39 that
+entered *and exited* at that same *T*. A live account handed 74 simultaneous signals knows none
+of their outcomes. Because the zero-duration set has a strongly negative mean, the leak was
+**directionally biased**: it drove the account into de-risk and OBSERVATION_ONLY *within the
+instant*, suppressing the later trades at that timestamp, and it fed both
+`1_consecutive_losses` and the crossing of the absorbing boundary — the two places the result
+is most fragile.
+
+**Now: the barrier.** The whole timestamp group is assessed against the state as of *T−*, all
+approved opens are applied, and only then are exits at `<= T` realised. Opens *within* the
+group remain visible to later rows in the group, which is correct and necessary — the
+concurrency and per-symbol caps must count simultaneous positions. Only *outcomes* are hidden.
+`barrier=False` is retained as an arm so the leak can be priced rather than merely removed.
 
 **8. Dollars per trade.** `pnl = r × contracts × risk_points × point_value`. `net_dollars =
 net_r × risk_dollars` is exactly the engine's own conversion `[repo-verified: engine.py:507]`,
@@ -160,11 +215,29 @@ labelled `1_trade_cap_on_open(DIVERGENT)` in the output, applied outside `assess
 place in `code/` where a governor runs outside the shipped code, and it is labelled). The
 shipped cap does leak: in the placebo arm, 2 days take 7 trades with the cap nominally at 6.
 
-**12. `volatility` is held at `"NORMAL"`.** Stage 7 applies ×0.70 when
-`proposal.volatility in ("HIGH","EXTREME")` `[repo-verified: manager.py:177-179]`. The artefact
-*does* carry a `vol` label, but it is `Trade.volatility` from the backtester's own bucketing,
-not the live layer's field, and feeding it in would mix a volatility penalty into an
-account-governor measurement. Held constant. **This is VERIFY Q4 and it may be wrong.**
+**12. `volatility` now comes from the artefact. [CORRECTED — this was the material divergence.]**
+Stage 7 applies ×0.70 when `proposal.volatility in ("HIGH","EXTREME")`
+`[repo-verified: manager.py:177-179]`. My first version pinned it to `"NORMAL"` on the grounds
+that it is a volatility penalty rather than an account governor. **R3 ruled that DIVERGENT by
+my own taxonomy, and it is right**: the multiplier fires *inside stage 7*, which I declared IN.
+The volatility *filter* is stage 5, which I disabled correctly and for a different reason
+(`atr=None`, and it needs an ATR/median ratio the artefact lacks). Stage 5 OUT with the stage-7
+multiplier IN is a consistent position; stage 7 IN with one of its multipliers pinned is not.
+And unlike `news_risk` — genuinely OUT because no event calendar exists to inform it — **the
+artefact carries `vol` per trade: 3,853 HIGH and 2,267 EXTREME, 6,120 rows, 27.9% of the
+stream** `[measured]`.
+
+It also biased the answer in the direction that matters: at ×0.70 the opening budget is $168
+rather than $240, which **deletes 1,275 more trades statically**, taking the floor from 35.38%
+to **41.19%** of the stream. So the first version *understated* the floor's bite, which is the
+claim the algorithm exists to test.
+
+`vol_aware=True` is now primary; `vol_aware=False` is retained as the held-constant control,
+because **the difference between the two arms is itself the measurement** — it separates the two
+independent channels through which volatility reaches the floor (a wider ATR stop, and a
+smaller budget). The `live_eligible` both-arms treatment was the model for this, and R3 asked
+for the same shape. Alongside: `analyst_agreement=0.0` is a true no-op (the ×0.60 needs `< 0`)
+and stays; `news_risk=NONE` stays OUT.
 
 **13. Concurrency is attributed by symbol.** `assess` stage 3 checks
 `st.position_for(proposal.symbol)` *before* the concurrent and correlated caps
@@ -189,6 +262,33 @@ stop distance and exposure clash identical.** That destroys any serial structure
 path-dependent governor could be reading while holding the entire static structure fixed. A
 governor effect that survives the permutation is reading the calendar and the stop
 distribution, not the signal. `placebo_shift` is not used (D42, leaks).
+
+**It runs over the same 200 seeds as the primary arm**, not once. A single placebo run against
+a 200-seed distribution is not a control when the ordering spread is larger than most of the
+effects being measured. Sharing the seeds also makes every arm **paired**, which is what lets
+`paired_tests.py` use an exact McNemar (on the binary "did this account die") and an exact sign
+test (on per-seed `taken`) instead of an unpaired test that would discard the largest source of
+common variance. D28 is this repo's standing warning about exactly that.
+
+**16. The absorbing state, which I did not anticipate and which R3 solved.** R3 found, and
+`absorbing_boundary()` reproduces from the shipped config alone, that
+`budget = min(usable_buffer × 0.06, equity × 0.0075, 500) × derisk_multiplier` falls below
+`min_dollar_risk = $25` at a **drawdown from peak of $2,800**, where it is **$21.60**
+`[measured: absorbing_boundary() → {'drawdown_at_which_the_account_dies': 2800.0,
+'budget_there': 21.6, 'dollars_of_headroom_left_unused': 2200.0,
+'derisk_multiplier_there': 0.3}]`. Stage 7 then vetoes **every** proposal at
+`budget < min_dollar_risk` *before* `contracts_for` is reached
+`[repo-verified: risk/manager.py:325-329]`. Past that point equity can move only through
+already-open positions; once they close it is frozen, `peak_equity` never falls, so the budget
+never recovers.
+
+**The account is dead and `has_failed` is False, with $2,200 of the $5,000 failure buffer
+never spent.** So the shipped configuration has a **dead-but-not-failed absorbing state, and
+`max_total_drawdown` is unreachable from above it** — which is why every run reports
+`failed=False`. The step is also discontinuous: at a $2,799 drawdown the budget is $36.03, at
+$2,800 it is $21.60, because the de-risk ladder steps from ×0.50 to ×0.30. ALGO-1 therefore
+tracks and reports `absorbing`, `death_index`, `death_ts`, `death_drawdown` and
+`taken_before_death` per run, and **the death rate is a primary statistic.**
 
 ### What it measures
 

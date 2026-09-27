@@ -56,8 +56,7 @@ def mcnemar(a: list, b: list) -> dict:
     return {"test": "McNemar exact (paired binomial on discordant seeds)",
             "n_pairs": len(a), "a_only": b10, "b_only": b01,
             "n_discordant": n_disc,
-            "p_two_sided": round(binom_two_sided(b10, n_disc), 6)
-            if n_disc else 1.0}
+            "p_two_sided": binom_two_sided(b10, n_disc) if n_disc else 1.0}
 
 
 def sign_test(a: list, b: list) -> dict:
@@ -69,7 +68,7 @@ def sign_test(a: list, b: list) -> dict:
             "n_pairs": len(a), "a_greater": pos, "b_greater": neg,
             "ties": len(a) - n,
             "median_diff": (sorted(x - y for x, y in zip(a, b))[len(a) // 2]),
-            "p_two_sided": round(binom_two_sided(pos, n), 6) if n else 1.0}
+            "p_two_sided": binom_two_sided(pos, n) if n else 1.0}
 
 
 def main() -> None:
@@ -97,23 +96,26 @@ def main() -> None:
                         "workspace/roundtable/backtest/BT3/code/paired_tests.json")
     json.dump(out, open(dest, "w"), indent=1)
 
-    #: 4 comparisons attempted in this burst, so the multiplicity is 4, not 1.
-    #: `sqrt(2*ln 4)` = 1.665 free t-units. Stated because PIPELINE §4 requires
-    #: the search size with any number, and 4 is the honest count.
-    print(f"search size for these comparisons: 3 (free_t = "
-          f"{math.sqrt(2 * math.log(3)):.3f}); programme-wide free_t = 5.46\n")
+    #: **Search size: 6.** Three arm comparisons x two statistics each, and that
+    #: is every test run in this burst - nothing was tried and discarded.
+    #: `sqrt(2*ln 6)` = 1.893 free t-units, against the programme-wide 5.46.
+    #: Stated up front because PIPELINE §4 obligation 2 requires it with any
+    #: number, and because a p-value of 0.029 against 1.893 free units is not a
+    #: finding, while 7e-10 is.
+    print(f"search size: 6 tests (3 comparisons x 2 statistics); free_t = "
+          f"{math.sqrt(2 * math.log(6)):.3f}; programme-wide free_t = 5.46\n")
     for k, v in out.items():
         print(f"{v['comparison']}")
         a = v["absorbing"]
         print(f"   absorbing: real {v['absorbing_rate_real']}% vs "
               f"{v['absorbing_rate_other']}%  |  {a['n_discordant']} discordant "
               f"({a['a_only']} real-only, {a['b_only']} other-only)  "
-              f"McNemar exact p = {a['p_two_sided']}")
+              f"McNemar exact p = {a['p_two_sided']:.3g}")
         t = v["taken"]
         print(f"   taken:     median {v['taken_median_real']}% vs "
               f"{v['taken_median_other']}%  |  real greater in {t['a_greater']}, "
               f"other in {t['b_greater']}, {t['ties']} ties  "
-              f"sign test p = {t['p_two_sided']}  "
+              f"sign test p = {t['p_two_sided']:.3g}  "
               f"(median per-seed diff {t['median_diff']:+d} trades)")
     print(f"\nwrote {dest}")
 

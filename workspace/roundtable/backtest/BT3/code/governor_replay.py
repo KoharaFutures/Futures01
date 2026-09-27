@@ -587,6 +587,40 @@ def floor_by_volatility(rows: Sequence[dict], *,
             for c in sorted(out)}
 
 
+def floor_budget_sensitivity(rows: Sequence[dict]) -> dict:
+    """Deletion rate as a function of the budget. The headline needs this caveat.
+
+    "The floor deletes 41.2% of the stream" invites the reader to treat 41.2% as
+    a property of the floor. It is not: it is a property of the floor *at $240*,
+    and the stop-distance distribution is concentrated right at that boundary,
+    so the number is steeply elastic. Reporting it without the curve would be
+    reporting a knife-edge as a constant.
+    """
+    import math
+    risk = [abs(r["entry"] - r["stop"]) * get_contract(r["symbol"]).point_value
+            for r in rows]
+    # Vol-aware: a HIGH/EXTREME row faces 0.70x the budget, which is the same
+    # thing as its risk being 1/0.70 larger relative to a common budget.
+    risk_v = [x / 0.70 if r["vol"] in ("HIGH", "EXTREME") else x
+              for x, r in zip(risk, rows)]
+    grid = (100, 120, 168, 200, 240, 300, 375, 500, 750, 1000, 1500)
+    curve = {b: {"deleted_pct_vol_pinned": round(
+                     100.0 * sum(1 for x in risk if x > b) / len(risk), 2),
+                 "deleted_pct_vol_aware": round(
+                     100.0 * sum(1 for x in risk_v if x > b) / len(risk_v), 2)}
+             for b in grid}
+    at240 = curve[240]["deleted_pct_vol_pinned"]
+    at168 = curve[168]["deleted_pct_vol_pinned"]
+    return {
+        "curve": curve,
+        "note": "a 30% budget cut ($240 -> $168) moves deletion by "
+                f"{round(at168 - at240, 2)} points",
+        "elasticity_near_240": round(((at168 - at240) / at240) / 0.30, 2),
+        "at_R3s_assumed_375": curve[375]["deleted_pct_vol_pinned"],
+        "at_R3s_assumed_500": curve[500]["deleted_pct_vol_pinned"],
+    }
+
+
 def absorbing_boundary(step: float = 1.0) -> dict:
     """Find the drawdown at which the account can never open another position.
 
@@ -668,6 +702,7 @@ def main() -> None:
     report["stage6"] = measure_stage6(rows)
 
     report["absorbing_boundary"] = absorbing_boundary()
+    report["floor_budget_sensitivity"] = floor_budget_sensitivity(rows)
 
     pooled = sort_stream(rows)      # the labelled anchor, not the headline
 

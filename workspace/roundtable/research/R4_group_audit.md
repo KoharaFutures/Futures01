@@ -368,3 +368,204 @@ before any signal is read, and one non-firing SIGNAL — or one that returns `Di
 one that disagrees in direction — returns `None` too
 `[repo-verified: futures_agents/strategies/base.py:670-684]`. So a single VOID member is not a weak
 component, it is the whole strategy's zero.
+
+---
+
+# The census this file's verdicts rest on
+
+`[measured: census.py, my own harness, 31 conditions × 47 cells, no backtest anywhere in it — no
+entries, no exits, no P&L, no expectancy, no z]`
+
+| cell family | cells | design |
+|---|---|---|
+| **corpus frames** | 23 | `tfs = FRAMES[primary]`, condition bound at `primary`, for `primary ∈ {5,15,30,60,240,1440}` × {MGC, MNQ, MES, MCL}. This is exactly what every published harness builds `[repo-verified: toolkit.py:157-161, bigscan/cell.py:86-90, chrono/ledger.py:37-40]`. MCL 1440 skipped: `csv/raw/` has no `MCL_1d.csv` |
+| **frame-of-one** | 23 | `tfs = [primary]` — each timeframe strictly on its own, no higher timeframe to read |
+| **one frame, three bindings** | 12 | `tfs = [5,15,60,240]` with the condition bound at 5, 60 and 240 — isolates timeframe-inertness from everything else |
+| **extra groups** | 4 | `tfs = [1,5,15]` bound at 1m, per the dispatch's request for 1m+5m+15m |
+
+`CONDITION_ERRORS` was **empty in all 47 cells** `[measured: reset_condition_errors() before each
+cell, dict empty after → no cell hit the silent-exception path at base.py:129-147]`. So no verdict
+below is the "raised on every bar and was recorded as a 0% trigger rate" failure that guard exists
+to expose.
+
+**Look-ahead / repainting, checked directly and not by inspection alone.** Prefix-invariance test:
+rebuild the frame from `bars[:i+1]` only, evaluate every one of the 31 conditions at bar `i`, and
+compare verdict **and direction** against the same bar evaluated inside the full series.
+
+| cell | probes | result |
+|---|---|---|
+| MGC 60m, tfs [60,240,1440] | 8 | **all 31 prefix-invariant** |
+| MNQ 5m, tfs [5,15,60] | 4 | **all 31 prefix-invariant** |
+| MCL 60m, tfs [60,240,1440] | 4 | **all 31 prefix-invariant** |
+
+`[measured: python3, build_symbol_frame on truncated vs full series, comparing (triggered, direction)]`
+So none of my 31 conditions repaints and none reads a bar later than the one being evaluated. That is
+a clean result and it is worth stating, because three of the four indicator families here (ADX,
+Kaufman efficiency, the 20-bar regression slope) are ones where a naive implementation would.
+
+---
+
+# Group 1 — `trend` (8 conditions) → **CLEAN**
+
+My reading of the arithmetic, from source, condition by condition:
+
+| condition | kind | arithmetic | fire rate, 23 corpus cells | verdict |
+|---|---|---|---|---|
+| `ema_stack` | SIGNAL | `ema9 > ema21 > ema50` → LONG; reversed → SHORT `[repo-verified: library.py:112-122]` | 76–81% | **CLEAN** |
+| `ema_fast_above_slow` | SIGNAL | `d = ema9 − ema21`, gated `abs(d) >= 0.10 × atr` `[repo-verified: library.py:125-133]` | 86–92% | **CLEAN** |
+| `price_above_ema50` | SIGNAL | `d = close − ema50`, same 0.10 ATR deadband `[repo-verified: library.py:136-144]` | **92–96%** | **CLEAN** |
+| `price_above_ema200` | SIGNAL | `d = close − ema200`, same deadband `[repo-verified: library.py:147-155]` | 84–95% | **CLEAN** |
+| `adx_trending` | FILTER | `adx >= 22` `[repo-verified: library.py:158-168]` | 49–65% | **CLEAN** |
+| `di_direction` | SIGNAL | `abs(+DI − −DI) >= 4`, sign gives direction `[repo-verified: library.py:171-182]` | 74–81% | **CLEAN** |
+| `slope_directional` | SIGNAL | 20-bar regression slope / ATR, `abs(v) >= 0.05` `[repo-verified: library.py:185-195]` | 69–80% | **CLEAN** |
+| `efficiency_high` | FILTER | Kaufman efficiency ratio `>= 0.35` `[repo-verified: library.py:198-208]` | **23–29%** | **CLEAN** |
+
+Every name matches its arithmetic, every description matches its arithmetic, every condition reads
+its own bound timeframe's feature row through `_s(snap, tf)`, and nothing in the group reads a
+quantity from a different series. **No misnaming, no proxy, no degradation, VOID in no cell on any
+symbol at any timeframe.** This is the cleanest group in my surface and it is required by 3 of 13
+templates, which makes the clean verdict worth more than a broken one would be.
+
+Two things worth recording that are *not* defects:
+
+### R4-T1 — the base-rate spread inside a required group is 4.2×, not the 3.5× previously reported
+
+Six of the eight fire on ≥ 49% of bars and two of those on ≥ 92%. `trend` is **required by TREND,
+PULLBACK and FIBONACCI** and the combinator fills a required slot with **one** member drawn from the
+6 SIGNALs (`adx_trending` and `efficiency_high` are FILTERs and cannot fill it —
+`[repo-verified: combinator.py:361-369]`). So the required slot's selectivity ranges from
+`price_above_ema50` at 92–96% to `ema_stack` at 76–81% among SIGNALs, and across the whole group
+from `efficiency_high` at 23% to `price_above_ema50` at 96% — a **4.2× spread in base rate**.
+
+Measured on 23 cells rather than 5, `di_direction` (74–81%) and `slope_directional` (69–80%) sit in
+the same bias band as the four EMA conditions. A condition-level comparison inside `trend` is a
+comparison of populations differing fourfold in size before any market question is asked.
+
+The library says this about itself and is right to: `_deadband`'s docstring states these "are *bias*
+conditions by nature and that is fine … inside a confluence that requires agreement they genuinely
+gate" `[repo-verified: library.py:76-82]`. The point is only that a trade count from a TREND
+strategy whose required condition is `price_above_ema50` carries essentially no information about
+EMA50.
+
+### R4-T2 — the deadband makes four of the eight silently non-firing whenever ATR is unavailable
+
+`_deadband` returns `False` when `s.get("atr")` is falsy `[repo-verified: library.py:84-88]`, so
+`ema_fast_above_slow`, `price_above_ema50`, `price_above_ema200` (and in `momentum`,
+`macd_directional` and `macd_hist_direction`) return `no()` rather than raising or abstaining. A
+SIGNAL returning `no()` returns the whole strategy to `None`
+`[repo-verified: base.py:676-678]`. This is correct behaviour and the right direction to fail, but
+it means **five of my 31 conditions are VOID on any bar where ATR is missing or zero**, which is
+warm-up and any zero-range bar. It never appeared as an error in 47 cells, so its practical scope is
+warm-up only. Recorded because "the deadband is what made it not fire" is invisible from a trade
+count.
+
+---
+
+# Group 2 — `momentum` (6 conditions) → **MISNAMED**
+
+Three separate problems. I reached the same two R1 did (declared anchor above) plus one it did not
+state.
+
+## R4-MO1 — `macd_directional` and `macd_hist_direction` are one condition with two names
+
+By construction `macd_hist = macd_line − macd_signal`
+`[repo-verified: futures_agents/indicators/core.py:198-199, hist = [a − b for a, b in zip(line, sig)]]`,
+and the feature layer stores all three from one call `[repo-verified: features.py:233]`. Then:
+
+- `macd_directional`: `d = s["macd"] − s["macd_signal"]`, gate `_deadband(s, d, 0.05)`, direction `sign(d)` `[repo-verified: library.py:240-249]`
+- `macd_hist_direction`: `h = s["macd_hist"]`, gate `_deadband(s, h, 0.05)`, direction `sign(h)` `[repo-verified: library.py:252-260]`
+
+Same number, same deadband fraction, same sign test. **Measured: the (fired, LONG, SHORT, FLAT)
+vector is identical in all 23 corpus cells** — 4 symbols × 6 timeframes, 4132/4132 (MGC 5m) through
+1127/1127 (MCL 240m) `[measured: census, exact vector equality, 23/23 cells]`. R1 measured 5 cells;
+this extends it to every corpus timeframe on every symbol, including 30m, 240m and 1440m, which R1
+did not cover.
+
+**But the consequence R1 states for it is structurally impossible, and this is a CONTRADICTION.**
+`R1_group_audit.md:396-399` writes: "any two-condition confluence that happened to draw **both**
+MACD conditions was counting one reading twice and calling it agreement." It cannot happen.
+`generate_combinations` draws **at most one condition per group**: required groups via
+`itertools.product(*required)`, one entry per group, and optional groups via
+`itertools.combinations(range(len(optional)), n_opt)` followed by `itertools.product(*(optional[g] …))`
+— one condition per *distinct* group index `[repo-verified: combinator.py:536-546]`. And **no
+template lists any group in both `required_groups` and `optional_groups`**
+`[measured: python3, set(t.required_groups) & set(t.optional_groups) → empty for all 13]`. So two
+`momentum` SIGNALs can never co-occur in one generated strategy.
+
+Measured: **0 generated strategies carry both MACD conditions**, and 0 carry both `bollinger_extreme`
+and `bollinger_mean_pull`, on all four symbols
+`[measured: python3, generate_strategies(sym,[5,15,60,240],max_total=400) → MGC 314, MNQ 314, MES 336,
+MCL 296 strategies; macd pair 0, bollinger pair 0 in every case]`.
+
+**What the duplication actually costs is search-space inflation, and that is worse for this
+programme than a false confluence would be.** The `momentum` required slot advertises 6 choices and
+offers 5 distinct behaviours, so 1 in 6 MOMENTUM rule sets is a **byte-identical twin of another rule
+set with a different `strategy_id`**. Two rows in any ranking can therefore be the same strategy
+counted twice, with two ids, two entries in the denominator, and a correlation of exactly 1 that no
+paired test can see. That lands directly on `BRIEF.md`'s `free_t` accounting and on `D48`'s
+concern about exact-zero between-arm differences.
+
+**The repo has a mechanism for exactly this and the pair is not in it.** `GLOBAL_EXCLUSIVE` exists
+to bar "condition pairs that are the same statement wearing two names, enforced whatever template
+draws them" and holds three pairs — `(value_area_breakout, prior_day_breakout)`,
+`(stoch_extreme, keltner_outside)`, `(stoch_extreme, bollinger_mean_pull)`
+`[repo-verified: combinator.py:390-398]`. **Neither of the two provable duplicates in my surface is
+listed**: `(macd_directional, macd_hist_direction)`, identical by algebra and measured identical in
+23/23 cells, and `(bollinger_extreme, bollinger_mean_pull)`, a strict algebraic subset. Its own
+comment says entries need "a structural explanation" as the bar for entry — both of these have one,
+and neither was added. Two of the three pairs that *are* listed involve my groups and are
+cross-group, i.e. the cases `GLOBAL_EXCLUSIVE` can actually bite on; the two same-group cases it
+omits are the two it cannot bite on anyway. The mechanism is therefore complete for its purpose and
+**the duplication must be fixed by deleting a condition, not by an exclusion.**
+
+## R4-MO2 — 2 of the 6 are mean-reversion conditions carrying the negation of the other 4's direction rule
+
+| condition | direction rule | hypothesis |
+|---|---|---|
+| `rsi_directional` | `RSI > 53` → LONG, `< 47` → SHORT, `47..53` → no `[repo-verified: library.py:212-221]` | momentum |
+| `macd_directional` / `macd_hist_direction` | `hist > 0` → LONG | momentum |
+| `stoch_directional` | `%K > %D` by ≥ 2 → LONG `[repo-verified: library.py:263-272]` | momentum |
+| **`rsi_extreme_reversal`** | **`RSI <= 30` → LONG, `>= 70` → SHORT** `[repo-verified: library.py:224-237]` | **mean reversion** |
+| **`stoch_extreme`** | **`%K <= 20` → LONG, `>= 80` → SHORT** `[repo-verified: library.py:275-285]` | **mean reversion** |
+
+On a bar with `RSI = 28`, `rsi_directional` returns **SHORT** and `rsi_extreme_reversal` returns
+**LONG**, and both are `momentum`. `rsi_extreme_reversal`'s own description says
+"mean-reversion trigger" `[repo-verified: library.py:225]` — honestly described, wrongly filed.
+`stoch_extreme`'s description ("Stochastic below 20 / above 80") is silent on the direction it
+assigns, which is worse: nothing warns a reader that it fades.
+
+Measured firing mass, 23 cells: `rsi_extreme_reversal` 8–14%, `stoch_extreme` **35–54%**. The two
+mean-reversion members are not a corner — `stoch_extreme` alone is the second most frequent member
+of the group. `momentum` is **required by MOMENTUM** and the required slot takes one member, so a
+strategy whose `momentum` condition is `stoch_extreme` is a fade published under MOMENTUM's heading.
+And per `R4-M1`, MOMENTUM's other declared requirement (`volume`) is not enforced, so that strategy
+is a pure fade with a `volatility_normal` filter and nothing else the template promised.
+
+**GLOBAL_EXCLUSIVE confirms the library already knows `stoch_extreme` is a mean-reversion condition**
+— it bars it against `keltner_outside` and `bollinger_mean_pull`, both in the `meanreversion` group,
+on the stated ground that they are "both … price is stretched to an extreme in volatility units"
+`[repo-verified: combinator.py:393-397]`. A condition whose declared near-duplicates are all in
+`meanreversion` is in the wrong group.
+
+## R4-MO3 — the group's two directional conditions have no independent content beyond MACD's sign
+
+Not a defect; a fact needed to read the group's aggregate. `stoch_directional` fires 70–75% of bars
+with a LONG share of **48.5–51.5%** in all 23 cells, and `macd_directional` 78–84% with a LONG share
+of **46.6–52.7%** `[measured: census]`. Both are near-perfectly balanced coin-flips at high base
+rate. `rsi_directional` is 79–85% at 44.5–72.9% LONG. So four of the six `momentum` SIGNALs are
+high-base-rate bias conditions in exactly the sense `trend`'s docstring owns up to, and the group's
+description does not.
+
+**Per-condition verdicts:**
+
+| condition | verdict |
+|---|---|
+| `rsi_directional` | **CLEAN** — description "RSI above/below 50", arithmetic is above 53 / below 47; the deadband is undocumented but names no wrong object |
+| `macd_directional` | **CLEAN** |
+| `macd_hist_direction` | **DEGRADED** — exact duplicate of `macd_directional`, zero independent content, 23/23 cells |
+| `stoch_directional` | **CLEAN** |
+| `rsi_extreme_reversal` | **MISNAMED (group)** — clean arithmetic, honest description, wrong group |
+| `stoch_extreme` | **MISNAMED (group)** — clean arithmetic, description silent on the direction hypothesis |
+
+**Group verdict: MISNAMED.** 4 distinct momentum conditions, 1 exact duplicate of one of them, 2
+whose direction rule is momentum's negation.

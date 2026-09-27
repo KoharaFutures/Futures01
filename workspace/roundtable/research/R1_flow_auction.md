@@ -521,3 +521,44 @@ group name does not describe what the code computes.** That is the number I woul
 anyone reading a `scan_reports/` table.
 
 ---
+## R1-D4 addendum — corrections to my own table, from `DEFECTS.md`
+
+Read after writing the table; two of my rows need qualifying, and one repo defect corroborates a
+finding of mine from a different direction. I am recording all three rather than silently editing.
+
+**Correction 1 — `session_extreme_sweep` and `overnight_sweep` are not cleanly HONEST-DERIVED.**
+D36 `[repo-verified: workspace/studies/DEFECTS.md:530-540]`: `session_levels()` builds
+`session_high` from bars with `b.ts <= cutoff`, **including the bar being tested**, so
+`bar.high > session_high` is arithmetically impossible and the 0.61% firing rate is degeneracy. A
+causal reimplementation fires at 2.7–3.9%; `overnight_sweep` at 9.3–12.3% against a library-reported
+RTH-only 4.7%. PDH/PDL reproduces exactly, so `prior_day_sweep` and `prior_day_breakout` stand.
+**Revised verdict:** `prior_day_sweep`, `prior_day_breakout`, `opening_range_breakout`,
+`opening_range_fade`, `initial_balance_break` = HONEST-DERIVED; `session_extreme_sweep`,
+`overnight_sweep` = HONEST-DERIVED-BUT-BROKEN (the concept is expressible from OHLCV; this
+implementation leaks the current bar into its own reference level). Group tally becomes
+`liquidity` 5 clean + 2 broken. Not a proxy problem — a causality problem, and already known.
+
+**Correction 2 — three more liquidity/profile conditions have known reachability gates I should
+not restate as market facts.** D5: `prior_session_profile` requires ≥10 bars in the prior session,
+so all six `profile` conditions fire on **0.0% of 1,148 4h bars**
+`[repo-verified: workspace/studies/DEFECTS.md:57-62]`. D30: the opening range is never constructed
+at 60m or 240m `[repo-verified: workspace/studies/DEFECTS.md:423]`. D23: previous-day levels are
+derived from `is_rth(b.ts)`-flagged bars and `is_rth` is False on 100% of daily bars
+`[repo-verified: workspace/studies/DEFECTS.md:306-315]`. So `profile` is 5m/15m/30m/1h only,
+and `liquidity` is intraday-only, for plumbing reasons rather than market reasons.
+
+**Corroboration — D5 and my invariance measurement are the same defect seen from two ends.**
+D5 says the profile *vanishes* when bars get too coarse (≥10-bar gate). My measurement says that
+well before it vanishes it is already *unstable*: at 60m the median bar smears across 8 of 40 bins
+and the POC moves up to 2.02 ATR versus the same day computed from 1m bars. D5 caught the cliff;
+the slope leading to it was not recorded. I am not claiming a new D-number.
+
+**The defect most consequential for my whole track is D37**
+`[repo-verified: workspace/studies/DEFECTS.md:541-548]`: "`min_signals=2` requires two conditions
+to fire **on the same bar**. A sweep and its consequence never co-occur by definition. So every
+ordered-chain idea … is inexpressible in the template system." Every operating framework in Class I
+is a sequence — footprint reading is *aggression, then absorption, then failure to extend*; market
+profile is *open type, then initial balance, then range extension or acceptance*; a stop-run trade
+is *sweep, then reclaim*. See §7 Q3.
+
+---

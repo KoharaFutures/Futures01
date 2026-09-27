@@ -176,3 +176,78 @@ Denser polling buys nothing, and that is a property of the design rather than an
 trigger that fires at 03:00 ET is detected and resolved correctly at the 10:05 check, with the
 same fill and the same outcome. Yahoo is also delayed, so a minute-by-minute watch would be
 watching a stale tape. Overnight Globex moves are never missed — only observed later.
+
+---
+
+# FAST CHECK — the 5-minute cadence, set by the account owner 2026-09-27
+
+The owner asked for a check **every 5 minutes**. Routines in this project are capped at hourly
+(verified: a `*/5` cron is rejected with "the minimum interval is 1 hour"), so the tight cadence
+runs through the `/loop` skill inside a live session, with an **hourly Routine as the durable
+backstop** — a `/loop` dies with its session or container, a Routine does not.
+
+**The cadence is matched to the data, not faster than it.** A 5-minute bar completes every five
+minutes, so at the 5m frame one check per bar is exactly right. That is the justification; it does
+not extend to the 15m or 60m frames, where four of five checks will see no new bar and should say
+so in one line.
+
+## What a fast check does — and does not do
+
+| | fast check (5 min) | full check (hourly Routine, and any check where state changed) |
+|---|---|---|
+| `git fetch` + `merge` | yes | yes |
+| re-read `CALLOUT.md` in full | **no** — only if the merge actually moved the head | yes, always |
+| fetch bars | 5m + 15m only | 5m, 15m, 60m/30d |
+| run `resolve.py` | yes | yes |
+| write a snapshot file | **only if a new real bar arrived** | yes |
+| commit + push | **only if state changed** | yes |
+| report | **one line if nothing changed** | the full ledger |
+
+**Do not commit a snapshot that contains no new bar.** At twelve checks an hour an unconditional
+commit would bury the real history of this desk under hundreds of empty ones, and
+`check_ownership.py` gets noisier the more paths change. "Nothing moved" is not a commit.
+
+**Do not re-derive the read every five minutes.** Re-reading a chart twelve times an hour and
+re-deciding each time is unbounded search width with no pre-registration — it is exactly what
+`CALLOUT.md` warns makes the sibling REPLAY desk's results inadmissible ("a discretionary decision
+remade at every bar has no pre-registration and unbounded search width"). **At 5-minute cadence the
+job is to WATCH a pre-registered plan, not to keep re-forming an opinion.** A new directional read
+belongs in a full check, or when price reaches a level that was written down in advance.
+
+## The one-line report
+
+When nothing changed, the whole report is one line, in this shape:
+
+```
+14:05 ET · no new real bar since 2026-09-28T13:45-04:00 (lag 20m) · CALL-0001 pending · dd $0
+```
+
+No framework, no restatement of the thesis, no colour card. A card is for a decision.
+
+## Record the feed lag every check — it is free evidence
+
+Each fast check already knows the wall clock and the newest bar that passes the
+`volume > 0 or high != low` guard. **Append that difference to `workspace/paper/CALL/feed_lag.jsonl`**
+as `{"ts":"<utc now>","symbol":"MGC","newest_real_bar":"...","lag_minutes":N,"frame":5}`.
+
+This costs nothing and answers a question this repository cannot currently answer: **how stale is
+this vendor actually, during live hours?** `CALLOUT.md` says only that the archive "is not
+real-time". If the measured lag turns out to be 15–20 minutes, then a 5-minute cadence is watching
+a tape that updates every 15–20 minutes, and the honest recommendation back to the owner is to
+widen the interval — with a measurement behind it rather than an opinion. If the lag is ~5 minutes,
+the cadence is right and that is worth knowing too.
+
+**Report the accumulated lag distribution at the first full check of each session**, and if the
+median lag exceeds the check interval, say so plainly and recommend the wider interval once. Then
+abide by whatever the owner decides; they have asked for 5 minutes and that is their call to make.
+
+## Stop conditions
+
+End the loop and say so if any of these holds — do not keep spinning:
+
+- the owner says stop, or asks for a different interval;
+- `pending.jsonl` has no `PENDING` plan **and** `state.json` has no open position **and** the
+  market is closed (outside 18:00 ET Sunday → 17:00 ET Friday) — there is nothing to watch;
+- the drawdown reaches **$2,600**, the operational floor, at which point the next loss can put the
+  account in the $2,800 absorbing state and the desk should stop and report rather than size again;
+- three consecutive checks fail to fetch — report the failure rather than looping on a broken feed.

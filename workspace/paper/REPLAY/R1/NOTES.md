@@ -685,3 +685,97 @@ because the stand-downs are journalled.
 
 **Stopped at:** cursor **1190/11287**, flat, equity **$50,348.18**, peak $50,348.18, drawdown $0,
 permitted $240 (×1.00), 1 closed trade, 6 theses, nothing armed.
+
+---
+
+## Burst 7 — bars 1190→1393. basis `7a13a9f` (2026-09-28)
+
+**Nothing to escalate.** `score` not due (next at bar 2,000), no absorbing state (drawdown $0, at peak
+equity), 34 callouts / 34 unique ids, series not ended. Briefs and harness unchanged since burst 6 — the
+roll finding is on the branch but has not yet been absorbed by `SERIES_AUDIT.md`.
+
+### Result: 203 bars, 3 callouts, **1 trade taken and closed a winner**. Equity $50,348.18 → $50,688.86
+
+**`R1-00033-b001340` — SHORT 3 MES @ 5973.25, stop 5985.5, target 5950.0 → TARGET, net +$340.68,
++1.854R.** Two trades now, two wins, +$688.86 (+1.38%) on the account. **n = 2, which is nothing**, and
+the caveats below matter more than the number.
+
+### The trade, and one thing I disclosed rather than buried
+
+12/27's low **5982.75** was broken on 12/30 (which traded to 5918.25). On 12/31 bar 1337 rallied to
+5983.5 and closed 5972.0 back below it — my pre-registered failed-retest shape, thesis 5, no new idea.
+Downtrend unambiguous: lower highs 6107.5 → 6086.5 → 6035.5 → 6020.75 → 5983.5, lower lows 6062.0 →
+5982.75 → 5918.25. Stop 5985.5 above the rejection high, 11.75 pts = 1.1 × ATR14 10.62 against a 5.31
+floor — structural *and* compliant. Target 5950.0 sat above 12/30's low so it needed no new low. Filled
+10:00 ET, target hit on the next bar.
+
+**What I disclosed in the `why` and repeat here: the level was NOT armed in advance.** Bar 1337's trigger
+fired before I was watching for it. I did not claim to have caught it and did not back-date an entry to
+it; I entered because the rejection **held two further bars** (1338 and 1339 both capped at exactly
+5980.0 and closed below), which is evidence available at decision time rather than hindsight.
+
+**But there is a real cost to that and I am recording it against myself: identifying a level
+post-hoc widens effective search width even when the pattern is pre-registered.** A pre-registered
+*shape* applied to a level I chose after seeing it reject is weaker than a pre-registered shape at a
+pre-named level — which is what my bar-452 winner was. So of my two winners, **one is cleanly
+pre-specified and one is not**, and they should not be quoted as two of a kind.
+
+### The shadow tally, updated
+
+Every entry I have *specified* (taken or missed), scored against its own stop and target:
+
+| bar | side | result |
+|---|---|---|
+| 263 | SHORT | **−1R** (tick-through trigger, mis-specified) |
+| 414 | SHORT | **+2.8R** (missed) |
+| 452 | SHORT | **+1.895R** — taken, pre-armed level |
+| 607 | SHORT | **−1R** (coil, missed) |
+| 612 | LONG | **−1R** (coil, missed) |
+| 1340 | SHORT | **+1.854R** — taken, level identified post-hoc |
+
+**Six measurable specified entries: +3.549R total, ≈ +0.59R each, 3 winners and 3 losers.** A 50% win
+rate with a payoff skew. Still **noise at n = 6**, still discounted by the declared bias, and now with
+the extra caveat that one winner's level was not pre-named.
+
+**Declines and silent non-fires that avoided a loss: bars 39, 151, 813, 873, 1049 and 1059 — six.**
+Against two missed winners. The stand-downs continue to be the load-bearing part of the record.
+
+### A point about the declared contamination that cuts in my favour, stated carefully
+
+**Both trades I have taken are SHORTS, and both sit in a calendar window my out-of-band prior says
+rose.** If that prior were driving my entries it would have pushed me long; it did not. That is **mild**
+evidence the bias is not operative in my decisions — and it is n=2, fully consistent with coincidence,
+and it **does not retire the declaration**. The discount on any separation I show across 2024-11 →
+2025-06 stands exactly as written at bar 555. I note it because a self-report that only ever finds
+against itself is as unreliable as one that never does.
+
+### Tooling: the roll-merge detector, and the false positive it produced first
+
+Added `roll_flags()` to my `view.py` — the fifth check `SERIES_AUDIT.md`'s four cannot make: **envelope
+constancy.** It flags runs of ≥ 4 consecutive bars whose high-band and low-band spreads are both tight
+relative to the mean bar range, while that range is ≥ 3 × the prior median and ≥ 25 points absolute.
+
+**My first parameterisation was wrong and I am recording it.** At `band_frac = 0.45` it also flagged bars
+1081–1086 — mean range 13.96, bands 4.5/6.0, which are 0.32 and 0.43 of the range. That is an ordinary
+balanced consolidation: **a false positive.** The genuine merge sits at 0.16 and 0.25 of an 84-point
+range, so `band_frac = 0.30` plus a 25-point absolute floor separates them. It now flags exactly one run
+in 1,393 bars — the real one.
+
+**And the caveat is in the code as well as here: tuning a detector on a single positive example is
+overfitting.** It is a screen that makes me look, never a verdict, and every flag gets read by eye before
+it changes a decision. It correctly stayed silent through genuinely violent real tape — 12/18's
+241-point session, 12/20's 185-point range, 1/02's drop to 5874.75.
+
+### Distinct theses tried: **6**, unchanged
+
+Both trades are thesis 5 (failed retest of a level, continuing in the break direction). The detector is
+diagnostics, not a trading idea. Nothing added.
+
+### Carried forward
+
+**Nothing armed.** The 6107.5 → 5874.75 decline reversed sharply on 1/03 and price is consolidating
+5980.75–5996.0 at 5987.5, back near the top of the recent range with ATR14 14.32. No level with distance,
+no rejection. I will arm off the next cycle's structure.
+
+**Stopped at:** cursor **1393/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0,
+permitted $240 (×1.00), **2 closed trades, 2 wins**, 6 theses.

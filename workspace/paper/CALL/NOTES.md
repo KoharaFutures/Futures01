@@ -5121,3 +5121,55 @@ rising), structure BULL, 5m BULL 3-0 unanimous, 60m BEAR 0-3 unanimous.
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
 opens 08:20 ET, 25 minutes out.
+
+## N137 — the arithmetic case has now arrived. MNQ's location IMPROVED while its price FELL, and the pre-committed decomposition names it
+
+Two consecutive steps in MNQ's location component, decomposed exactly as N132 committed to:
+
+| check | window | close | pos | what moved |
+|---|---|---|---|---|
+| 07:53 | [30535.00, **30789.50**] | 30630.00 | 37.3% | — |
+| 07:55 | [30535.00, **30789.50**] | **30643.75** | 42.7% | **PRICE** — close +13.75, window identical |
+| 08:00 | [30535.00, **30760.00**] | **30632.00** | 43.1% | **THE WINDOW** — close **−11.75**, high **−29.50** |
+
+Arithmetic: 108.75/254.50 = 42.73%; 97.00/225.00 = 43.11%. **MNQ's location reading improved by 0.38
+percentage points while its price fell 11.75 points**, because the `09-27T21:45` bar carrying the 30789.50 high
+rolled out of the trailing window.
+
+This is precisely the case N132 was written for, and it arrived within seven minutes of the prediction. Both
+halves of the pre-commitment have now been exercised on live data — the price case at 07:55 and the arithmetic
+case here — and each was named before any call fired. **A reader watching only `location 42.7% -> 43.1%` would
+see steady improvement; what happened is that the market went down and the denominator went down faster.**
+
+Tracker updated on the correct all-bars window (N135):
+
+    window 09-27T22:00..09-28T07:45   hh 30760.00  ll 30535.00  close 30632.00  pos 43.1%
+    location BULL above 30670.00      ->  +38.00 points of price
+    OR hh down to 30696.67            ->  a further 63.33 of window slide
+
+The threshold has fallen 30687.70 -> **30670.00** in five minutes without MNQ doing anything, so the distance
+required of price has dropped **+43.95 -> +38.00**. `reversal()` still fails on `"15m is 2-0, not unanimous"`.
+
+## N138 — the 4h frame advanced at 08:00 exactly as derived, and MNQ's 4h has gone CONFLICTED
+
+The `240m` frame published a new bar, `2026-09-28T04:00`, at the 08:00 fetch. N60 established that these frames
+publish only completed bars and that the 4h would next advance at **08:00**; it did, to the minute. Thirteenth
+machinery prediction tonight to hold. The new bars are the whole 04:00-08:00 block:
+
+    MGC 4h  o 4187.50   h 4193.40   l 4172.60   c 4181.20    v 49,019
+    MNQ 4h  o 30610.00  h 30649.00  l 30535.00  c 30631.50   v 211,139
+
+**MNQ's 4h headline has flipped BULLISH 1-0 -> CONFLICTED 1-1.** That is one of the three higher timeframes
+`reversal_setup` counts, so MNQ's bullish-HTF count is now 2 (DAILY, WEEKLY) rather than 3 — still enough for
+that test's two-HTF requirement, but the margin is gone. `reversal()`'s "another timeframe agrees" condition is
+unaffected: 1m, 5m, DAILY and WEEKLY still read BULLISH.
+
+Also, N63's **seventh** consecutive confirmation: the 240m frame's *revised* bar is `2026-07-30T08:00` — the
+oldest edge of the 60-day lookback window, as it has been every single time.
+
+MGC's 4h remains BEAR 0-2. MGC is otherwise unchanged and inert: trend BEAR (4181.20 < EMA20 4189.70,
+falling), structure MIXED with both legs inside noise, location **11.0%** of [4172.60, 4250.70], 1m BEAR 0-2,
+5m BEAR 0-1, 15m BEAR 0-2, 60m BEAR 0-3 unanimous. Eighth consecutive check with nothing to trade.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
+**MGC RTH opens 08:20 ET, 20 minutes out** — CALL-0002's window and the first measured session of the night.

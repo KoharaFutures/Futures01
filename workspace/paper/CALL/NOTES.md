@@ -7292,3 +7292,72 @@ Two things this makes concrete, both already on the record rather than discovere
 Frames at the moment of the touch: MNQ 1m BULLISH 2-0, 5m BULLISH 1-0, but **15m still BEARISH 0-2 and 60m
 BEARISH 0-2** — the pullback the plan was written to sell has not yet turned the settled frames. MGC
 unchanged in character, location **9.6% of [4143.00, 4212.10]**. **No new call.**
+
+# N207 — 12:33: CALL-0006 FILLED AND WAS STOPPED ON THE SAME BAR. The desk has its first countable trade, and it is a loss.
+
+    resolve.py  16:34:04Z   TRIGGERED CALL-0006 MNQ SHORT @ 30560.0 (bar 12:15) stop 30618.0 risk $116.00
+    resolve.py  16:35:47Z   CLOSED    CALL-0006 LOSS STOP  net $-118.44  (-1.021R)
+                            open 0  closed 2  equity $50,038.12  drawdown $118.44
+
+The fill landed exactly where N206 said it would before it resolved — **30560.00, the limit price, no
+slippage** — because the bar opened at 30515.75, below the limit, so `raw = max(trig, open)` takes the limit
+itself. That part went as predicted.
+
+## The part that did not, and the defect it exposed
+
+The **same** 15m bar that filled it printed a high of **30628.75 — 10.75 points through the 30618.00 stop.**
+
+`resolve_open()` scanned bars *strictly after* the entry bar (`b["ts"] > pos["entry_bar_ts"]`). So on the
+first run it reported **`open 1`**: a position the desk would have carried, in profit or not, that in fact was
+already stopped. **An exclusion that can only ever delete losses is not conservatism. It is a flattering
+error**, and left alone it would have put a fabricated open position in the ledger — the same category of
+thing as writing an outcome before a trade resolves, which CALLOUT.md calls fabrication.
+
+**The ordering here is not ambiguous, and that is the whole point.** The general worry behind the old rule is
+real — OHLC cannot order two touches inside one bar. But when a LIMIT fills, price must TRAVEL to the limit
+from the far side, and a stop lying beyond the entry in that same direction can only be reached afterwards:
+
+    15m 12:15   o 30515.75   h 30628.75   l 30511.25   c 30621.00
+                open is BELOW the 30560.00 sell limit -> price rose THROUGH the limit, then on to 30628.75
+                low 30511.25 never reached TP1 30473.00, so there is no competing target touch
+
+Confirmed at 5m, where the two touches fall in **different bars**: `12:15 h 30591.50` crosses the limit,
+`12:20 h 30628.75` crosses the stop. Forced ordering, corroborated at finer resolution.
+
+## The fix, and why it was safe to make mid-position
+
+`resolve.py` now scans the entry bar **only when the ordering is forced** — SHORT with the bar opening below
+the entry and the stop above it, LONG with the bar opening above the entry and the stop below it. A stop
+entry never qualifies, because there the stop sits on the opposite side of the travel and could have been
+touched before the fill. **And on the entry bar only the STOP is checked, never the target**, since reaching
+a target on the entry bar is not forced by the same argument and crediting one would invent wins.
+
+So the check can only ever turn an open position into a LOSS. That asymmetry is the only reason it was
+defensible to change the resolver while a position was open: **the change made my own record worse, which is
+the single direction in which a mid-flight edit cannot be self-serving.** Same logic as the breakout
+prohibition (N196) and the unreachable-void rule (N202).
+
+## The ledger, and rule 3 applies for the first time with a real denominator
+
+    state.json  equity $50,038.12   drawdown $118.44   open 0   closed 2
+
+    CALL-0002 remains EXCLUDED (N155, filled 102.70 points from its specified entry)
+
+    MEASURED RECORD, n = 1 at last:
+      closed 1 | wins 0 | losses 1
+      win rate 0.0%  WITH  payoff UNDEFINED (no winner exists to form the ratio) - rule 3 forbids
+        quoting the 0% alone, and it is worth saying that 0% of 1 is not a rate, it is one trade
+      expectancy -1.021R at n = 1
+      measured equity $49,881.56   measured drawdown $118.44
+      distance to the $2,800 absorbing state: $2,681.56
+
+The -1.021R rather than a clean -1.000R is costs: $2.44 of commission and slippage on $116.00 of risk.
+
+**What this trade actually cost and what it bought.** It cost $118.44 of paper. It bought the desk its first
+countable outcome after a full session at n = 0, and it bought a defect found — one that would have
+mis-stated every future fill whose stop sits inside its own entry bar. The plan's own invalidation list named
+rule 2 (z = -4.09) and an unvalidated reversal path as the serious risks; what actually killed it was the
+pullback continuing 68.75 points past the entry, which is the most ordinary way a limit short dies.
+
+**No new call.** MNQ has now rallied to 30621.00 and MGC to 4165.70, and re-entering short after being
+stopped, on the same signal, at a worse price, is revenge dressed as conviction.

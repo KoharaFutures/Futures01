@@ -386,15 +386,49 @@ def resolve_open(state: dict, now_iso: str) -> list[str]:
         sym, side = pos["symbol"], pos["side"]
         spec = CONTRACTS[sym]
         sign = 1.0 if side == "LONG" else -1.0
-        # Rule 5: strictly after the entry bar.
-        bars = [b for b in load_bars(sym, pos["bar_minutes"]) if b["ts"] > pos["entry_bar_ts"]]
+        # Rule 5 USED to say "strictly after the entry bar", and that hid a real stop-out.
+        #
+        # CALL-0006 filled at 30560.00 on the 15m 12:15 bar. That SAME bar printed a high of
+        # 30628.75 - 10.75 points through its 30618.00 stop - and the strictly-after rule meant
+        # the resolver never looked, so the desk carried a position that in fact was stopped.
+        # An exclusion that can only ever DELETE losses is not conservatism, it is a flattering
+        # error, and it would have put a fabricated open position in the ledger.
+        #
+        # The general worry behind the old rule is real: OHLC cannot order two touches inside one
+        # bar. But it is not always undecidable. When a LIMIT fills, price must TRAVEL to the
+        # limit from the far side, and a stop lying BEYOND the entry in that same direction can
+        # only be reached afterwards. Here the 12:15 bar opened at 30515.75, BELOW the 30560.00
+        # sell limit, so price rose through the limit and then on to 30628.75 - forced ordering,
+        # and confirmed at 5m where the two touches fall in different bars (12:15 h 30591.50
+        # crosses the limit, 12:20 h 30628.75 crosses the stop).
+        #
+        # So the entry bar is scanned only when the ordering is FORCED, which is exactly the
+        # limit-entry case: side SHORT with the bar opening below the entry and the stop above
+        # it, or side LONG with the bar opening above the entry and the stop below it. A stop
+        # entry never qualifies, because there the stop sits on the opposite side of the travel
+        # and could have been touched before the fill.
+        #
+        # AND ON THE ENTRY BAR ONLY THE STOP IS CHECKED, NEVER THE TARGET. Reaching a target on
+        # the entry bar is NOT forced by the same argument, so crediting one would invent wins.
+        # This check can therefore only ever turn an open position into a LOSS - the same
+        # asymmetry that justifies the breakout prohibition and the unreachable-void rule, and
+        # the only direction in which a mid-flight change to the resolver is safe to make.
+        series = load_bars(sym, pos["bar_minutes"])
+        bars = [b for b in series if b["ts"] > pos["entry_bar_ts"]]
+        entry_bar = next((b for b in series if b["ts"] == pos["entry_bar_ts"]), None)
+        if entry_bar is not None and (
+                (side == "SHORT" and entry_bar["o"] < pos["entry_price"]
+                 and pos["stop"] > pos["entry_price"])
+                or (side == "LONG" and entry_bar["o"] > pos["entry_price"]
+                    and pos["stop"] < pos["entry_price"])):
+            bars = [entry_bar] + bars
         closed = False
 
         for bar in bars:
             stop_hit = bar["l"] <= pos["stop"] if side == "LONG" else bar["h"] >= pos["stop"]
             pending_tp = next((t for t in pos["tps"] if not t["hit"]), None)
             tp_hit = False
-            if pending_tp:
+            if pending_tp and bar["ts"] != pos["entry_bar_ts"]:   # never credit a TP on the entry bar
                 tp_hit = (bar["h"] >= pending_tp["price"] if side == "LONG"
                           else bar["l"] <= pending_tp["price"])
 

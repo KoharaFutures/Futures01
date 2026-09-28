@@ -1,9 +1,9 @@
 {
   "starting_equity": 50000.0,
-  "equity": 50156.56,
+  "equity": 50038.12,
   "peak_equity": 50156.56,
-  "drawdown": 0.0,
-  "realized_pnl": 156.56,
+  "drawdown": 118.44,
+  "realized_pnl": 38.12,
   "open": [],
   "closed": [
     {
@@ -42,6 +42,41 @@
       "net": 156.56,
       "r_multiple": 1.566,
       "result": "WIN"
+    },
+    {
+      "call_id": "CALL-0006",
+      "symbol": "MNQ",
+      "side": "SHORT",
+      "bar_minutes": 15,
+      "entry_price": 30560.0,
+      "entry_bar_ts": "2026-09-28T12:15:00-04:00",
+      "initial_stop": 30618.0,
+      "stop": 30618.0,
+      "risk_points": 58.0,
+      "contracts": 1,
+      "remaining": 0,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.5,
+          "fraction": 1.0,
+          "price": 30473.0,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 116.0,
+      "realized": -118.44,
+      "triggered_at_utc": "2026-09-28T16:34:04+00:00",
+      "basis_at_trigger": "ec702ef",
+      "entry_fill_note": "resting limit filled at its price, no slippage charged",
+      "exit_price": 30618.0,
+      "exit_bar_ts": "2026-09-28T12:15:00-04:00",
+      "exit_reason": "STOP",
+      "ambiguous": false,
+      "closed_at_utc": "2026-09-28T16:35:47+00:00",
+      "net": -118.44,
+      "r_multiple": -1.021,
+      "result": "LOSS"
     }
   ]
 }

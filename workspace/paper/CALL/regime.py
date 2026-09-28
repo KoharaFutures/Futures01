@@ -190,3 +190,75 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# ---------------------------------------------------------------- reversal SETUP
+
+def reversal_setup(symbol: str, tfs: list[dict] | None = None) -> dict:
+    """A structural reversal candidate: short-term capitulation INTO higher-timeframe support.
+
+    This is a different object from `reversal()`. That one asks whether this desk's own 15m
+    headline has flipped sign - a statement about the indicator. This one asks whether the
+    MARKET is set up to turn, which is what the account owner means by a confident reversal.
+
+    Four conditions, and the reason each is here:
+
+    1. EXTENDED - |sigma| > 1.5 from the 20-bar 15m mean. A reversal needs something to
+       revert FROM; a trend at its mean is just a trend.
+    2. HIGHER TIMEFRAMES ON THE OTHER SIDE - at least two of 4h / DAILY / WEEKLY pointing
+       the way the reversal would go. This is the condition that separates a turn from a
+       knife-catch, and it is why MGC fails tonight at RSI 15.2 while MNQ passes: MGC is
+       extended with NOTHING above it, MNQ is extended into three bullish slow frames.
+    3. A RECLAIM TRIGGER - an actual level above (or below) the market that price must take
+       back. Without it the plan fires while price is still falling, which is how "buy the
+       dip" becomes "buy every dip".
+    4. CLIMAX VOLUME on the extreme bar, reported but NOT required. A flush on 2x volume is
+       a different event from a drift on 0.4x, and the caller deserves to know which it is
+       rather than have the distinction averaged into a pass/fail.
+
+    Frames the audit disqualifies are excluded from condition 2 - a bias that may not be
+    computed cannot vote.
+    """
+    bars5, bars15 = _ch.load(symbol, 5), _ch.load(symbol, 15)
+    if len(bars5) < 40 or len(bars15) < 25:
+        return {"qualifies": False, "reasons": ["not enough bars"]}
+    last = bars5[-1]["c"]
+    win = [x["c"] for x in bars15[-20:]]
+    mean = sum(win) / len(win)
+    sd = (sum((x - mean) ** 2 for x in win) / len(win)) ** 0.5
+    sigma = (last - mean) / sd if sd else 0.0
+    side = "LONG" if sigma < 0 else "SHORT"
+    tfs = tfs or timeframe_bias(symbol)
+    want = "BULLISH" if side == "LONG" else "BEARISH"
+    htf = [label(t["frame"]) for t in tfs
+           if t["frame"] in (240, 1440, 10080) and t["headline"] == want]
+
+    swings = []
+    for i in range(1, len(bars5) - 1):
+        a, b, c = bars5[i - 1], bars5[i], bars5[i + 1]
+        if side == "LONG" and b["h"] > a["h"] and b["h"] > c["h"]:
+            swings.append(b["h"])
+        elif side == "SHORT" and b["l"] < a["l"] and b["l"] < c["l"]:
+            swings.append(b["l"])
+    cand = [x for x in swings[-12:] if (x > last if side == "LONG" else x < last)]
+    trigger = (min(cand) if side == "LONG" else max(cand)) if cand else None
+
+    vols = [x["v"] for x in bars5[-40:] if x["v"] > 0]
+    medv = sorted(vols)[len(vols) // 2] if vols else 0
+    ext_bar = (min(bars5[-12:], key=lambda x: x["l"]) if side == "LONG"
+               else max(bars5[-12:], key=lambda x: x["h"]))
+    climax = (ext_bar["v"] / medv) if medv else 0.0
+
+    fails = []
+    if abs(sigma) <= 1.5:
+        fails.append(f"only {sigma:+.2f} sigma from the 20-bar mean, needs |1.5|")
+    if len(htf) < 2:
+        fails.append(f"only {len(htf)} higher timeframe(s) {want.lower()} "
+                     f"({', '.join(htf) or 'none'}), needs 2")
+    if trigger is None:
+        fails.append("no reclaim level on the far side of price")
+    return {"qualifies": not fails, "side": side, "sigma": round(sigma, 2),
+            "htf_support": htf, "trigger": trigger, "climax_x": round(climax, 2),
+            "climax_note": ("flush" if climax >= 1.5 else
+                            "NO capitulation volume — a drift, not a flush"),
+            "last": last, "reasons": fails}

@@ -442,6 +442,43 @@ single-frame artefact; it does not raise confidence, and the card prints that ca
 column. Nothing here reads a daily frame, because `D50` aliases every request ≥ 1440 into a
 lagged copy of the same series.
 
+## Calling a REVERSAL: the market turning, not the indicator flipping
+
+```
+python3 -c "import importlib.util;g=importlib.util.spec_from_file_location('rg','workspace/paper/CALL/regime.py');rg=importlib.util.module_from_spec(g);g.loader.exec_module(rg);print(rg.reversal_setup('MNQ'))"
+```
+
+`regime.reversal_setup()` is a **different object** from `regime.reversal()`. The latter asks
+whether this desk's own 15m headline changed sign — a statement about the indicator. The former
+asks whether the **market** is set up to turn, which is what the account owner means by a
+confident reversal. Four conditions:
+
+1. **Extended** — |sigma| > 1.5 from the 20-bar 15m mean. A reversal needs something to revert
+   *from*; a trend sitting at its mean is just a trend.
+2. **Higher timeframes on the other side** — at least two of 4h / DAILY / WEEKLY pointing the way
+   the reversal would go. **This is the condition that separates a turn from a knife-catch.**
+3. **A reclaim trigger** — a real level price must take back. Without one the plan fires while
+   price is still falling, which is how "buy the dip" becomes "buy every dip".
+4. **Climax volume** on the extreme bar — *reported, not required*. A flush on 2× volume is a
+   different event from a drift on 0.4×, and the caller deserves to be told which rather than have
+   the distinction averaged into a pass/fail.
+
+Frames the audit disqualifies cannot vote in condition 2 — a bias that may not be computed may not
+support a trade either.
+
+**Worked example, 2026-09-27 22:17 ET, showing why condition 2 carries the weight.** Both symbols
+were extended and both had a reclaim level. MGC was *more* extreme on RSI (15.2, with a genuine
+1.98× volume flush) — and it **failed**, because **zero** higher frames were bullish. MNQ passed at
+a milder RSI 37.3 because 4h, DAILY and WEEKLY were all unanimously bullish. Extension alone picks
+the wrong symbol; extension *into* higher-timeframe support picks the right one.
+
+## The 10-minute call is arithmetically impossible — say so rather than approximating it
+
+Median feed lag at 5m is **12.9 minutes across 80 samples** (`feed_lag.jsonl`). A ten-minute trade
+is **over before its entry bar is visible**. A thirty-minute trade retains ~17 minutes of usable
+life after the signal appears. When asked for a short horizon, quote those numbers and set the
+plan's window accordingly; do not accept a horizon the feed cannot serve.
+
 ## The one-line report
 
 When nothing changed, the whole report is one line, in this shape:

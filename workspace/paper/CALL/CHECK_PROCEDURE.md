@@ -989,3 +989,32 @@ silent outage costs the open.
 **And every in-window check starts by confirming the jobs exist.** If `CronList` is empty during
 the window, the cadence has already stopped; re-create it before doing anything else, and report
 the gap rather than letting the next check look normal.
+
+### Card commands take PARAMETERS, never hand-typed numbers
+
+Owner, 2026-09-28 18:52: *"when rendering the card, would it be more beneifical for you to have a
+python script that will generate it while you provide its parameters to make it smoother for you?"*
+
+For **plan cards** that was already the design and needs nothing:
+
+    python3 card_png.py <call_id> --scale 3
+
+It reads the plan out of `pending.jsonl` and takes no numbers from me at all. Entry, stop, targets,
+R, contracts, dollar risk and every basis string are rendered from the registered record, so the
+card cannot disagree with the plan. That is also why it is safe: a card that restated the numbers
+independently could drift from the plan it depicts.
+
+**The gap was the status card, and it is now closed:**
+
+    python3 status_card.py 3 --auto
+
+`--auto` composes the three binding-reason lines from measured state via `auto_reason()`, in
+priority order: the volatility stand-down with both ATRs, rule 5 if the clock is inside
+15:00-16:00, then the 15m gate with each non-unanimous tally. **The ATRs come from `atr14()` — the
+same function that draws the ATR panel — so the headline text and the panel can no longer
+disagree.**
+
+Before this, every check retyped both ATRs by hand into a command-line string. Around thirty checks
+today did that. One wrong digit would have put a veto level on the one artefact the owner reads
+that was never measured, and nothing in the pipeline would have caught it. Passing a literal string
+is still permitted for a genuinely one-off reason, but `--auto` is the default and the normal case.

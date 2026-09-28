@@ -42,6 +42,51 @@ def atr14(sym: str) -> float:
     return sum(trs[-14:]) / 14.0
 
 
+def auto_reason() -> str:
+    """Compose the binding-reason lines FROM MEASURED STATE, so no number is ever hand-typed.
+
+    Installed 2026-09-28 at the owner's suggestion: *"would it be more beneifical for you to have
+    a python script that will generate it while you provide its parameters."* For PLAN cards the
+    answer was already yes -- `card_png.py <call_id>` reads the plan from pending.jsonl and takes
+    no numbers from me at all. The gap was HERE: the status card took its three reason lines as a
+    command-line string, so every check I retyped the two ATRs by hand into the one artefact the
+    owner actually reads. One wrong digit and the card states a veto level that was never measured.
+
+    The reasons are now DERIVED, in priority order, and the ATRs come from atr14() -- the same
+    function that draws them on the card, so the text and the panel can never disagree.
+    """
+    import datetime, zoneinfo
+    now = datetime.datetime.now(zoneinfo.ZoneInfo("America/New_York"))
+    lines = []
+
+    stood = []
+    clear = []
+    for sym in ("MGC", "MNQ"):
+        a, line = atr14(sym), SPEC[sym]["line"]
+        (stood if a > line else clear).append(f"{sym} {a:.2f}{'>' if a > line else '<'}{line:g}")
+    if stood:
+        lines.append("VOL STAND-DOWN: " + ", ".join(stood))
+        if clear:
+            lines.append("clear: " + ", ".join(clear))
+    else:
+        lines.append("ATRs CLEAR: " + ", ".join(clear) + " - vetoes off")
+
+    if datetime.time(15, 0) <= now.time() < datetime.time(16, 0):
+        lines.append("RULE 5: no intraday entry 15:00-16:00 (z -4.43)")
+
+    gate = []
+    for sym in ("MGC", "MNQ"):
+        bi = bias(load(sym, 15)[-40:])
+        if not bi["unanimous"]:
+            gate.append(f"{sym} {bi['bull']}-{bi['bear']}")
+    if gate:
+        lines.append("GATE SHUT: 15m not unanimous (" + ", ".join(gate) + ")")
+    else:
+        lines.append("15m unanimous on both - gate open")
+
+    return "\n".join(lines[:3])
+
+
 def gather() -> dict:
     st = json.loads((HERE / "state.json").read_text())
     plans = [json.loads(l) for l in (HERE / "pending.jsonl").read_text().splitlines() if l.strip()]
@@ -227,7 +272,8 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
 
 def main() -> int:
     C.SCALE = float(sys.argv[1]) if len(sys.argv) > 1 else 3.0
-    reason = sys.argv[2] if len(sys.argv) > 2 else "No plan: both symbols stood down on volatility."
+    arg = sys.argv[2] if len(sys.argv) > 2 else "--auto"
+    reason = auto_reason() if arg == "--auto" else arg
     out = render(HERE / "card_STATUS.png", reason)
     w, h = Image.open(out).size
     print(f"{out.name}  {w}x{h}  ratio {w/h:.2f}:1  ({out.stat().st_size//1024} KB)")

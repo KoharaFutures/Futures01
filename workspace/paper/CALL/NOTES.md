@@ -8105,3 +8105,60 @@ added, and the desk's entry logic is unchanged.
 pivot level (a retest) behaves differently from one in open space. That is a structure question,
 not a volume one, and appending it to this run would widen the search from 24 cells to 48 without
 pre-registration. It should be its own test with its own placebo if the owner wants it.
+
+---
+
+# N222 — 18:52 hourly: CALL-0007 pending 1.30 from its limit, and the status card stopped taking hand-typed numbers
+
+`basis ecca3eb`. Cadence verified: all three UTC jobs alive (`5b6f90c7`, `697d7750`, `13cbeeca`).
+Clocks checked both ways — UTC 22:52, ET 18:52, inside the window.
+
+## Book
+
+**CALL-0007 PENDING**, 0 open. MGC SHORT, LIMIT SELL 4159.00, stop 4163.40 (4.40 pts = 0.69x ATR),
+TP1 4152.40, 1 contract, $44 risk = 18.3% of permitted. Registered 18:47 on the session's first
+MGC reversal call. Price 4157.70 — **1.30 points below the trigger**, in from 3.90 at registration.
+`thesis.py` reports "no bars since creation", which is correct and not a failure: the 15m frame has
+not published a bar since `18:30`.
+
+Equity **$50,038.12**, peak $50,156.56, drawdown **$118.44**. Distance to the $2,800 absorbing
+state: **$2,681.56**.
+
+**Measured record, CALL-0002 EXCLUDED per N155:** n=1, 0 wins, 1 loss, **win rate 0% with payoff
+0.00** — there is no win to size a payoff against, and quoting either number alone would breach
+rule 3 in whichever direction flattered me. Expectancy −1.021R. 0 ambiguous bars.
+
+## The read
+
+MGC 15m is unanimous BEAR 0-3 and the reversal call has held **34 checks**, agreeing frames
+[60m, 240m]. 60m is brutal: close 4148.70 against EMA20 4192.94 falling, lower highs
+4203.80→4181.00, lower lows 4172.60→4143.00, location **3.0% of [4143.00, 4336.00]** — the bottom
+of a 30-bar range. Meanwhile 1m is 2-1 bull and 5m 2-0 bull, which is the bounce the limit sits in.
+
+MNQ 60m has now also gone unanimous BEAR 0-3 (close 30556.75 < EMA20 30632.85 falling, location
+33.6% of [30356.50, 30952.50]) while its DAILY stays unanimous BULL 3-0. Its 15m is 1-0 bull on one
+check of two. **That is the fifth flip attempt on MNQ today**; the previous four all died before a
+second consecutive check, three of them on revisions of an unclosed bar.
+
+Both ATRs clear: MGC 6.34 vs 10, MNQ 39.41 vs 58.
+
+## The card change, and why the plan card needed none
+
+The owner asked whether a parameterised script would be smoother than whatever I was doing. For
+plan cards it already was: `card_png.py <call_id> --scale 3` reads the plan from `pending.jsonl`
+and takes no numbers from me. That is deliberate — a card that recomputed the numbers
+independently could drift from the plan it depicts.
+
+**The status card was the real gap.** It took its three reason lines as a command-line string, so
+every quiet check I retyped both ATRs by hand. Roughly thirty checks today did that. One wrong
+digit puts a veto level that was never measured onto the one artefact he actually reads, and
+nothing downstream would catch it.
+
+Fixed: `status_card.py 3 --auto` now derives the lines in `auto_reason()` — stand-down with both
+ATRs, rule 5 when the clock is inside 15:00-16:00, then the 15m gate with each non-unanimous tally.
+**The ATRs come from `atr14()`, the same function that draws the ATR panel**, so the headline and
+the panel cannot disagree. A literal string is still accepted for a one-off, but `--auto` is the
+default.
+
+The owner found a transcription hazard I had been walking past all day. Worth recording as that,
+not as a styling tweak.

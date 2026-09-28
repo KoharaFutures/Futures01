@@ -6384,3 +6384,21 @@ trades, win rate undefined, payoff undefined, expectancy undefined at n = 0, mea
 measured drawdown $0.00, the full $2,800 to the absorbing state.** Journal 23 entries, 4 resolved, 11 NO
 TRADE, 1 excluded. Live: **CALL-0001 only** (MNQ LONG, stop-entry 30998.50, expires on the 16:00 bar, now
 364.50 points adverse and DIRECTION WRONG by the tracker). CALL-0005 is retired.
+
+## N182 — 10:04 amendment to N179: the 09:45 bar's low revised, so "3.63 through" is now 13.63 through
+
+`fetch.py` reported **`new=0 revised=1`** on both symbols at both the 5m and 15m frames, so per N140 nothing
+here is a price move. The `09:45` MNQ 15m bar now reads:
+
+    h 30666.75   l 30582.25   c 30648.75   v 91735     (was h 30650.50  l 30592.25  c 30634.00  v 49108)
+
+The low revised down **10.00 points** and the volume nearly doubled — the bar was still filling in when I read
+it four minutes ago. **N179's "3.63 points through the limit" was correct for the data in hand and is now
+13.63.** Amended rather than silently restated, because the number was the whole point of that note.
+
+It changes nothing about the outcome: CALL-0005 expired on the `09:30` bar and the `09:45` bar was never
+eligible to fill it at any low. What it does change is the *size* of the miss, and it is a reminder pointed
+straight at N179's own counterfactual — I computed a hypothetical entry and a hypothetical stop distance off a
+bar that had not finished revising. The counterfactual stop room I quoted as "52.25 points left" was actually
+42.25. **A counterfactual built on a provisional bar is doubly untrustworthy**, which is the best argument yet
+for not building them at all.

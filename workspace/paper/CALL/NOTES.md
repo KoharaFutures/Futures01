@@ -5527,3 +5527,35 @@ anything new.
 
 No new call. Three plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00, full
 $2,800 to the absorbing state.
+
+## N153 — MGC has round-tripped a SECOND time, and the divergence with MNQ is now unambiguous
+
+MGC's `08:15` 15m bar (unsettled): `h 4203.80 l 4186.10 c 4187.80` — a **17.70-point** bar, 2.16x its 8.20 ATR.
+It made the session high at 4203.80 and has given back **16.00 points** in about fifteen minutes. Its 1m is back
+to **BEARISH 0-3 unanimous**, its 5m to CONFLICTED 0-0, its **trend component back to BEAR** (4187.80 < EMA20
+4190.08, still falling), and location has fallen **30.4% -> 20.0%** of [4172.60, 4248.60].
+
+**This is MGC's second complete round trip of the session.** N93 recorded the first: down to 4172.60 and back to
+4188.30 for a net −0.60 against the 04:00 settled close. Now it has run to 4203.80 and come back to 4187.80.
+Two excursions, both fully retraced, and the settled close is within a few points of where it was four hours ago.
+
+**MNQ, in the same window, has all three of its fast and mid frames unanimous BULLISH simultaneously** — 1m 3-0,
+5m 3-0, 15m 3-0 — for the first time on either symbol tonight. Trend BULL (30704.25 > EMA20 30627.28, rising),
+structure BULL with swing lows `30547.75 -> 30610.50`, location **84.2%** of [30535.00, 30736.00]. **REVERSAL
+BULLISH still called, `held 28`.** Its 60m remains BEARISH 0-3 unanimous and its 4h CONFLICTED, so the
+disagreement with the slow frames persists.
+
+So the picture is clean and worth stating simply: **MNQ is trending and MGC is oscillating.** Every plan I wrote
+tonight was on the oscillating symbol until CALL-0005, and the one plan on the trending symbol is the one that
+cannot reach its entry (N151). That is an uncomfortable pairing and it is the honest summary of the session's
+callout record.
+
+**CALL-0005 remains unfilled** — the newest 15m low is 30688.25 against the 30595.88 limit, ~92 points away,
+and the prediction in N151 stands.
+
+**CALL-0002 is still not evaluated**, fifth consecutive check: MGC's newest stored 15m bar is `08:15` and
+`08:15` is not `> 08:20`. The `08:30` bar completes 08:45 and should be in hand ~08:46, which is the next check.
+
+No new call. MGC's reversal remains closed on all three counts; a 16-point fade from a session high with the 15m
+at 0-2 bearish is not a setup, and there is no pre-committed MGC method that fires on it. Three plans PENDING;
+ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.

@@ -3884,3 +3884,70 @@ Also at 06:09: CALL-0004 still has not expired — newest 15m is `05:45` and exp
 i.e. `06:15`, expected ~06:31-06:35 per N86. MGC location 12.8% of [4172.60, 4295.20], MNQ 15.6% of
 [30535.00, 30900.50]. MGC 1m and 5m both BULL 2-0, MNQ 1m CONFLICTED 1-1 with 5m BULL 2-0. 15m and 60m
 unanimous bearish on both, unchanged all session. No call; reversal test false on both.
+
+## N93 — the 06:09 prediction held verbatim, and MGC has ROUND-TRIPPED: the whole decline is gone on settled data
+
+The `05:45` bar settled at 06:13. What I wrote at 06:09, before it did, was that the raw settled high would
+be above the prior lower high, the detector would not register a change, and condition 1 would be pending
+rather than broken. All three:
+
+- MGC settled `05:45`: `o 4182.50 h 4190.00 l 4182.50 c 4188.30`. **Raw settled high 4190.00 > 4185.20.**
+- `chart.py` structure still reads swing highs `4193.10 -> 4185.20`, **unchanged** — 4190.00 cannot be a
+  swing high until the bars after it are in.
+- **N75 condition 1 is PENDING, not broken.** Lower low intact at 4172.60; lower high now in question.
+
+Sixth machinery prediction tonight to hold without amendment (N62, N65, N72/N74, N81, N88, this).
+
+### The thing that actually matters: MGC went nowhere
+
+Fifth settled pair: MGC `05:30` 4182.40 -> `05:45` **4188.30**, **+5.90**. MNQ 30593.50 -> 30592.00, −1.50.
+
+Settled tally over six bars since `04:15`:
+
+| symbol | settled 04:15 | settled 05:45 | net over 2h15m |
+|---|---|---|---|
+| MGC | 4176.90 | **4188.30** | **+11.40** |
+| MNQ | 30622.75 | 30592.00 | **−30.75** |
+
+And against the `04:00` settled close of **4188.90**, MGC is now **−0.60**. It fell to 4172.60 and came all
+the way back. **The MGC decline I have been reporting for two and a quarter hours is a complete round trip
+with no net move.** The unsettled 5m frame has it at 4191.20 already, above the 4190.00 settled high, so if
+anything the round trip is now slightly positive.
+
+That reframes the session honestly: **MNQ trended down and MGC did not move.** I described them as a
+joint one-way bearish tape for most of the night — the 15m and 60m frames said BEARISH unanimously on both
+the entire time, and on MGC that was a statement about a swing that fully reversed.
+
+### What that says about the four declines, stated carefully
+
+N44, N51, N52, N56 and N66 declined MGC shorts at locations between 1.0% and 5.3% of range — i.e. near
+4173-4182. MGC is now 4188.30 settled and 4191.20 unsettled. A short taken at any of those points on a
+0.9-1.0x ATR stop (roughly 8-9 points) would be **stopped out or close to it right now.** The stated reason
+each time was "this is chasing an extended move," and the move being chased has since retraced entirely.
+
+**That is one favourable counterfactual on five declines with no control, over one night, on one symbol.**
+It is not evidence that the rule works — that is exactly the inference BRIEF.md's whole programme exists to
+forbid, and a run of placebo entries would produce plenty of nights like this. What it *is* worth: the
+declines are journalled with their reasons and timestamps, so this night contributes a real observation to a
+record that can eventually be measured, rather than a memory. That is the only claim I will make for it.
+
+Also worth recording because it cuts the other way: **CALL-0004 would still have paid.** Its 4287.60 trigger
+was never reached, but its thesis tracking reads fav 75.70 against a 19.04 target distance. The trade was
+right and unreachable; the declines were right and unnecessary. Both facts belong in the same note.
+
+## N94 — 06:14 state
+
+CALL-0004 still has not expired: newest 15m is `05:45`, expiry needs a bar after `06:00`, so the `06:15`
+bar, expected in hand ~06:31-06:35 (N86). Newest real 5m bar `06:00` on both symbols now, lag 14.7m — the
+N91 freshness divergence has closed, MGC caught up.
+
+MGC 5m `06:00` bar: `h 4191.40 l 4185.80 c 4191.20`, so unsettled price is now **4191.20, within 1.90 of the
+older swing high 4193.10**. If that level goes, both lower highs are gone and condition 1 fails outright.
+Per N89's test the current excess over 4185.20 is 4.80 against a 6.20 maximum high revision — still inside
+noise; 4193.10 has not been touched.
+
+MNQ is now **BULLISH unanimous 3-0 on both 1m and 5m** for the first time tonight, with 15m and 60m still
+unanimous bearish. MGC 1m and 5m both BULL 2-0. Locations MGC 12.8% of [4172.60, 4295.20], MNQ 15.6% of
+[30535.00, 30900.50].
+
+No call. Reversal test false on both symbols. MGC RTH opens **08:20 ET**, 2h06m out.

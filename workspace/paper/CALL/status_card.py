@@ -70,38 +70,75 @@ def gather() -> dict:
 def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     d = gather()
     side = None                                  # NO TRADE -> grey, always
-    las, deep = C.LASER[side], C.DEEP[side]
     W, H = C.sc(1760), C.sc(704)                 # 2.5:1, same family as the plan card
-    img = Image.new("RGB", (W, H), deep)
+
+    # SILVER GRADIENT, at the owner's request 2026-09-28 14:51. It stays inside CALLOUT.md's
+    # grey NO TRADE family - silver IS grey - so the card still cannot be mistaken for a
+    # direction in peripheral vision, which is the whole point of the colour rule. Light
+    # silver at the top, dark silver at the bottom.
+    TOP, BOT = (214, 218, 223), (26, 29, 34)
+    img = Image.new("RGB", (W, H))
+    g = ImageDraw.Draw(img)
+    for yy in range(H):
+        t = yy / (H - 1)
+        g.line([(0, yy), (W, yy)],
+               fill=tuple(int(round(TOP[i] + (BOT[i] - TOP[i]) * t)) for i in range(3)))
     dr = ImageDraw.Draw(img)
+
+    def lum(y: int) -> float:
+        t = min(max(y / (H - 1), 0.0), 1.0)
+        r, gg, b = (TOP[i] + (BOT[i] - TOP[i]) * t for i in range(3))
+        return 0.2126 * r + 0.7152 * gg + 0.0722 * b
+
+    CROSS = 150      # not 128: at the midpoint ink and ground have equal value and the
+                     # band goes unreadable - which is exactly what the first render did
+
+    def ink(y: int):
+        """Body text: near-black on the light half, near-white on the dark half."""
+        return (18, 20, 24) if lum(y) > CROSS else (238, 246, 255)
+
+    def dim(y: int):
+        return (92, 96, 102) if lum(y) > CROSS else (170, 172, 178)
+
+    def accent(y: int):
+        """The grey 'laser'. Must stay readable at both ends of the ramp."""
+        return (86, 90, 98) if lum(y) > CROSS else (196, 198, 204)
+
+    def danger(y: int):
+        return (176, 18, 44) if lum(y) > CROSS else C.RED
+
+    def money(y: int):
+        return (150, 92, 0) if lum(y) > CROSS else (255, 190, 90)
+
+    las = accent(0)
     f_big = ImageFont.truetype(C.MONO_B, C.sc(58))
     f_hd = ImageFont.truetype(C.MONO_B, C.sc(30))
     f_row = ImageFont.truetype(C.MONO_B, C.sc(26))
     f_sm = ImageFont.truetype(C.MONO, C.sc(19))
     f_tiny = ImageFont.truetype(C.MONO, C.sc(16))
 
-    dr.rectangle([0, 0, W - 1, H - 1], outline=las, width=C.sc(3))
+    dr.rectangle([0, 0, W - 1, H - 1], outline=(120, 124, 130), width=C.sc(3))
     now = datetime.now(ZoneInfo("America/New_York"))
-    dr.text((C.sc(44), C.sc(34)), now.strftime("%-I:%M %p ET"), font=f_big, fill=C.WHITE)
-    dr.text((C.sc(44), C.sc(112)), "NO TRADE — DESK STATUS", font=f_hd, fill=las)
+    dr.text((C.sc(44), C.sc(34)), now.strftime("%-I:%M %p ET"), font=f_big, fill=ink(C.sc(34)))
+    dr.text((C.sc(44), C.sc(112)), "NO TRADE — DESK STATUS", font=f_hd, fill=accent(C.sc(112)))
 
     y = C.sc(178)
     for r in d["rows"]:
         tag = "STOOD DOWN" if r["stood"] else "CLEAR"
-        col = C.RED if r["stood"] else las
-        dr.text((C.sc(44), y), f"{r['sym']}", font=f_row, fill=C.WHITE)
-        dr.text((C.sc(150), y), f"{r['px']:>10.2f}", font=f_row, fill=C.WHITE)
+        col = danger(y) if r["stood"] else accent(y)
+        dr.text((C.sc(44), y), f"{r['sym']}", font=f_row, fill=ink(y))
+        dr.text((C.sc(150), y), f"{r['px']:>10.2f}", font=f_row, fill=ink(y))
         dr.text((C.sc(330), y), f"15m {r['head']:<10} {r['tally']}"
-                                f"{'  UNANIMOUS' if r['unan'] else ''}", font=f_row, fill=las)
-        dr.text((C.sc(830), y), f"ATR {r['atr']:>7.2f}", font=f_row, fill=C.WHITE)
-        dr.text((C.sc(1030), y), f"line {r['line']:>5.0f}", font=f_row, fill=las)
+                                f"{'  UNANIMOUS' if r['unan'] else ''}", font=f_row, fill=accent(y))
+        dr.text((C.sc(830), y), f"ATR {r['atr']:>7.2f}", font=f_row, fill=ink(y))
+        dr.text((C.sc(1030), y), f"line {r['line']:>5.0f}", font=f_row, fill=accent(y))
         dr.text((C.sc(1230), y), tag, font=f_row, fill=col)
         y += C.sc(46)
 
     st = d["state"]
     y += C.sc(14)
     dr.text((C.sc(44), y), f"BOOK   {len(d['pending'])} pending   {len(st['open'])} open"
-                           f"   drawdown ${st['drawdown']:,.2f}", font=f_row, fill=C.WHITE)
+                           f"   drawdown ${st['drawdown']:,.2f}", font=f_row, fill=ink(y))
     y += C.sc(42)
     closed = [c for c in st["closed"] if c["call_id"] != "CALL-0002"]
     wins = [c for c in closed if c.get("r_multiple", 0) > 0]
@@ -109,17 +146,17 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     dr.text((C.sc(44), y),
             f"MEASURED  n={len(closed)}  wins {len(wins)}  losses {len(closed)-len(wins)}"
             f"   E[R] {exp:+.3f}   ${2800 - st['drawdown']:,.0f} to the floor",
-            font=f_sm, fill=las)
+            font=f_sm, fill=accent(y))
     y += C.sc(34)
     # THE PRICE OF THE CAUTION. A veto that is never costed always looks free (DECISIONS.md),
     # so when a stand-down binds the card carries what it has foreclosed since it went on -
     # the movement actually available, as an upper bound, beside the marginal cost given that
     # the reversal gate may not have fired at all. The owner should not have to ask.
     if any(r["stood"] for r in d["rows"]) and d.get("cost"):
-        dr.text((C.sc(44), y), d["cost"], font=f_sm, fill=(255, 190, 90))
+        dr.text((C.sc(44), y), d["cost"], font=f_sm, fill=money(y))
         y += C.sc(32)
     for line in reason.split("\n")[:3]:
-        dr.text((C.sc(44), y), line, font=f_sm, fill=C.WHITE)
+        dr.text((C.sc(44), y), line, font=f_sm, fill=ink(y))
         y += C.sc(30)
 
     # THE SEVEN-FRAME TABLE. The owner reads cards, not terminals, so the frame table has to
@@ -129,18 +166,18 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     y += C.sc(10)
     frames = [(1, "1m"), (5, "5m"), (15, "15m"), (60, "60m"), (240, "4h"), (1440, "D")]
     x0, colw = C.sc(150), C.sc(200)
-    dr.text((C.sc(44), y), "FRAMES", font=f_tiny, fill=las)
+    dr.text((C.sc(44), y), "FRAMES", font=f_tiny, fill=accent(y))
     for i, (_, lbl) in enumerate(frames):
-        dr.text((x0 + i * colw, y), lbl, font=f_tiny, fill=las)
+        dr.text((x0 + i * colw, y), lbl, font=f_tiny, fill=accent(y))
     y += C.sc(28)
     for sym in ("MGC", "MNQ"):
-        dr.text((C.sc(44), y), sym, font=f_sm, fill=C.WHITE)
+        dr.text((C.sc(44), y), sym, font=f_sm, fill=ink(y))
         for i, (mins, _) in enumerate(frames):
             if sym == "MGC" and mins == 1440:
                 # CALLOUT.md §4: MGC daily is unusable unadjusted in BOTH stores - intraday
                 # sum -2.0079 against a boundary-gap sum of +2.9584, p<0.0001. Printing a
                 # headline for it would put a number on the card that the brief forbids using.
-                dr.text((x0 + i * colw, y), "NOT ELIG", font=f_sm, fill=(120, 120, 124))
+                dr.text((x0 + i * colw, y), "NOT ELIG", font=f_sm, fill=dim(y))
                 continue
             try:
                 bb = load(sym, mins)
@@ -150,20 +187,20 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
                     hd = {"BULLISH": "BULL", "BEARISH": "BEAR"}.get(bi2["headline"], "CONF")
                     cell = f"{hd} {bi2['bull']}-{bi2['bear']}"
                     col = (C.LASER["LONG"] if hd == "BULL"
-                           else C.LASER["SHORT"] if hd == "BEAR" else las)
+                           else C.LASER["SHORT"] if hd == "BEAR" else accent(y))
                 else:
-                    col = (120, 120, 124)
+                    col = dim(y)
             except Exception:
-                cell, col = "n/a", (120, 120, 124)
+                cell, col = "n/a", dim(y)
             dr.text((x0 + i * colw, y), cell, font=f_sm, fill=col)
         y += C.sc(34)
     dr.text((C.sc(44), y), "MGC DAILY/WEEKLY NOT ELIGIBLE - roll audit fails p<0.0001 (CALLOUT.md §4)",
-            font=f_tiny, fill=(150, 150, 155))
+            font=f_tiny, fill=dim(y))
 
     dr.text((C.sc(44), H - C.sc(46)),
             f"PAPER — UNVALIDATED   basis {d['basis']}   as-of {d['rows'][0]['bar']} 15m bar"
             f"   win rate and payoff undefined at n={len(closed)} (rule 3)",
-            font=f_tiny, fill=(150, 150, 155))
+            font=f_tiny, fill=dim(H - C.sc(46)))
     img.save(out)
     return out
 

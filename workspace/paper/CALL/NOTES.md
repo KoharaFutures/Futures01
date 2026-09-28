@@ -6507,3 +6507,28 @@ Neither reversal test fires.
 MNQ bounced 63.25 points off the low inside the `10:15` 5m bar (l 30520.50, c 30569.75). **That is not a
 signal and I am not calling it one** — a single 5m bar closing off its low is precisely the sub-hourly noise
 rule 7 calls a graveyard, and the desk has no pre-registered level down here. **No call.**
+
+## N187 — 10:33: MNQ's location moved 5.8% -> 36.4% and this one IS price, not the window
+
+Decomposed per N132's pre-commitment before treating it as movement:
+
+    range endpoints  [30506.75, 30759.25]  -> [30506.75, 30759.25]   IDENTICAL, both ends
+    15m newest bar   10:00 -> 10:15                                   a NEW bar, new=1
+    location         5.8% -> 36.4%
+
+Both endpoints unchanged and a genuinely new bar arrived, so neither the roll-off branch nor the revision
+branch applies: **MNQ actually traded up 77.25 points on the 15m close** (30521.50 -> 30598.75), about 92
+points off the 30506.75 low. That is the fourth exercise of the three-branch test and the second time it has
+returned "price" (N136 was the first).
+
+MNQ's **structure component flipped BULL -> MIXED**: swing lows 30610.50 -> 30506.75, the first lower swing low
+on MNQ today. So MNQ's 15m is now BEARISH 0-2 with trend and location bearish and structure neutral — its
+first 15m reading with no bullish component at all this session. MGC unchanged in character, location back to
+**11.6% of [4168.30, 4233.20]** after its own bounce.
+
+**No call, and the bounce is the reason to be more careful rather than less.** MNQ has now moved 124 points
+down and 92 points back up inside forty minutes; MGC 4190 -> 4168 -> 4176. Both symbols' 1m/5m disagree with
+each other again (MNQ 1m BULLISH 2-0 against 5m BEARISH 0-3 unanimous). Neither reversal test fires, MGC's
+remains structurally closed (N166), and there is still no level down here that was written down in advance.
+Acting now would be a discretionary decision remade at the bar — the thing `CALLOUT.md` says makes the
+sibling desk's results inadmissible.

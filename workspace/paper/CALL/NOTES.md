@@ -1714,3 +1714,69 @@ a label that tells the truth about it.
 **The standing lesson for new plans:** `created_bar_ts` is the newest bar held at creation,
 full stop. An RTH or session constraint belongs in `rth_note` and in the expiry, never in
 the creation stamp — putting it there does not gate the plan, it disables it.
+
+## N31 — MGC printed 4217.70 and my proposed fix to the Discord call would have lost MORE than the stop I criticised. The caveat I wrote came true fifteen minutes later.
+
+01:32 AM EDT. Newest 5m bar 01:20, lag 12.8m. MGC made a new low **4217.70**.
+
+N29, thirteen minutes ago, recorded the Discord MGC long stopping out on its 4224.2
+stop and said: *"I also proposed the fix: move the stop under the low — 4221 or 4219.
+Neither would have been touched by 4222.40. The position would still be open."*
+
+It isn't. Traced against real bars:
+
+```
+01:05  o 4228.00 h 4228.20 l 4222.40 c 4224.70   hits their 4224.2
+01:15  o 4224.80 h 4227.00 l 4221.20 c 4221.70   hits their 4224.2
+01:20  o 4221.80 h 4222.80 l 4217.70 c 4219.90   hits 4221 AND 4219 - both my alternatives
+```
+
+```
+their stop  4224.2   risk  5.80 pts = $ 58   <- stopped 01:05
+my 4221              risk  9.00 pts = $ 90   <- would have stopped 01:20
+my 4219              risk 11.00 pts = $110   <- would have stopped 01:20
+```
+
+**The stop I criticised produced the smallest loss of the three.** Their 5.80-point stop
+cost $58. Both of my "better" stops cost more — $90 and $110 — and bought fifteen extra
+minutes of being wrong. On this instance my recommendation was worse in dollars by 55% to
+90%.
+
+### I wrote the caveat that predicted this, which is the only defensible part
+
+From N29, verbatim: *"Had the low printed 4218 instead of 4222.40, my proposed stop would
+have gone too and the critique would look identical while being equally unproven."*
+
+The low printed **4217.70**. The hypothetical I raised against my own claim is now the
+actual tape. I am not going to treat having hedged it as being right — the hedge was
+correct and the recommendation was still the more expensive one.
+
+### What survives and what does not
+
+**Does not survive:** "move the stop to 4221 or 4219" as advice on this trade. In
+hindsight it was a worse trade than the one I graded C-. Anyone who took my note over the
+Discord call lost more money.
+
+**Survives, and I still hold it:** the trade was a counter-trend long into a downtrend
+with zero higher-timeframe support, on a symbol whose daily and weekly are disqualified so
+it *cannot* pass a two-HTF test. The entry was the error. **Both stops lose because the
+direction was wrong** — MGC has fallen 12.30 points from 4230 and is still falling. Stop
+placement decides *how much* you lose on a bad long; it does not rescue one. My critique
+spent its strongest language on the stop, which was the second-order problem, when the
+first-order problem was being long at all. That is a real misallocation of emphasis and
+it is mine.
+
+**The general claim is now untested in both directions.** "Stops on the obvious swing low
+get probed" was supported at 01:18 (4222.40, a 1.80-point probe that closed back above)
+and contradicted at 01:32 (4217.70, straight through both alternatives). Two observations,
+pointing opposite ways, on one trade. That is n=1 behaving exactly as n=1 does, and it is
+why this repository requires `free_t` 5.46 rather than a convincing story.
+
+### The uncomfortable symmetry with my own book
+
+MGC has now fallen **30.60 points** from CALL-0004's reference price of 4248.30, against a
+19.04-point target. `thesis.py` has said DIRECTION RIGHT with 0.30 adverse excursion for
+an hour. I criticised someone for a badly placed entry on a trade whose direction was
+wrong, while holding two correctly-directioned shorts whose entries are so badly placed
+they have captured none of a 30-point move. Their entry problem cost them $58. Mine has
+cost the desk the entire move.

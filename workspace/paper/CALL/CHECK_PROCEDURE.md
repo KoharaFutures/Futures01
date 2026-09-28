@@ -328,6 +328,23 @@ which colour means which direction and differ only in intensity. **Never introdu
 something the terminal palette does not**; red is used only for the stop, never for a direction,
 because orange already means SHORT.
 
+**Name the strategy on the card, and say whether that family was ever tested on that symbol.**
+Each plan carries `strategy` (shown under the symbol) and `strategy_basis` (a block lower down).
+This is not decoration — `STRATEGY_CATALOGUE.md` §1 establishes that a family absent from a
+symbol's profile was **never generated, never backtested and appears in no ranking**, so it was not
+tried and beaten, it was not tried at all. Both current plans are structurally BREAKOUT, and the
+two symbols differ:
+
+- **MNQ** generates BREAKOUT (1 of its 7 families), so MNQ breakout strategies were built and
+  measured — and none cleared its threshold.
+- **MGC EXCLUDES BREAKOUT.** Zero MGC breakout strategies have ever existed in this programme.
+  `profiles.py`'s recorded reason is *"compression-to-expansion at intraday scale; on a 23-hour
+  product this mostly fires on session handoffs"* — which is close to what `CALL-0002` is.
+
+**Treat that absence as unknown, never as licence.** An untested family is not a clean slate with
+better odds; it is a hole in the evidence, and the card must say so rather than let a confident
+layout imply otherwise.
+
 **TP1/TP2/TP3: show three, execute one, and say which.** The card reads `display_targets`. Only
 **TP1 is executable** at this account size — a three-tier scale-out needs three contracts, which is
 **$300 on MGC and $360 on MNQ against a $240 permitted budget** at zero drawdown (N6). TP2 and TP3

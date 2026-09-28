@@ -41,6 +41,62 @@ RED = (255, 40, 70)
 WHITE = (238, 246, 255)
 
 
+# ---------------------------------------------------------------- metal chassis
+
+FRAME = 58          # width of the machined bezel around the card
+
+
+def brushed_metal(W: int, H: int) -> Image.Image:
+    """A machined bezel: vertical tone ramp, horizontal brush striations, diagonal sheen.
+
+    Deterministic by construction - a fixed seed and pure arithmetic - because a card that
+    renders differently on each run cannot be compared against the one that was sent.
+    """
+    import random
+    rng = random.Random(20260927)
+    img = Image.new("RGB", (W, H))
+    px = img.load()
+    # per-row brush jitter, drawn once and reused across the width
+    jitter = [rng.randint(-9, 9) for _ in range(H)]
+    for y in range(H):
+        fy = y / H
+        # tone ramp: dark at top, bright shoulder at a third, mid below
+        base = 58 + int(120 * (1.0 - abs(fy - 0.33) * 2.1)) if fy < 0.78 else 46 + int(26 * (1 - fy))
+        base = max(28, min(196, base)) + jitter[y]
+        for x in range(0, W, 2):
+            sheen = int(26 * max(0.0, 1.0 - abs((x / W) + fy - 0.85) * 2.4))
+            v = max(18, min(228, base + sheen))
+            c = (v, v, int(v * 1.03) if v < 240 else v)
+            px[x, y] = c
+            if x + 1 < W:
+                px[x + 1, y] = c
+    return img
+
+
+def bevel(d, box, light=(226, 230, 238), dark=(16, 18, 22), w=3):
+    """Top/left catch the light, bottom/right fall into shadow - the cue that reads as
+    'machined edge' rather than 'drawn rectangle'."""
+    x0, y0, x1, y1 = box
+    for i in range(w):
+        d.line([x0 + i, y0 + i, x1 - i, y0 + i], fill=(*light, 150 - i * 34))
+        d.line([x0 + i, y0 + i, x0 + i, y1 - i], fill=(*light, 130 - i * 30))
+        d.line([x0 + i, y1 - i, x1 - i, y1 - i], fill=(*dark, 190 - i * 40))
+        d.line([x1 - i, y0 + i, x1 - i, y1 - i], fill=(*dark, 170 - i * 36))
+
+
+def screw(d, cx, cy, r, las):
+    """Hex-socket fastener with a lit rim - the laser catches the metal."""
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(74, 78, 86, 255),
+              outline=(210, 216, 226, 190), width=2)
+    d.ellipse([cx - r + 3, cy - r + 3, cx + r - 3, cy + r - 3], fill=(38, 41, 47, 255))
+    k = r - 6
+    pts = [(cx + k * __import__("math").cos(__import__("math").radians(a)),
+            cy + k * __import__("math").sin(__import__("math").radians(a)))
+           for a in range(0, 360, 60)]
+    d.polygon(pts, fill=(22, 24, 28, 255), outline=(120, 126, 136, 160))
+    d.arc([cx - r, cy - r, cx + r, cy + r], 200, 340, fill=(*las, 150), width=2)
+
+
 def blend(a, b, t):
     return tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b))
 
@@ -122,6 +178,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     fkl = ImageFont.truetype(MONO_B, 16)
     fbody = ImageFont.truetype(MONO, 20)
     fmeta = ImageFont.truetype(MONO, 18)
+    fsub2 = ImageFont.truetype(MONO_B, 23)
 
     def trim(text, width, maxl):
         import re
@@ -142,8 +199,9 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     weak = trim(plan.get("invalidation", ""), 116, 3)
 
     W = 1760
-    H = 1130 + (len(why) + len(weak)) * 26
+    H = 1130 + (len(why) + len(weak)) * 26 + 150   # strategy header + basis block
     img = backdrop(W, H, side).convert("RGBA")
+    # content is composed at interior size, then mounted in the bezel below
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -154,14 +212,19 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     hud_frame(gd, frame, las, width=4)
     hud_frame(d, frame, las, width=3)
 
-    # header
+    # header: symbol and direction on ONE baseline, strategy beneath
     gd.text((86, 84), plan["symbol"], font=fsym, fill=(*las, 210))
     d.text((86, 84), plan["symbol"], font=fsym, fill=WHITE)
-    glyph = "▲" if side == "LONG" else "▼"
-    d.text((92, 208), f"{glyph}  {'BUY / LONG' if side=='LONG' else 'SELL / SHORT'}",
-           font=fdir, fill=(*las, 255))
-    gd.text((92, 208), f"{glyph}  {'BUY / LONG' if side=='LONG' else 'SELL / SHORT'}",
-            font=fdir, fill=(*las, 180))
+    symw = d.textlength(plan["symbol"], font=fsym)
+    glyph = "\u25b2" if side == "LONG" else "\u25bc"
+    dirtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
+    dx, dy = 86 + symw + 46, 84 + 50          # optically centred on the symbol's cap height
+    d.text((dx, dy), dirtxt, font=fdir, fill=(*las, 255))
+    gd.text((dx, dy), dirtxt, font=fdir, fill=(*las, 185))
+    strat = plan.get("strategy", "")
+    if strat:
+        d.text((92, 212), "STRATEGY", font=fkl, fill=(*las, 150))
+        d.text((92, 236), strat, font=fsub2, fill=(*WHITE, 234))
 
     meta = [f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
             f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"]
@@ -173,7 +236,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     d.text((W - 86 - d.textlength(pu, font=flab), yy + 4), pu, font=flab, fill=WHITE)
 
     # ---- row 1: ENTRY (laser) | SL (RED)
-    y0, ph = 286, 176
+    y0, ph = 320, 176
     gapx, inner = 30, W - 2 * (M + 32)
     ew = int(inner * 0.60)
     sw = inner - ew - gapx
@@ -229,6 +292,14 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     # ---- reasoning
     by = sy + 78
     d.line([M + 32, by - 14, W - M - 32, by - 14], fill=(*las, 70), width=1)
+    sb = plan.get("strategy_basis", "")
+    if sb:
+        d.text((M + 32, by), "STRATEGY BASIS", font=fkl, fill=(*las, 150))
+        by += 24
+        for ln in textwrap.wrap(sb, 116)[:4]:
+            d.text((M + 32, by), ln, font=fbody, fill=(*WHITE, 212))
+            by += 26
+        by += 14
     d.text((M + 32, by), "TARGETS", font=fkl, fill=(*las, 150))
     by += 24
     for ln in textwrap.wrap(plan.get("display_targets_note", ""), 116)[:3]:
@@ -253,9 +324,47 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
            font=fmeta, fill=(*las, 195))
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
-    img = Image.alpha_composite(img, ov).convert("RGB")
+    interior = Image.alpha_composite(img, ov)
+
+    # ---- mount the card in a machined bezel with a recessed laser channel
+    CW, CH = W + FRAME * 2, H + FRAME * 2
+    chassis = brushed_metal(CW, CH).convert("RGBA")
+    cg = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+    cgd = ImageDraw.Draw(cg)
+    co = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+    cd = ImageDraw.Draw(co)
+
+    # outer edge of the chassis
+    cd.rounded_rectangle([3, 3, CW - 4, CH - 4], radius=22,
+                         outline=(232, 236, 244, 120), width=2)
+    bevel(cd, (6, 6, CW - 7, CH - 7))
+
+    # recessed channel, cut into the metal, with the laser running in it
+    ch = FRAME - 20
+    cd.rounded_rectangle([ch, ch, CW - ch - 1, CH - ch - 1], radius=16,
+                         fill=(14, 15, 18, 255), outline=(10, 11, 13, 255), width=2)
+    for i, a in ((0, 255), (2, 120), (4, 55)):
+        cd.rounded_rectangle([ch + 5 + i, ch + 5 + i, CW - ch - 6 - i, CH - ch - 6 - i],
+                             radius=12, outline=(*las, a), width=2 if i == 0 else 1)
+    cgd.rounded_rectangle([ch + 5, ch + 5, CW - ch - 6, CH - ch - 6], radius=12,
+                          outline=(*las, 255), width=5)
+
+    # inner lip where the bezel meets the card face
+    bevel(cd, (FRAME - 5, FRAME - 5, CW - FRAME + 4, CH - FRAME + 4),
+          light=(200, 206, 216), dark=(8, 9, 11), w=4)
+
+    # fasteners at the four corners
+    for sx2, sy2 in ((FRAME // 2 + 2, FRAME // 2 + 2), (CW - FRAME // 2 - 2, FRAME // 2 + 2),
+                     (FRAME // 2 + 2, CH - FRAME // 2 - 2),
+                     (CW - FRAME // 2 - 2, CH - FRAME // 2 - 2)):
+        screw(cd, sx2, sy2, 15, las)
+
+    chassis = Image.alpha_composite(chassis, cg.filter(ImageFilter.GaussianBlur(9)))
+    chassis = Image.alpha_composite(chassis, co)
+    chassis.paste(interior, (FRAME, FRAME), interior)
+    chassis = chassis.convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out)
+    chassis.save(out)
     return out
 
 

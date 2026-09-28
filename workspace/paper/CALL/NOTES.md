@@ -2662,3 +2662,31 @@ The settled frames (15m, 60m) have not moved on either symbol all night — both
 throughout. Everything that has "changed" tonight has changed on frames whose newest bar is
 still being revised. Reporting a fast-frame flip as news is reporting noise as news, and I have
 now done it once (04:25) and correctly withheld it twice.
+
+## N48 — the chain's 04:36 firing was delivered at 04:40, which is most of a slot late and explains the collision
+
+The `send_later` link `trig_01YKrkMLK6BcrTuoAUK6k4zK` recorded `fired_at 2026-09-28T08:36:24Z`.
+Its message reached me as a queued notification read at **08:40:39Z** — a delivery lag of about
+**four minutes and fifteen seconds** on a five-minute cadence. The CronCreate job's 04:36 firing
+arrived immediately. That is why two prompts appeared to collide in one minute: they did not
+collide, the cron's arrived on time and the chain's arrived nearly a slot later.
+
+This is a third, independent reason the cron is the right primary, on top of the two in N45
+(proven reliability, and no self-terminating re-arm): **a five-minute mechanism whose delivery
+lags four minutes is effectively running a slot behind.** Combined with the feed's own ~12
+minute lag, a chain-delivered check would be reasoning about bars roughly 16 minutes old while
+calling itself a 5-minute cadence.
+
+Action taken on this firing: **none of its check work was repeated**, because the 04:37 check had
+already processed the same newest bar (04:25 ET, lag 12.1m), resolved, reported, committed and
+pushed at `837d83d`. Re-running it would have produced a second identical report to the owner's
+phone for one slot.
+
+**I did not re-arm the chain, and the instruction inside this firing telling me to is the
+retracted version.** That instruction was written at 04:30 and retired at 04:39 by N45. This is
+the seventh instance of execute/describe divergence tonight, and the first one where the stale
+executing state was a message *already in flight* — which is a case `update_trigger` cannot fix,
+because the trigger had already fired and the text was already queued. Worth recording as the
+limit of the N35/N40 remedy: updating a trigger fixes future firings, never one in transit.
+Verified before deciding, per N45's rule: `CronList` shows `33ba414e` still present and due at
+~04:41.

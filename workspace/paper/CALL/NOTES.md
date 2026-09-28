@@ -302,3 +302,47 @@ it cannot fire on this tape at all; it needs Monday 08:20-13:30 ET, by which tim
 have been re-formed on liquid bars at the hourly full check. **This is the gate earning its keep
 twice in one evening**: first refusing the trigger on thin liquidity, now refusing to act on a bias
 that will not sit still.
+
+## N10 — CALL-0002's trigger was touched 40 minutes after it was written, the RTH gate refused it, and the outcome is UNDETERMINED
+
+**basis: 091e471, 2026-09-27 20:12 ET.** The gate's first live test. Recording it now, before the
+result is known, so the record cannot be written to flatter the decision afterwards.
+
+**What happened.** MGC's 5-minute bar at `2026-09-27T20:00-04:00` printed:
+
+```
+o 4294.40   h 4295.20   l 4288.30   c 4289.20   v 1635
+```
+
+The low is **0.80 points below the 4289.10 trigger**, and the close came straight back **above** it.
+On the plan's own frame, 15m, the break has not registered at all — the newest completed 15m bar is
+`19:45` with a low of 4293.40.
+
+**The gate refused the fill, correctly and by construction.** `CALL-0002`'s window opens
+`2026-09-28T08:20-04:00`; every bar that traded below the trigger is dated `2026-09-27`, before it.
+`resolve.py` left the plan `PENDING` with no intervention.
+
+**Three things worth separating, because they are easy to collapse into one.**
+
+1. **The plan's named weakness materialised almost immediately.** Its `invalidation` field said
+   *"4289.10 has now HELD TWICE, so it is support and a break of it may be a false break."* Forty
+   minutes later the level was poked by 0.80 points and reclaimed on the same bar. That is evidence
+   the weakness was **correctly identified**, not evidence the plan is wrong.
+2. **The gate did its job as specified.** It exists to refuse fills on Sunday-reopen liquidity, and
+   it refused one. That is the mechanism working, which is a different claim from the mechanism
+   being *right*.
+3. **Whether refusing was profitable is NOT KNOWN and must not be asserted.** A fill would have
+   been near 4289.00; price is now 4289.20–4294.50, so as of this instant a hypothetical short
+   would be roughly flat to slightly offside. It could be a saved loss or a missed winner, and the
+   honest answer is that **neither is established**. Claiming the gate "saved" anything here would
+   be the same error as writing an outcome before a trade resolves.
+
+**The cost of the gate, restated because it is now concrete rather than hypothetical.** A stop-entry
+below 4289.10 needs price to **cross** the level inside the window. If MGC spends the overnight
+session below 4289.10 and opens Monday beneath it, `CALL-0002` never fills and expires as `NO_FILL`
+— the move happens without the desk. That was accepted when the gate was written and it is not
+being retro-fitted now.
+
+**Also this check: MNQ's headline went CONFLICTED (1-1)** — its location component crossed to BULL
+at 61.5% of range. First non-bearish headline of the evening, and a third instance of N9's finding
+that these readings do not sit still.

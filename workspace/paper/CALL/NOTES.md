@@ -6284,3 +6284,103 @@ No new call. Neither reversal fires, MGC's is structurally blocked, and there is
 on a midpoint reading with a conflicted fast frame. **Ledger: 0 open, 1 closed (excluded), 2 pending.
 `state.json` equity $50,156.56, drawdown $0.00. Measured: 0 countable closed trades, equity $50,000.00, drawdown
 $0.00, full $2,800 to the absorbing state.**
+
+## N179 — 10:00: CALL-0005 EXPIRED UNTRIGGERED, and price traded THROUGH the limit one minute later
+
+`resolve.py` at 14:00:13Z, on the arrival of the `09:45` 15m bar:
+
+    EXPIRED CALL-0005 MNQ LONG - never triggered (window closed 2026-09-28T09:30:00-04:00)
+    open 0  closed 1  equity $50,156.56  drawdown $0.00
+
+The resolver wrote it, as required. **Outcome: `EXPIRED_UNTRIGGERED`, NO FILL, 0.0R.** That is the fourth
+consecutive non-fill and the third by the mechanism N149/N151 named.
+
+But this one carries a measurement the other three did not. The bar that closed the window is the bar that
+went there:
+
+    limit                       30595.88
+    09:30 15m bar low (final)   30601.50   -> 5.62 ABOVE the limit; never touched
+    09:45 15m bar low           30592.25   -> 3.63 THROUGH the limit
+    1m bar that did it          09:46      l 30592.25
+
+`check_triggers` scans `bars = [b for b in all_bars if b["ts"] <= expiry]`, so the last bar eligible to fill
+was the `09:30` bar. Price reached the level in the **first minute of the next bar**. The plan was wrong about
+the window by one bar and wrong about the level by less than four points on an instrument whose 15m ATR is
+53.84.
+
+**The counterfactual, stated as a counterfactual and not as a result.** Had the window held one bar longer:
+entry would be `min(30595.88, open 30612.25)` = 30595.88; stop 30540.00 untouched (bar low 30592.25, 52.25
+points of room left); TP1 30679.69 untouched (bar high 30650.50). At the current 30634.00 the position would be
+**OPEN and UNRESOLVED at +38.12 points, +$76.24, +0.68R** — not a win. There is no closed trade in that branch
+either, and I am not counting one.
+
+**What I am NOT doing with this.** The 90-minute window on CALL-0005 was *chosen*, never measured. Lengthening
+it now, having watched price arrive 61 seconds late, is the textbook post-hoc parameter fit — the same act N8
+forbids on entry price, applied to expiry instead. If window length is ever to change it must be
+pre-registered against a measured distribution of time-from-registration-to-limit-touch across many plans,
+with the non-touching plans included in the denominator, not against this single instance. Recording the
+observation is the whole of the permitted response.
+
+## N180 — the fill-by-revision scenario resolved NEGATIVE, and the revision that did happen went the wrong way
+
+N176 pre-committed to saying explicitly if CALL-0005 were awarded its entry by a data restatement rather than
+by the market trading there. **It was not.** The `09:30` bar's low revision history, in fetch order:
+
+    30617.25  ->  30617.25  ->  30601.50  ->  30601.50   (settled)
+
+One downward revision of 15.75 points, then settled 5.62 short. Inside N70's measured MNQ 15m low-revision
+range (max 27.25) but it stopped before the level. So the scenario I flagged as live at 09:54 closed out
+against itself, and the honest reading is that N177's assessment — window shrinking, nothing moving — was the
+right one and N176's alarm was the over-read. The distinction still mattered to state in advance: had it
+filled at 30601.50-going-to-30595.88 the entry would have been manufactured by a restatement, and the journal
+would have had to say so.
+
+Worth keeping: **the 09:30 bar was the largest-volume 15m bar of the session on both symbols** (MNQ v 154,727
+against ~19,000 on the preceding bars; MGC v 13,412 against ~4,000) and it is also the bar that revised most.
+Volume and revision magnitude moving together is consistent with the vendor back-filling a heavy bar, and is a
+better candidate explanation for the 18:00 session-open bar's outlier revisions (N70/N89) than "session open"
+as such. Not tested; noted as a hypothesis with n=1 session.
+
+## N181 — 10:00 full check: both ATRs expanded again and the size cap now binds near 1.1x ATR
+
+    MGC  15m ATR14  10.97  (was 9.97 at 09:54, 8.52 overnight)   1.0x = $109.70 = 45.7% of $240
+    MNQ  15m ATR14  53.84  (was 44.25 at 09:54, 31.10 overnight) 1.0x = $107.68 = 44.9% of $240
+
+The 50% self-imposed cap ($120 while DISCRETIONARY and UNVALIDATED) now binds at **1.09x ATR on MGC and 1.11x
+on MNQ** — the tightest headroom of the session, down from 1.20x/1.36x six minutes ago. Rule 4 forbids stops
+tighter than ~0.5 ATR, so the usable band on a 1-contract position is now roughly 0.5x-1.1x ATR and closing.
+If ATR expands another 10% on either symbol the cap and the rule-4 floor start to squeeze a 1-contract plan
+from both sides, and the correct response is no plan, not a thinner stop.
+
+Directional read, 15m frame, all endpoints quoted:
+
+    MGC  trend MIXED   4190.40 > EMA20 4186.43, EMA20 FALLING
+         structure BEAR swing highs 4203.80->4187.80 lower, lows 4175.00->4168.30 lower
+         location BEAR  34.1% of [4168.30, 4233.20]
+         1m BULL 3-0 unanimous | 5m BULL 2-1 | 15m BEAR 0-2 | 60m BEAR 0-3 unanimous | 4h BEAR 0-2
+         DAILY / WEEKLY NOT ELIGIBLE (roll audit)
+         no reversal call - 15m is 0-2 not unanimous; no prior directional headline (N166, structural)
+
+    MNQ  trend MIXED   30634.00 < EMA20 30651.72, EMA20 rising
+         structure BULL swing highs 30753.75->30759.25 higher, lows 30547.75->30610.50 higher
+         location MIXED 44.1% of [30535.00, 30759.25]
+         1m BEAR 0-2 | 5m BEAR 0-2 | 15m BULL 1-0 | 60m BEAR 0-3 unanimous | 4h CONFLICTED 1-1
+         DAILY BULL 3-0 unanimous | WEEKLY BULL 2-1
+         no reversal call - 15m is 1-0 not unanimous; held only 1 check, needs 2
+
+**No new call, and MGC is the one I have to say no to out loud.** MGC has run 4168.30 -> 4190.40 in two 15m
+bars, +22.10 points, **2.0x ATR in 30 minutes**, with the 1m unanimous behind it. That is precisely the shape
+that invites a long, and it is precisely the extended move the owner's standing constraint forbids chasing:
+the 60m is BEARISH 0-3 unanimous against it, the 15m structure is still lower-highs-lower-lows, and there is
+no pre-committed continuation method to act on it — building one now, while watching the move, would be the
+same laundering of N8 refused four times already (N52, N151, and twice since). MNQ is internally opposed on
+every adjacent pair of frames and under rule 1 that is a reason not to trade.
+
+**Ledger, win rate and payoff together per rule 3.** `state.json` reads 1 closed trade, 1 win, 100% win rate,
++1.566R, equity $50,156.56, peak $50,156.56, drawdown $0.00. **That trade is CALL-0002 and it is EXCLUDED
+from measurement** (N155: filled 102.70 points from its specified entry because its `created_bar_ts` was
+future-dated and off the 15m grid). The desk's measured record is therefore unchanged: **0 countable closed
+trades, win rate undefined, payoff undefined, expectancy undefined at n = 0, measured equity $50,000.00,
+measured drawdown $0.00, the full $2,800 to the absorbing state.** Journal 23 entries, 4 resolved, 11 NO
+TRADE, 1 excluded. Live: **CALL-0001 only** (MNQ LONG, stop-entry 30998.50, expires on the 16:00 bar, now
+364.50 points adverse and DIRECTION WRONG by the tracker). CALL-0005 is retired.

@@ -7030,3 +7030,45 @@ catching it loses money. What (A)-(C) fix is the thing that is indefensible rega
 that watched a 3x-ATR move with no mechanism capable of returning YES, and that is still at n = 0 after a
 full session.** Outcomes are the missing input. Getting to n > 0 safely, under the governors, is worth more
 right now than any directional call.
+
+## N200 — 11:37: the reversal test fired on MNQ, and CALL-0006 is registered as a SHORT
+
+`regime.py reversal()` returned **called=True on MNQ** for the first time this session — all five conditions:
+15m headline BEARISH, **unanimous 0-3**, held **18 consecutive checks**, prior directional headline BULLISH
+to reverse from, agreeing frames **[5m, 60m]**.
+
+The `11:15` 15m bar completed the unanimity by flipping the structure component to BEAR: swing highs
+30759.25 -> 30502.75 (lower), lows 30506.75 -> 30356.50 (lower).
+
+**First thing I checked, and it matters:** is that unanimity an artefact of the very `swings()` defect I
+diagnosed ninety minutes ago in N194/N199 — the last-two-pivot comparison that printed BULL through a
+400-point decline? **No.** Under the proposed running-extreme fix, the newest pivot high 30502.75 is below
+the running max 30759.25 and the newest low 30356.50 is below the running min 30506.75, so **the fixed rule
+also returns BEAR.** The call survives the correction I am proposing to the component that generated it.
+Had it not, I would have reported the headline and not traded it.
+
+**The prohibition installed at 11:35 bound the entry shape immediately.** Displacement is -83.10 against a
+0.5x-ATR threshold of 41.07, so it is established and the EMA20 is falling — which makes a sell-stop below
+the 30405.00 three-bar low *exactly* the entry measured at z -2.61 to -4.72 versus random. So the entry is a
+**LIMIT at 30560.00**, just under the falling EMA20 at 30574.60, 68.50 points above the market. The rule I
+wrote two minutes earlier changed what I did two minutes later, which is the only test of a rule that counts.
+
+    CALL-0006  MNQ SHORT  LIMIT 30560.00  stop 30618.00 (58.00 pts, 0.71x ATR 82.14)
+               TP1 30473.00 (1.5R, executable)  TP2 30415.00  TP3 30357.00
+               1 contract, $116.00 = 48.3% of $240 permitted, inside the 50% cap
+               created_bar_ts 11:15 (newest bar SEEN, on the 15m grid - the CALL-0002 defect not repeated)
+               expires_bar_ts 15:00 (rule 5's boundary, not a tuned window - N179)
+
+**Not a chase.** Price at 30491.50 is 135.00 points **above** the 30356.50 session low, at 33.5% of the day
+range. That is a retracement, not an extreme — and N194 Cause 5 was that my extension test had become an off
+switch by measuring from the swing origin rather than from the pullback. This is the corrected form applied.
+
+**Five stated weaknesses**, first two serious: (1) nothing about the reversal path is validated, and today
+alone added two failures to the pile (CONT-1 worse than random, FADE-1 dead); a gate returning YES is not
+evidence it should. (2) It may never fill — limits on this desk are **0-for-3**, and CALL-0005 died this way
+at 09:30 with its level reached 61 seconds after the window shut. (3) rule 2, z = -4.09, and reversal()
+condition 5 is an alignment requirement — the same unanimity that marked the exact high on this symbol six
+hours ago. (4) MNQ DAILY is BULLISH 3-0 unanimous against it. (5) rule 7, sub-hourly graveyard.
+
+MGC: no call. Its reversal path stays structurally closed (`prior: None`, N166) and its 1m is BULLISH 3-0
+unanimous against a BEARISH 15m/60m/4h — the opposition shape that has meant nothing all session.

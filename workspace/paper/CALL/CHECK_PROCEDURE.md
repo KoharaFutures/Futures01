@@ -893,13 +893,31 @@ minutes of when the futures opens to 30 minutes before close."*
 18:00 → 16:00, nothing held across 16:00–18:00). Thirty minutes before the close is **15:30**.
 Outside that window the desk does not check.
 
-Three session cron jobs carry it, and together they are the whole cadence:
+Three session cron jobs carry it. **They are written in UTC, because `CronCreate` schedules in
+the container's local time and this container runs UTC** — `date` says UTC, `TZ=America/New_York
+date` says ET, and they are four hours apart while EDT is in force:
 
-| job | cron | covers |
+| job | cron (UTC) | Eastern |
 |---|---|---|
-| `4d5d148b` | `*/2 18-23 * * 0-4` | Sunday–Thursday evening, from the 18:00 open to midnight |
-| `94de14ed` | `*/2 0-14 * * 1-5` | Monday–Friday overnight and day, midnight to 14:58 |
-| `af67dea9` | `0-28/2 15 * * 1-5` | Monday–Friday 15:00–15:28, the last window of the day |
+| `63064a52` | `*/2 22-23 * * 0-4` | Sun–Thu 18:00–19:58 ET — the first two hours after the open |
+| `9874c3ba` | `*/2 0-18 * * 1-5` | 20:00 ET the previous evening through 14:58 ET |
+| `37a49f79` | `0-28/2 19 * * 1-5` | 15:00–15:28 ET, the last window of the day |
+
+**This is the mistake that cost an hour of the owner's patience on 2026-09-28.** The first attempt
+wrote the windows in Eastern — `*/2 18-23 * * 0-4` and friends — and the scheduler read them as
+UTC, so the "closed" desk fired every two minutes from 14:00 ET onward. I then told the owner
+twice that the firings were *"not coming from any job I control"*, having checked `CronList` and
+`list_triggers` and failed to check the one thing that mattered: **which clock the expression is
+measured in.** Two schedulers agreeing that nothing is scheduled at 16:20 ET means nothing if the
+jobs are keyed to 20:20 UTC.
+
+**So: when a schedule misfires, compare the clocks before concluding the source is external.**
+`date -u` and `TZ=America/New_York date` side by side, every time.
+
+**Daylight saving will break this again.** These expressions assume EDT (UTC−4). On **2026-11-01**
+Eastern goes to EST (UTC−5) and every row above shifts an hour early: the desk would reopen at
+17:00 ET and the last window would run 14:00–14:28 ET. Re-cut all three on that date — 23 for the
+evening job, 0-19 for the day job, 20 for the final window.
 
 Nothing fires between **15:30 and 18:00**, and nothing fires from Friday 15:30 to Sunday 18:00.
 

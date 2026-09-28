@@ -6591,3 +6591,76 @@ sample later.
 CALL-0001 (MNQ LONG, stop-entry 30998.50) is now **497.75 points away** and needs a 1.6% rally in five hours
 to trigger. It stays exactly as written until the 16:00 bar retires it — N8 forbids editing a pre-registered
 plan after watching price, and that applies most strongly when the plan looks worst.
+
+## N190 — 10:53 hourly full check: the 50% cap now binds BELOW 1.0x ATR on both symbols
+
+Cadence verified by listing it, not remembering it: `CronList` returns **`33ba414e — Every 5 minutes
+(recurring) [session-only]`**, carrying the fast-check prompt. Present, unchanged, and **no `send_later`
+chain armed** — two 5-minute mechanisms is the N42/N45 failure. CALLOUT.md re-read in full: unchanged since
+`1948339`, and it does **not** contradict CHECK_PROCEDURE.md, so nothing to record under the
+CALLOUT-wins rule.
+
+**ATRs re-measured this firing, not inherited:**
+
+    MGC  15m ATR14  12.74  (10.97 at 10:00, 8.52 overnight, +50% on the session)
+         1.0x = $127.43 = 53.1% of $240   -> the $120 cap binds at 0.94x ATR
+         rule 4 floor 0.5x = 6.37 points = $63.71
+
+    MNQ  15m ATR14  72.23  (53.84 at 10:00, 31.10 overnight, +132% on the session)
+         1.0x = $144.46 = 60.2% of $240   -> the $120 cap binds at 0.83x ATR
+         rule 4 floor 0.5x = 36.12 points = $72.23
+
+**This is the squeeze N181 said to watch for, and it has arrived.** A 1.0x-ATR stop on one contract now
+exceeds the desk's own 50% cap on BOTH symbols for the first time this session. The placeable band is
+**0.50x-0.94x ATR on MGC** and **0.50x-0.83x ATR on MNQ**. Still open, but a plan sized at 1.0x ATR — the
+shape of every plan this desk has written — is now uninstantiable at one contract without breaching the cap.
+MNQ's ATR has more than doubled on the session and rose 34% in the last twenty minutes alone.
+
+Per CALLOUT.md's one finding that clears its own deflation threshold — **governors that shrink size are net
+protective, |z| 6.164 / 5.543 against `free_t` 2.2293** — the correct response to that squeeze is to place
+nothing rather than to widen the cap. I am not widening the cap.
+
+**Fresh directional read, both symbols, settled frames first (N41/N47 — do not lead with a fast-frame flip):**
+
+    MGC 60m  BEARISH 0-3 (all three components)  close 4189.40 < EMA20 4227.85 falling
+             structure highs 4332.30->4203.80 lower, lows 4224.10->4172.60 lower
+             location 11.5% of [4168.30, 4351.60]      newest completed 60m bar 09:00
+    MNQ 60m  BEARISH 0-3 (all three components)  close 30651.00 < EMA20 30700.86 falling
+             structure highs 30900.50->30705.50 lower, lows 30780.00->30535.00 lower
+             location 25.0% of [30535.00, 30998.50]    newest completed 60m bar 09:00
+
+    MGC 15m  BEARISH 0-2  close 4157.30 < EMA20 4181.38  location 3.0% of [4155.00, 4231.50]
+    MNQ 15m  BEARISH 0-2  close 30465.50 < EMA20 30615.94  location 7.6% of [30441.25, 30759.25]
+
+**The 60m is the frame that matters here and it is unanimous BEARISH on both symbols** — the first time this
+session that the settled 60m has been 0-3 on both at once. That is a description, not a signal, and under
+rule 2 (z = -4.09) the fact that every other frame agrees with it is not corroboration.
+
+**No callout.** Both reversal tests decline: MGC on the structural block (N166 — `prior: None`, unreachable
+while DAILY/WEEKLY are ineligible), MNQ on 15m not unanimous (0-2, structure MIXED). Beyond the tests, the
+positive case for a short is the worst it has been all morning: MGC is 3.5x ATR below its 10:09 high and MNQ
+4.6x, and CALLOUT.md §3 puts MGC's RTH at 08:20-13:30 so there are under three hours of measured session
+left on it. **Do not manufacture a callout to justify the wake-up.**
+
+### Ledger — win rate and payoff together, never one without the other (rule 3)
+
+    journal entries                 22      (12 with side: null - NO TRADE and admin rows)
+    pending.jsonl                   1 PENDING, 3 EXPIRED, 1 TRIGGERED
+    ambiguous-bar resolutions       0        (resolve.py has never hit one)
+
+    state.json  equity $50,156.56   peak $50,156.56   drawdown $0.00   realized $156.56
+                open 0              closed 1 (CALL-0002, WIN, +1.566R)
+
+    CALL-0002 IS EXCLUDED FROM MEASUREMENT (N155) - filled 102.70 points from its specified entry
+    because its created_bar_ts was future-dated and off the 15m grid.
+
+    MEASURED RECORD:  closed trades 0 | wins 0 | losses 0
+                      win rate UNDEFINED  and  payoff UNDEFINED  (n = 0; neither exists, and rule 3
+                      forbids quoting either alone even when one of them could be computed)
+                      expectancy UNDEFINED at n = 0
+                      equity $50,000.00   peak $50,000.00   drawdown $0.00
+                      distance to the $2,800 absorbing state: the FULL $2,800 (floor $47,200)
+
+Four plans have now closed without producing a countable outcome: CALL-0003 and CALL-0004 expired
+untriggered, CALL-0005 expired untriggered (N179), CALL-0002 filled defectively and is excluded. **The desk's
+measurement programme is at n = 0 after a full session**, which is the honest headline of this check.

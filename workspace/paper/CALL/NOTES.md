@@ -3274,3 +3274,76 @@ location reading moves without price doing anything new.
 No call. Selling a break of the low, on a provisional bar, at 2.3% of range, is chasing in the most
 literal available sense. MGC's retracement short remains blocked by N52 for ~44 more minutes until
 CALL-0004 resolves on the 06:00 ET bar. CALL-0001's adverse excursion widened 318.25 -> 334.00.
+
+## N70 — a revision-magnitude distribution, which turns N41/N49 from a prohibition into a calibrated test. And it caught me about to overclaim
+
+MNQ's forming `05:00` bar has its low at 30538.25, **32.75 below** the 30571.00 double bottom. I was
+about to write that a 32.75-point upward revision of a low is far outside anything observed tonight, so
+the break is effectively real. Before writing it I measured the distribution from the delta files —
+every 15m bar that has ever been re-served with a different low, in fetch order — and the first answer
+was that MNQ's largest observed low revision is **74.00 points**, which would have made my sentence
+flatly wrong.
+
+It is not that simple, and the split matters:
+
+| MNQ 15m low revisions | value |
+|---|---|
+| largest overall | **74.00**, on the `09-27T18:00` bar |
+| largest excluding the 18:00/18:15 session-open bars | **27.25**, on tonight's `04:30` bar |
+| median across 2,331 observations | **0.00** |
+| 95th percentile | **0.00** |
+
+| MGC 15m low revisions | value |
+|---|---|
+| largest overall | **20.00**, on the `09-27T18:00` bar |
+| largest excluding session-open bars | **6.80** |
+| median across 2,324 observations | **0.00** |
+
+Three things follow, and the first is why the naive answer was wrong:
+
+1. **The single largest revision on each symbol is the session-open bar**, 18:00 ET — 74.00 on MNQ and
+   20.00 on MGC, both several times the next-largest. The first bar of a session is assembled as data
+   arrives and is a different object from an ordinary bar. Any calibration that includes it is
+   dominated by it. This is a new instance of the window-edge principle from N63: the extreme values
+   live at the edges, here the *session's* edge rather than the lookback window's.
+2. **Revisions are rare and small.** Median and 95th percentile are both exactly 0.00 on both symbols —
+   most bars never change. The action is concentrated in the newest one or two bars, which is what N41
+   asserted qualitatively and this now quantifies.
+3. **So the calibrated read on MNQ's break: 32.75 exceeds the 27.25 largest non-session-open low
+   revision ever observed here, but not by much.** The break is more likely real than not, and the
+   margin is one-fifth of the largest comparable revision — not the comfortable margin I was about to
+   claim. The `05:00` bar's low has already been revised by 17.00 points during this session, so it is
+   actively moving.
+
+### The reusable thing
+
+This gives the desk a test it did not have. N41 and N49 could only say "the newest bar is provisional,
+do not report it." Now: **compare the depth of a level break on a provisional bar against the
+distribution of revisions for that symbol and frame, excluding session-open bars.** A break shallower
+than the 95th percentile is noise; a break deeper than the observed maximum is safe to act on; in
+between, say which and by how much. Applied here: MNQ's break is in the "in between, and near the top
+of it" band, and it settles at 05:28 which resolves it outright.
+
+MGC's own forming break is 4172.60 against a 4174.30 low — **1.70 deep**, against a 6.80 non-session-
+open maximum. That one is **well inside** revision range and should not be treated as a break at all.
+Two breaks on the same screen, one probably real and one probably noise, and the naked chart shows
+them identically.
+
+Deferred as code, and this one earns its place: a helper that reports revision percentiles per symbol
+and frame, so the test is a function call rather than a bespoke script each time.
+
+## N71 — 05:21 state, and ATRs widening again
+
+Newest settled 15m bar is still `04:45`; `05:00` settles at 05:28. Both symbols extended lower on the
+forming bar: MGC low 4172.60, MNQ 30538.25. Locations MGC 1.0% of [4172.60, 4300.30], MNQ 2.1% of
+[30538.25, 30900.50]. MGC 5m/15m/60m unanimous bearish with 1m 0-2; MNQ 1m unanimous 0-3, 5m 1-2,
+15m/60m unanimous.
+
+ATRs re-measured, not inherited: MGC **9.11** (1.0x stop $91.14, 38.0% of the $240 permitted), MNQ
+**47.52** (1.0x stop $95.04, **39.6%**). MNQ has widened 38.04 -> 44.12 -> 44.68 -> 47.52 across the
+session; a 1.26x ATR stop now breaches the 50% cap, against 1.3x an hour ago. The instrument is
+getting harder to express a trade in, which is a sizing fact rather than a directional one.
+
+No call. Three hours of one-way tape with both symbols at range extremes, no reversal test true on
+either, and the MGC retracement short still blocked by N52 for ~39 minutes until CALL-0004 resolves on
+the 06:00 ET bar.

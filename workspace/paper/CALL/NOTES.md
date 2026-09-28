@@ -6560,3 +6560,34 @@ Frames: MGC BEARISH on all five eligible for a third consecutive check, 1m back 
 **4166.80** vs EMA20 4182.28. MNQ BEARISH on 1m/5m/15m/60m, 4h CONFLICTED, location **12.0% of [30506.75,
 30759.25]** with both its endpoints unchanged. Neither reversal fires. **No call** — same reason as the last
 six checks: no level down here was written down in advance, and both symbols are extended.
+
+## N189 — 10:52: a 3x-ATR trend day, and the desk is flat through all of it
+
+New session lows on both symbols:
+
+    MGC  4190.40 (10:09)  ->  4156.00 (10:40 5m low)   -34.40 points in 43 minutes  =  3.1x ATR14(15m) 10.97
+    MNQ  30656.25 (10:09) ->  30487.50 (10:40 5m low)  -168.75 points in 43 minutes =  3.1x ATR14(15m) 53.84
+
+Both symbols are now BEARISH on every eligible frame with **1m and 5m both 0-3 unanimous on MNQ** and 1m 0-3
+unanimous on MGC. Location 3.3% of [4156.00, 4231.50] and 4.9% of [30487.50, 30759.25].
+
+**The desk has held no position through the entire move, and I am recording that as a fact about the method
+rather than as a regret or as a vindication.** Both readings are available and neither is supported yet:
+
+- *Against the method:* N149/N151 diagnosed the 0-for-4 fill rate as retracement limits anchored to legs that
+  get superseded. A trend day is exactly the regime where that fails — price never comes back to the limit,
+  the plan becomes irrelevant rather than wrong, and no outcome is produced.
+- *For the method:* the one plan that came closest to filling, CALL-0005, would be closed at -1R (N185), and
+  a LONG is what the desk's directional read would have produced at 09:30. Being flat has cost $0.00 and
+  measured drawdown stays $0.00.
+
+Both are n = 1. **What is NOT available is a third reading in which I design a trend-following entry now,
+while the trend is visible on the screen.** That is the fifth or sixth form the same temptation has taken
+today and the answer does not change with the size of the move: an entry method invented mid-move has
+unbounded search width and no pre-registration, which is precisely the defect `CALLOUT.md` names as making
+results inadmissible. The honest deliverable is the observation, logged, for a method designed out of
+sample later.
+
+CALL-0001 (MNQ LONG, stop-entry 30998.50) is now **497.75 points away** and needs a 1.6% rally in five hours
+to trigger. It stays exactly as written until the 16:00 bar retires it — N8 forbids editing a pre-registered
+plan after watching price, and that applies most strongly when the plan looks worst.

@@ -3695,3 +3695,17 @@ through 05:30 forming, 60m through 05:00, 4h through 04:00 (next at 08:00), dail
 symbols, and the only plan whose method was pre-committed is VOID on the risk cap by three independent
 recomputations (N77/N80/N82). MGC RTH opens **08:20 ET** — 2h27m out, CALL-0002's window and the first
 moment tonight anything enters a measured session. MNQ RTH 09:30.
+
+## N85 — 05:55, two minutes after the full check: nothing has changed and this entry says so in four lines
+
+Newest settled 15m is still `05:15` on both symbols; `05:30` settles at **05:58** and will be the first
+settled bar carrying the bounce. CALL-0004 has **not** expired — its window is the `06:00` bar and
+resolve.py reports `open 0, closed 0, equity $50,000.00, drawdown $0.00` unchanged.
+
+Forming `05:30` re-printed as it always does: MGC 4182.80 -> **4182.40**, MNQ 30588.50 -> **30593.50**.
+Per N49 that is not a price move and is not reported as one. Regime unchanged from 05:53 on every frame of
+both symbols. Locations MGC 7.7% of [4172.60, 4299.20], MNQ 16.0% of [30535.00, 30900.50].
+
+No call. The two moments worth waiting for are 05:58 and the `06:00` bar, and neither has arrived. Kept
+short deliberately — a check two minutes after a full check has nothing in it, and padding it would be
+the same failure as manufacturing a callout.

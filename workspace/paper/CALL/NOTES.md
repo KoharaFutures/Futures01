@@ -1956,3 +1956,85 @@ schema names, so `why` is the canonical field and `why_short` is the card's disp
 New pre-registrations write both. The two existing plans are not being edited — N8 — and the
 resolver now tolerates either, which is the right place for the tolerance since the archive
 already contains both shapes.
+
+## N34 — MNQ's reversal setup qualifies again, the correlation objection has vanished, and I am declining it for a sharper reason than before
+
+02:33 AM EDT. Newest 5m bar 02:20, lag 13.8m. Both symbols on new lows — MGC 4203.90,
+MNQ 30595.75. Nothing triggered, nothing resolved this pass.
+
+`reversal_setup("MNQ")` returns `qualifies: true` on every condition:
+
+```
+sigma        -1.87            past the 1.5 threshold
+htf_support  4h, DAILY, WEEKLY
+trigger      30661.75         55.75 ABOVE the market - a genuine reclaim, not a chase
+climax_x     1.17             "NO capitulation volume - a drift, not a flush"
+```
+
+**And N15's main objection is genuinely gone.** That note declined a qualifying setup partly
+because CALL-0001 and CALL-0003 were both live MNQ LONG stop-entries, so a third would fill on
+the same move and stack $344 of one-direction risk. CALL-0003 expired at 02:20. Only CALL-0001
+remains and it sits **392.50 points away** — irrelevant. I am not going to pretend an objection
+still applies when the thing that caused it has resolved.
+
+### What replaces it is stronger, not weaker
+
+**1. This detector's trigger has slid 105.50 points, and CALL-0003 was this exact trade.**
+
+```
+22:15  30767.25   <- CALL-0003 pre-registered here
+22:55  30735.25
+23:58  30704.75
+00:23  30704.75
+00:32  30704.75
+01:53  30687.75
+02:33  30661.75   <- offered now
+```
+
+Monotone, tracking price down as the 40-bar window drops its highest bars (N17). CALL-0003 came
+from this detector, on this symbol, with this logic — and it resolved **NO_FILL thirteen minutes
+ago with a 263.25-point adverse excursion against a 52-point stop.** Re-registering the same
+setup at a trigger 105.50 lower, minutes after its predecessor expired, is the sharpest instance
+of goalpost-moving available to this desk. A mechanical source does not launder it.
+
+**2. The fresh sigma is evidence the downmove is intact, not that a turn is near.**
+
+```
+22:55 -2.12 | 23:58 -1.55 | 00:23 -1.27 | 01:53 -1.01 | 02:33 -1.87
+```
+
+It re-extended from -1.01 to -1.87 because price **accelerated down again**. N22 established that
+a z-score against a trailing mean measures acceleration, not displacement. So -1.87 here is a
+reading that the selling is speeding up. Treating it as "extended, therefore due a bounce" is
+reading the instrument backwards, and I only know that because I measured it four hours ago.
+
+**3. The detector's own note says participation is missing** — `climax_x` 1.17, labelled "NO
+capitulation volume - a drift, not a flush." Same failure N15 flagged at 0.59x.
+
+**4. The lower-frame case against the long got STRONGER in the last forty minutes.** MNQ's 15m
+went from 0-2 to **unanimous 0-3**, and its 60m is unanimous too. At 01:53 the 15m's
+non-unanimity was the only thing blocking a reversal call; now the 15m has resolved that
+question in the opposite direction.
+
+**5. Rule 2.** The 4h/DAILY/WEEKLY agreement that makes `htf_support` pass is the same MTF
+alignment this repository measured at **z = -4.09**. It is a negative coefficient, not a virtue.
+
+### Journalled at the time of the decision, which is the N25 fix working
+
+`CALL-NT-0003` is in `journal.jsonl` now, not at the next full check. N25 found that this desk
+had journalled every directional pre-registration immediately while leaving its two hardest
+declines in NOTES.md only — a record skewed toward the trades I found interesting. The entry
+carries `reversal_setup_qualified: true` and `declined_despite_qualifying: true`, so the record
+shows a qualifying setup was refused rather than quietly absent, and names CALL-0003 as its
+predecessor with that predecessor's outcome attached.
+
+### The honest counter-argument, stated because it exists
+
+The strongest case against my own decision: this detector has now offered the same trade five
+times and I have refused it every time, which means in practice **I have disabled it.** A
+detector you never act on is not a detector, it is a comment. If the fix specified in N22 —
+anchoring displacement to a fixed pivot instead of a trailing mean — makes it trustworthy, then
+it should be built and acted on; if it cannot be made trustworthy, it should be removed rather
+than left firing into a permanent veto. Leaving it in place and declining forever is the worst
+of the three options, and that is currently what I am doing. That work belongs at a full check,
+with the random-level control rule 8 demands, and it is now the most overdue item on this desk.

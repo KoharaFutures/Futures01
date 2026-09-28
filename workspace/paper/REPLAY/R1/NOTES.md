@@ -582,3 +582,106 @@ and no substitute for a refused tool goes through convenience before it goes thr
 
 **Stopped at:** cursor **924/11287**, flat, equity **$50,348.18**, peak $50,348.18, drawdown $0,
 permitted $240 (×1.00), 1 closed trade, nothing armed.
+
+---
+
+## Burst 6 — bars 924→1190. basis `1fcd6e4` (2026-09-28)
+
+### ⚠ REPORTABLE: MES 60m carries a contract-roll merge defect, and `SERIES_AUDIT.md` rules it ELIGIBLE
+
+**`workspace/studies/SERIES_AUDIT.md` says "MGC / MCL / MES / MNQ at 5m–240m: **eligible**, unchanged —
+no splice, no roll signature" and "No series has an OHLC ordering violation, a duplicate timestamp or a
+non-monotonic timestamp. **77 of 77 clean on all four.**" That ruling is wrong for MES 60m, and all four
+of the audit's checks pass on the corrupt bars.** `REPLAY.md` says to write it here and say so, so here
+it is. I own no file outside my lane and have changed nothing else.
+
+**The defect: bars 1146–1158, `2024-12-17T04:00` → `16:00` ET, 13 consecutive hourly bars.**
+
+| | |
+|---|---|
+| bar ranges | **79.25 – 93.25 pts**, against 2–18 pts across the preceding twenty bars |
+| **high band** | 6129.5 – 6143.0 — **spread 13.50** |
+| **low band** | 6040.0 – 6060.75 — **spread 20.75** |
+| mean separation | **84.23 pts** |
+| volume | `0` at 09:00, 12:00, 15:00 ET (RTH); **476,608** on the 16:00 bar |
+
+**Every bar spans the same envelope.** Real volatility moves the envelope; this one is nailed in place
+for thirteen hours. Opens and closes jump between the two bands with no continuity — bar 1147 opens
+6139.0 and closes 6138.75 while its low is 6060.75; bar 1151 opens 6131.5 and closes 6055.0. That is
+**two contract months merged into one bar series**, and the ~84-point separation is the calendar spread.
+Dated three sessions before a quarterly expiry.
+
+**Control test, so this is not me crying defect at a big move.** Bars 1179–1181 (12/18) have ranges of
+97.75, 113.50 and 36.75 — comparable size — but their high band spans **202.25** and low band **227.50**,
+each open equals the prior close, and the ranges decay 97.75 → 113.50 → 36.75 → 16.75 → 13.50. A genuine
+~200-point directional move with normal continuity, structurally nothing like 1146–1158. **The two are
+separable on band structure and open/close continuity alone**, with no appeal to calendar or event
+knowledge — which matters given the contamination I declared at bar 555.
+
+### Why the audit missed it — and this is the transferable part
+
+Verified on `visible.jsonl`: **0 duplicate timestamps, 0 non-monotonic, 0 OHLC ordering violations.** The
+corrupt bars are *well-formed*. Each of the audit's four checks is blind here for a specific reason:
+
+| check | why it cannot see this |
+|---|---|
+| **scale** | looks for a bar-to-bar **close step > 3×** with **disjoint** segment ranges. The merge is *within* bars, so consecutive closes never step 3× and the two bands overlap inside every bar — never disjoint |
+| **roll** | measures the boundary gap `open[i+1]/close[i]` with a month-parity sign test tuned to COMEX gold delivery months. Wrong shape for an index quarterly, and the pollution here is intra-bar, not at boundaries |
+| **shape** | counts `h == l` rangeless bars, zero-volume bars and OHLC ordering. These bars have *huge* ranges and valid ordering. The 4 zero-volume RTH bars would be absorbed into the audit's global 3.5–4.0% rate, which it attributes to "the thin overnight hour" |
+| **clock** | duplicates and monotonicity — genuinely clean |
+
+**So a test built for one failure shape cannot see another, and "77 of 77 clean on all four" reads as
+assurance when it is only the absence of four specific shapes.** This is the same species as the lesson
+`BRIEF.md` already records about measuring absolutely before relatively: the sweep was thorough within
+its own frame and structurally blind outside it.
+
+**Detection is one line and cheap:** flag any run of *k* consecutive bars whose high-band spread and
+low-band spread are each small relative to the mean bar range. Thirteen bars whose highs span 13.5 and
+lows span 20.75 while each bar ranges ~84 is arithmetically impossible for a single instrument. That is a
+**D-candidate for the manager**, described not numbered per R-9. The tool is
+`workspace/roundtable/lib/scale_audit.py`, which I have not touched — it is not mine.
+
+**Scope, and why this is not a curiosity.** This is the *first* quarterly roll inside the series (which
+starts 2024-10-06). On a 2024-10-06 → 2026-09-25 span there are roughly **eight** more. If each corrupts
+~13 bars that is ~100 bars of ~11,287 — small in count, but they read as enormous volatility and poison
+every ATR-based stop and size for ~14 bars either side. **Any MES 60m result measured across a roll week
+is measuring the calendar spread.** Whether MNQ/MGC/MCL 60m carry the same signature I have not checked
+and **cannot** check, because those series are outside `visible.jsonl`.
+
+**My own exposure: none.** My single closed trade is bars 452–455 (2024-11-01), ~700 bars earlier. I
+took no decision across bars 1146–1189 and recorded the reason at `R1-00031-b001190`.
+
+### `score` at bar 1000 — the first run, and it has no power
+
+```
+REAL     n 1   mean +1.8949R   sd 0.0000   t +0.000   win 100.0%
+PLACEBO  n 1   mean -0.0671R   sd 0.0000   t +0.000   win   0.0%
+```
+
+**No separation measurable, no leak signal, nothing near |z| = 4.5.** With n=1 the sd is 0 and *t* is
+undefined — the harness prints 0.000, which is not "no effect", it is "not computable". The 100% win rate
+is one trade. **This line is in the record for completeness and carries no information whatsoever**, and I
+would rather say that plainly than let a +1.89R mean sit next to a −0.07R placebo looking like a result.
+**Trials declared: 6.**
+
+### Result: 266 bars, 6 callouts, 0 trades, equity unchanged at $50,348.18
+
+31 callouts / 31 unique ids, no absorbing state, series not ended. Roughly **240 of 266** bars passed
+over without a candidate. Of the 266, **44 (1146–1189) were structurally untradeable.**
+
+### The two declines this burst confirmed
+
+- **Bar 1049's armed short never fired, correctly.** I required a rally to 6059.25 that *closed back
+  below*; bar 1058 closed 6070.75 **through** the level and 1059 ran to 6084.0. The retest succeeded, so
+  the failure my pattern needs never happened. **First time a trigger protected me by staying silent.**
+- **Bar 1059's long, declined, would have lost.** Price reached only 6102.5 (short of the 6110.75 target)
+  and 12/12 fell to 6054.75, through the 6070.25 stop. I declined it because it was a *different* thesis
+  — "breakdown fails, reverse" rather than my "retest fails, continue" — adopted mid-move to justify an
+  entry at the top of a two-bar 33-point vertical. **Declining to invent a thesis saved a −1R and kept
+  the trials count honest.**
+
+Running balance: **eight avoided losses against two missed winners.** Still noise, still only meaningful
+because the stand-downs are journalled.
+
+**Stopped at:** cursor **1190/11287**, flat, equity **$50,348.18**, peak $50,348.18, drawdown $0,
+permitted $240 (×1.00), 1 closed trade, 6 theses, nothing armed.

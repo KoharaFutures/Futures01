@@ -5864,3 +5864,42 @@ MGC: 5m BEAR 0-2, 15m BEAR 0-2, **60m BEAR 0-3 unanimous** (unchanged all sessio
 
 No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
 **MNQ RTH opens 09:30 — 26 minutes.**
+
+## N163 — the excluded position is back to exactly flat, and reporting that is the test of N155's exclusion
+
+MGC's 5m `08:55` bar: `h 4187.80 l 4180.60 c 4186.40`. **The close is exactly CALL-0002's entry of 4186.40, so
+the position is at 0.00 / $0.00 unrealised**, from a peak of +9.50 / +$95.00 twenty-two minutes ago. Its stop at
+4196.40 is 10.00 away and TP1 at 4170.40 is 16.00 away; the bar's high of 4187.80 traded 1.40 through the entry.
+
+**This is the test of N155's exclusion and it passes in the direction nobody checks.** I declared the exclusion
+at +3.80, restated it at +9.50 and +$95, and am restating it now at flat. **An exclusion that only survives while
+the excluded trade is winning is not an exclusion, it is a hedge.** The reason for excluding this position has
+nothing to do with its P&L — the fill is 102.70 points from the specified entry, on a plan that was blind for six
+hours — and that reason is identical whether the position is up $95, flat, or stopped out for −$100. If it stops
+out, the −$100 is excluded too, and the desk's drawdown for measurement purposes stays $0.00 while `state.json`
+records something else.
+
+Note also what this move is and is not: MGC has travelled 4176.90 -> 4186.40 across three checks, and the last
+leg of it (N161) was a **revision** rather than a trade. This leg is a real 5m bar (`new=1`), so MGC genuinely
+traded back to the entry. Both statements needed checking and both were checked.
+
+## N164 — 09:09 state, twenty-one minutes to the MNQ open
+
+MNQ: **REVERSAL BULLISH still called, `held 48`**. 1m, 5m and 15m all **BULL 3-0 unanimous** simultaneously;
+**60m still BEAR 0-1, not unanimous**; 4h CONFLICTED; DAILY BULL 3-0 unanimous; WEEKLY BULL 2-1. Trend BULL
+(30739.50 > EMA20 30645.47, rising), structure BULL with both legs established, location **93.5%** of
+[30535.00, **30753.75**] — another new range high, the fourth in a row.
+
+MGC: 1m BULL 2-1, 5m BEAR 0-1, 15m BEAR 0-2, **60m BEAR 0-3 unanimous** (the one reading that has not moved all
+session), 4h BEAR 0-2. Trend BEAR — but only just: 4186.40 against EMA20 **4188.42**, a gap of 2.02 points with
+the EMA still falling. Structure MIXED, location 21.7% of [4172.60, 4236.20]. Reversal closed on all three
+counts.
+
+Worth flagging because it is close: **MGC's trend component is 2.02 points from flipping.** If MGC closes a 15m
+bar above a falling EMA20 the component goes MIXED, not BULL, so this would take the 15m from 0-2 to 0-1 rather
+than producing anything directional. Stating it now so that if it happens next check it is not reported as news.
+
+**CALL-0005's limit is 126.62 below the market** and its expiry is the 09:30 bar — 21 minutes — resolving on the
+`09:45` bar around 10:01 per N86.
+
+No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.

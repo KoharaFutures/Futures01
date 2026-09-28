@@ -4622,3 +4622,26 @@ sub-noise differences. Locations MGC 12.9% of [4172.60, 4259.50], MNQ 21.4% of [
 
 No call. Both reversal tests false; MGC's unreachable per N117. Two plans PENDING; ledger unchanged at
 open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 59 minutes out.
+
+## N122 — 07:26: the 07:00 bar's low has now been revised down three times while it waits to settle
+
+Newest settled 15m is still `06:45` on both; the `07:00` bar settles at **07:28**, two minutes out, and per
+N121's correction the pivot it might create cannot be tested until ~07:43. Newest real 5m `07:15` on both,
+lag 11.1m.
+
+MGC's `07:00` 15m bar low, across three successive checks: **4182.10 -> 4181.50 -> 4180.60**. Total 1.50
+points of downward revision on a bar that nominally closed at 07:15, all of it well inside MGC's 6.80-point
+low-revision maximum. The bar now spans `l 4180.60 h 4193.40` = **12.80 points = 1.54x ATR**, the widest of
+the session, and its close has drifted 4184.00 -> 4183.80 -> **4182.30** over the same three checks. So the
+bar that touched 4193.40 is finishing near its own low.
+
+This is the cleanest live example yet of why the settled/newest distinction matters: three consecutive checks
+all quoting "the same bar", each with a different low and close, none of them a price move.
+
+Locations MGC **11.2%** of [4172.60, 4259.50] — back toward the bottom of the range — and MNQ 20.0% of
+[30535.00, 30823.50]. Frames: MGC 1m BEAR 0-3 unanimous, 5m BEAR 0-1, 15m BEAR 1-2, 60m BEAR 0-3 unanimous.
+MNQ 1m BEAR 0-2, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. Both structures still BULL on unchanged
+sub-noise differences; both reversal tests false, MGC's unreachable per N117.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
+opens 08:20 ET, 54 minutes out.

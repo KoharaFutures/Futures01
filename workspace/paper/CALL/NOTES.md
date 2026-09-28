@@ -3845,3 +3845,42 @@ on both symbols and have not changed once in the entire session.**
 No call. The reversal test is false on both. The bounce is now 1.62x ATR on MGC and is the rule 8 sweep
 continuation; the structure that would have to change for a plan to exist has not changed on settled data,
 and the one apparent change is inside measured revision noise.
+
+## N91 — the two symbols' feeds have diverged in freshness for the first time tonight, so "the newest bar" is per-symbol, not global
+
+At 06:09 the 5m frames differ: **MGC newest `05:55`, lag 15.0m, `new=0 revised=2`** while **MNQ newest
+`06:00`, lag 10.0m, `new=1 revised=2`**. MNQ advanced a bar and MGC did not. Every previous fetch tonight
+returned the same newest 5m stamp and the same lag for both symbols, which is why I have been printing one
+`newest real bar / lag` line covering both.
+
+That line is now wrong in form even when it happens to be right in value. **Freshness is a per-symbol
+property** — the vendor serves two independent series and there is no reason they advance together. From
+here the report gives the newest bar and lag per symbol whenever they differ, and says so when they agree.
+The 15m and 60m frames are still in step (both `05:45` at 25m, both `05:00` at 70m), so the divergence is
+confined to the 5m frame this time, which is consistent with it being a publishing-timing accident rather
+than anything structural.
+
+Practical consequence, and the reason this is worth more than a footnote: a cross-symbol statement built on
+"the newest bar" is comparing 05:55 on MGC with 06:00 on MNQ. Every divergence claim I have made tonight
+(N64, N67, N68, N72) assumed a common timestamp. Those were all made while the stamps did in fact match —
+I checked the lag rows — so none of them is retracted. But the assumption was unstated and would have
+failed silently the first time it broke, which is now.
+
+## N92 — 06:09 state: the 05:45 bar settles at 06:13 and decides N89's condition-1 question
+
+Newest **settled** 15m bar is `05:30` on both symbols (MGC c 4182.40, MNQ c 30593.50). The `05:45` bar
+completed at 06:00 and reaches the measured settle threshold at **06:13**, four minutes out. Its high is
+still **4190.00** on MGC, unchanged across the last two fetches — so the 4.80-point excess over the
+4185.20 lower high has not been revised away, and if it survives to 06:13 the raw settled high will have
+exceeded the prior lower high even though N89's test classes 4.80 as inside noise.
+
+Those two things can both be true, and the resolution is the one from N74: the **raw settled high** and the
+**swing-high detector** are different objects. A confirmed lower high needs bars either side; 4190.00 will
+not become a swing high until the bars after it are in. So at 06:13 the honest report will be that the raw
+settled high is above the prior lower high, the detector has not registered a change, and N75's condition 1
+is pending rather than broken. I am writing that before 06:13 so it cannot be shaded afterwards.
+
+Also at 06:09: CALL-0004 still has not expired — newest 15m is `05:45` and expiry needs a bar after 06:00,
+i.e. `06:15`, expected ~06:31-06:35 per N86. MGC location 12.8% of [4172.60, 4295.20], MNQ 15.6% of
+[30535.00, 30900.50]. MGC 1m and 5m both BULL 2-0, MNQ 1m CONFLICTED 1-1 with 5m BULL 2-0. 15m and 60m
+unanimous bearish on both, unchanged all session. No call; reversal test false on both.

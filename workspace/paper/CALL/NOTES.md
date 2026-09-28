@@ -2303,3 +2303,59 @@ The 429 arrived at a point where the effective fetch rate has been higher than 5
 because the chained firings and the owner's manual prompts have overlapped — several checks
 tonight ran 2-3 minutes apart. If 429s recur, that overlap is the first thing to look at, not
 the vendor.
+
+## N39 — "MNQ is un-sizeable" was an overstatement, and I propagated it into the chain prompt where it would have suppressed MNQ plans for hours
+
+03:52 AM EDT. The chain prompt I wrote at 03:49 told the next several firings to re-measure
+MNQ's ATR rather than inherit N37's conclusion. Re-measured:
+
+```
+MNQ  ATR14(15m)  38.04   session low 30576.25   $2/pt    1.0x ATR stop = $ 76.07 = 31.7% of permitted
+MGC  ATR14(15m)   8.01   session low  4184.20   $10/pt   1.0x ATR stop = $ 80.14 = 33.4% of permitted
+```
+
+**A 1.0x ATR stop on MNQ costs 31.7% of the $240 permitted — comfortably inside the 50% cap.**
+So MNQ is not un-sizeable. N37's arithmetic was right about the plan it evaluated and wrong
+about the instrument.
+
+### What the actual constraint was
+
+N37 priced an entry at **30649.25** — the 15m lower-high — with a stop below the session low
+at 30576.25. That is a 73-point span *before* any buffer, so the stop came out at 74-84 points,
+**1.9-2.2x ATR**, and only then did it breach the cap. The binding constraint was never MNQ's
+volatility or its point value. It was that **I picked a reclaim entry a long way above the
+level I wanted to protect behind**, and then measured the resulting stop against a cap.
+
+An entry nearer the low, or a stop placed at a defined ATR multiple instead of behind the
+session extreme, sizes fine on either symbol. And the two are near-equivalent in sizeability:
+31.7% versus 33.4% at 1.0x ATR. **The claim "MGC at ~$10/point with a far smaller ATR is the
+only one of the two that can currently be sized" is false** — the smaller ATR and the larger
+point value cancel almost exactly, which is the whole point of a micro contract pair.
+
+### Why this one matters more than a wrong number
+
+I did not merely think it, I **wrote it into the chain prompt as a standing instruction**:
+*"MNQ is currently UN-SIZEABLE regardless of signal — check this arithmetic before working up
+any MNQ plan, and do not spend the turn building one that cannot be expressed."* That would
+have told every firing for the rest of the night not to bother with MNQ. A false constraint
+embedded in a self-perpetuating prompt is worse than a false statement in a report, because
+the report is read once and the prompt executes repeatedly — and the desk had already found
+the same shape twice tonight, in N30's card that asserted `AWAITING FILL` on an inert plan and
+N35's chain whose death was masked by manual prompts. **Anything that runs unattended and
+carries my conclusions forward needs the conclusion checked before it is embedded, not after.**
+
+Corrected in the next chain prompt: the sizing note now states the real rule — that the
+constraint is the distance from entry to a defensible stop, not the instrument — and gives both
+symbols' current numbers rather than a verdict about either.
+
+### The rule worth keeping from all of this
+
+Size the stop first, then find an entry that the stop can live with. N37 did it the other way
+round: chose the entry it liked, derived the stop from structure, then discovered the cost. On
+a $240 budget that ordering will reject good trades on both symbols indefinitely, and it will
+look like a volatility problem every time.
+
+Nothing triggered, nothing resolved. MGC 4189.20 at 3.6% of range, MNQ 30600.00 at 6.9%.
+MNQ's 1m has gone CONFLICTED while its 5m, 15m and 60m stay unanimous bearish; `reversal()`
+returns no call on either symbol, so there is no plan to build right now regardless — the
+correction above is about not having foreclosed the option.

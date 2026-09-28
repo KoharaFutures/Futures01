@@ -3205,3 +3205,29 @@ The honest summary of the state: the decline has stopped extending on both symbo
 printing a reversal signal the desk can test. That is a wait, not a setup. CALL-0004 resolves on the
 06:00 ET bar, ~54 minutes out, and that is the point at which the MGC retracement short stops being
 blocked by N52.
+
+## N67 — 05:11: MGC is retesting its low while MNQ holds; fourth check with no new settled bar; nothing to add
+
+Deliberately short. The procedure says report briefly when nothing happened, and the last few notes
+have been long because the findings were real — writing at that length when there is nothing to say
+would be the same manufacturing failure as an unwarranted callout.
+
+State: newest settled 15m bar is still `04:30` on both symbols, fourth consecutive check without an
+advance; `04:45` settles at 05:13. The settled comparison is therefore unchanged: MGC +4.60,
+MNQ −33.50.
+
+The one thing that is new comes from the 5m frame, whose `05:00` bar is not yet inside any 15m bar the
+feed has published: **MGC traded to 4174.90, which is 0.60 above its session low of 4174.30.** MNQ's
+same bar low is 30574.25, 3.25 above its 30571.00. So MGC is retesting its low and MNQ is not — the
+divergence from N64 persists but has changed sign, since there MGC was the one that had bounced. I am
+noting the sign change rather than narrating it as momentum, because it is one 5m bar and N41 applies.
+
+Locations: MGC 1.9% of [4174.30, 4300.60], MNQ 2.5% of [30571.00, 30900.50]. MGC is back to unanimous
+bearish on 1m, 5m, 15m and 60m together; MNQ reads 1m 0-1 and 5m 0-2 with 15m and 60m unanimous.
+MNQ's settled swing lows still read 30571.00 -> 30571.00, so the double bottom is intact on settled
+data.
+
+No call, and no new reason — the reversal test is false on both symbols, both are at range extremes,
+and the MGC retracement short stays blocked by N52 until CALL-0004 resolves on the 06:00 ET bar,
+~49 minutes out. The next genuinely informative moments are 05:13 (the `04:45` bar settles) and the
+06:00 bar (CALL-0004 resolves).

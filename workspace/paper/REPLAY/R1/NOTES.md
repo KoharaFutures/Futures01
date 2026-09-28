@@ -1209,3 +1209,77 @@ can make the arm buildable prospectively: **from here every `notrade --why` begi
 
 Files: `agents/A_grid.py`, `agents/A_geometry.md`. A also logged an error of its own making, per the desk
 convention.
+
+### Agent C + my own follow-up D — the finding that undercuts my two wins
+
+**C's substrate results, which I verified:**
+
+- **No second roll merge.** C built a *better* detector than mine: the widest price corridor untouched by
+  any OHLC **and** straddled by every bar in the window — arithmetically impossible for one instrument, and
+  **needing no tuned fraction at all.** Swept widths 3–25 at all 1,635 starts: exactly one region, bars
+  **1146–1158**, a 55–71.75pt corridor at 10.6× the prior median range. Excise it and the best anywhere
+  else is 19.75pt (1.82×), falling to 0.50pt at width ≥13. **It also rejects both of `roll_flags()`'s
+  historical false positives without needing my jump test.** C's method is cleaner than my twice-tuned one
+  and I am adopting it as the primary screen.
+- Tape ends 2025-01-21, so the March 2025 roll is untestable — consistent with the cursor.
+- Both my trades sat in **DOWN** trend regimes (−4.6 ATR over 40 bars): bar 452 MID volatility (63rd pct),
+  bar 1337 LO (26th pct).
+
+**A correction to `SERIES_AUDIT.md`, verified independently.** The audit records the ~3.5–4% zero-volume
+rate on 60m micros as benign — *"the thin overnight hour, not a hole"* — and supports it with MGC daily,
+where 334 of 355 zero-volume bars are also **rangeless**. **That explanation does not hold for MES 60m.**
+Measured on `visible.jsonl`: 60 zero-volume bars (3.7%), **0 of 60 rangeless**, and **56 of them in the
+18:00 ET hour — 79% of every 18:00 bar in the tape.** A bar with a real high-low range and zero volume did
+not have no trades; it has a **missing volume field.**
+
+**The consequence is specific and it lands on the account owner's own rule:** the **first bar of the
+18:00→16:00 cycle has no volume 79% of the time.** Any volume condition evaluated there reads zero — so a
+volume filter would veto or misfire at exactly the hour the owner's session begins. (The only 3 RTH
+zero-volume bars are 2024-12-17 09:00/12:00/15:00, all inside the roll merge.)
+
+### The one that matters: my two wins cannot be attributed to a pattern
+
+C mechanised thesis 5 faithfully — including my own 0.5-ATR floor, rule 5's window and the merge exclusion
+— and swept the tape. **I could not reconcile C's report with C's own script, and I am quoting both rather
+than the one that suits me:** C reported **91 firings at −0.113R, 1 per 18 bars**, while its script's own
+headline prints **442 tradeable and resolvable signals, 1 per 3.7 bars**, on which I measure **+0.023R,
+38% win**. The 91 appears in C's output as SHORT 34 + LONG 57 under a heading that says 442. Whichever
+population is right, **both means are ≈ zero**, and that is the robust part.
+
+So I wrote `agents/D_discretion.py` to ask the question C's mechanisation could not: **the naked pattern is
+worthless, so does my discretion add anything?** My two trades required things C did not encode — a clean
+level, real liquidity, trend depth — and at bar 1502 I *declined* a mechanically-firing signal for exactly
+those reasons. Within-sample, keep-versus-drop on C's own 442:
+
+| filter | keep | drop | z |
+|---|---|---|---|
+| clean level (≤2 crossings / 6 bars) | n=366, +0.031R | n=76, −0.017R | **+0.29** |
+| liquid fill bar (≥50k) | n=217, +0.051R | n=225, −0.005R | **+0.45** |
+| trend ≥1.5 ATR with the trade | n=190, **−0.017R** | n=252, **+0.052R** | **−0.55** |
+| **all three** | n=75, +0.106R | n=367, +0.006R | **+0.63** |
+
+**Nothing separates.** The combination reaches z +0.63, and **requiring trend depth actively hurts**
+(−0.55) — rule 2's territory, arriving unbidden.
+
+**And then the result that matters more than any of the numbers: my filters reject one of my own two
+trades.** Bar 1337 has a clean level (0 crossings) and deep trend (−4.53 ATR) but its signal bar carried
+11,778 and its mechanical fill bar 18,522 — both under any liquidity bar I would set. **Because my second
+trade was never an instance of the mechanised pattern.** I entered at bar 1340, *three bars after* the
+mechanical signal, on a level I had identified post-hoc — which I disclosed at the time and which is now
+shown to matter.
+
+> **I cannot state my discretionary rule in a form that reproduces my own two trades. An unreproducible
+> rule is not a rule.** So: the naked pattern is ≈ zero, my mechanised discretion adds nothing measurable,
+> and one of my two wins does not belong to the pattern I credited it to. **The two wins are not evidence
+> of a pattern working. They are two outcomes, one of them off-process.**
+
+I am **not** going to keep adjusting filters until they admit both trades — that is curve-fitting to n=2,
+and it is the single most seductive error available to me here. One fair re-run (liquidity on the fill bar
+rather than the signal bar) is all I did; it moved the combination from +0.62 to +0.63 and still rejected
+bar 1337. I stopped there.
+
+**What this changes going forward:** thesis 5 is no longer "my one supported pattern". It is a pattern with
+a measured expectancy of about zero, and any trade I take on it must be justified by something I can state
+*in advance and in code*, or not taken. The `LEAN:` convention adopted above is the start; the next step is
+to write the filter down as an executable predicate **before** the next thesis-5 entry, so that it can be
+falsified rather than narrated.

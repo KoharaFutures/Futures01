@@ -4572,3 +4572,29 @@ Two precisions, because the frames differ and conflating them is the N99 error:
 No call. Locations MGC 16.2% of [4172.60, 4265.40], MNQ 17.4% of [30535.00, 30825.25]. Newest settled 15m
 `06:30` on both; `06:45` settles 07:13. Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown
 $0.00. MGC RTH opens 08:20 ET, 1h09m out.
+
+## N120 — ninth settled pair, and MGC has given the whole 4193.40 spike back
+
+Ninth settled pair: MGC `06:30` 4188.40 -> `06:45` **4187.60** (−0.80); MNQ 30576.00 -> **30585.50** (+9.50).
+Settled tally since `04:15`: MGC **+10.70**, MNQ **−37.25**.
+
+The `07:00` 15m bar is now published (it settles at **07:28**) and carries MGC `h 4193.40 c 4184.00` — so the
+spike N119 described is inside a published bar for the first time, and **MGC has closed 9.40 points below its
+own high**. With the 5m `07:05` low at 4182.10, that bar spans about 11.30 points against an 8.33 ATR, i.e.
+**1.36x ATR** — the widest MGC 15m bar in some hours, and it is a rejection bar rather than a directional one.
+
+MGC's location has fallen 16.2% -> **13.1%** of [4172.60, **4259.50**] while MNQ's rose to **22.4%** of
+[30535.00, **30823.50**]. Both range highs rolled down again (N53, twelfth and thirteenth sightings).
+
+What to watch, stated with its mechanism so it cannot be shaded later: when the `07:00` bar settles at 07:28
+its high of 4193.40 becomes a candidate pivot. It confirms only if the `07:15` bar's high comes in **below**
+4193.40. If it confirms, MGC's settled swing-high comparison becomes `4192.00 -> 4193.40` — higher by **1.40
+points** against a 6.20-point maximum high revision, so once again a label change well inside noise. If the
+`07:15` bar exceeds 4193.40 the pivot does not form and the sequence stays at `4191.40 -> 4192.00`.
+
+Frames: MGC 1m BEAR 0-2, 5m CONFLICTED 0-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2. MNQ 1m
+CONFLICTED 1-1, 5m BULL 3-0 unanimous, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h/DAILY/WEEKLY bull. Both
+structures BULL. Both reversal tests false — and per N117 MGC's is unreachable regardless.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
+opens 08:20 ET, 1h04m out.

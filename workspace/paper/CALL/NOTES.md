@@ -6118,3 +6118,64 @@ limit is 101.62 above the newest low** and its expiry bar has passed on the cloc
 on the `09:45` bar, in hand around 10:01.
 
 No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+
+## N172 — MGC HAS TRADED THROUGH THE EXCLUDED POSITION'S TARGET. The resolver will register it at ~09:46, and the exclusion is restated one last time BEFORE it closes
+
+MGC's 5m `09:30` bar: `h 4178.20 l 4170.10 c 4175.60`. **Its low of 4170.10 is 0.30 below CALL-0002's TP1 of
+4170.40.** The target has been traded through.
+
+`resolve.py` still reports `open 1, closed 0`, and the reason is the frame distinction I have been careful about
+all night — checked, not assumed:
+
+    position bar_minutes: 15
+    MGC 15m newest bars:  08:45 l 4175.40 | 09:00 l 4177.30 | 09:15 l 4173.50   <- none reach 4170.40
+    MGC 5m  09:30 bar:    l 4170.10                                             <- below it
+    the 09:30 15m bar covers 09:30-09:45, completes 09:45, publishes ~09:46
+
+**The position is managed on 15m bars, and the 15m bar containing that low does not exist yet.** So this is not a
+resolver failure and not a missed fill: it is the same publish-timing arithmetic as N86 and N142, arriving exactly
+where those notes said it would. When the `09:30` 15m bar lands at about 09:46 its low will be at or below 4170.10
+and the resolver will close the position at **TP1 4170.40 for +16.00 points = 1.6R = +$160.00**.
+
+### The exclusion, stated for the last time before the number becomes real
+
+Entry 4186.40, stop 4196.40, risk 10.00 points, TP1 4170.40. **+1.6R / +$160.00**, and `state.json` will show
+**1 closed trade, 1 win, a 100% win rate and +1.6R expectancy on n = 1.**
+
+**None of those numbers belong to this desk, and I am saying so before the resolver writes them rather than after.**
+The fill was 102.70 points from the specified entry of 4289.10, on a plan whose `created_bar_ts` was future-dated
+and off the 15m grid (N30, N148), which left it blind for the six hours in which the move it was written to capture
+actually happened. **It is profitable because it was broken**, and the profit is the size of the defect, not the
+size of any edge.
+
+So the desk's record after this closes remains what it has been all session:
+
+| measured | value |
+|---|---|
+| closed trades **countable** | **0** |
+| win rate | **undefined** |
+| payoff | **undefined** |
+| expectancy | **undefined**, n = 0 |
+| measured drawdown | **$0.00** |
+| resolved plans | 2, both NO_FILL at **0.0R** |
+| plans still live | CALL-0005 (unfillable), CALL-0001 (adverse) |
+
+This is the sixth and final restatement of N155, at the moment it costs the most to make: **+$38 declared,
+restated at +$95, restated at $0.00 flat, restated at +$45, restated at +$103, and restated now at the instant a
++$160 win becomes certain.** An exclusion made once and then quietly dropped when the number got attractive would
+have been worthless; this one has been repeated at every value the position has taken, including the largest.
+
+## N173 — MNQ's RTH open produced an 84-point bar and a new session high
+
+MNQ 5m `09:30` bar: `h 30759.25 l 30675.00 c 30731.00` — an **84.25-point range**, 1.79x its 47.20 ATR, and a new
+session high at **30759.25**. That is the RTH open doing what an RTH open does, and it is the first bar tonight
+that occurred inside MNQ's measured window.
+
+**REVERSAL still called, `held 66`+**. The bar's low of 30675.00 brings **CALL-0005's 30595.88 limit to 79.12
+away** — the closest it has been all session, closer than the 94.62 at 09:28 — and its expiry bar has already
+passed on the clock. The resolver writes that outcome on the `09:45` bar too, around 10:01, so **both plans resolve
+within about fifteen minutes of each other.**
+
+MGC: location **5.8%** of [4172.60, 4233.20] region, every frame bearish, 15m and 60m both 0-3 unanimous, trend
+BEAR, structure BEAR. No new call. 1 open (excluded, about to close), 2 pending; equity $50,000.00, drawdown
+$0.00.

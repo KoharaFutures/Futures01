@@ -2994,3 +2994,83 @@ tonight and it happened on a fetch that delivered no new 5m bar.
 Nothing here is actionable; it is recorded because "the feed advanced" and "I fetched" are different
 events, and a check that fetches successfully can still hold strictly older information than the
 minute suggests.
+
+## N60 — N57 IS WRONG in its diagnosis. No frame is stale. `lag_minutes` is measured from the bar's OPENING stamp, so a large number on a long frame is arithmetic, not a defect
+
+Three minutes after publishing N57 I checked what the lag column actually measures, which is what I
+should have done before publishing it. `fetch.py` computes
+`lag = now - newest.ts`, and `newest.ts` is the bar's **opening** timestamp. So for a frame of length
+L that serves only completed bars, the lag is necessarily somewhere in `[L + δ, 2L + δ]` at all
+times, where δ is the vendor's publishing delay. **A 60m frame reading 117 minutes is the expected
+steady state of a perfectly current frame**, not evidence of anything.
+
+The history settles it. Over the last eight fetches:
+
+| frame | newest bar, every fetch | new / revised, every fetch | lag drift |
+|---|---|---|---|
+| 15m | advances 04:00 -> 04:15 -> 04:30 | `new=1` then `rev=2`, repeatedly | sawtooth 16 -> 27 |
+| 60m | `03:00` throughout | **`new=0 rev=0` on all eight** | monotonic 85 -> 117 |
+| 240m | `00:00` throughout | `new=0 rev=0` on all eight | monotonic 265 -> 297 |
+| 1440m | `09-25` throughout | `new=0 rev=0` on all eight | monotonic 4585 -> 4617 |
+
+The monotonic drift with zero new and zero revised bars is the signature of a frame that publishes
+**completed bars only** and is waiting for its current bar to finish. The 15m sawtooth is the
+signature of a frame that publishes a **forming** bar and revises it. Both are correct behaviour.
+
+Checked against the calendar rather than asserted:
+- 60m `03:00` covers 03:00-04:00 and completed at 04:00. The 04:00 bar cannot exist until 05:00.
+- 240m `00:00` covers 00:00-04:00 and completed at 04:00. The next completes at 08:00.
+- 1440m `09-25` is **Friday**. 09-26 and 09-27 were Saturday and Sunday; Monday 09-28's daily bar is
+  still forming. Friday is genuinely the newest completed daily bar.
+
+**So N57's headline — "frames range from 10 minutes stale to 3.2 DAYS stale" — is false, and the
+sentence "60m does not contain the last two hours" is false.** The 60m frame contains everything
+through 04:00. It does not contain 04:00-04:57 because that hour is not over, and it will at 05:00.
+I also called it CALLOUT.md's "empty frame with no error" failure in partial form. It is not that
+either; nothing failed.
+
+### The narrow thing that survives, stated correctly
+
+MGC's decline happened inside the 04:00 hour: the 15m `04:00` bar closed 4188.90 and `04:15` closed
+4176.90. So the 60m, 4h and daily rows **do not yet reflect the move** — correctly, because their
+bars are unfinished. Putting `daily BULL 3-0` beside `5m BEAR 0-3` in one table is therefore
+comparing a Friday-completed observation with a 12-minute-old one, and a reader is entitled to know
+which is which. That is a **labelling** point about my table, not a defect in the data, and it is all
+that N57 should have said.
+
+Correct labelling, replacing N57's "stale" marks: give each long frame the period it covers and when
+it next updates — 60m *through 04:00, next at 05:00*; 4h *through 04:00, next at 08:00*; daily
+*through Friday 09-25, next at tonight's session close*. And the proper staleness test, for a frame
+that publishes completed bars only, is `lag > 2L + tolerance`. **On that test every frame passes
+right now.** The deferred code item from N57 stands but with the correct threshold; a rule written
+against raw `lag_minutes` would have flagged all three long frames permanently and taught the desk to
+ignore its own warning.
+
+### The pattern, twice in fifty minutes
+
+N42 -> N45 and now N57 -> N60. Both times I found a number that looked alarming, built a diagnosis on
+what it appeared to mean, wrote it into NOTES, a commit message and a report to the owner, and only
+afterwards checked what the number measures. **The check that resolves it is always cheap** — one
+`CronList`, one read of the line that computes the lag — and it is always available before publishing
+rather than after. The rule I keep failing is not about markets: *establish what a measurement means
+before reporting what it implies.* Three of tonight's retractions are the same sentence.
+
+Owed to the owner in the reply. He was told his frame table was misleading in a way he could not
+detect; the truthful version is that the table needed better labels and I mis-read its freshness
+column.
+
+## N61 — third consecutive check with no new settled 15m bar, exactly as N55 predicted
+
+Newest settled 15m bar at 04:57 is `04:15` on both symbols — unchanged at 04:46, 04:51, 04:54 and
+now. The `04:30` bar completed at 04:45 and crosses the `T+28` settle threshold at 04:58, so it
+becomes usable on the next check.
+
+This is N55's arithmetic behaving exactly as stated: four consecutive 5-minute checks fell inside one
+15m settle window. Worth recording once as confirmation, and then it stops being news. The forming
+`04:30` bar meanwhile re-printed again — MGC close 4181.60 -> 4181.50, MNQ 30588.50 -> 30589.25 — the
+kind of difference N49 forbids reporting as a move.
+
+Fast frames: MGC 1m BULL 1-0 (from BULL 2-0, from CONFLICTED, from BEAR 0-3 unanimous); MNQ 1m back
+to BEAR 0-3 unanimous. Both 5m unanimous bearish. No new call: nothing in the decline's structure has
+changed, MNQ remains near its low, and the MGC retracement stays blocked by N52 until CALL-0004
+resolves on the 06:00 ET bar, now ~63 minutes out.

@@ -7072,3 +7072,36 @@ hours ago. (4) MNQ DAILY is BULLISH 3-0 unanimous against it. (5) rule 7, sub-ho
 
 MGC: no call. Its reversal path stays structurally closed (`prior: None`, N166) and its 1m is BULLISH 3-0
 unanimous against a BEARISH 15m/60m/4h — the opposition shape that has meant nothing all session.
+
+## N201 — 11:47: MNQ's reversal switched OFF ten minutes after it produced CALL-0006, and MGC now fails on ONE condition
+
+**Two things happened on the same fetch and they point in opposite directions.**
+
+**(1) MNQ's reversal call is gone.** At 11:37 it fired with the 15m unanimous BEARISH 0-3, held 21 checks. At
+11:47 `regime.py` says *"no reversal call - 15m is 0-2, not unanimous"*: the location component went MIXED at
+**40.8% of [30356.50, 30759.25]**, endpoints unchanged from the last check, so that is **price** — MNQ rose
+26.50 points (30494.50 -> 30521.00) and lifted out of the sub-40% band.
+
+**CALL-0006 stands exactly as written.** N8 forbids editing a pre-registered plan after watching price, and
+that applies with full force when the signal decays rather than only when it pays. The plan was registered on
+a condition that was true at 11:37 and is false at 11:47, and **that fact goes in the record now, before the
+outcome, not after.** If it fills and wins I will not claim the signal held; if it fills and loses I will not
+claim the signal had already gone. The honest statement is that the gate's output has a half-life measured in
+single-digit minutes, which is the third time today unanimity has proved fleeting (N183's five-frame MGC
+agreement lasted one check, N191's 60m unanimity lasted eight minutes, this one ten).
+
+Ironically the decay moved price **toward** the limit: CALL-0006 is now **39.00 points** from filling, down
+from 65.50.
+
+**(2) MGC's 15m is now BEARISH 0-3 UNANIMOUS**, structure having flipped to BEAR on the `11:30` bar (swing
+highs 4193.20 -> 4160.90 lower, lows 4168.30 -> 4143.00 lower). `regime.py` now reports exactly one failing
+condition:
+
+    no reversal call - no prior directional headline to reverse from
+
+**Four of the five conditions pass. The fifth is the one that cannot ever pass on this symbol today.** MGC's
+headline has been BEARISH at every 15m bar since 07:00, so `prior` is `None` and stays `None`. This is N194
+Cause 1 caught in the act, with everything else lined up: the desk's gate is not declining MGC on the
+evidence, it is declining it because the gate is a reversal detector and MGC has not reversed. **No call on
+MGC, and the reason is a defect and not a judgement** — which is precisely the distinction the post-mortem
+was written to make visible, and it is now visible in the tool's own output rather than only in my notes.

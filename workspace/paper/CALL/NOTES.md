@@ -8023,3 +8023,85 @@ decline. That does not make it wrong; a running-extreme comparison might have op
 the same bar that a lower-high comparison refused, and there is no evidence yet which is better.
 But it is no longer a cosmetic defect, and the parent should test it against the archive before
 another session inherits it.
+
+---
+
+# N221 — VOL-1: volume at a 1m/5m bounce says nothing about direction, and delta does not exist here
+
+Owner asked at 18:41: *"look at the 1 and 5 minute bounce levels and see if you can match that
+with anything line volume or delta or anything that can tell you that it is a buy or a short."*
+
+## First, the part that is not a result but a fact about the environment
+
+**There is no delta, and there never was.** Bars carry `o,h,l,c,v` and nothing else — no bid/ask,
+no tick data, no CVD, no footprint, no order book. CALLOUT.md already says all three `orderflow`
+conditions in the strategy universe are OHLCV proxies with no delta data. Anyone who reports
+"delta" off this feed is reporting a derived guess and calling it a measurement.
+
+What does exist, and was tested:
+1. **Volume** at the pivot bar, as a ratio to its own trailing 20-bar median. Coverage is
+   effectively complete — only the newest provisional bar reads `v=0` (0.2% of 1m, 0.5% of 5m).
+2. **Close position inside the pivot bar's range** — the only honest OHLCV proxy for absorption.
+   A pivot low closing near its high "absorbed" the selling in a crude sense. **A proxy, labelled
+   as one, never to be reported as delta.**
+
+## The test: `vol1.py`, pre-registered before any result was seen
+
+`K=3` strict pivot; **entry at the close of bar `i+K`**, the confirmation bar, never the pivot
+itself — a pivot is only knowable K bars later and entering at `i` is look-ahead; `FWD=6` bars
+held; returns normalised by ATR14 at entry; volume buckets `HIGH ≥1.5x` / `MID` / `LOW <1.0x`;
+placebo = 200 draws of the same count of **non-pivot** bars through the same forward measurement.
+Pivot lows tested as longs, pivot highs as shorts, so positive always means the obvious trade paid.
+
+Archive only, ends 2026-09-25, so today is out of sample. n≈700 per cell on 1m, ≈1,100 on 5m.
+
+## The result is a null, and not a marginal one
+
+The hypothesis is `HIGH minus LOW`. Across all eight symbol×frame×direction cells:
+
+    MGC 1m LONG   +0.02      MNQ 1m LONG   +0.18
+    MGC 1m SHORT  +0.34      MNQ 1m SHORT  +0.38
+    MGC 5m LONG   -0.33      MNQ 5m LONG   +0.51
+    MGC 5m SHORT  -1.29      MNQ 5m SHORT  -0.63      (t-statistics)
+
+**Sign flips, magnitudes are noise.** Largest |t| on any individual bucket anywhere is **1.97**
+against `free_t` **2.2293** for a single pre-registered claim — and I examined **24 cells**, so the
+honest multiple-testing bar sits well above 2.23. Nothing here is close.
+
+**The diagnostic that settles it:** the buckets are **not monotonic**. On MGC 5m LONG the MID
+bucket is the extreme (z −3.94 vs placebo) while HIGH (+1.25) and LOW (+2.06) sit on either side of
+it in the *same* direction. A middle bucket that beats both tails is the signature of a partition
+of noise, not of a dose-response. Same shape on MGC 5m SHORT and MNQ 1m SHORT.
+
+## One thing worth flagging, and it points the wrong way
+
+The close-position proxy came out **negative in 7 of 8 cells** — a pivot low that closes strongly
+in the upper third of its own range goes on to do slightly *worse* than one that closes weakly,
+by about −0.1 ATR. Individually none of it clears t=1.05.
+
+I am not going to dress this up as a contrarian edge. Three reasons: the magnitudes are inside the
+noise; the eight cells are **not independent** (MGC 1m and MGC 5m cover overlapping time, and LONG
+and SHORT on one series are two views of the same tape), so the effective n behind "7 of 8" is well
+under 8; and it surfaced from a scan of 24 cells, which is exactly the condition under which a
+sign-consistent nothing appears. **It is a hypothesis for a future pre-registered test, not a
+finding.**
+
+## What today looked like, for completeness
+
+Today's 24 confirmed pivots on 1m and 5m are consistent with the null. MGC 5m's largest volume
+spike of the day, **5.15x** the trailing median at 13:10, went **−1.00** afterward. MNQ 5m's
+quietest bounce, **0.20x** at 16:50, went **+5.75**. MGC 1m's 3.10x at 16:34 went **−1.50**.
+n=24 proves nothing on its own — it is reported because it agrees with the 3,500-pivot test, not
+as evidence in itself.
+
+## The ruling
+
+**Volume at a sub-hourly bounce level does not tell you whether it is a buy or a short.** This
+sits alongside rule 7 (sub-hourly is a graveyard, 11–16% of strategies profitable at 5 minutes)
+and N196 (the breakout prohibition) rather than contradicting either. No gate is added, no veto is
+added, and the desk's entry logic is unchanged.
+
+**What I did NOT test, and will not quietly bolt on:** whether a bounce that lands on a *prior*
+pivot level (a retest) behaves differently from one in open space. That is a structure question,
+not a volume one, and appending it to this run would widen the search from 24 cells to 48 without
+pre-registration. It should be its own test with its own placebo if the owner wants it.

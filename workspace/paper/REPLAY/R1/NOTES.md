@@ -1493,3 +1493,48 @@ those nulls are real:
 **E9 is the one that could overturn the most.** If my stand-downs cluster at thin overnight hours and the
 control does not, then the counterfactual's null is a composition artefact and the headline finding of this
 whole record is unsafe. I would rather find that from an agent told to look for it than not find it.
+
+### E1 — the 91-vs-442 contradiction resolved, and I was wrong about where the fault lay
+
+**RETRACTION, mine.** I wrote that "the 91 appears in C's output as SHORT 34 + LONG 57 **under a heading
+that says 442**", and used that to suggest C's script mislabelled its own subset. **That heading does not
+exist.** Verified: line 223 prints `EVERY TRADEABLE SIGNAL (n resolvable)` — a **Tier A** header — and the
+`by side: {'SHORT': 34, 'LONG': 57}` is line 254, a **Tier B** print thirty lines later. I had run
+`grep -E "TRADEABLE|resolvable|by side"`, which matched both and printed them adjacently, **and then wrote
+the false adjacency up as a finding about someone else's code.**
+
+**C labelled both tiers correctly.** That is the same failure B caught me in 27 times — an artefact of my
+own tooling narrated as evidence — and this time I aimed it at an agent. Retracted.
+
+**What the two populations actually are.** `C_regime.py` §5 (lines 230–268) defines **Tier B** as a subset
+of Tier A narrowed by three further filters: trend-aligned, first-retest-only, break within 12 bars. Both
+tiers are printed and labelled. So there was never a mislabelling — only C's *hand-back lead* quoting Tier B
+without naming it and without its opposite-signed parent, which E1 calls misrepresentation by omission and
+I agree.
+
+**The number to quote is Tier A:**
+
+| | n | mean | win | placebo | z |
+|---|---|---|---|---|---|
+| **Tier A (the answer)** | 444 (400 distinct bars), 1 per 3.8 bars | **+0.025R** | 38.1% | −0.011R | **+0.59**, p≈0.28 |
+| one-position-at-a-time | 192 | +0.008R | | | |
+| Tier B (do not use, see below) | 91 | −0.113R | 36% | −0.020R | |
+
+**The finding is "no edge". The sign is not part of the finding** — Tier A minus Tier B is t = +0.80, so the
+two tiers do not even differ from each other. My earlier framing, that the two means disagreed in sign and
+I would quote both, was over-reading a difference that is itself noise.
+
+**And Tier B is contaminated, which is the real catch.** Line 267 of C's script reads
+`print("  did Tier B keep the two real trades?", ...)` for bars 452 and 1337 — **C validated its Tier B
+filters on whether they retained the two known winners.** That is fitting the filter to the outcome, the
+exact thing I refused to do in `D_discretion.py` when I declined to tune until both trades were admitted —
+and I then failed to notice C had done it. **Tier B's −0.113R is not evidence in either direction.**
+
+**One structural finding worth keeping:** **44 bars emit LONG and SHORT simultaneously.** At those bars the
+pattern is not directional at all, which is a defect in the thesis rather than in the measurement, and it
+bears directly on thesis 5's probation. E1 also notes Tier B's "1 per 18 bars" used the wrong denominator
+(1 per 12.2 eligible) and a latent `None`-crash at line 255.
+
+**Net effect on the record:** C's substantive conclusion stands — the mechanised pattern has no edge — but
+it now rests on Tier A at z +0.59, not on Tier B's larger-looking negative. One open contradiction closed,
+one of my own errors added to the corrections list.

@@ -24,9 +24,13 @@ TWO ACCOUNTING MODELS - the crux of this report
       the ACTUAL fill: stop = fill -/+ S, target = fill +/- 2S. A stop-out is
       then exactly -1.0R no matter how much you slipped, because the slippage
       moved the stop by the same amount it moved the entry. Slippage can only
-      show up indirectly, by shifting which bars get touched. THIS IS WHY THE
-      DESK'S GRID NEVER PRICED ITS OWN COSTS: in fill-relative R, entry
-      slippage is very nearly invisible by construction.
+      show up indirectly, by shifting which bars get touched.
+      I EXPECTED THIS TO HIDE THE COST AND IT DOES NOT. Section 1 measures the
+      two models 0.002 R apart over a 0-3 tick sweep: moving the whole bracket
+      adverse raises the stop-touch probability by very nearly the amount the
+      direct deduction would have cost. So the desk's fill-relative convention
+      is NOT the accounting error. The accounting error is that commission was
+      never entered at all, and it is 2.15x the slippage.
   (B) SIGNAL-RELATIVE (correct cost accounting). The bracket is hung off the
       price you DECIDED at, P0 = the next bar's open, which is also the risk
       you sized against: stop = P0 -/+ S, target = P0 +/- 2S, and you get
@@ -315,5 +319,57 @@ whys = {}
 for t in TRADES:
     whys[t[4]] = whys.get(t[4], 0) + 1
 P("  gross outcome mix: " + "  ".join(f"{k} {100*v/N:.1f}%" for k, v in sorted(whys.items())))
+P()
+
+# ---- 6. is Agent A's stop-width gradient actually cost? -------------------
+P("## 6. Is Agent A's stop-width gradient actually cost? (gross vs net, 2R target)")
+P()
+P("| stop | median 1R pts | GROSS mean R (zero cost) | 1-tick slip only | "
+  "+ commission (all-in) | drag R |")
+P("|---|---|---|---|---|---|")
+ladder = {}
+for sm in [0.25, 0.5, 0.75, 1.0, 1.5, 2.0]:
+    g, inv = [], []
+    for f, a in ELIGIBLE:
+        S = sm * a
+        for sgn in (1, -1):
+            gr, _ = sim_signal_relative(f, sgn, S)
+            g.append(gr); inv.append(1.0 / S)
+    mi, mg = mean(inv), mean(g)
+    drag = TICK * mi + COMM_POINTS * mi
+    ladder[sm] = (mg, drag, mi)
+    P(f"| {sm:.2f} ATR | {q([sm*a for _, a in ELIGIBLE], .5):.2f} | {mg:+.4f} | "
+      f"{mg-TICK*mi:+.4f} | {mg-drag:+.4f} | {drag:.4f} |")
+P()
+_lo, _hi = 0.25, 1.5
+gg = ladder[_hi][0] - ladder[_lo][0]
+sl = (ladder[_hi][0] - TICK*ladder[_hi][2]) - (ladder[_lo][0] - TICK*ladder[_lo][2])
+al = (ladder[_hi][0] - ladder[_hi][1]) - (ladder[_lo][0] - ladder[_lo][1])
+P(f"  0.25 ATR -> 1.5 ATR change in mean R (A's reported gradient, all-in {al:+.4f} R):")
+P(f"    GROSS (zero cost)   {gg:+.4f} R  = {100*gg/al:.1f}%  <- NOT cost: real geometry/noise effect")
+P(f"    slippage component  {sl-gg:+.4f} R  = {100*(sl-gg)/al:.1f}%")
+P(f"    commission component {al-sl:+.4f} R  = {100*(al-sl)/al:.1f}%")
+P("  => A's 'the mechanism is arithmetic, not market structure' is about half right.")
+P("     Roughly half the gradient is arithmetic, and MOST of that half is the")
+P("     commission A never counted; the other half survives at zero cost.")
+P()
+
+# ---- 7. break-even scale -------------------------------------------------
+P("## 7. Break-even scale")
+P()
+gpt = mean(res_B[0.0])
+need = (TICK + COMM_POINTS) / gpt
+P(f"  all-in cost = {TICK + COMM_POINTS:.4f} points. For the sample's gross point")
+P(f"  estimate ({gpt:+.4f} R) to cover it, 1R must be >= {need:.2f} points,")
+P(f"  i.e. ATR14 >= {need:.2f} at a 1.0-ATR stop.")
+_n = sum(1 for a in ATRS if a >= need)
+P(f"  bars on this tape with ATR14 >= {need:.2f}: {_n}/{len(ATRS)} = {100*_n/len(ATRS):.1f}%")
+P(f"  (tape ATR q3 = {q(ATRS,.75):.2f}, max {ATRS[-1]:.2f})")
+P()
+P("## 8. The spec's min_stop_ticks 8 floor (2.00 pts) in cost terms")
+P(f"  at a 2.00-pt stop: 1 tick = {100*TICK/2.0:.1f}% of 1R, commission = "
+  f"{100*COMM_POINTS/2.0:.1f}% of 1R, all-in = {100*(TICK+COMM_POINTS)/2.0:.1f}% of 1R")
+P(f"  0.25 ATR at the Q1 median ATR ({qsum[1][1]:.2f}) = {0.25*qsum[1][1]:.2f} pts "
+  f"-> BELOW the 2.00-pt floor, so A's 0.25-ATR cell is partly unsizeable anyway")
 P()
 open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "E5_raw.txt"), "w").write("\n".join(out))

@@ -968,3 +968,24 @@ the window is closed. you are just wasting tokens at this point. just use a sche
 out-of-window firing gets **no tool calls** — not even a clock read. The window is known from this
 file; it does not need re-measuring every two minutes. Read the firing, recognise the hours, emit
 nothing, stop. The schedule is the three cron jobs above; they are what reopens the desk at 18:00.
+
+### The silence rule has ONE carve-out: verify the cron jobs
+
+Written 2026-09-28 18:34, immediately after it cost 34 minutes. The session crons are
+**session-only and die with the worker process** — twice on 2026-09-28, at ~12:55 and again
+between 17:00 and 18:00 ET. At 18:00 the window opened and nothing fired; `CronList` returned
+**No scheduled jobs**. The desk was dark for 34 minutes and the owner found it, not me.
+
+**What made it invisible was my own fix.** An hour earlier I wrote "make NO tool calls outside the
+window, do not run CronList" into the hourly backstop. The 17:52 ET wake — the last one before the
+open, the one whose entire purpose is to have the cadence alive when the bell rings — obeyed that
+and checked nothing.
+
+So the rule is now: **outside the window, one `CronList` and nothing else.** No fetch, no chart, no
+card, no message — unless a job is missing, in which case re-create all three in UTC and say in one
+line that you repaired it and how long the gap was. A silent verification costs one call an hour. A
+silent outage costs the open.
+
+**And every in-window check starts by confirming the jobs exist.** If `CronList` is empty during
+the window, the cadence has already stopped; re-create it before doing anything else, and report
+the gap rather than letting the next check look normal.

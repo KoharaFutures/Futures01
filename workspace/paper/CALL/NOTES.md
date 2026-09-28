@@ -5822,3 +5822,45 @@ unrealised, TP1 8.30 away. N155's exclusion unchanged.
 No new call. 1 open, 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. **MNQ RTH
 opens 09:30, 30 minutes out**, which is CALL-0005's expiry bar — resolving on the `09:45` bar around 10:01 per
 N86.
+
+## N161 — the excluded position's unrealised P&L moved $47 on a REVISION, not a price move. N140's rule applied to money for the first time
+
+The 09:04 fetch returned **`new=0`** on both 5m frames. Per N140 that means every changed reading this check is a
+revision or the window, never a price move — and the changed readings are large:
+
+    MGC 5m 08:50 close:  4178.70 -> 4183.40   (+4.70, revised)
+    MNQ 5m 08:50 close:  30724.50 -> 30740.50 (+16.00, revised)
+
+    EXCLUDED CALL-0002 SHORT 4186.40:
+      at 09:00  MGC 4178.70  ->  +7.70 points  = +$77.00 unrealised
+      at 09:04  MGC 4183.40  ->  +3.00 points  = +$30.00 unrealised
+
+**The position's mark-to-market fell $47.00 without a single trade printing.** This is the first time tonight the
+revision phenomenon has been visible in money rather than in an indicator reading, and it is worth naming
+because a P&L number feels far more concrete than a location percentage. It is not: **an unrealised P&L computed
+against the newest bar's close inherits every property of that close, including that it is still being
+restated.**
+
+Practical consequence for every report from here: **an unrealised figure quoted against the newest bar is
+provisional in exactly the way the bar is.** The realised number, when `resolve.py` writes it, will be computed
+from a stop or target level actually touched, not from a close — so it is not exposed to this. The distinction is
+between "what the position is worth right now" (provisional) and "what it resolved at" (not).
+
+MGC's own readings moved the same way: location **9.6% -> 17.0%** of an unchanged [4172.60, 4236.20], and its 1m
+flipped to BULLISH 2-1, all on the revised close. None of it is a price move.
+
+## N162 — 09:04 state
+
+MNQ: REVERSAL BULLISH still called, `held 45`; 5m and 15m both BULL 3-0 unanimous; **60m still 0-1, not
+unanimous** (N159 holding); 4h CONFLICTED; DAILY BULL 3-0 unanimous. Location **96.9%** of
+[30535.00, **30747.00**] — another new range high. Trend BULL (30740.50 > EMA20 30645.56, rising), structure BULL
+with both legs established.
+
+MGC: 5m BEAR 0-2, 15m BEAR 0-2, **60m BEAR 0-3 unanimous** (unchanged all session), 4h BEAR 0-2, trend BEAR
+(4183.40 < EMA20 4188.13, falling), structure MIXED with swing lows `4178.70 -> 4175.00`, location 17.0% of
+[4172.60, 4236.20]. Reversal closed on all three counts.
+
+**CALL-0005's limit is 125.87 below the market.** Expiry is the 09:30 bar, resolving on `09:45` around 10:01.
+
+No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+**MNQ RTH opens 09:30 — 26 minutes.**

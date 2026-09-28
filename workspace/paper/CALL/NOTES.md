@@ -4426,3 +4426,20 @@ against a 19.04 target distance. Two plans PENDING: CALL-0001 (MNQ LONG, 354.25 
 two-higher-timeframe condition at all tonight, since its daily and weekly are NOT ELIGIBLE and its 4h is
 bearish. MGC RTH opens **08:20 ET**, 1h26m out: CALL-0002's window, and the first moment tonight anything
 enters a session this repository has measured. MNQ RTH 09:30.
+
+## N114 — 06:57: three minutes after the full check, nothing settled, nothing to add
+
+Newest settled 15m is still `06:15` on both symbols; `06:30` settles at **06:58**, one minute after this
+check, so the eighth settled pair belongs to the next one. Newest real 5m `06:45` on both, lag 12.5m.
+
+Unsettled prices: MGC 4187.40 (`06:30` 15m bar h 4192.00 c 4188.40), MNQ 30580.25 (h 30585.75 c 30576.00).
+Locations MGC 15.7% of [4172.60, 4273.50], MNQ 12.7% of [30535.00, 30857.00] — both effectively unchanged
+from 06:54.
+
+Frames: MGC 1m BEAR 0-2 (from CONFLICTED), 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. MNQ 1m BULL
+2-0, 5m CONFLICTED 0-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. Both structures BULL, both reversal tests
+false, both 60m frames unanimous bearish as they have been for the whole session.
+
+No call, no new information. Two plans PENDING, ledger unchanged at equity $50,000.00 and drawdown $0.00.
+Kept to three lines on purpose — a check three minutes after a full check has nothing in it, and writing it
+up at length would be the padding failure N85 and N98 were about.

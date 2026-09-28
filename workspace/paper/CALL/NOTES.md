@@ -4267,3 +4267,72 @@ Two plans PENDING: CALL-0001 (MNQ LONG, 354.25 adverse, expires 16:00 bar), CALL
 08:20). Ledger: open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
 
 No call. Reversal test false on both. MGC RTH opens 08:20 ET, 1h37m out.
+
+## N109 — BOTH symbols' settled structure now reads BULL, and the reversal test says no on both, with the reasons named
+
+MGC's structure has flipped to **BULL**: swing highs `4185.20 -> 4191.40` (higher) **and** swing lows
+`4172.60 -> 4183.90` (higher). MNQ was already BULL. Both 15m tallies are now **1-2**. Only the 60m frames
+are still unanimous bearish, on both symbols, as they have been since the session began.
+
+The higher low is the more solid of MGC's two: **11.30 points** (4172.60 -> 4183.90) against MGC's
+**6.80**-point largest non-session-open 15m low revision — beyond the noise floor, unlike the higher high
+at 6.20 which sits exactly on it. So MGC's higher low is established and its higher high is marginal.
+
+**I ran `reversal_setup()` rather than judging the chart, and both symbols fail with specific reasons:**
+
+    MGC   qualifies: False   side LONG   sigma -0.08   htf_support []        climax 1.39 "NO capitulation
+                             volume - a drift, not a flush"
+          reasons: only -0.08 sigma from the 20-bar mean, needs |1.5|
+                   only 0 higher timeframe(s) bullish (none), needs 2
+
+    MNQ   qualifies: False   side LONG   sigma -1.10   htf_support [4h, DAILY, WEEKLY]   climax 1.54 "flush"
+          reasons: only -1.10 sigma from the 20-bar mean, needs |1.5|
+
+**No long, and the reasons are not discretionary.** MGC fails two conditions, and the first one is the
+telling number: **sigma −0.08 means MGC is sitting exactly on its own 20-bar mean.** Its "BULL structure"
+is the structure of an instrument that has gone nowhere — which is N93's round trip stated a different way.
+It also has **zero** higher-timeframe support: daily and weekly are NOT ELIGIBLE on MGC and 4h is bearish,
+so the two-HTF requirement cannot be met on this symbol tonight at all. MNQ fails on sigma alone, with HTF
+support present and a genuine flush.
+
+A long here would be buying a symbol at its mean with no higher-timeframe support, on a structure label
+built partly from a 6.20-point difference that equals its own noise maximum. The bright-line rule — call a
+REVERSAL only when the test returns true on **all** conditions — says no, and on the numbers it is not close
+on MGC.
+
+## N110 — the MNQ setup I declined twice has now DECAYED, so those declines will never get an outcome
+
+`CALL-NT-0003` (06:34Z) and `CALL-NT-0004` (07:34Z) are the two journal entries carrying
+`declined_despite_qualifying: true`. Both recorded MNQ reversal setups that **did** qualify on every
+condition — sigma −1.87 and −1.83, HTF support 4h/DAILY/WEEKLY, and in the second case climax_x 1.94
+labelled "flush".
+
+At 06:47 MNQ's sigma has decayed to **−1.10**, below the |1.5| threshold. **The setup no longer qualifies.**
+It did not resolve into a win or a loss; it expired as a setup while I stood aside.
+
+That is worth naming because it is the least useful possible outcome for the record. A declined setup that
+subsequently pays, or subsequently fails, teaches something. A declined setup that simply stops being a
+setup teaches nothing, and two of them are now in that state. The journal will show
+`declined_despite_qualifying: true` with `outcome: null` forever, because there is no trade to attach an
+outcome to and `resolve.py` — correctly — only writes outcomes for plans that were pre-registered.
+
+The honest self-criticism, unchanged from when I first recorded it: the detector fired, the conditions were
+met, and I did not take it. Tonight produced **zero fills** across the entire session, and two of the
+nearest misses were setups the desk's own test said qualified. Whatever the reasoning in each case, a desk
+that declines its own qualifying signals is not being measured on its signals — it is being measured on its
+discretion, and it has no record of that discretion paying.
+
+## N111 — 06:47 state
+
+Seventh settled pair: MGC `06:00` 4187.50 -> `06:15` **4190.80** (+3.30), MNQ 30567.75 -> **30575.75**
+(+8.00). Both up. Settled tally since `04:15`: MGC **+13.90**, MNQ **−47.00**.
+
+Newest real 5m `06:35` on both, lag 13.0m. MGC unsettled 4189.20, MNQ 30568.25. Locations MGC 16.5% of
+[4172.60, **4273.50**], MNQ 10.5% of [30535.00, **30857.00**] — both range highs rolled down again (N53,
+eighth and ninth sightings; MGC's high has now fallen 4303.50 -> 4273.50 purely by bars leaving the window).
+
+Frames: MGC 1m BULL 3-0 unanimous, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. MNQ 1m CONFLICTED
+1-1, 5m BEAR 0-2, 15m BEAR 1-2, 60m BEAR 0-3 unanimous.
+
+Two plans PENDING: CALL-0001 (MNQ LONG, adverse), CALL-0002 (inert, window opens 08:20). Ledger: open 0,
+closed 0, equity $50,000.00, drawdown $0.00. No call. MGC RTH opens 08:20 ET, 1h33m out.

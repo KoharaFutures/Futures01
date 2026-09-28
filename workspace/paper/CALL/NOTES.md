@@ -5592,3 +5592,81 @@ an MGC that has spent the last six hours between 4172.60 and 4203.80, never with
 No new call. MGC's reversal is closed on all three counts and there is no pre-committed MGC method that fires on
 a confirmed rejection. Three plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown
 $0.00, full $2,800 to the absorbing state.
+
+## N155 — CALL-0002 HAS FILLED, 102.70 POINTS FROM ITS INTENDED ENTRY. It is a defective fill, it is my fault for not retiring it, and I am declaring it excluded NOW while it is in PROFIT
+
+`resolve.py` at 12:48:04Z:
+
+    TRIGGERED CALL-0002 MGC SHORT @ 4186.4 (bar 2026-09-28T08:30:00-04:00) stop 4196.4 risk $100.00
+    open 1  closed 0  equity $50,000.00  drawdown $0.00
+
+**What happened, mechanically.** CALL-0002 is a `STOP_ENTRY_BELOW` at **4289.10** — a downside-break entry
+written when MGC was trading near 4290, on the thesis *"Friday's bounce FAILED... price traded down to 4289.10."*
+Because its `created_bar_ts` was stamped `08:20` — in the future at creation (N30) and not on the 15m grid
+(N148) — the resolver could not look at it for six hours. At 08:48 the `08:30` bar finally qualified:
+
+    08:30 bar:  o 4186.50  h 4186.70  l 4180.10  c 4182.60
+    low 4180.10 < trigger 4289.10  ->  condition trivially true
+    fill: "gapped through the trigger; filled at the bar open", 4186.50 less 0.10 slippage = 4186.40
+    stop: 4186.40 + 10.00 = 4196.40     TP1 4170.40 (1.6R)
+
+**The fill is 102.70 points below the entry the plan specified.** The decline it was written to capture —
+4289.10 down to 4172.60, about 116 points — **happened entirely while the plan was blind**, and the resolver has
+now entered it at the far end of a move that is already over. The 10-point stop was sized against 4299.50
+structure above a 4289.10 entry; at 4186.40 the stop at 4196.40 sits on nothing.
+
+### This is my failure, not the resolver's
+
+`resolve.py` did exactly what it should with the data it was given. **I identified this defect at N30, roughly
+six hours ago, and wrote at least eight times since that CALL-0002 "should be retired with an honest
+non-outcome" — and I never did it.** I kept reporting it as inert and kept treating "the resolver cannot see it"
+as a safety property. It was not a safety property; it was a timer. The correct action was available every one of
+those checks: set its status to `VOID` with a written reason before its window opened. I did not, and now a
+position exists that no reading of the desk's process ever called.
+
+### The exclusion, declared before the outcome is known
+
+**The position is currently in profit.** MGC is at 4182.60 against a 4186.40 short entry — **+3.80 points,
++$38.00 unrealised** — and TP1 at 4170.40 is 12.20 away while the stop at 4196.40 is 10.00 away.
+
+**I am declaring now, while it is winning, that whatever this position resolves to must be EXCLUDED from any
+performance measurement of this desk**, for these reasons, on the record before the result:
+
+1. The fill price is 102.70 points from the specified entry. No reading of the plan would have produced a short
+   at 4186.40.
+2. The thesis ("sell the failure of Friday's bounce at 4289.10") does not describe an entry 102.70 points below
+   that level, six hours after the level was left behind.
+3. The stop and target were sized relative to structure that is nowhere near the fill, so the R-multiple the
+   resolver computes is arithmetic without meaning.
+4. The plan was never pre-registered against the bars it filled on, which is the entire point of
+   pre-registration.
+
+Declaring this while the trade is **in profit** is the only way the exclusion is credible. Had I waited for the
+outcome and then excluded it, that would be results-shopping, and if it closes at TP1 for +1.6R it would be the
+session's only winning trade — which is precisely why the exclusion has to be stated now and cannot be revisited
+later.
+
+### What I am NOT doing, and why
+
+**I am not hand-editing `state.json` to remove the position.** CALLOUT.md is explicit that `resolve.py` is the
+only thing permitted to write an outcome, and closing a position by hand is writing one. Erasing a result I do
+not like is a worse failure than reporting one I do not want. The position stays in the ledger, `resolve.py`
+manages it to whatever conclusion it reaches, and the exclusion lives here and in the journal as an annotation
+rather than as a deletion.
+
+**Owed to the parent session, since `pending.jsonl` is mine but the harness rules are not:** a plan whose
+`created_bar_ts` is in the future should be refused at write time, not silently skipped — and a
+`created_bar_ts` that is not on the plan's own `bar_minutes` grid should be refused too. Either check would have
+prevented this. Both are one line.
+
+## N156 — 08:47 state, with a position open for the first time tonight
+
+MGC 5m `08:35` bar `h 4185.30 l 4180.10 c 4182.60`. The `08:30` 15m bar has published. MNQ 5m `08:35`
+`h 30717.25 l 30699.25 c 30712.25` — **MNQ has made a new session high**, and its REVERSAL BULLISH remains called.
+
+**Ledger: 1 OPEN, 0 closed, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.** The open
+position is CALL-0002 and it is the defective fill above. **Three plans remain: CALL-0002 (now TRIGGERED/open),
+CALL-0005 (MNQ LONG, unfilled, limit ~117 below market), CALL-0001 (MNQ LONG, adverse).**
+
+The desk's real callout record is unchanged by this: two plans resolved as non-fills at 0.0R, one plan
+(CALL-0005) live and probably unreachable, and one position open that should not exist.

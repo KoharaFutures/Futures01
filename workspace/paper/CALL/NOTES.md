@@ -5260,3 +5260,53 @@ MGC: tenth consecutive inert check — structure MIXED with both legs inside noi
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
 **MGC RTH opens 08:20 ET, 11 minutes out**, and CALL-0002's window opens with it.
+
+## N142 — MNQ's 5m has traded ABOVE the 30670 threshold, but the 15m frame has not seen it. Flagging the frame distinction before making N119's error again
+
+MNQ's `08:00` **5m** bar: `h 30686.75 l 30610.50 c 30673.25` — a 76.25-point range, and **its close is above the
+30670.00 threshold** the location component needs.
+
+**But the location test runs on the 15m frame, and the 15m frame's newest bar is still `07:45`** with close
+**30639.75**. The `08:00` 15m bar completes at 08:15 and publishes around 08:16. So:
+
+    5m  frame:  close 30673.25   ABOVE the 30670.00 threshold
+    15m frame:  close 30639.75   needs +30.25   <- this is the one that decides
+
+This is the same frame conflation as N119 (a 5m high quoted against a 15m structure test) and I am naming it
+before rather than after: **MNQ has genuinely traded through the level, and the test that fires on it has not
+been given the chance to look yet.** The decision point is **~08:16**, when the `08:00` 15m bar publishes. If
+its close holds above 30670.00, location turns BULL, the 15m goes unanimous, and `reversal()` fires.
+
+`reversal()` now returns `held: 14` — the BULLISH 15m headline has persisted fourteen consecutive checks — with
+`agreeing_frames [5, 1440, 10080]` and the sole failure `"15m is 2-0, not unanimous"`.
+
+## N143 — N140's rule worked on its first live use, immediately
+
+The location reading moved **46.9% -> 46.6%** this check. N140's test is: *if `fetch.py` reports `new=0` on the
+15m frame, any change is a revision or the window, never a price move.* The fetch line reads
+`MNQ 15m (+0 new, 2 revised)` and the window is unchanged at [30535.00, 30760.00] — **so it is a revision**, and
+indeed the `07:45` close went 30640.50 -> **30639.75**, down 0.75.
+
+That took four seconds to establish instead of the delta-file archaeology N140 needed, and it is the first of
+tonight's constructions to pay off on its very next use. Fifth decomposition, second revision case, and the
+first one I did not have to investigate.
+
+## N144 — 08:14 state, six minutes from MGC's RTH open
+
+MGC's `08:00` 5m bar: `h 4190.50 l 4178.70 c 4186.50`, an 11.80-point range — its widest 5m bar in some time,
+on a 8.20 ATR. But as with MNQ the 15m frame is still on `07:45` (close 4181.00), so MGC's 15m readings do not
+contain it: trend BEAR (4181.00 < EMA20 4189.68, falling), structure MIXED with both legs inside noise,
+location **10.8%** of [4172.60, 4250.70]. Eleventh consecutive inert 15m check even as the 5m starts to move.
+
+MGC frames: 1m, 5m, 15m, 60m and 4h all bearish; daily/weekly NOT ELIGIBLE. `reversal()` fails on 15m not
+unanimous **and** no prior directional headline — MGC has never had a non-bearish 15m headline all session, so
+it has nothing to reverse *from*. That is a third independent reason MGC cannot produce a reversal call
+tonight, alongside N117's unreachable HTF gate.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
+
+**MGC RTH opens 08:20 ET — six minutes.** Two things happen there: the tape enters the only session this
+repository has ever measured, and **CALL-0002's window opens.** CALL-0002 has never once been evaluated because
+its `created_bar_ts` is stamped in the future (N30), so the first thing to establish after 08:20 is whether
+`resolve.py` now sees it at all — and if it does, it will be seeing six hours of price it was never shown,
+which is why the plan is to be retired with an honest non-outcome rather than allowed to resolve.

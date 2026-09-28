@@ -4834,3 +4834,80 @@ displacement to trade and an unreachable reversal gate (N117).
 Newest settled 15m `07:00` on both; `07:15` settles at **07:43** — three minutes out — which also resolves
 MGC's 4193.40 pivot on the settled series. Two plans PENDING; ledger unchanged at open 0, closed 0, equity
 $50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 40 minutes out.
+
+## N129 — MNQ's 15m headline has turned BULLISH, the first on either symbol all session, and it is TWO conditions from a REVERSAL call — by a path that does not need sigma
+
+Eleventh settled pair: MGC `07:00` 4182.30 -> `07:15` **4188.10** (+5.80); MNQ 30592.75 -> **30642.00**
+(**+49.25**). MNQ's settled `07:15` bar is `h 30642.75 l 30588.00 c 30642.00` — it closed at its high.
+
+**MNQ's 15m headline is now BULLISH 2-1.** Every 15m headline on both symbols has been BEARISH or
+CONFLICTED since the session began.
+
+I read `regime.py:130` `reversal()` instead of inferring its conditions from the printed line. A REVERSAL is
+called only when **five** conditions hold, and it is a **separate path from `reversal_setup()`** — it does
+**not** require sigma at all:
+
+| condition | MNQ now |
+|---|---|
+| 15m headline directional (not CONFLICTED) | **PASS** — BULLISH |
+| 15m unanimous | **FAIL** — 2-1 |
+| headline held >= 2 consecutive checks | **FAIL** — held 1 |
+| a prior directional headline of opposite sign exists | **PASS** — BEARISH all night |
+| at least one other timeframe agrees | **PASS** — 1m, 5m, 4h, DAILY, WEEKLY all BULLISH |
+
+**So MNQ is two conditions from a REVERSAL BULLISH call, and both are reachable within about ten minutes**:
+its 15m must reach 3-0 and hold BULLISH across two consecutive checks. This matters because N117/N118/N124
+all reasoned about `reversal_setup`, whose sigma gate is closed while MNQ is extended upward at +1.71 — and
+`reversal()` has no sigma gate. **I had been treating "no reversal call" as one fact when it is two
+independent tests, and the live one is the one I had not been watching.**
+
+## N130 — pre-committing what happens IF that reversal fires, before it fires
+
+A REVERSAL is a **directional headline**, not automatically a trade, and MNQ at 39.7% of range with sigma
++1.71 is extended — entering at market would be the chase the procedure forbids. So, written now while the
+call has not fired:
+
+1. **If `reversal()` returns `called: True` on MNQ, I report a REVERSAL BULLISH headline**, rendered through
+   `card_png.py` so it carries its colour. That is what the standing rule requires and it is not optional.
+2. **The trade, if any, is a BUY LIMIT on a pullback — never a market entry.** Entry at the **50%
+   retracement of the settled up-leg**, measured from the last settled swing **low** to the last settled swing
+   **high**, both taken from the settled 15m series and recomputed at the moment of registration, never carried
+   from this note. It must sit **below** the market or there is no plan.
+3. **Stop** below the settled swing low that anchors the leg, at least **0.5x ATR14(15m)**, ATR re-measured
+   then.
+4. **1 contract; void if `stop_points x $2 > $120`.**
+5. **Expiry the 09:30 ET RTH-open bar.** Overnight is outside everything measured.
+6. **TP1 1.5R executable; TP2 2.5R and TP3 3.5R marked `NEEDS 3 LOTS`**, bare R multiples named as such.
+7. **Weakness in advance:** rule 2's z = −4.09 counts against the HTF agreement condition 5 leans on; rule 7
+   says sub-hourly is a graveyard and this is a 15m headline; and the plan may simply never fill, which is how
+   both of tonight's resolved plans died.
+
+**Arithmetic on today's numbers, purely to show it is expressible** — these get recomputed at registration:
+settled swing low 30547.75 (`06:00`), settled swing high 30644.00 (`07:00`), leg **96.25**, 50% entry
+**30595.88**, stop 30540.00, distance **55.88 points = $111.76** against the $120 cap, and 1.23x the 45.41
+ATR. **It fits, with $8.24 of headroom.** That is the opposite of the MGC plan's problem, and it is the first
+plan tonight that both sizes and has a reachable trigger.
+
+## N131 — MGC's structure has reverted to MIXED, and BOTH its legs are now inside noise
+
+MGC settled swings: highs `4192.00 -> 4193.40`, lows **`4183.90 -> 4180.20`** — a *lower* low, so the BULL
+label from N123 is gone and `chart.py` reads **MIXED** again. Measured against the floors:
+
+- higher high **1.40** vs 6.20 -> inside noise
+- lower low **3.70** vs 6.80 -> inside noise
+
+**Both legs of MGC's structure reading are now smaller than the feed's own revisions.** N123 recorded MGC's
+higher low at 11.30 as established; that leg has since been replaced by a lower low that is not. So MGC's
+structure label carries no information at all right now, in either direction.
+
+Also: MGC's 4193.40 pivot **confirmed on the settled series**, exactly as N121 predicted for ~07:43 — the
+`07:15` bar settled with `h 4188.20`, below 4193.40, so the pivot formed and the settled comparison moved to
+`4192.00 -> 4193.40`. Twelfth machinery prediction to hold, and the timing correction from 07:21 was the
+reason it landed on the right minute.
+
+MGC frames: 1m BEAR 0-3 unanimous, 5m BEAR 0-1, 15m BEAR 0-2, 60m BEAR 0-3 unanimous. Location 14.8% of
+[4172.60, **4251.10**]. Sixth consecutive check with MGC within 0.4 sigma of its mean.
+
+No call this check — MNQ's reversal has not fired and buying it extended is forbidden; MGC has nothing. Two
+plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens 08:20
+ET, 35 minutes out; MNQ RTH 09:30.

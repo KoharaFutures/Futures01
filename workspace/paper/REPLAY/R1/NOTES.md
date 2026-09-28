@@ -1283,3 +1283,78 @@ a measured expectancy of about zero, and any trade I take on it must be justifie
 *in advance and in code*, or not taken. The `LEAN:` convention adopted above is the start; the next step is
 to write the filter down as an executable predicate **before** the next thesis-5 entry, so that it can be
 falsified rather than narrated.
+
+---
+
+## ⚠ CORRECTIONS — agent B audited this file against the machine record and found 27 errors
+
+**Every one is in my prose. The machine record is clean, and the net direction of my errors flatters me.**
+That asymmetry is the finding, not the individual numbers. `agents/B_audit.md` has the full list; what
+follows is what I verified myself and what it retracts. Earlier sections are left as written — this is an
+append-only journal and quietly editing history would be the worse dishonesty — so **where an earlier
+statement conflicts with this block, this block wins.**
+
+**What is clean, stated first so the retractions are proportionate.** All 44 callout rows are structurally
+sound: `visible_bars`, `as_of`, bar indices and unique ids all reconcile. **Both trades' arithmetic
+reconciles exactly** — `risk_dollars`, `rr`, `net`, `r`, fills and exits. **Both counterfactual registers
+reproduce digit-for-digit.** The harness-written fields and my tooling are sound; my narration is not.
+
+### 1. The most serious: I embellished my own trade rationale with a price that did not exist yet
+
+Burst 7 and callout `R1-00037` describe the bar-1340 winner as taken at **"a three-touch 5985.75–5987.5
+shelf"**. Verified against the tape: **5987.5 does not occur anywhere before bar 1392** — 52 bars *after*
+that trade. 5985.75 appears only at bars 544 and 802, nowhere near it.
+
+**The trade itself was clean.** Its `why` names **5982.75** (12/27's low, first occurring at bar 1296,
+correctly before the trade) and explicitly discloses the level was **not pre-armed** and was a single
+touch. So the contemporaneous record is honest and the *retrospective description* is not: I re-described
+a one-touch, post-hoc level as a three-touch shelf, using a price I had not yet seen, which made the setup
+look materially better-supported than it was. **Retracted.** The bar-1340 entry was a single-touch level
+identified after the fact, exactly as its own `why` says.
+
+This is the failure mode I have spent this whole record cataloguing in the machinery — a description that
+reads as evidence but is not traceable to the tape — occurring in my own hand.
+
+### 2. Two numbers that propagate into the tally
+
+- **Bar 1059 is +0.24R, not −1R.** Burst 6 claimed the declined long "would have lost −1R" because 12/12
+  fell through the stop. Wrong: the entry bar's open was **6083.75**, and bars 1060–1063 ran *up* to
+  6102.5 — the stop was never hit in that session. I had read a *later* session's low and forgotten the
+  16:00 flat. **So the claim of "six avoided losses against two missed winners" is wrong**, and it was
+  wrong in the direction that made my declines look good.
+- **Bar 414 is +2.296R, not +2.8R.** Burst 8's table labelled a row "414" while using **bar 429's**
+  geometry (entry 5856.00, stop 5875.5 → 2.821R). Bar 414's own geometry (entry 5832.0, stop 5845.5,
+  target 5801) gives **2.296R**. The row conflated two different entries.
+- B also reports **bar 1538 as −0.74R not −1R**, **bar 293 omitted entirely**, the tally **frozen at burst
+  7**, and bar 1619's "pre-computed" geometry appearing in **no callout** — described in prose only.
+
+**The corrected ledger, per B: 12 specified entries, +7.08R, 7 W / 5 L.** My claimed "+3.549R over six,
++0.59R each, 3W/3L" was an incomplete ledger whose per-entry mean coincidentally matched. **Use B's
+figure, not mine.** And note what it does *not* do: +0.59R per entry over 12 is still noise, and agent C
+has separately shown the pattern behind most of these entries has an expectancy of about zero.
+
+### 3. Search width: 8 was understated. The honest figure is ~20, and it moves my own thresholds
+
+B's verdict: **10 is the floor, ~20 is the real search width — a figure this file states and then
+discards.** That is the error that matters most, because every deflation threshold here is computed from
+it. `free_t = sqrt(2·ln n)`:
+
+| n trials | free_t |
+|---|---|
+| 8 (what I claimed) | **2.04** |
+| 20 (honest) | **2.45** |
+
+So every "clears the single-hypothesis floor" remark I made was measured against a threshold too lenient.
+Applied to the one result I called interesting — fresh swing extremes breaking more than they hold, at
+z ≈ 1.76 — it was already short of 2.33 by my own reckoning and is now short of **2.45**. It stays a
+non-result. **Thesis count for all future `score` calls: 20.**
+
+### What I am taking from this about my own reliability
+
+Three agents each attacked one of my claims. **A cleared the null and found two latent defects in my code.
+C showed my two wins cannot be attributed to a pattern. B found my prose systematically flattering, once by
+importing a price from the future.** The code and the machine record survived; the narration did not.
+
+**The concrete change: any figure in a future burst note must be traceable to a callout field or a bar in
+the tape, and where it is a derivation I state the inputs.** The counterfactual registers reproduced
+digit-for-digit precisely because they are code. The prose failed precisely because it was prose.

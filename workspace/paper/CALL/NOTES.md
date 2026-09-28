@@ -6532,3 +6532,31 @@ each other again (MNQ 1m BULLISH 2-0 against 5m BEARISH 0-3 unanimous). Neither 
 remains structurally closed (N166), and there is still no level down here that was written down in advance.
 Acting now would be a discretionary decision remade at the bar — the thing `CALLOUT.md` says makes the
 sibling desk's results inadmissible.
+
+## N188 — 10:47: both branches of the location decomposition fired at once, for the first time
+
+MGC's location fell 10.9% -> 4.0% and **both** range endpoints moved:
+
+    [4168.30, 4233.20]  ->  [4164.10, 4231.50]
+
+Decomposed by reading the window, not by inferring it:
+
+    window   00:45 -> 10:30   (was 00:30 -> 10:15)
+    the bar that rolled off is 00:30, h 4233.20   -> the HIGH fell by WINDOW ROLL-OFF, 1.70 points
+    the newest bar 10:30 has l 4164.10            -> the LOW fell by PRICE, 4.20 points
+
+So of the 6.9 percentage points location moved, part is MGC genuinely making a new session low at 4164.10 and
+part is the 00:30 bar's 4233.20 high ageing out of the 40-bar window — **price and window in the same
+direction at the same time, the first time both branches have fired on one reading** (N136 was price alone,
+N137 window alone, N140 revision alone). Had I not looked, "location collapsed to 4.0%" would have read as
+pure capitulation when a quarter of the move is the chart forgetting last midnight.
+
+This is the concrete form of the N132 hazard: a unanimity requirement containing a trailing-window component
+can be pushed toward agreement by the window sliding. Here it did not change the headline — MGC's 15m was
+already BEARISH 0-2 and location was already BEAR — but the magnitude I would have quoted was wrong by a
+quarter.
+
+Frames: MGC BEARISH on all five eligible for a third consecutive check, 1m back to 0-3 unanimous, close
+**4166.80** vs EMA20 4182.28. MNQ BEARISH on 1m/5m/15m/60m, 4h CONFLICTED, location **12.0% of [30506.75,
+30759.25]** with both its endpoints unchanged. Neither reversal fires. **No call** — same reason as the last
+six checks: no level down here was written down in advance, and both symbols are extended.

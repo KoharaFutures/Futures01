@@ -1780,3 +1780,92 @@ an hour. I criticised someone for a badly placed entry on a trade whose directio
 wrong, while holding two correctly-directioned shorts whose entries are so badly placed
 they have captured none of a 30-point move. Their entry problem cost them $58. Mine has
 cost the desk the entire move.
+
+## N32 — full check: CALL-0003's expiry is BAR-based, so it will not journal at 02:00 ET. And the 60m headline I just reported describes the midnight hour.
+
+01:53 AM EDT, hourly full check. Chain intact — `trig_01Pd1K8Qs9qm5CB9wDEcvuYA` pending,
+fires 01:53, no repair needed. `CALLOUT.md` unchanged since `1948339`, the same commit
+verified at the 00:55 full check, nothing to reconcile. Nothing triggered, nothing resolved.
+
+Both symbols on new lows: **MGC 4212.60**, **MNQ 30628.50** — MNQ finally through the
+30637.50 that had held since 00:00.
+
+### CALL-0003 will not expire at 02:00, and I should say so before the owner waits for it
+
+I have told the owner twice that CALL-0003 expires at 02:00 ET. That is its
+`expires_bar_ts`, and `resolve.py` retires a plan by comparing **bar timestamps**:
+
+```python
+expiry = plan.get("expires_bar_ts")
+bars   = [b for b in all_bars if b["ts"] <= expiry] if expiry else all_bars
+expired = bool(expiry) and all_bars[-1]["ts"] > expiry
+```
+
+`expired` needs a held bar **stamped after 02:00**. The newest 5m bar right now is 01:40 at
+13.1 minutes of lag, so the 02:00 bar will not be in hand until roughly **02:15 ET**, and the
+02:05 bar that actually satisfies `> 02:00` arrives around 02:18-02:20. So the NO_FILL will
+be journalled ~15-20 minutes after the wall clock says 02:00.
+
+That is correct behaviour, not a bug — the whole desk resolves against bars it has actually
+fetched, and an expiry that fired on wall-clock time while the resolver had no bar for that
+period would be retiring a plan on a window it never looked at. But "expires 02:00 ET" is
+what I said, and the owner will be watching at 02:00 and seeing nothing. **Bar-based expiry
+plus 13 minutes of feed lag means every expiry lands late by the lag.** Saying it now.
+
+### The 60m read in this check is 113 minutes old, and that changes what it means
+
+Verified per frame rather than assumed:
+
+```
+MGC    1m  01:43  lag  10.3m        MNQ    1m  01:43  lag  10.3m
+MGC    5m  01:40  lag  13.3m        MNQ    5m  01:40  lag  13.3m
+MGC   15m  01:30  lag  23.3m        MNQ   15m  01:30  lag  23.3m
+MGC   60m  00:00  lag 113.3m        MNQ   60m  00:00  lag 113.3m
+MGC  240m  20:00  lag 353.3m        MNQ  240m  20:00  lag 353.3m
+```
+
+The 60m headline for both symbols is built on the **00:00 bar**. The vendor has not published
+the 01:00 hour at all — this fetch wrote no 60m snapshot, neither new nor revised. So when I
+report `MGC 60m BEARISH 0-3, close 4227.40, 0.6% of range`, that is a description of the
+midnight hour, and MGC has since fallen another 14.80 points to 4212.60. The reading is not
+wrong, it is just **about a different time than the report it appears in**, and a reader
+scanning the seven-frame table has no way to see that.
+
+Same for `MNQ 60m location MIXED 45.1%` — the wider fact from the 00:55 check still holds and
+is still worth more than the 15m's 6%, but it is a statement about midnight.
+
+**Specified, not built now:** the seven-frame table should carry each frame's lag, so a row
+built on a two-hour-old bar cannot sit flush beside one built on a ten-minute-old bar and
+read as equally current. That is a display change — the same category N27 allowed itself to
+fix mid-loop — but the honest reason to defer it is that I have already made three passes at
+the grading display tonight and the churn is itself a cost. It goes with the N28 split.
+
+### Ledger
+
+```
+journal records          11   (7 directional, 4 NO TRADE, 4 amendments)
+pre-registered PENDING    4   (1 INERT, never evaluated - N30)
+open positions            0        closed trades  0
+win rate                 N/A       expectancy  N/A       ambiguous bars  0
+equity            $50,000.00       drawdown  $0.00
+to the $2,600 operational floor    $2,600.00
+to the $2,800 absorbing state      $2,800.00
+ladder fraction   0.000 of the $4,000 usable buffer
+```
+
+### Thesis tracking
+
+```
+CALL-0001  MNQ LONG   fav  11.25  adv 260.75  tgt 96.00   DIRECTION WRONG
+CALL-0003  MNQ LONG   fav  17.25  adv 114.25  tgt 83.20   DIRECTION WRONG
+CALL-0004  MGC SHORT  fav  35.70  adv   0.30  tgt 19.04   DIRECTION RIGHT, TARGET COVERED
+```
+
+CALL-0004's favourable excursion is now **35.70 against a 19.04 target with 0.30 adverse** —
+1.88x its own first target, on a read that has been right for four hours, collected entirely
+by nobody. CALL-0003's adverse excursion has grown to 114.25 against a 52-point stop; the
+NO_FILL it is heading for is the better of the two available outcomes.
+
+No new pre-registration. Both `reversal_setup` calls still fail, MGC on both conditions and
+MNQ on extension, and MGC structurally cannot pass a two-HTF test while its daily and weekly
+are disqualified.

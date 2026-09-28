@@ -175,6 +175,54 @@ def mech(p):
     return spec, fill, stop, tgts, sp * spec.point_value * p["contracts"]
 
 
+def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> pathlib.Path:
+    """The empty shell: chassis, rail and laser channel, with every content element
+    removed. Useful for judging the frame on its own, and for laying out a new card.
+
+    It writes to its own filename and touches nothing else - no plan, no journal, no
+    ledger. "Delete the content of the card" is a rendering choice; deleting the record
+    would be a different act entirely and is not what this does.
+    """
+    las = LASER[side]
+    img = backdrop(W, H, side).convert("RGBA")
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    M = 54
+    hud_frame(d, (M, M, W - M, H - M), las, gd=gd)
+    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
+    interior = Image.alpha_composite(img, ov)
+
+    CW, CH = W + FRAME * 2, H + FRAME * 2
+    chassis = brushed_metal(CW, CH).convert("RGBA")
+    cg = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+    cgd = ImageDraw.Draw(cg)
+    co = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+    cd = ImageDraw.Draw(co)
+    cd.rounded_rectangle([3, 3, CW - 4, CH - 4], radius=22, outline=(232, 236, 244, 120), width=2)
+    bevel(cd, (6, 6, CW - 7, CH - 7))
+    ch = FRAME - 20
+    cd.rounded_rectangle([ch, ch, CW - ch - 1, CH - ch - 1], radius=16,
+                         fill=(14, 15, 18, 255), outline=(10, 11, 13, 255), width=2)
+    for i, a in ((0, 255), (2, 120), (4, 55)):
+        cd.rounded_rectangle([ch + 5 + i, ch + 5 + i, CW - ch - 6 - i, CH - ch - 6 - i],
+                             radius=12, outline=(*las, a), width=2 if i == 0 else 1)
+    cgd.rounded_rectangle([ch + 5, ch + 5, CW - ch - 6, CH - ch - 6], radius=12,
+                          outline=(*las, 255), width=5)
+    bevel(cd, (FRAME - 5, FRAME - 5, CW - FRAME + 4, CH - FRAME + 4),
+          light=(200, 206, 216), dark=(8, 9, 11), w=4)
+    for sx2, sy2 in ((FRAME // 2 + 2, FRAME // 2 + 2), (CW - FRAME // 2 - 2, FRAME // 2 + 2),
+                     (FRAME // 2 + 2, CH - FRAME // 2 - 2),
+                     (CW - FRAME // 2 - 2, CH - FRAME // 2 - 2)):
+        screw(cd, sx2, sy2, 15, las)
+    chassis = Image.alpha_composite(chassis, cg.filter(ImageFilter.GaussianBlur(9)))
+    chassis = Image.alpha_composite(chassis, co)
+    chassis.paste(interior, (FRAME, FRAME), interior)
+    chassis.convert("RGB").save(out)
+    return out
+
+
 def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     side = plan["side"]
     las = LASER[side]
@@ -384,8 +432,17 @@ def main() -> int:
     import sys
     sys.path.insert(0, str(HERE.parents[2]))
     ap = argparse.ArgumentParser()
-    ap.add_argument("call_ids", nargs="+")
+    ap.add_argument("call_ids", nargs="*")
+    ap.add_argument("--blank", action="store_true",
+                    help="render the empty shell only - frame and rail, no content")
     a = ap.parse_args()
+    if a.blank:
+        for side in ("LONG", "SHORT"):
+            out = HERE / f"card_blank_{side}.png"
+            render_blank(side, out)
+            w, h = Image.open(out).size
+            print(f"{out.name}  {w}x{h}  ({out.stat().st_size//1024} KB)")
+        return 0
     plans = {json.loads(l)["call_id"]: json.loads(l)
              for l in (HERE / "pending.jsonl").read_text().splitlines() if l.strip()}
     for cid in a.call_ids:

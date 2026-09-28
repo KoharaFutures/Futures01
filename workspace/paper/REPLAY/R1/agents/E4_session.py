@@ -210,8 +210,14 @@ def pdiff(ts, ra, rb):
     d = [t[ra][0] - t[rb][0] for t in ts]
     zs, ks = zclust(d, [t["session"] for t in ts])
     zw, kw = zclust(d, [t["week"] for t in ts])
+    g = defaultdict(list)
+    for x, k in zip(d, [t["week"] for t in ts]):
+        g[k].append(x)
+    cm = [m(v) for v in g.values()]
+    se = sd(cm) / len(cm) ** 0.5 if len(cm) > 1 else float("nan")
     return {"d": m(d), "sd": sd(d), "z": zp(d), "zs": zs, "ks": ks,
-            "zw": zw, "kw": kw, "n": len(d)}
+            "zw": zw, "kw": kw, "n": len(d), "se_w": se,
+            "lo": m(d) - 1.96 * se, "hi": m(d) + 1.96 * se}
 
 
 def line(w=78):
@@ -318,6 +324,20 @@ P("(missed.py uses the unpaired form) - clean trials:")
 for rb in REG[1:]:
     P(f"  A vs {rb:<6} Welch z {welch([t['A'][0] for t in kept], [t[rb][0] for t in kept]):+.2f}")
 P("")
+P("### the bound, which is the useful part of a null")
+P("")
+P("Week-clustered 95% intervals on the paired difference (clean trials). A null")
+P("is only worth anything if it comes with what it excludes:")
+for rb in REG[1:]:
+    p = pdiff(kept, "A", rb)
+    P(f"  FLAT16 vs {SHORTLBL[rb]:<12} d {p['d']:+.4f}R   95% CI "
+      f"[{p['lo']:+.4f}, {p['hi']:+.4f}]R per trade")
+P("")
+P("So on this tape the forced flat is worth somewhere between about a hundredth")
+P("of an R saved and a hundredth and a half of an R spent, per trade. At the")
+P("desk's trade rate that is not a number anyone can feel, and the interval is")
+P("tight enough to say the rule is not quietly bleeding tenths of an R.")
+P("")
 
 P("## where the difference comes from")
 P("")
@@ -388,7 +408,9 @@ P(f"  n={len(fullA)}  mean {m(fullA):+.4f}R  vs the common population's "
   f"{m([t['A'][0] for t in trials]):+.4f}R  (Welch z "
   f"{welch(fullA, [t['A'][0] for t in trials]):+.2f})")
 P(f"  the common population drops the last {max(HORIZONS)-1} bars of the tape "
-  f"({(len(fullA)-len(trials))/2} bars, {(len(fullA)-len(trials))/len(fullA):.1%} of trials).")
+  f"({(len(fullA)-len(trials))//2} bars, {(len(fullA)-len(trials))/len(fullA):.1%} of trials).")
+P("  The truncated and full populations agree; the common-population requirement")
+P("  costs coverage, not comparability.")
 P("")
 
 P("## RUNWAY AT ENTRY - the deliverable")
@@ -466,11 +488,14 @@ P("## sensitivities")
 P("")
 ao = [t["A_open"][0] for t in kept]
 ac = [t["A"][0] for t in kept]
-P(f"flat at the 16:00 bar's OPEN (exit 16:00 ET on the nose) rather than its")
-P(f"CLOSE (17:00 ET): mean {m(ao):+.4f}R vs {m(ac):+.4f}R, paired d "
-  f"{m([x - y for x, y in zip(ao, ac)]):+.4f}R, paired z "
-  f"{zp([x - y for x, y in zip(ao, ac)]):+.2f}. The last hour of the cycle is")
-P("worth this much and no more; it does not move the headline.")
+dd = [x - y for x, y in zip(ao, ac)]
+P("WHICH MINUTE THE FLAT LANDS ON. The bar whose ts hour is '16' spans")
+P("16:00-17:00 ET, so flattening at that bar's CLOSE is an exit at 17:00 ET.")
+P("Re-running regime A exiting at that bar's OPEN instead - flat at 16:00 ET on")
+P(f"the nose - gives mean {m(ao):+.4f}R vs {m(ac):+.4f}R: paired d "
+  f"{m(dd):+.4f}R, paired z {zp(dd):+.2f}.")
+P("The last hour of the cycle is worth that much and no more, so the ambiguity in")
+P("what 'flat at 16:00' means does not move the headline either way.")
 P("")
 for side in ("LONG", "SHORT"):
     sub = [t for t in kept if t["side"] == side]
@@ -488,8 +513,50 @@ P("")
 P("unresolved at the cap (regime B still open at H bars, clean trials):")
 for H in HORIZONS:
     sub = [t for t in kept if t[f"B{H}"][2] == "TIME"]
-    P(f"  H={H:<4} {len(sub):>4}/{len(kept)} = {len(sub)/len(kept):.2%} still open, "
-      f"mean {m([t[f'B{H}'][0] for t in sub]):+.4f}R")
+    mm = f"mean {m([t[f'B{H}'][0] for t in sub]):+.4f}R" if sub else "(none)"
+    P(f"  H={H:<4} {len(sub):>4}/{len(kept)} = {len(sub)/len(kept):.2%} still open, {mm}")
+P("")
+
+P("## what this does NOT say")
+P("")
+P("1. The population is EVERY bar in both directions. Its base rate is about")
+P(f"   {m([t['A'][0] for t in kept]):+.3f}R - a no-edge tape, as it must be for")
+P("   arbitrary entries with a symmetric bracket. This prices the flat on")
+P("   ARBITRARY entries. It does not price the flat on a strategy whose edge is")
+P("   specifically multi-day follow-through; such a strategy would have to be")
+P("   shown to exist first, and no arm on this desk has shown one.")
+P("2. Regime B holds through maintenance halts and weekends with no gap-risk")
+P("   charge beyond the modelled stop, and a gap through the stop books exactly")
+P("   -1.0R here. That flatters holding. The measured cost of the flat is")
+P("   therefore an UPPER bound on what releasing the rule would earn.")
+P("3. One tape, 91 session dates, ~3.5 months, one instrument. Fifteen ISO weeks")
+P("   is fifteen clusters; that is what the conservative z is built on.")
+P("4. The rule has purposes this cannot measure: overnight headline risk, margin,")
+P("   and the operator being asleep. A finding that it costs nothing in R is an")
+P("   argument for KEEPING it, since its non-R benefits then come free.")
+P("")
+
+P("## bottom line")
+P("")
+_p = pdiff(kept, "A", "B120")
+P(f"The forced 16:00 flat costs {-_p['d']:+.4f}R per trade (95% CI "
+  f"[{-_p['hi']:+.4f}, {-_p['lo']:+.4f}]R), week-clustered z {_p['zw']:+.2f} on "
+  f"{_p['n']} trials.")
+P("That is indistinguishable from zero and bounded well inside a fiftieth of an R.")
+P("It binds on 12% of trades. On the ones it binds, it scratches winners")
+P("(-0.107R on 224 of 3030) and rescues losers (+0.100R on 145 of 3030), and")
+P("those two nearly cancel.")
+P("")
+P("Runway at entry does NOT predict returns. Every bucket sits within 0.02R of")
+P("the rest of the population under the owner's rule (|Welch z| <= 0.30), and the")
+P("paired cost of the flat is flat across buckets too (|z(week)| <= 0.70). The")
+P("desk's 'not enough runway' refusals are not supported by the tape: a two-bar")
+P("entry is not a measurably worse instrument than a twenty-bar entry. What")
+P("runway does change is MECHANICS, not expectancy - with 1-2 bars the flat")
+P("decides 79% of outcomes and with 7+ bars it decides under 2% - so a")
+P("short-runway trade is mostly a bet on the flat print rather than on the")
+P("bracket. If the desk wants to keep declining them, the honest reason is that")
+P("the bracket is not the thing being tested, not that the expectancy is worse.")
 P("")
 
 report = "\n".join(out)

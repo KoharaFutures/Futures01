@@ -2768,3 +2768,81 @@ the honest test of this rule is whether it survives the move going the way the c
 
 MNQ is at maximum internal disagreement: 1m BULL 3-0 unanimous and 5m BULL 2-0 against 15m and
 60m both BEAR 0-3 unanimous, with daily BULL 3-0. That is a no-trade configuration on its face.
+
+## N52 — the MGC short I wanted to pre-register at 04:46 is CALL-0004 with the trigger moved to where price went, and a new call_id does not launder that
+
+I worked one up properly before rejecting it, so the arithmetic is on record rather than the
+conclusion alone. MGC has broken structure to new lows and the obvious plan is to sell a bounce
+back into the broken shelf rather than sell at the low:
+
+    MGC SHORT   entry 4190.00 (prior swing high 4193.10 / broken shelf 4182.70 zone)
+                stop  4197.00  = 7.00 pts = 0.75x ATR14(15m) 9.34, clear of rule 4's 0.5x floor
+                risk  7.00 x $10 x 1 = $70.00 = 29.2% of the $240 permitted, inside the 50% cap
+                TP1 1.5R 4179.50 · TP2 2.5R 4172.50 · TP3 3.5R 4165.50
+
+It sizes. It is above the market, so it is a forward bounce and not a chased level — the thing
+the owner specifically asked for. It clears rule 4 and the sizing cap. And I am **not** writing
+it, for a reason I did not see until I had it on paper:
+
+**This is CALL-0004.** CALL-0004's thesis, in its own words, is "sell a forward-projected
+retracement into the downtrend" on MGC, triggered at 4287.60. The plan above is the same thesis,
+same symbol, same side, same shape, with the trigger relocated from 4287.60 to 4190.00 — which is
+to say, relocated to where price actually went after I wrote the first one. That is precisely what
+**N8** forbids: editing a pre-registered plan after watching price. Opening a new `call_id` does
+not make it a new idea; it makes it the same idea with its pre-registration stripped off. The whole
+value of writing a trigger down before the price exists is destroyed if a miss can be re-issued
+nearer the market.
+
+It also fails on correlated exposure, independently. CALL-0004 already commits $119, 49.6% of the
+$240 permitted. Adding $70 of MGC short would put **78.6% of permitted into one direction on one
+symbol**. The honest counter-argument is that CALL-0004 cannot realistically fill — 4287.60 is
+107.40 points above price with ~74 minutes to its 06:00 expiry, about 11.5x ATR in five bars — so
+joint fill is negligible and the aggregate is theoretical. I note that the counter-argument is
+available and I am declining to use it, because "the plan I already have can't fill, so its risk
+doesn't count" is the reasoning that lets a book quietly double up.
+
+### What this actually means, and the timeline
+
+The MGC retracement short is a legitimate idea. It is not legitimate *right now* because there is
+an unresolved instance of it on the book. CALL-0004 expires on the **06:00 ET bar** — bar-based, so
+the journal entry will land ~13 minutes behind the clock (N32), and on current distance it will
+resolve `EXPIRED_UNTRIGGERED` / NO_FILL at 0.0R. Once it has resolved, a fresh MGC retracement plan
+computed from the geometry as it stands then is properly pre-registered and carries no N8 problem,
+because the previous instance will have a recorded outcome rather than an open trigger.
+
+So: no new call this check, and the reason is not the one I gave for the last three. N44 and N51
+declined on chasing and on rule 2. This declines on **pre-registration integrity**, which is a
+stronger objection, and it comes with a time at which it stops applying.
+
+Third consecutive note whose subject is my own reasoning rather than the market. Worth saying
+plainly: the desk has now produced eight infrastructure and self-correction findings tonight and
+zero filled trades. That ratio is not a sign of rigour by itself — it is also what a desk looks
+like when it is more comfortable auditing itself than committing. The 06:00 resolution is the point
+at which that excuse expires too.
+
+## N53 — the 40-bar range HIGH migrated as well, so both ends of the location denominator move
+
+MGC's 40-bar range read `[4175.00, 4303.50]` at 04:41 and `[4175.00, 4300.60]` at 04:46. The high
+fell 2.90 with no new high printed: the bar carrying 4303.50 simply rolled out of the trailing
+40-bar window. Location consequently read 1.5% then and 4.1% now, and the close moved from 4176.90
+(settled `04:15`) to 4180.20 (forming `04:30`).
+
+N46 caught the floor migrating; this catches the ceiling migrating by expiry rather than by
+revision. A trailing-window location reading therefore has **three** independent ways to move
+while price does nothing: the low revises down, the high rolls off the back, and the forming bar
+re-prints. Quoting the endpoints (the N46 remedy) covers all three, which is the right reason to
+keep doing it.
+
+## N54 — MNQ's entire fast stack flipped from unanimous bull to bear in five minutes
+
+04:41: MNQ 1m BULLISH 3-0 unanimous, 5m BULLISH 2-0.
+04:46: MNQ 1m BEARISH 0-2, 5m BEARISH 0-2.
+
+A complete reversal of both fast frames, including a unanimous one, inside a single 5-minute slot.
+MGC's 1m did the reverse in the same window, 0-3 unanimous -> 1-2. Meanwhile 15m and 60m on both
+symbols are unchanged and have been unanimous bearish for the entire session.
+
+Running count of MNQ 5m states tonight: BEAR 0-1, BULL 2-0, CONFLICTED 1-1, BULL 2-0, BEAR 0-2 —
+five states in twenty-one minutes. "Unanimous" on a fast frame means unanimous for one bar, and I
+should stop treating the word as carrying weight there. Both symbols are now bearish on all four of
+1m/5m/15m/60m, and after tonight that fact is worth roughly nothing on its own.

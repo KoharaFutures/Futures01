@@ -1474,3 +1474,77 @@ credits a 4-agree state at +0.43 where the old one penalised it -1.0. The defens
 part is that the penalty was arbitrary and the new number is on a stated curve; the
 honest part is that my own book got slightly better-looking out of it. The ranking is
 unchanged — MGC's two plans above MNQ's two, and all four still below the B+ ceiling.
+
+## N28 — smoothing the mapping did not stop the grade moving, because the INPUT oscillates. The real error is that I put two different things in one letter.
+
+01:13 AM EDT. Newest 5m bar 01:00, lag 13.8m. Nothing triggered, nothing resolved.
+All four grades moved again — one notch each this time, not two:
+
+```
+              01:09   01:13
+CALL-0001  C      -> B-      confluence 1 agree -> 2 agree
+CALL-0002  B-     -> B       confluence 4 agree -> 3 agree
+CALL-0003  C      -> B-      confluence 1 agree -> 2 agree
+CALL-0004  B-     -> B       confluence 4 agree -> 3 agree
+```
+
+The continuous curve did exactly what N27 designed it to do — amplitude down from two
+letters to one. But the letters are still moving every five minutes, and now the cause
+is visible and it is not the mapping.
+
+**MGC's confluence tally across four consecutive checks: 4 -> 3 -> 4 -> 3.** The input
+itself oscillates on the check cadence. Smoothing a mapping cannot stabilise a figure
+whose input flickers; all I did was halve the amplitude of the flicker. N26 diagnosed a
+step function, N27 fixed the step function, and the thing I was actually chasing was
+underneath both.
+
+### The design error, stated plainly
+
+I put **two different quantities in one letter**:
+
+- **construction quality** — where the stop sits relative to ATR and the 40-bar
+  extreme, whether the size is inside the cap, whether the entry is forward or
+  reactive, whether the horizon label matches the arithmetic, whether the family was
+  ever tested for that symbol. All of this was determined **when the plan was written**
+  and cannot change afterwards, because N8 forbids changing any of it.
+- **current context** — how many families agree right now, what today's ATR is. This
+  moves by construction, and is supposed to.
+
+A grade that mixes them is incoherent: it claims to score how well a plan was built,
+then revises that score as the market moves, with the plan untouched. The owner is
+being shown a letter that looks like a verdict on the callout and is partly a reading
+of the last five minutes.
+
+### The fix, and why implementing it right now would be the wrong kind of convenient
+
+Split them. Compute the **construction grade once, at pre-registration, from the bars
+available at that moment**, and never recompute it. Show current context separately —
+the TIMEFRAMES column and confluence panel already do that job and are honestly
+labelled as live.
+
+The trap: if I froze the grades at *this* check, I would be locking in the highest
+values they have taken all night — B-/B/B-/B, against C/C+/C/C forty minutes ago. That
+is not a fix, that is picking a flattering snapshot and calling it permanent. Done
+properly the construction grade for each plan must be computed from the bars **as of
+that plan's own `created_bar_ts`**, which the archive supports but which is real work:
+it needs the ATR and 40-bar envelope reconstructed at four different historical
+timestamps, and `confluence.evaluate` called against each plan's creation state rather
+than now.
+
+Stored in a sidecar keyed by `call_id`, not written into `pending.jsonl` — a
+pre-registered plan record should not grow fields after the fact, and N25 already
+established that this desk amends by appending rather than mutating.
+
+**Three changes to the grader in one hour is enough.** N26 diagnosed, N27 fixed the
+mapping, and this is the third finding in the same component while I watch the letters
+it produces. The pattern of repeatedly adjusting a scoring function in front of the
+thing it scores is itself the risk, whatever each individual justification looks like.
+Specified here, implemented at a full check, from historical bars.
+
+### Until then, what the letter means
+
+It is a live composite, not a verdict, and it will keep moving a notch as confluence
+flickers. Ranking is stable and is the part worth reading: **MGC's two plans above
+MNQ's two, every check tonight**, which comes from the fixed criteria — MGC's stops sit
+~4x ATR clear of the 40-bar extreme, MNQ's CALL-0001 sits 3.50 points off it. That
+ordering has not changed once, through two grader rewrites and four confluence flips.

@@ -1869,3 +1869,90 @@ NO_FILL it is heading for is the better of the two available outcomes.
 No new pre-registration. Both `reversal_setup` calls still fail, MGC on both conditions and
 MNQ on extension, and MGC structurally cannot pass a two-HTF test while its daily and weekly
 are disqualified.
+
+## N33 — resolve.py CRASHED on CALL-0003's expiry. A missing dict key took down resolution for the whole book, and it had been latent for four hours.
+
+02:19 AM EDT. The 02:05 bar finally arrived, `resolve.py` ran, and it did not journal
+anything — it raised:
+
+```
+File "workspace/paper/CALL/resolve.py", line 257, in check_triggers
+    f"Original thesis: {plan['why'][:200]}"),
+KeyError: 'why'
+```
+
+Which plans carry which key:
+
+```
+CALL-0001  why, why_short
+CALL-0002  why, why_short
+CALL-0003  why_short only      <- the one expiring
+CALL-0004  why_short only
+```
+
+At some point I started writing the thesis under `why_short` and stopped writing `why`, and
+the resolver indexes `plan["why"]` unconditionally. So the moment CALL-0003's window closed,
+the expiry path hit a plan that had no `why` and died.
+
+### Three things about this are worse than the crash itself
+
+**1. It aborted the entire run, not one plan.** `check_triggers` raised before `save_state`,
+so CALL-0001, CALL-0002 and CALL-0004 were not evaluated either. One missing key in one plan
+stops resolution for the whole book. Had CALL-0004's sell limit filled on that same pass, the
+fill would have been lost with it.
+
+**2. It was latent on the FILL path too.** Line 231 — the path that opens a position — has the
+identical `plan["why"]`. So for two of four live plans, *both* outcomes were unrecordable:
+a fill would have crashed and an expiry did crash. That has been true since CALL-0003 was
+written at 22:23 ET, roughly four hours, and nothing surfaced it because neither plan had
+reached either event until now.
+
+**3. It is the N20 class again, in its loudest form.** N20 warned about a resolver that
+returns a silent no-op indistinguishable from a quiet market. This is the same harm arriving
+as a traceback instead — and the traceback is strictly better, because it is impossible to
+mistake for "nothing happened." The reason I saw it at all is that the fast check runs
+`resolve.py` and reads its output every five minutes. A desk that only checked hourly would
+have lost four resolution passes.
+
+### Fixed, and why fixing resolver code here was not the thing I have been deferring
+
+I have deferred four fixes tonight (N17, N19, N20, N28) on the rule that code feeding a
+decision or an outcome must not be rewritten while watching a move. This is not that. The bug
+prevented an outcome from being **recorded at all**; the fix restores recording and changes
+nothing about *what* gets recorded. Added `plan_thesis(plan)`, which returns `why` or
+`why_short` and says plainly when neither exists rather than inventing one, and pointed both
+call sites at it. No resolution semantics touched: not the fill rule, not the stop-wins-ties
+rule, not the cost model, not the expiry comparison.
+
+Re-ran, and it journalled:
+
+```
+EXPIRED CALL-0003 MNQ LONG - never triggered (window closed 2026-09-28T02:00:00-04:00)
+
+outcome  {result: NO_FILL, reason: expired untriggered, net_dollars: 0.0, r_multiple: 0.0}
+why      pre-registered LONG never triggered. Window 22:05 -> 02:00 closed with no real
+         bar above 30767.25.
+as_of    2026-09-28T02:05:00-04:00
+```
+
+**First resolved outcome this desk has ever produced: CALL-0003, NO_FILL, 0.0R.**
+
+### What the outcome means, with the diagnosis the owner asked for
+
+`thesis.py` had this plan **DIRECTION WRONG** throughout: favourable excursion 17.25 against
+an adverse excursion of **263.25** from its reference price, with a 52-point stop. Had it
+filled, it would almost certainly have stopped out for −1.0R ≈ −$104. **The non-fill is the
+better of the two outcomes that were available to it**, and that is exactly the distinction
+the owner asked for at 01:23 — a 0.0R that saved money, not a 0.0R that missed one.
+
+Contrast CALL-0004 on the same page: favourable 41.30 against a 19.04 target with 0.30
+adverse. Same 0.0R so far, opposite meaning. Without `thesis.py` the ledger would show two
+identical zeros.
+
+### Standing fix for the schema
+
+Plans must be written with a consistent thesis key. `why` is what `CALLOUT.md`'s journal
+schema names, so `why` is the canonical field and `why_short` is the card's display variant.
+New pre-registrations write both. The two existing plans are not being edited — N8 — and the
+resolver now tolerates either, which is the right place for the tolerance since the archive
+already contains both shapes.

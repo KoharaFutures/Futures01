@@ -135,6 +135,22 @@ def rewrite_journal_outcome(call_id: str, outcome: dict) -> bool:
 
 # ---------------------------------------------------------------- triggering
 
+def plan_thesis(plan: dict) -> str:
+    """The plan's stated thesis, whichever key it was written under.
+
+    Two of the four live plans carry only `why_short`; `CALL-0001`/`CALL-0002` carry both.
+    Indexing `plan["why"]` unconditionally raised KeyError and took down the ENTIRE resolve
+    run - not just the one plan - at the exact moment CALL-0003's window expired (N33). This
+    returns the thesis without asserting which key holds it, and says so plainly when neither
+    does rather than inventing one.
+    """
+    for k in ("why", "why_short"):
+        v = plan.get(k)
+        if v:
+            return v
+    return "(no thesis recorded under 'why' or 'why_short')"
+
+
 def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
     """Turn pre-registered plans into open positions, on a real bar only."""
     log: list[str] = []
@@ -228,7 +244,7 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
                 "contracts": plan["contracts"], "risk_dollars": pos["risk_dollars"],
                 "ladder_mult": plan.get("ladder_mult"),
                 "rr": tps[0]["r"] if tps else None,
-                "confidence": plan["confidence"], "why": plan["why"],
+                "confidence": plan["confidence"], "why": plan_thesis(plan),
                 "basis": basis, "as_of": bars[-1]["ts"],
                 "entry_bar_ts": bar["ts"], "fill_note": pos["entry_fill_note"],
                 "pre_registered_at": plan["created_utc"],
@@ -254,7 +270,7 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
                     "why": (f"pre-registered {side} never triggered. Window "
                             f"{plan['created_bar_ts']} -> {expiry} closed with no real bar "
                             f"{'above' if side == 'LONG' else 'below'} {trig}. "
-                            f"Original thesis: {plan['why'][:200]}"),
+                            f"Original thesis: {plan_thesis(plan)[:200]}"),
                     "basis": basis, "as_of": all_bars[-1]["ts"],
                     "pre_registered_at": plan["created_utc"],
                     "resolution": "EXPIRED_UNTRIGGERED",

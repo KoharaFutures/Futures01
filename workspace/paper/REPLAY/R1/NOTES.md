@@ -1861,3 +1861,78 @@ that pretended to forecast.**
 
 The remaining 33 findings are catalogued and will be worked through in order of the NUMBER tag; none of the
 others is live in a decision path.
+
+### E2 — **MES 60m is a random walk in returns.** The unifying answer, and the last of the nine.
+
+**Variance ratio (heteroskedasticity-robust z):** q2 1.025 (+0.33) · q4 1.038 (+0.30) · q8 0.993 (−0.04) ·
+q12 0.993 (−0.04) · q24 1.011 (+0.04). **All p ≥ 0.74.** Runs test z **−0.345**.
+
+**The part that matters most is how the naive test lies.** I verified it directly:
+
+- **Kurtosis 24.1** against a Gaussian 3. At that kurtosis the homoskedastic ±1.96/√n band is invalid.
+- The naive band flags **exactly 7 of 24 lags** — [3, 4, 5, 6, 9, 21, 23] — with **Ljung-Box p = 1.1e-7.**
+  A naive reading would have declared strong structure at one in ten million.
+- **Sign-flip surrogates** (zero return predictability, real volatility preserved) flag **5.06 lags on
+  average.** Observed 7 → **p = 0.23.** Q(24) = 78.3 against a null 95th of 112.5 → **p = 0.26.** Under a
+  robust band, **1 of 24 — chance.**
+
+**And the power check I asked for landed hardest: E2's own seeded Gaussian random walk produced VR(8)
+z = −2.50 and runs z = +2.03 — *more* apparent structure than the real market.** A test that finds more
+signal in simulated noise than in the tape has answered the question about its own power.
+
+**The bound: detection floor |ρ| ≈ 0.11 (0.21 at lag 1); breakeven needs |ρ| ≈ 0.18.** So **anything
+profitable would have been detectable, and nothing was detected.** Volatility *is* predictable
+(R² = 0.112) and is **directionless** — it sizes trades, it does not choose sides.
+
+**Reconciling E2 with E5, because they appear to disagree and do not.** E5 concluded "no structure" stays
+*untested* (detectable floor +0.19R above the 0.081R cost hurdle); E2 concludes no *profitable* structure
+exists (detectable floor 0.11 in ρ *below* the 0.18 breakeven). **Both are right because they constrain
+different objects.** E2 bounds **linear serial predictability**, where the ordering favours us. E5 bounds
+**any strategy's trade-level expectancy**, where it does not. So: **linear structure large enough to trade is
+ruled out; nonlinear or conditional structure is not**, and that is the honest residue.
+
+**A finding of my own from verifying E2, and it is sharp.** Excising the 13 known roll-merge bars
+(1146–1158) shifts the autocorrelations by **+0.1077 at lag 1, −0.1107 at lag 3, −0.0830 at lag 6.**
+**Thirteen corrupt bars in 1,684 move ρ by about as much as the entire detectable effect size (0.11).** Any
+serial-correlation claim on this tape that does not excise the merge is measuring the merge. E2 adds that
+lag 1 is **48% one FOMC bar pair** (I have not verified that decomposition myself) — so the +0.1313 that
+appears at lag 1 once the merge is removed is an *event*, not structure. **Two independent contaminants
+inside one statistic.**
+
+E2 also **found and fixed a √n error in its own VR statistic** and declared ~98 trials.
+
+---
+
+## Closing the nine-agent round: what it produced
+
+**One sentence: the desk's conclusions survived, my narration and my controls did not, and the unifying
+explanation is that there is nothing to find at this timeframe.**
+
+| survived | did not survive |
+|---|---|
+| The stand-down null (A: 36/36 cells; E9: fair, matched control) | My levels control — **manufactured a null** (E9 + E7) |
+| Zero look-ahead breaches (E3: 678 prices; E7: none in code) | "Fresh extremes break more often" — **retracted**, z 1.76 → −0.73 |
+| `as_of` and `bar_index` 45/45 | All touch-count claims — **suspended** |
+| Rule 6 (E6: 0 of 22 hours clear even 1.96) | Rule 5 *as I tested it* — a census cannot reproduce it |
+| Rule 4 kept, now defended by measurement | Thesis 5 — **retired** (E8: 105 trials, family-wise p 0.86) |
+| `mode.py` correct at every boundary | My "hostile regime" reading — it was **cost** (E5) |
+| The owner's 16:00 flat — costs 0.0032R, **keep it** (E4) | My "not enough runway" refusals — **unsupported in R** (E4) |
+
+**Two fabricated figures reached live decisions** — the phantom three-touch shelf at bar 1502 and the
+withdrawn 46/54 odds at bar 1684. Both happened to push me toward the safer action. **That is luck, not a
+safeguard**, and it is the single most important thing for a future burst to remember about this record.
+
+**Search-width ledger, kept honest and unsummed** — adding these into one number would mislead as badly as
+understating them:
+
+| family | count | its `free_t` |
+|---|---|---|
+| distinct **trading theses** (desk-level, per B) | **20** | 2.45 |
+| thesis-5 predicate search (E8) | 105 | 3.05 |
+| hour-of-day cells (E6) | 22 | 2.49 |
+| geometry cells × arms (A) | 36 | 2.68 |
+| random-walk diagnostics (E2) | ~98 | 3.04 |
+| *sample sizes, NOT search width* (E4 3,102; E5 3,318) | — | — |
+
+**Nothing anywhere in this record clears its own threshold.** The largest |z| produced by nine agents is
+**+4.30**, and it belongs to **a broken volume field on the 18:00 bar** — not to a trade.

@@ -326,3 +326,125 @@ fresh level once the reversal's structure is legible.
 
 **Stopped at:** cursor **506/11287**, flat, equity **$50,348.18**, peak $50,348.18, drawdown $0,
 permitted $240 (×1.00), **1 closed trade, 1 win, +1.895R**.
+
+---
+
+## Burst 4 — bars 506→714. basis `cb15cb5` (2026-09-28, autonomous firing)
+
+### ⚠ REPORTABLE, AND IT IS NOT THE HARNESS: I have out-of-band knowledge of this calendar period
+
+**This is the most important thing this firing produced and it should reach the account owner ahead of
+any number in this file.**
+
+The tape reached **2024-11-07** and ran 5724.25 → 6013.0 → 6053.25. I have knowledge from training of
+the coarse monthly direction of US equity indices across late 2024 and much of 2025. That is **not** a
+leak from `visible.jsonl`, the harness is intact, and it cannot tell me whether the next bar is up or
+down. But:
+
+- it can bias me toward longs across a window that rose, and
+- **the placebo cannot catch it.** A random-direction control shares none of my priors, so a
+  prior-driven directional bias shows up as *separation from the placebo* — which is to say, as skill.
+
+So the contamination is **asymmetric to the control**, which is exactly the property that makes it
+dangerous. Any positive separation I show over roughly **2024-11 → 2025-06 must be discounted for it**,
+and `score`'s z is a weaker instrument in this window than the threshold language implies. A |z| below
+4.5 there does not clear me; it only fails to convict me.
+
+**My mitigation, stated so it can be audited rather than trusted:** every `why` cites only structure
+visible in the tape, and I act on no calendar or event knowledge. I have not named an event anywhere in
+`callouts.jsonl`. But a declared prior is still a prior, and the honest position is that this window's
+numbers are weaker evidence than the record will superficially suggest. This is a structural property
+of any LLM replaying recent history, known before I started, so I did not treat it as a stop condition —
+I logged it at `R1-00017-b000556` and kept working.
+
+### Result: 208 bars, 5 callouts, 0 trades taken, equity unchanged at $50,348.18
+
+No absorbing state, no id assertion (21 callouts, 21 unique ids), `score` not due, series not ended.
+
+### The coil: both sides of a symmetric plan fired and both would have lost
+
+The single most informative entry in the record so far, and it is evidence **against** my method.
+
+At bar 605 a very tight coil had formed at the top of the advance — bars 598–605 inside 6021.0–6032.5,
+11.5 points, ATR14 compressed 17.1 → 7.14. I armed **both** directions, deliberately symmetric so I was
+not expressing a view (which mattered given the bias declared above), and I widened the stops to the
+**far side of the coil** rather than the signal bar's extreme, reasoning that a stop sized to a
+compressed ATR is what the coil-ending expansion takes out.
+
+| leg | trigger | fired | entry | stop | outcome |
+|---|---|---|---|---|---|
+| SHORT | close < 6021.0 | bar 607 @ 6020.5 | bar 608 open 6020.75 | 6034.0 | bar 612 printed 6036.5 → **−1R** |
+| LONG | close > 6032.5 | bar 612 @ 6032.75 | bar 613 open 6032.75 | 6019.0 | bar 613 fell to 6015.5 → **−1R** |
+
+**A 24-point coil produced two false breaks in six bars and took both stops.** The stop-widening did not
+help, and the reason is worth keeping: **the failure was not stop size, it was that there was no
+expansion to catch.** The coil was a chop zone, not a launchpad. The expansion did arrive — ATR went
+7.14 → 13.21 — but two sessions later and after both stops were gone.
+
+This is **rule 8 arriving as first-hand evidence in my own record** rather than as a citation I was
+obeying on trust. I disarmed both triggers rather than taking a third break in a zone I had just watched
+fail twice.
+
+### The honest shadow tally, which reframes "1 trade, 1 win" considerably
+
+Burst 3 reported a win and three missed winners. That framing was **flattering and incomplete**, because
+I had not yet had a specified trigger lose. Now I have two. Every entry I have *specified*, taken or
+missed, scored against its own stop and target:
+
+| # | bar | side | basis | result |
+|---|---|---|---|---|
+| 1 | 39 | LONG | declined (extended) | would have **lost −1R** — decline correct |
+| 2 | 151 | LONG | declined, pre-condition failed | would have **lost badly** (−68 pts of adverse move) — decline correct |
+| 3 | 263 | SHORT | tick-through trigger, mis-specified | **−1R** |
+| 4 | 414 | SHORT | two-bar acceptance | **+2.8R** (entry 5856.00, stop 5875.5, target 5801 hit bar 423) |
+| 5 | 429 | SHORT | two-bar acceptance | **unmeasurable** — target passed before the entry confirmed |
+| 6 | 452 | SHORT | one-bar close-beyond — **TAKEN** | **+1.895R** |
+| 7 | 607 | SHORT | coil break | **−1R** |
+| 8 | 612 | LONG | coil break | **−1R** |
+
+**Five measurable specified entries: ≈ +1.7R total, ≈ +0.34R each, 2 winners and 3 losers — a 40% win
+rate whose payoff roughly compensates.** That is rule 3 in miniature (win rate and payoff cancel) and it
+is **noise at n = 5**. It is also contaminated by the bias declared above.
+
+The two correct *declines* are the part of the record I still rate most highly, and both turned on a
+condition written down before the bars — not on judgement exercised after them.
+
+### What I got wrong this firing
+
+Only one thing, and it is a read rather than a process failure for once: **I called a chop zone a coil.**
+I described bars 598–605 as "the cleanest structure since my winner" and armed both sides of it. The tell
+I missed was that 11/11 had already printed a 26-point rejection off 6053.25 — the advance was *rolling
+over*, so the tight range at the top was distribution, not accumulation before continuation. Two sessions
+later the structure resolved into a clean series of lower highs and lower lows, which is what it had been
+all along.
+
+I also did not break my cadence rule this firing: n=8 while armed, n=50 only when nothing was. That rule
+finally held after three bursts of breaking it three different ways. It did not save me, because the
+triggers were wrong rather than unreachable — which is its own lesson about fixing the process you can
+measure instead of the one that is failing.
+
+### Tooling I added, in my own lane
+
+`workspace/paper/REPLAY/R1/view.py` — a compact reader of `visible.jsonl` (ATR14 and its 0.5 floor, per-ET-date
+OHLC, the window range, and the last *n* bars in detail). It reads **only** `visible.jsonl`, and it
+roughly halves the context each decision point costs, which is the binding constraint on how many bars
+this replay can honestly cover. It is the part of burst 3's span-versus-fidelity problem I *could* fix
+inside my own lane; the armed-trigger primitive remains a harness request, not mine to build.
+
+### Distinct theses tried: **6**
+
+Adding (6) coil / volatility-compression break, both directions. Previous five unchanged. Counted
+generously on purpose — a wider search width raises my own deflation threshold, and that is the direction
+to err in.
+
+`score` not run: 1 closed trade. First run due at bar 1,000.
+
+### Carried into the next firing
+
+**Nothing armed, deliberately.** The blow-off topped 6053.25 on 11/11 and unwound 176 points to 5877.0 by
+11/15; 11/17–11/18 based 5877.0–5933.0 with price at 5918.0. That base is two sessions old and I have just
+been taught that a level I find interesting is not thereby tradeable. I will arm off the next cycle's
+structure rather than pre-committing to this one.
+
+**Stopped at:** cursor **714/11287**, flat, equity **$50,348.18**, peak $50,348.18, drawdown $0,
+permitted $240 (×1.00), 1 closed trade.

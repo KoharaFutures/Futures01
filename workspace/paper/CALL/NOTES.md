@@ -6246,3 +6246,41 @@ at 4168.30 on the 5m `09:35` bar.
 
 Ledger: **0 open, 1 closed (excluded), 2 pending. `state.json` equity $50,156.56, drawdown $0.00. Measured equity
 $50,000.00, measured drawdown $0.00, measured closed trades 0.**
+
+## N177 — 09:52: the 09:30 bar's low has NOT revised, and its revision window is closing
+
+    CALL-0005 fill test:  09:30 15m bar  h 30759.25  l 30617.25  c 30647.00
+    limit 30595.88 is 21.37 below the low  -- unchanged from 21.37 at 09:47
+    expiry needs ts > 09:30  ->  none yet; the 09:45 bar lands ~10:01
+
+**The low has not moved.** Per N89's measurement the bar's last revision typically lands **+12.3 minutes** after
+completion (90th percentile +14.2m); it completed at 09:45, so its revision window closes around
+**09:57-09:59**. Five to seven minutes remain, and the required 21.37-point downward revision has not started.
+
+So the N176 scenario is becoming unlikely rather than resolving: a fill-by-restatement was inside the measured
+range (max 27.25) but the window is shrinking and nothing has moved. **The expected outcome reverts to
+`EXPIRED_UNTRIGGERED` / NO_FILL / 0.0R on the `09:45` bar around 10:01** — N151's original prediction, which will
+make three non-fills from three plans by the same cause. The close and high of the 09:30 bar both revised this
+check (c 30647.75 -> 30647.00) while the low did not, which is consistent with N140's finding that the **close**
+is the field that moves.
+
+## N178 — MGC's 1m and 15m are now unanimous in opposite directions too
+
+MGC: **1m BULLISH 3-0 unanimous** against **15m BEARISH 0-3 unanimous** — the same full opposition MNQ showed at
+N169, now on the other symbol and the other way round. 5m BEAR 0-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2. Trend
+BEAR (4182.80 < EMA20 4185.95, falling, gap 3.15), structure BEAR, location **22.3%** of [**4168.30**, 4233.20].
+Reversal still blocked on the single unsatisfiable condition (N166).
+
+MNQ: **no reversal call** — 15m BULLISH 1-0, not unanimous. 1m **BEARISH 0-3 unanimous**, 5m BEAR 0-1, 60m BEAR
+0-1, 4h CONFLICTED, DAILY BULL 3-0 unanimous, WEEKLY BULL 2-1. Trend **MIXED** (30647.00 < EMA20 30656.23 while
+the EMA still rises), structure BULL, location **49.9%** of [30535.00, 30759.25] — almost exactly the midpoint,
+having been at 96.9% ninety minutes ago.
+
+Both symbols now have a unanimous 1m pointing against a 15m that disagrees, in opposite directions from each
+other. Per N54/N78/N115 that is worth nothing: the 1m has been unanimous in both directions repeatedly tonight
+and lasts a bar or two at a time.
+
+No new call. Neither reversal fires, MGC's is structurally blocked, and there is no pre-committed method that acts
+on a midpoint reading with a conflicted fast frame. **Ledger: 0 open, 1 closed (excluded), 2 pending.
+`state.json` equity $50,156.56, drawdown $0.00. Measured: 0 countable closed trades, equity $50,000.00, drawdown
+$0.00, full $2,800 to the absorbing state.**

@@ -3481,3 +3481,59 @@ per N54, "unanimous" on a 1m frame means unanimous for one bar.
 No call. The reversal test is false on both symbols, the bounce is the rule 8 sweep from N74, and the
 MGC plan waits on CALL-0004's resolution and on the conditions in N75 rather than on how the bounce
 looks.
+
+## N77 — N75 had a hole big enough to drive a trade through: it never said WHICH LEG. Closing it now, and the closed version says there is no MGC plan at 06:00
+
+N75 fixed the method 25 minutes before it would be used, which was the right instinct, and then I tested
+it and found it under-specified in the one place that matters. **It says "the settled down-leg" without
+defining the leg.** That is the whole plan. On MGC right now there are two defensible candidates and they
+give completely different trades:
+
+| leg | span | length | 50% entry | 61.8% stop level |
+|---|---|---|---|---|
+| 40 settled 15m bars: high `09-27T19:15` 4300.30 -> low `09-28T05:00` 4172.60 | 127.70 pts | **14.01x ATR** | **4236.45** | 4251.52 |
+| most recent confirmed swings: 4185.20 -> 4172.60 | 12.60 pts | **1.38x ATR** | **4178.90** | 4180.39 |
+
+An entry at 4236.45 and an entry at 4178.90 are not variants of one plan. The settled close is 4176.40,
+so one sits 60.05 above the market and the other 2.50 above it. **Choosing the leg at 06:00, after
+another 25 minutes of price, would let me choose the trade** — which is the exact failure N75 was written
+to prevent, surviving inside N75. A pre-registration with a free parameter is not a pre-registration.
+
+**The leg rule, fixed now:** the leg runs from the **highest high to the lowest low of the last 40
+settled 15m bars**, and is valid only if the high precedes the low. Mechanical, no discretion, and it
+uses the same 40-bar window `chart.py` already reports so it is checkable from the printed output. It
+must also be **at least 2.0x ATR14(15m)** to be a leg at all — a 1.38x-ATR "leg" is barely one bar's
+range and calling a retracement of it a setup is dressing noise.
+
+### Applied, in advance: both candidates fail, for opposite reasons
+
+- **40-bar leg (the rule's answer):** entry 4236.45, stop just beyond 4251.52, so stop distance ~15.5
+  points. `15.5 x $10 = $155` against the **$120** cap (50% of the $240 permitted at $0 drawdown).
+  **VOID on N75 condition 4.** For reference CALL-0004's 11.9-point stop cost $119 and was *just* inside,
+  so MGC's cap binds at about 12.0 stop points — this leg needs 15.5.
+- **Near leg:** 1.38x ATR, so it **fails the 2.0x minimum** just added. Its 61.8% stop would also be
+  1.49 points, a third of rule 4's 0.5-ATR floor of 4.56.
+
+**So the pre-committed method, evaluated honestly, produces no MGC plan at 06:00.** I am saying that now
+rather than at 06:00, because a prediction made before the moment is checkable and one made at the moment
+is not. Unless the geometry changes materially in the next 20 minutes, CALL-0004's resolution will be
+followed by **NO TRADE, journalled, with condition 4 named as the failure** — not by a plan.
+
+And the useful thing underneath: **MGC's problem is not direction, it is that the move is too large for
+the account to express at this stop geometry.** A 127.70-point leg with a 15.5-point stop needs $155 of
+risk on a $120 allowance. That is the same shape as N39/N40's conclusion — the binding constraint is
+entry-to-stop distance, never the instrument or the signal — and it is why five hours of a correctly-read
+one-way tape have produced no fill. Worth stating plainly to the owner rather than letting "no trade"
+look like indecision.
+
+## N78 — 05:40 state
+
+Newest settled 15m `05:00` on both; `05:15` settles at 05:43. Both symbols flat-to-drifting after the
+bounce: MGC forming c 4178.40 (l 4173.80 h 4181.00), MNQ forming c 30587.25 (l 30535.00 h 30591.00).
+Locations MGC 4.6% of [4172.60, 4299.20], MNQ 14.3% of [30535.00, 30900.50].
+
+Fast frames continue to churn: MGC 1m BULL 1-0 with 5m now BEAR 1-2 (out of unanimity), MNQ 1m BULL 2-1
+with 5m **CONFLICTED 0-0** — MNQ's 5m has now held five distinct states tonight. 15m and 60m unchanged and
+unanimous bearish on both, as they have been all session.
+
+No call. Reversal test false on both.

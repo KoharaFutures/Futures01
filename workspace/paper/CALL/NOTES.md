@@ -5984,3 +5984,28 @@ CONFLICTED 1m, location **11.9%** of [4172.60, 4234.90].
 
 No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
 **MNQ RTH opens 09:30 — 11 minutes.**
+
+## N168 — 09:23: MNQ's pullback has stalled seven minutes from CALL-0005's expiry
+
+MNQ 5m `09:10` bar `h 30717.75 l 30701.75 c 30706.50`. **The pullback has stalled**: its low of 30701.75 is
+5.75 *above* the previous bar's 30696.00, so the 57.75-point retracement recorded at N167 has stopped extending.
+Location 78.4% of [30535.00, 30753.75], effectively unchanged. `reversal()` still called, `held 57`,
+`agreeing_frames [5, 1440, 10080]`, 15m and 5m both BULL 3-0 unanimous, trend BULL (rising EMA20), structure BULL.
+1m BEARISH 0-2 and 60m BEARISH 0-1.
+
+**CALL-0005's limit is 105.87 below the bar's low with seven minutes to its 09:30 expiry.** The pullback closed
+the gap from 130.87 to 100.12 and has now given 5.75 of that back. There is no realistic path to a fill, and
+N151's prediction — `EXPIRED_UNTRIGGERED` / NO_FILL / 0.0R, the third such outcome from the same cause — will be
+confirmed by the resolver on the `09:45` bar around 10:01, not by the clock at 09:30 (N86).
+
+MGC: 5m `09:10` bar `h 4182.10 l 4178.40 c 4180.60`. Every frame bearish — 1m 0-2, 5m 0-2, **15m 0-3 unanimous**,
+60m 0-3 unanimous, 4h 0-2 — with trend BEAR (4181.50 < EMA20 4187.69, falling), structure BEAR (the lower high
+established at 16.00 vs a 6.20 floor, the lower low not at 3.70 vs 6.80), location **14.3%** of
+[4172.60, 4234.90]. Its reversal fails on the single unsatisfiable condition from N166.
+
+**The excluded position**: CALL-0002 SHORT 4186.40 against MGC 4180.60 = **+5.80 points / +$58.00** unrealised.
+Stop 15.80 away, TP1 10.20 away. N155's exclusion unchanged.
+
+No new call, and nothing in either symbol has changed materially in the last four minutes. 1 open (excluded),
+2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. **MNQ RTH opens 09:30 — seven
+minutes — and that is CALL-0005's expiry bar.**

@@ -5670,3 +5670,81 @@ CALL-0005 (MNQ LONG, unfilled, limit ~117 below market), CALL-0001 (MNQ LONG, ad
 
 The desk's real callout record is unchanged by this: two plans resolved as non-fills at 0.0R, one plan
 (CALL-0005) live and probably unreachable, and one position open that should not exist.
+
+## N157 — hourly full check, 08:52 ET. The excluded position is now +$95 and TP1 is 6.50 away; MNQ's bull structure is established on BOTH legs for the first time
+
+Cadence verified by listing per N45: `CronList` shows `33ba414e` present, no chain armed. CALLOUT.md, BRIEF.md
+and SERIES_AUDIT.md unchanged since `1948339` — no new disagreement to record. Merged a REPLAY-lane push from the
+sibling session; basis `884e2e0`.
+
+### The excluded position, reported because excluding it does not mean hiding it
+
+    CALL-0002 SHORT  entry 4186.40  stop 4196.40  TP1 4170.40
+    MGC now 4176.90  ->  unrealised +9.50 points = +$95.00
+    distance to TP1: 6.50      distance to stop: 19.50
+
+I declared the exclusion at 08:47 when it was **+3.80 / +$38.00**. Five minutes later it is **+9.50 / +$95.00**
+and TP1 is 6.50 away, so it will very likely close at **+1.6R / +$160** and stand as the only winning trade of
+the session. **The exclusion declared in N155 is unchanged and is not revisitable.** Stating it while the number
+was small is the whole reason it can be trusted now that the number is larger; if I had waited, this paragraph
+would be indistinguishable from keeping a fluke.
+
+To be explicit about the arithmetic that follows: when it closes, `state.json` equity will move and the ledger
+will show 1 closed trade with a positive R. **That number is not a result of this desk's process** and every
+report from here will say so beside it. `resolve.py` owns the ledger and I am not touching it.
+
+### Fresh directional read
+
+- **MGC — fully bearish again, and back at its lows.** trend BEAR (4176.90 < EMA20 4188.52, falling), structure
+  MIXED with swing highs now `4193.40 -> 4203.80` (higher) and lows `4180.20 -> 4178.70` (lower), location
+  **6.2%** of [4172.60, **4242.00**]. Every frame bearish: 1m 0-3 unanimous, 5m 0-2, 15m 0-2, 60m 0-3 unanimous,
+  4h 0-2. Its second excursion is fully retraced and then some — MGC is 9.70 above its session low after having
+  been 31.20 above it forty minutes ago.
+- **MNQ — reversal intact, `held 36`,** and this is new: **its bull structure is now established on BOTH legs
+  for the first time.** Swing highs `30644.00 -> 30736.00` = **+92.00** against a 19.75 noise floor (4.7x), and
+  swing lows `30547.75 -> 30610.50` = **+62.75** against a 27.25 floor (2.3x). At N123 the higher low was inside
+  noise at 12.75/27.25; it no longer is. Location **88.3%** of [30535.00, 30736.00], 5m and 15m both BULL 3-0
+  unanimous, trend BULL (30712.50 > EMA20 30634.15, rising). 60m still BEARISH 0-3 unanimous and 4h CONFLICTED.
+
+**ATRs re-measured from settled bars — both have expanded again:**
+
+| symbol | ATR14(15m) | session path | 1.0x stop | % of $240 | cap binds at |
+|---|---|---|---|---|---|
+| MGC | **9.18** | 8.01 -> 9.34 -> 8.20 -> **9.18** | $91.79 | 38.2% | 1.31x |
+| MNQ | **47.20** | 38.04 -> 49.68 -> 45.43 -> **47.20** | $94.39 | 39.3% | 1.27x |
+
+### The ledger, in full
+
+| quantity | value |
+|---|---|
+| journal entries | **21** |
+| callouts with a resolved outcome | **2** |
+| **closed trades** | **0** |
+| **open positions** | **1** — CALL-0002, **EXCLUDED** (N155) |
+| wins / losses | 0 / 0 |
+| **win rate** | **undefined — no closed trade** |
+| **payoff** | **undefined** |
+| expectancy in R | **undefined**, n = 0 |
+| the resolutions | CALL-0003 `NO_FILL` **0.0R**; CALL-0004 `EXPIRED_UNTRIGGERED` **0.0R** |
+| NO TRADE entries | **11** (2 `declined_despite_qualifying`) |
+| journal entries flagged `excluded_from_measurement` | **1** |
+| realized P&L | $0.00 |
+| equity / peak | **$50,000.00 / $50,000.00** |
+| drawdown | **$0.00** |
+| distance to the $2,800 absorbing state | **$2,800.00**, full width |
+| ambiguous bars | 0 |
+
+Rule 3 stated rather than assumed: no win rate, because there is no *countable* closed trade — and when
+CALL-0002 closes there will still be none, because it is excluded.
+
+**CALL-0005** tracking: `DIRECTION RIGHT, target distance not covered` — fav 33.00, adv 14.75 against an 83.82
+target distance, trigger **107.12** away. N151's prediction that it resolves unfilled stands. **CALL-0001**
+remains 354.25 adverse.
+
+Per-frame coverage: 1m 08:42, 5m 08:40, 15m 08:30, 60m 07:00 (next 09:00), 4h 04:00 (next 12:00), daily Friday
+09-25.
+
+**No new callout.** MNQ is at 88.3% of range with its reversal already called and its plan unreachable; buying it
+here is the chase the procedure forbids. MGC is fully bearish at 6.2% of range with its reversal path closed on
+all three counts (N117, `prior None`, unanimity) and no pre-committed method that fires. **MNQ RTH opens 09:30 —
+38 minutes — which is also CALL-0005's expiry bar.**

@@ -1640,3 +1640,46 @@ are ~0.08R per trade at this geometry and any structure is smaller, then **MES 6
 structurally unprofitable regardless of the read**, and the levers that actually move the arithmetic are
 bigger R per trade (wider stops, higher-volatility regimes, a longer timeframe) rather than better
 selection. That is a conclusion about instrument choice, and it belongs to the account owner.
+
+### E8 — the thesis-5 predicate does not exist. **Thesis 5 is retired, not on probation.**
+
+I committed to taking no further thesis-5 trade until the filter existed as a pre-registered, falsifiable
+predicate. E8 tried to build one and established that none is honestly buildable at this sample size.
+
+**The method was right in the way that matters: the threshold was stated before the winner.** 105 trials
+(15 pre-declared variables × 7 quantile cuts) on C's Tier A population (n=444, +0.025R), giving
+`free_t = sqrt(2·ln 105) = 3.05`.
+
+| | |
+|---|---|
+| best split | `v_closepos ≤ 0.277` — signal bar closing in the lower 28% of its range |
+| its z | **2.10** — against a required **3.05**. **Fails.** |
+| splits reaching \|z\| > 2.0 | **1 of 105**, against **~4.8 expected by chance** |
+| permutation test, 1,000 draws | null max\|z\| median **2.55**, 95th **3.47** → **family-wise p = 0.86** |
+
+**Read the third row twice. The search found *less* than noise.** One split over |z| 2 where chance alone
+predicts about five means the population is more homogeneous than random — there is not a weak signal here
+being swamped, there is nothing.
+
+**And the out-of-sample check produced the cleanest demonstration of the trap I have seen in this record.**
+`v_hour ≤ 13` fits the first half of the tape at **z +3.62 — clearing `free_t` 3.05** — and then **reverses
+to −2.01 in the second half.** The reverse split flips it again; sign agreement is 4/8 either way. An
+in-sample result that clears its own multiple-testing threshold and *still* inverts out of sample. Had E8
+reported only the fitted half, it would have handed me a "validated" filter.
+
+**The bound, which is the useful part:** the sample **could not have detected an edge below ≈ +0.19R per
+trade, or filter separation below ≈ +0.40R.** Set that beside E5: costs are ~0.081R per trade. **So the
+smallest effect this tape can resolve is about 2.3× the size of the hurdle it would have to clear to be
+worth trading.** The instrument cannot see anything small enough to be plausible and large enough to matter.
+
+**Decision: thesis 5 is retired.** Not "on probation pending a predicate" — the predicate was sought
+properly and does not exist. It was the desk's only pattern, its two live wins are unattributable (agent C),
+one of them was off-process, the mechanised version earns +0.025R at z +0.59, and no conditioning variable
+separates it. **I will not take another thesis-5 trade in this replay.** If a future burst wants to, it must
+first beat this: 105 declared trials, `free_t` 3.05, family-wise p 0.86, and an out-of-sample flip.
+
+**Search-width bookkeeping.** E8's 105 is a genuine search, unlike E5's 3,318 evaluations of one
+hypothesis. It does **not** raise the desk's count of distinct *trading theses*, which stays at **20** — E8
+searched for a filter *within* one thesis, not for new theses. But **any future claim about a thesis-5
+filter must be deflated against 105+, not 20**, and that is now on the record so a later burst cannot
+quietly reset it.

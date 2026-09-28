@@ -134,7 +134,8 @@ def study(variant, seed=7):
             if i - active.get(key, -99) < HORIZON: continue
             active[key] = i
             side = 1 if prev > L else -1
-            ev.append({"touches": touches, "side": side, "outcome": resolve(i, L, side, a),
+            ev.append({"bar": i, "atr": a, "touches": touches, "side": side,
+                       "outcome": resolve(i, L, side, a),
                        "bounce_r": sim(i + 1, side, a), "break_r": sim(i + 1, -side, a)})
     return ev
 
@@ -272,3 +273,79 @@ for k, nm in (("A", "published"), ("B", "+count-match"), ("C", "+touch-match"), 
     cb = [e["bounce_r"] for e in controls[k] if e["bounce_r"] is not None]
     print(f"    {nm:<18} control bounce mean {mean(cb):+.3f}R (n={len(cb):>3})  "
           f"vs real {mean(rb):+.3f}R")
+
+# ---------------------------------------------------------------------------
+# ISOLATE the decontamination, and test whether variant D's events are drawn
+# from a different REGIME than real level tests (momentum / ATR). If they are,
+# D's +0.338R is a composition effect too and must not be reported as a result.
+print("\n" + "="*84)
+print("ISOLATING THE DECONTAMINATION, AND CHECKING D's EVENTS FOR REGIME DRIFT")
+print("="*84)
+
+def study2(mode, seed=7, tag=False):
+    """mode: 'decon_only' = 12 lines, [2,2,3,4] touches, but decontaminated.
+             'ct'         = count+touch matched, NOT decontaminated."""
+    rng = random.Random(seed); ev = []; active = {}; contam = [0, 0]
+    for i in BARS:
+        if i not in real_cache: continue
+        a, rlv = real_cache[i]
+        seg = rows[max(0, i - LOOKBACK):i]
+        lo, hi = min(r["l"] for r in seg), max(r["h"] for r in seg)
+        nline = 12 if mode == "decon_only" else len(rlv)
+        lv = []
+        for _ in range(nline):
+            if mode == "ct":
+                x = rng.uniform(lo, hi)
+            else:
+                for _t in range(25):
+                    x = rng.uniform(lo, hi)
+                    if not any(abs(x - L) <= BAND_ATR * a for L, _u in rlv): break
+            contam[0] += 1
+            if any(abs(x - L) <= BAND_ATR * a for L, _u in rlv): contam[1] += 1
+            t = rng.choice([2, 2, 3, 4]) if mode == "decon_only" else rng.choice(real_touch_pool)
+            lv.append((x, t))
+        band = BAND_ATR * a
+        for L, touches in lv:
+            if touches < MIN_T: continue
+            key = round(L / max(band, 0.25))
+            prev, cur = rows[i - 1]["c"], rows[i]["c"]
+            if abs(cur - L) > band or abs(prev - L) <= band: continue
+            if i - active.get(key, -99) < HORIZON: continue
+            active[key] = i
+            side = 1 if prev > L else -1
+            ev.append({"bar": i, "atr": a, "touches": touches, "side": side,
+                       "outcome": resolve(i, L, side, a),
+                       "bounce_r": sim(i + 1, side, a), "break_r": sim(i + 1, -side, a)})
+    return ev, contam
+
+for mode, nm in (("decon_only", "decontamination ONLY (else as published)"),
+                 ("ct", "count+touch matched, NOT decontaminated")):
+    ev, contam = study2(mode)
+    cb = [e["bounce_r"] for e in ev if e["bounce_r"] is not None]
+    print(f"  {nm:<46} n={len(cb):>4}  bounce {mean(cb):+.3f}R  "
+          f"diff {mean(rb)-mean(cb):+.3f}R  z {zc(rb,cb):+.2f}")
+    print(f"     residual contamination after drawing: {contam[1]}/{contam[0]} = {contam[1]/contam[0]:.1%}")
+
+# regime comparison at the EVENT bars
+evD = controls["D"]; evA = controls["A"]
+def bvel(e):
+    b = rows[e["bar"]]; return abs(b["c"] - b["o"]) / e["atr"]
+# real events need bar/atr recorded - rebuild quickly
+realx, activex = [], {}
+for i in BARS:
+    if i not in real_cache: continue
+    a, rlv = real_cache[i]; band = BAND_ATR * a
+    for L, t in rlv:
+        if t < MIN_T: continue
+        key = round(L / max(band, 0.25)); prev, cur = rows[i-1]["c"], rows[i]["c"]
+        if abs(cur - L) > band or abs(prev - L) <= band: continue
+        if i - activex.get(key, -99) < HORIZON: continue
+        activex[key] = i
+        realx.append({"bar": i, "atr": a})
+print(f"\n  regime at the EVENT bars (are we comparing like tape?)")
+print(f"  {'population':<40} {'n':>5} {'mean ATR':>9} {'|c-o|/ATR':>11} {'mean bar idx':>13}")
+for nm, ev in (("real level tests", realx), ("control A (published)", evA), ("control D (fair)", evD)):
+    if not ev: continue
+    hasv = [e for e in ev if "atr" in e and "bar" in e]
+    print(f"  {nm:<40} {len(hasv):>5} {mean([e['atr'] for e in hasv]):>9.2f} "
+          f"{mean([bvel(e) for e in hasv]):>11.3f} {mean([e['bar'] for e in hasv]):>13.0f}")

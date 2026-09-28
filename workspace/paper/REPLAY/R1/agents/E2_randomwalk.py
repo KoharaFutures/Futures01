@@ -404,13 +404,31 @@ def main():
           f"Gaussian-null 95% = [{band(dist_g['aacf_mean1_24'])[0]:+.4f},"
           f"{band(dist_g['aacf_mean1_24'])[2]:+.4f}]  "
           f"emp p = {pct_rank(obs['aacf_mean1_24'], dist_g['aacf_mean1_24']):.4f}")
-    print(f"\nLjung-Box Q(24) returns : {obs['lb_q']:8.2f}  p = {obs['lb_p']:.4f}")
-    print(f"Ljung-Box Q(24) |return|: {obs['lb_abs_q']:8.2f}  p = {obs['lb_abs_p']:.3e}")
-    print(f"  control, one Gaussian draw, returns Q(24) = {obs_g1['lb_q']:.2f} "
+    print(f"\nLjung-Box Q(24) returns : {obs['lb_q']:8.2f}  chi2 p = {obs['lb_p']:.4f}")
+    print(f"Ljung-Box Q(24) |return|: {obs['lb_abs_q']:8.2f}  chi2 p = {obs['lb_abs_p']:.3e}")
+    print("\n  The chi2 p-value above is NOT trustworthy for returns: Ljung-Box")
+    print("  assumes homoskedasticity and over-rejects badly under clustering.")
+    print("  The SIGN-FLIP (wild) bootstrap is the correct null - it keeps every")
+    print("  |r_t| in place, so all volatility structure survives, and randomises")
+    print("  only direction. Q(24) against that null:")
+    lo, med, hi = band(dist_w["lb_q"])
+    print(f"    observed Q(24) = {obs['lb_q']:.2f}   sign-flip null median {med:.2f} "
+          f"95% [{lo:.2f},{hi:.2f}]")
+    print(f"    sign-flip empirical p = "
+          f"{float(np.mean(np.asarray(dist_w['lb_q']) >= obs['lb_q'])):.4f}  "
+          f"<-- the honest joint test")
+    print(f"    (for scale, the iid chi2 critical value at 24 df is "
+          f"{stats.chi2.isf(0.05,24):.1f}; the sign-flip null's 95th pct is {hi:.1f})")
+    print(f"\n  control, one Gaussian draw, returns Q(24) = {obs_g1['lb_q']:.2f} "
           f"p = {obs_g1['lb_p']:.4f};  |r| Q(24) = {obs_g1['lb_abs_q']:.2f} "
           f"p = {obs_g1['lb_abs_p']:.4f}")
     print(f"  control, one permutation, |r| Q(24) = {obs_p1['lb_abs_q']:.2f} "
           f"p = {obs_p1['lb_abs_p']:.4f}")
+    print(f"  control, one sign-flip,   returns Q(24) = {obs_w1['lb_q']:.2f}; "
+          f"|r| Q(24) = {obs_w1['lb_abs_q']:.2f} (|r| structure survives, as designed)")
+    print(f"\n  max|rho| vs sign-flip null: observed {obs['acf_maxabs']:.4f}, "
+          f"null 95% {band(dist_w['acf_maxabs'])[2]:.4f}, "
+          f"emp p = {float(np.mean(np.asarray(dist_w['acf_maxabs']) >= obs['acf_maxabs'])):.4f}")
 
     # ---------------- 2. VR
     print("\n" + "=" * 78)
@@ -418,14 +436,22 @@ def main():
     print("   the statistic to read; z1 = homoskedastic, shown for contrast)")
     print("=" * 78)
     print(f"{'q':>4} {'VR':>8} {'z1':>8} {'z2 rob':>8} {'p(z2)':>8} "
-          f"{'Gauss-null VR 95%':>24} {'emp p':>7}")
+          f"{'sign-flip VR 95%':>20} {'emp p':>7}")
     for q_ in QS:
         vr, z1, z2 = obs[f"vr{q_}"], obs[f"vrz1_{q_}"], obs[f"vrz2_{q_}"]
-        lo, med, hi = band(dist_g[f"vr{q_}"])
+        lo, med, hi = band(dist_w[f"vr{q_}"])
         p2 = 2 * stats.norm.sf(abs(z2))
-        ep = pct_rank(vr, dist_g[f"vr{q_}"])
+        ep = pct_rank(vr, dist_w[f"vr{q_}"])
         print(f"{q_:>4} {vr:>8.4f} {z1:>+8.3f} {z2:>+8.3f} {p2:>8.3f} "
               f"[{lo:>7.4f},{hi:>7.4f}] {ep:>7.3f}")
+    print("  (the 95% band shown is the SIGN-FLIP null, which holds the real")
+    print("   volatility path fixed - the Gaussian-null band is narrower and")
+    print("   would overstate significance; both agree on the verdict here.)")
+    print("\n  Gaussian-RW null VR 95% bands, for comparison:")
+    for q_ in QS:
+        lo, med, hi = band(dist_g[f"vr{q_}"])
+        print(f"{q_:>4} [{lo:>7.4f},{hi:>7.4f}]  emp p = "
+              f"{pct_rank(obs[f'vr{q_}'], dist_g[f'vr{q_}']):.3f}")
     print("\n  same table, ONE Gaussian RW draw (seed %d) - what null looks like:" % SEED)
     for q_ in QS:
         print(f"{q_:>4} {obs_g1[f'vr{q_}']:>8.4f} {obs_g1[f'vrz1_{q_}']:>+8.3f} "
@@ -447,8 +473,12 @@ def main():
     lo, med, hi = band(dist_p["runs"])
     print(f"permutation null runs 95% = [{lo:.0f},{hi:.0f}] median {med:.0f}  "
           f"emp p = {pct_rank(rt['runs'], dist_p['runs']):.3f}")
+    lo2, med2, hi2 = band(dist_w["runs"])
+    print(f"sign-flip  null runs 95% = [{lo2:.0f},{hi2:.0f}] median {med2:.0f}  "
+          f"emp p = {pct_rank(rt['runs'], dist_w['runs']):.3f}")
     print(f"control, one Gaussian draw: runs z = {obs_g1['runs_z']:+.3f}")
     print(f"control, one permutation  : runs z = {obs_p1['runs_z']:+.3f}")
+    print(f"control, one sign-flip    : runs z = {obs_w1['runs_z']:+.3f}")
     print("  a positive z means MORE runs than independence predicts, i.e. sign")
     print("  alternation / mean reversion; negative means sign persistence.")
 
@@ -466,7 +496,11 @@ def main():
               f"  emp p = {pct_rank(obs[key], dist_g[key]):.3f}")
         print(f"{'':<30} permutation null: median {medp:.4f} 95% [{lop:.4f},{hip:.4f}]"
               f"  emp p = {pct_rank(obs[key], dist_p[key]):.3f}")
-        print(f"{'':<30} one draw: gauss {obs_g1[key]:.4f}  perm {obs_p1[key]:.4f}")
+        low, medw, hiw = band(dist_w[key])
+        print(f"{'':<30} sign-flip   null: median {medw:.4f} 95% [{low:.4f},{hiw:.4f}]"
+              f"  emp p = {pct_rank(obs[key], dist_w[key]):.3f}")
+        print(f"{'':<30} one draw: gauss {obs_g1[key]:.4f}  perm {obs_p1[key]:.4f}"
+              f"  wild {obs_w1[key]:.4f}")
     print("\n  BIAS DIRECTION: the uncorrected R/S null median above is the whole")
     print("  point - a series KNOWN to be an exact random walk returns H well")
     print("  above 0.50 at this length. Short-series raw R/S is biased UPWARD.")
@@ -537,11 +571,18 @@ def main():
     print(f"dropped {int(np.sum(~keep))} boundary returns, n = {len(r_nb)}")
     a_nb = acf(r_nb, MAXLAG)
     b_nb = 1.96 / math.sqrt(len(r_nb))
-    print(f"lag-1 rho {a_nb[0]:+.4f} (band +-{b_nb:.4f})   "
-          f"max|rho| 1-24 {np.max(np.abs(a_nb)):.4f}   "
-          f"lags outside band {int(np.sum(np.abs(a_nb) > b_nb))}/24")
+    rse_nb = acf_robust_se(r_nb, MAXLAG)
+    print(f"lag-1 rho {a_nb[0]:+.4f} (naive band +-{b_nb:.4f}, "
+          f"robust +-{1.96*rse_nb[0]:.4f})   max|rho| 1-24 {np.max(np.abs(a_nb)):.4f}")
+    print(f"lags outside NAIVE band {int(np.sum(np.abs(a_nb) > b_nb))}/24   "
+          f"outside ROBUST band {int(np.sum(np.abs(a_nb) > 1.96*rse_nb))}/24")
     qn, pn = ljung_box(r_nb, MAXLAG)
-    print(f"Ljung-Box Q(24) = {qn:.2f} p = {pn:.4f}")
+    print(f"Ljung-Box Q(24) = {qn:.2f} chi2 p = {pn:.4f} (over-rejects; see below)")
+    rngb = np.random.default_rng(SEED + 3)
+    qnull = [ljung_box(r_nb * rngb.choice([-1.0, 1.0], len(r_nb)), MAXLAG)[0]
+             for _ in range(2000)]
+    print(f"  sign-flip null Q(24) 95th pct = {np.percentile(qnull,95):.2f}  "
+          f"emp p = {float(np.mean(np.asarray(qnull) >= qn)):.4f}  <-- honest")
     for q_ in QS:
         vr, z1, z2 = variance_ratio(r_nb, q_)
         print(f"  VR({q_:>2}) = {vr:.4f}  z2 = {z2:+.3f}")
@@ -573,21 +614,31 @@ def main():
     print("\n" + "=" * 78)
     print("TRIALS - my own multiplicity, declared")
     print("=" * 78)
-    print(f"  return ACF lags           24")
+    print(f"  return ACF lags           24  (each read twice: naive + robust band)")
     print(f"  abs-return ACF lags       24")
     print(f"  Ljung-Box                  2  (returns, |returns|)")
     print(f"  variance ratio             5  q = {QS} (z2 read; z1 reported)")
     print(f"  runs                       1")
     print(f"  Hurst                      3  (R/S corrected, R/S raw, DFA-1)")
-    print(f"  robustness pass            6  (lag-1 + LB + 5 VR, break dropped)")
+    print(f"  robustness pass            7  (lag-1 + LB + sign-flip LB + 5 VR)")
     print(f"  volatility regressions     2")
+    print(f"  sign-persistence           1")
     print(f"  ---------------------------")
-    print(f"  TOTAL                     67 statistics on the real series.")
-    print(f"  At alpha = .05 that is ~3.4 expected false positives. Nothing")
-    print(f"  below is claimed as a finding unless it clears the empirical null")
-    print(f"  band from {REPS} matched draws, which is multiplicity-free by")
-    print(f"  construction for the max-|rho| and mean-rho(|r|) summaries.")
-    print(f"\n  seed {SEED} (Gaussian draws and permutations), REPS {REPS}")
+    print(f"  TOTAL                     69 statistics on the real series.")
+    print(f"  At alpha = .05 that is ~3.5 expected false positives if every one")
+    print(f"  were independent. NOTHING is claimed as a finding unless it clears")
+    print(f"  the empirical null band from {REPS} matched draws. The max-|rho| and")
+    print(f"  Ljung-Box summaries are multiplicity-free by construction: the null")
+    print(f"  distribution of the MAXIMUM already absorbs the 24-lag search.")
+    print(f"\n  This script was run to completion twice: once with a defective")
+    print(f"  Lo-MacKinlay delta_j (missing its leading n, which deflated psi*")
+    print(f"  by n and inflated every robust VR z by sqrt(n) ~ 41), and once")
+    print(f"  after the fix. Only the fixed run is reported. The bug was caught")
+    print(f"  because VR = 1.03 cannot produce z = +16; the fix is verified by")
+    print(f"  z1 == z2 to 0.2% on homoskedastic iid input, where psi* -> psi.")
+    print(f"\n  seed {SEED}; nulls: Gaussian RW, permutation, sign-flip (wild).")
+    print(f"  REPS {REPS} per null; power curve 1000 per rho; 2000 sign-flips")
+    print(f"  for the robustness Ljung-Box.")
 
 
 if __name__ == "__main__":

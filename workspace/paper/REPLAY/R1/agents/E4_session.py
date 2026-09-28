@@ -244,6 +244,26 @@ P(f"population: both directions at every bar f in [{FMIN}, {fmax}] at which ALL 
   f"regimes resolve in-tape")
 P(f"TRIALS: {len(trials)}  ({len(trials)//2} bars x 2 directions)   "
   f"of which ROLLED {len(rolledt)}, clean {len(kept)}")
+P("source: agents/E4_session.py - reads visible.jsonl only; no harness run, no")
+P("cursor advanced, nothing else in the lane touched.")
+P("")
+_h = pdiff(kept, "A", "B120")
+_ht = [t for t in kept if t["A"][2] == "TIME"]
+P("## ANSWER")
+P("")
+P(f"The forced 16:00 flat costs {abs(_h['d']):.4f}R per trade against holding to")
+P(f"stop or target, week-clustered z {_h['zw']:+.2f} on {_h['n']} trials; 95% CI")
+P(f"[{abs(_h['hi']):.3f}R saved, {abs(_h['lo']):.3f}R spent]. It costs nothing")
+P("measurable. It binds on only "
+  f"{len(_ht)/len(kept):.0%} of trades, and on those it gives up about as much on")
+P("winners as it saves on losers.")
+P("")
+P("Runway at entry does not predict expectancy in any bucket (|Welch z| <= 0.30).")
+P("It changes only how often the flat is the thing that decides the trade: 79% of")
+P("outcomes at 1-2 bars of runway, under 2% at 7 or more. The desk's repeated")
+P("'not enough runway' refusals have no support in the R numbers.")
+P("")
+P(line())
 P("")
 
 P("## short sessions and cycles with no 16:00 bar")
@@ -264,9 +284,13 @@ P(f"dates carrying a day session but NO 16:00 bar -> TRUNCATED SESSIONS: {len(no
 for d in no16:
     ix = bydate[d]
     P(f"  {d}  {len(ix):>2} bars  {rows[ix[0]]['ts'][11:16]}..{rows[ix[-1]]['ts'][11:16]} ET")
-P(f"dates holding only evening bars (18:00-23:00) - the opening leg of the next")
-P(f"cycle, nothing missing: {len(evening_only)} (Sundays and the Friday-evening-free")
-P(f"weekday pattern of this tape)")
+_dows = sorted({datetime.fromisoformat(rows[bydate[d][0]]["ts"]).strftime("%a")
+                for d in evening_only})
+P(f"dates holding only evening bars (18:00-23:00): {len(evening_only)}, all "
+  f"{'/'.join(_dows)} - these are the")
+P("Sunday-evening OPENING LEG of Monday's cycle, not a session missing its close;")
+P("a weekday carries both its own 16:00 bar and the next cycle's evening bars, so")
+P("it never shows up here.")
 P("")
 P("These are abbreviated sessions: 2024-11-29 (day after Thanksgiving) and")
 P("2024-12-24 (Christmas Eve) run on a 30-minute-offset grid 09:30..12:30 and stop")

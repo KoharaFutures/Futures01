@@ -5,6 +5,23 @@ tape: 1685 bars, 2024-10-06T19:00 .. 2025-01-23T23:00 ET, hourly, labelled by ba
 geometry: 1.0 ATR stop, 2.0R target, ATR14 at the decision bar, fill next bar's open +/- 0.25, stop wins the tie
 population: both directions at every bar f in [15, 1565] at which ALL regimes resolve in-tape
 TRIALS: 3102  (1551 bars x 2 directions)   of which ROLLED 72, clean 3030
+source: agents/E4_session.py - reads visible.jsonl only; no harness run, no
+cursor advanced, nothing else in the lane touched.
+
+## ANSWER
+
+The forced 16:00 flat costs 0.0032R per trade against holding to
+stop or target, week-clustered z -0.47 on 3030 trials; 95% CI
+[0.016R saved, 0.022R spent]. It costs nothing
+measurable. It binds on only 12% of trades, and on those it gives up about as much on
+winners as it saves on losers.
+
+Runway at entry does not predict expectancy in any bucket (|Welch z| <= 0.30).
+It changes only how often the flat is the thing that decides the trade: 79% of
+outcomes at 1-2 bars of runway, under 2% at 7 or more. The desk's repeated
+'not enough runway' refusals have no support in the R numbers.
+
+------------------------------------------------------------------------------
 
 ## short sessions and cycles with no 16:00 bar
 
@@ -13,9 +30,10 @@ dates carrying a day session but NO 16:00 bar -> TRUNCATED SESSIONS: 3
   2024-11-29   4 bars  09:30..12:30 ET
   2024-12-24   4 bars  09:30..12:30 ET
   2025-01-09  16 bars  00:00..23:00 ET
-dates holding only evening bars (18:00-23:00) - the opening leg of the next
-cycle, nothing missing: 16 (Sundays and the Friday-evening-free
-weekday pattern of this tape)
+dates holding only evening bars (18:00-23:00): 16, all Sun - these are the
+Sunday-evening OPENING LEG of Monday's cycle, not a session missing its close;
+a weekday carries both its own 16:00 bar and the next cycle's evening bars, so
+it never shows up here.
 
 These are abbreviated sessions: 2024-11-29 (day after Thanksgiving) and
 2024-12-24 (Christmas Eve) run on a 30-minute-offset grid 09:30..12:30 and stop

@@ -786,3 +786,90 @@ correct as written and needs no change. Two consequences worth keeping:
    `v==0 AND h!=l`, I would have taught it to throw away every forming bar —
    which is the one bar a live desk most needs — on the basis of a single
    observation I had not yet explained.
+
+## N19 — N18 was wrong about the scope: the 5m endpoint is truncated, the 1m endpoint is live. It is a per-frame failure, not a feed outage.
+
+00:09 ET, second consecutive degraded fetch:
+
+```
+MGC 5m newest 2026-09-27T21:05:00-04:00  lag=184.0m  new=0 revised=1
+MNQ 5m newest 2026-09-27T20:55:00-04:00  lag=194.0m  new=0 revised=0
+snapshots written: MGC 1m (+4 new, 2 revised), ... MNQ 1m (+4 new, 2 revised)
+```
+
+The line I should have read at 00:04 and did not: **the 1m frames took new
+bars on both symbols while 5m took none.** Measured per frame just now:
+
+```
+MGC   1m newest_real 23:58  lag 11.2m      MNQ   1m newest_real 23:58  lag 11.2m
+MGC   5m newest_real 23:45  lag 24.2m      MNQ   5m newest_real 23:45  lag 24.2m
+MGC  15m newest_real 23:30  lag 39.2m      MNQ  15m newest_real 23:30  lag 39.2m
+```
+
+N18 said "the vendor served a response three hours stale" and treated it as
+one thing. It is not one thing. **The 1m endpoint is healthy at 12.4 minutes,
+which is the normal lag for this vendor; the 5m and 15m endpoints are serving
+a truncated window.** Same vendor, same request cycle, different frames,
+different health. Correcting the record because the wrong version has an
+operational consequence: under N18's reading there is no current price and the
+desk is blind, and under the correct reading the 1m frame gives a usable one.
+
+Newest 1m bars **with real volume** (the N18 habit, applied):
+
+```
+MGC  23:57  o 4231.10 h 4231.30 l 4230.80 c 4230.80 v   48   lag 12.4m
+MNQ  23:57  o30651.25 h30652.75 l30645.25 c30651.75 v  868   lag 12.4m
+```
+
+So MGC is **4230.80** and MNQ **30651.75**, and MNQ printed a new low at
+30645.25 on that bar — information the 5m frame cannot see and the 15m frame
+will not see for another twenty minutes.
+
+**This does not trip the stop condition, and saying why matters.** The
+condition is *three consecutive checks fail to fetch*. Two checks have now
+returned a truncated 5m window, but the fetch is not failing — it is
+succeeding on 1m and partially on 5m. Stopping a live desk on a
+frame-specific degradation while a healthy frame is delivering current price
+would be the wrong call, and counting these toward a limit meant for a dead
+feed would get there by miscounting rather than by judgement.
+
+**What was at risk, checked rather than assumed.** With 5m and 15m frozen,
+`resolve.py` sees no new bars for plans keyed to those frames and correctly
+does nothing — but a trigger touched since 23:45 would be invisible to it.
+So I checked the range actually traded on the live 1m frame against every
+pending trigger:
+
+```
+traded 23:45-23:58   MGC 4229.50 - 4232.60      MNQ 30645.25 - 30673.00
+CALL-0001  MNQ 30998.50  (15m)   far above
+CALL-0002  MGC  4289.10  (15m)   58.3 above
+CALL-0003  MNQ 30767.25  ( 5m)   94.3 above  <- expires 02:00 ET
+CALL-0004  MGC  4287.60  (15m)   56.8 above
+```
+
+Nothing came near anything. **No trigger was missed** — that is a verified
+statement, not an inference from resolve.py's silence. The distinction is the
+whole point: resolve.py reporting "nothing resolved" while its input frame is
+frozen is not evidence that nothing happened, and I should never again report
+a quiet check without checking the live frame when a frozen one is feeding
+the resolver.
+
+The standing fix, if this recurs: give `resolve.py` a **staleness assertion**
+per plan — if the newest bar on a plan's own frame is older than some multiple
+of that frame, it should say so loudly rather than return a silent no-op that
+reads identically to a genuinely quiet market. Specifying it here rather than
+writing it mid-loop, same discipline as N17.
+
+### The frame split is also showing up in the bias table, and it is an artefact
+
+```
+MGC   1m BULLISH 3-0 unanimous   <- reading a LIVE frame, price up from 4225.60
+MGC   5m BEARISH 0-3 unanimous   <- reading a FROZEN frame, stuck at 23:45
+```
+
+MGC's 1m headline is the only frame tonight looking at bars newer than 23:45,
+and it has gone unanimously bullish off a 4.60-point bounce. That is not a
+disagreement between timeframes — it is a disagreement between *times*. Any
+multi-timeframe reading taken right now is comparing 00:09 data against 23:30
+data and calling the difference structure. Not trading off it, and not
+reporting the split as though it meant something about the market.

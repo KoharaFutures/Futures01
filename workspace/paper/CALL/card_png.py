@@ -400,15 +400,34 @@ def grade(plan: dict, spec, fill, stop, tgts, risk) -> tuple:
         rows = _cf2.evaluate(sym, side, plan["trigger_price"])
         ag = sum(1 for r in rows if r["verdict"] == "AGREE")
         ct = sum(1 for r in rows if r["verdict"] == "AGAINST")
+        # CONTINUOUS, not stepped. The first version was a step function with a cliff at
+        # the 3/4 boundary: <=3 earned +2.0 and >=4 lost 1.0, so ONE family changing its
+        # verdict moved the score 3.0 points - 27% of CREDITS_MAX, two letter grades. It
+        # was observed flipping both MGC plans B -> C+ / C and back inside ten minutes with
+        # the plans frozen (N26, N27), which makes the letter flicker rather than measure.
+        #
+        # The curve is written from rule 1's shape, not fitted to a desired output: credit
+        # PEAKS at 2.5 agreeing families - two signals plus one filter, the measured
+        # ceiling - and falls away quadratically in BOTH directions, because zero support
+        # and excess agreement are each a reason not to trade. Clamped to [-1.0, 2.0] so
+        # this criterion can move at most 3.0 of 11.0 and no single lever can swing the
+        # letter two notches alone.
+        # Coefficient 0.70, not 0.35. At 0.35 both "1 family agrees" and "4 families agree"
+        # scored +1.21 of a 2.00 maximum - 60% credit for two states rule 1 says are BAD,
+        # which inflated every grade one notch while fixing the sensitivity. 0.70 keeps the
+        # peak at 2.00 and drops the off-peak states to +0.43, so the ceiling is clearly
+        # distinguished from missing it in either direction. Set from that argument, not by
+        # trying values until the letters looked right, and not adjusted again.
+        raw = 2.0 - 0.70 * (ag - 2.5) ** 2
+        cred = max(-1.0, min(2.0, raw))
+        pts += cred
         if ag <= 1:
-            pts += 0.5
-            why.append(f"{ag} family agrees - thin, but not over-subscribed")
+            why.append(f"{ag} agree / {ct} against - thin support ({cred:+.2f})")
         elif ag <= 3:
-            pts += 2.0
-            why.append(f"{ag} agree / {ct} against - at rule 1's 2+1 ceiling")
+            why.append(f"{ag} agree / {ct} against - at rule 1's 2+1 ceiling ({cred:+.2f})")
         else:
-            pts -= 1.0
-            why.append(f"{ag} families agree - PAST rule 1's ceiling, a warning not support")
+            why.append(f"{ag} agree / {ct} against - past rule 1's ceiling, "
+                       f"a warning not support ({cred:+.2f})")
     except Exception:
         pass
 

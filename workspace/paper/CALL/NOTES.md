@@ -1398,3 +1398,79 @@ asserted.
 is real and mechanically derived, and it is also two notches up on a plan nobody
 touched, for a reason that says more about my scoring function than about the trade.
 Showing the grade without that would be showing an improvement that did not happen.
+
+## N27 — the grade flickered two letters in ten minutes, so I fixed it mid-loop and I am stating why that was the right exception
+
+01:09 AM EDT. Newest 5m bar 00:55, lag 14.0m. Nothing triggered, nothing resolved.
+
+N26, one check ago, recorded both MGC grades rising C+/C -> B because confluence fell
+4 AGREE -> 3 AGREE and criterion 6's step function turned a -1.0 penalty into a +2.0
+credit. I specified the fix and deferred it to a full check. Five minutes later:
+
+```
+01:04   3 agree   CALL-0002 B    CALL-0004 B
+01:09   4 agree   CALL-0002 C+   CALL-0004 C
+```
+
+**Straight back down, two letters, with both plans frozen.** So the cliff does not
+merely make the grade coarse — it makes it *oscillate on the check cadence*. A number
+shown to the owner every five minutes that swings two letters while nothing about the
+trade changes is not a coarse measurement, it is a misleading one.
+
+### Why I broke the defer-to-a-full-check discipline here, and where the line is
+
+N17, N19, N20 and N26 all deferred a fix. That discipline exists for one specific
+danger: code rewritten while watching a move gets fitted to that move. It applies to
+anything feeding a decision or an outcome — `reversal_setup`, the 1m backfill, anything
+`resolve.py` reads.
+
+**The grade is display-only.** It cannot change whether a plan fills, what it fills at,
+where its stop is, or how it resolves. It touches no pre-registered number (N8) and
+`resolve.py` never reads it. So the post-hoc-fitting risk is not the same risk, and
+against it sits a concrete cost: leaving a known-flickering figure in front of the owner
+for an hour. Fixing display promptly and deferring signal code is the right way round,
+and conflating the two would have been using a good rule as an excuse.
+
+The residual risk is real though — I was changing a scoring function while looking at the
+four cards it re-scores. Mitigation: **I wrote the formula from rule 1's shape and
+committed it before evaluating it**, then printed before/after for all four plans.
+
+### What changed
+
+Criterion 6 is now continuous. Credit peaks at 2.5 agreeing families — two signals plus
+one filter, the measured ceiling — and falls quadratically in *both* directions, because
+zero support and excess agreement are each a reason not to trade. Clamped [-1.0, 2.0] so
+this criterion can move at most 3.0 of `CREDITS_MAX` 11.0 and no single lever can swing
+the letter two notches alone.
+
+```
+agreeing  0      1      2      3      4      5      6
+credit   -1.00  +0.43  +1.82  +1.82  +0.43  -1.00  -1.00
+
+3 -> 4 agreeing:   stepped 3.00 pts (2 letters)  ->  continuous 1.40 pts (~1 letter)
+```
+
+**I adjusted the coefficient once, and the reason was not the letters.** At 0.35 the
+curve gave both "1 agrees" and "4 agree" +1.21 of a 2.00 maximum — 60% credit for two
+states rule 1 says are bad — which fixed the sensitivity while inflating every grade a
+notch. 0.70 keeps the peak at 2.00 and drops the off-peak states to +0.43, so hitting
+the ceiling is clearly distinguished from missing it either way. That is the whole
+argument, it is not "the numbers looked better", and I am not touching the coefficient
+again.
+
+### Before and after, all four
+
+```
+                     stepped (01:09)   continuous
+CALL-0001  MNQ            C               C
+CALL-0002  MGC            C+              B-
+CALL-0003  MNQ            C               C
+CALL-0004  MGC            C               B-
+```
+
+Both MGC plans still end a notch above where the stepped version had them at this
+tally, so the change is not neutral and I am not going to present it as neutral: it
+credits a 4-agree state at +0.43 where the old one penalised it -1.0. The defensible
+part is that the penalty was arbitrary and the new number is on a stated curve; the
+honest part is that my own book got slightly better-looking out of it. The ranking is
+unchanged — MGC's two plans above MNQ's two, and all four still below the B+ ceiling.

@@ -3537,3 +3537,50 @@ with 5m **CONFLICTED 0-0** — MNQ's 5m has now held five distinct states tonigh
 unanimous bearish on both, as they have been all session.
 
 No call. Reversal test false on both.
+
+## N79 — third settled pair: MNQ's sweep-and-reclaim is confirmed on settled data, +44.00, and the 5m frame has already faded most of it
+
+`05:15` settled, giving the third settled-to-settled comparison of the night:
+
+| symbol | settled `05:00` | settled `05:15` | change |
+|---|---|---|---|
+| MGC | 4176.40 | 4178.40 | **+2.00** |
+| MNQ | 30543.25 | 30587.25 | **+44.00** |
+
+MNQ's settled `05:15` bar is `o 30544.00 h 30591.00 l 30535.00 c 30587.25` — it made the low of the
+session at 30535.00 and closed 52.25 points off it. So the sweep of the double bottom and the reclaim
+above it are both now settled facts, not forming-bar impressions. N74 called it a rule 8 sweep on
+provisional data; settled data agrees.
+
+**And it has already partly unwound.** This fetch returned `new=0, revised=1` on both 5m frames with the
+lag stretched to **14.8m** — the feed did not advance, it restated. MGC's `05:30` close was revised
+4178.20 -> **4174.60** (−3.60) and MNQ's 30588.25 -> **30562.75** (**−25.50**). So more than half of
+MNQ's 44-point settled bounce is gone in the unsettled window, and both 5m frames are bearish again with
+MNQ's unanimous 0-3.
+
+This is the cleanest illustration yet of why the settled/forming distinction earns its keep and also of
+its limit: **the settled bar tells you truly what happened, and by the time it is settled the market may
+have undone it.** MNQ's +44.00 is a correct statement about 05:00->05:15 and a poor guide to 05:44. Both
+halves matter — N49 stopped me reporting noise as movement, and it cannot stop settled movement being
+stale. The honest form is the one used here: state the settled change, then state what the unsettled
+window has done to it, and label which is which.
+
+Running settled tally since `04:15`: MGC 4176.90 -> 4178.40, **+1.50 over 90 minutes**. MNQ 30622.75 ->
+30587.25, **−35.50**. Four settled bars each. MGC has gone nowhere; MNQ has fallen and bounced.
+
+## N80 — the 40-bar window slid and moved the leg by 1.10 points, which does not change N77's VOID
+
+`chart.py` now reports MGC's 40-bar range as `[4172.60, 4299.20]` where my N77 computation found the high
+at **4300.30**. Not a discrepancy: the newest settled bar advanced from `05:00` to `05:15`, so the oldest
+bar rolled out of the trailing 40 and it was the one carrying 4300.30. N53's mechanism, third sighting,
+and it confirms that N77's leg **must be computed at the moment of registration** rather than carried
+from a note — which is what N77 specified, and this is why.
+
+Re-run with the new window: leg 4299.20 -> 4172.60 = 126.60 points, 50% entry **4235.90**, 61.8% level
+**4250.80**, so stop distance ~15.4 points = **$154** against the **$120** cap. **Still VOID on condition
+4**, by essentially the same margin. The prediction from N77 stands: CALL-0004's resolution on the 06:00
+bar, ~16 minutes out, should be followed by NO TRADE with condition 4 named, not by a plan.
+
+No call this check. Reversal test false on both symbols; MGC 1m/5m 0-2, MNQ 1m 0-1 and 5m unanimous 0-3,
+15m and 60m unanimous bearish on both as they have been all session. Locations unchanged from 05:40
+because no new 15m bar arrived: MGC 4.6% of [4172.60, 4299.20], MNQ 14.3% of [30535.00, 30900.50].

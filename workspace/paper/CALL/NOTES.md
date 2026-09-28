@@ -269,3 +269,36 @@ Those are different setups and a bare stop-entry cannot tell them apart. That is
 of the plan as written — **and the honest response is to note it now and write a better entry
 condition into the NEXT pre-registration, not to patch this one mid-flight.** The Monday 16:00
 expiry bounds the exposure to one session either way.
+
+## N9 — the three-component bias is unstable on a thin tape: two unanimous readings broke within ~30 minutes each
+
+**basis: 5b94361, 2026-09-27 20:03 ET.** Recorded on the second occurrence, because one was an
+anecdote and two is a property of the tool.
+
+| symbol | unanimous at | broken by | what moved |
+|---|---|---|---|
+| MNQ | 19:02 ET, `0-3` | 19:18 ET, `0-2` | location crossed 40% into MIXED on ~20 pts of drift |
+| MGC | 19:32 ET, `0-3` | 20:03 ET, `0-2` | structure went MIXED on a **higher** swing low, 4291.80 -> 4293.20 |
+
+Both breaks came from a single component crossing a threshold on very little price movement, on
+Sunday-reopen liquidity. Tonight MNQ also went `0-2` -> `0-1` in the same half hour, again on a
+higher swing low.
+
+**What this does and does not mean.**
+
+- It does **not** invalidate the panel. It is a 40-bar description and it is describing a tape that
+  is genuinely going sideways after a gap down. Unanimity breaking is the honest output.
+- It **does** mean a unanimous reading is not a durable state and must never be treated as one.
+  `chart.py` already prints the tally and the rule-1 reminder on every render precisely so a `0-3`
+  cannot be quoted later as though it still held.
+- It is the concrete argument for the fast-check rule against re-deriving the read every five
+  minutes. A desk that re-decided on each render would have taken a bearish MGC position at 19:32
+  and been looking at a broken premise by 20:03, having changed nothing about the market.
+
+**Consequence for `CALL-0002`.** The unanimity that justified it has already weakened, 31 minutes
+after it was written. The plan is **not** modified — same reasoning as N8: editing a pre-registered
+level after watching price move destroys the threshold it was written for. And the RTH gate means
+it cannot fire on this tape at all; it needs Monday 08:20-13:30 ET, by which time the read will
+have been re-formed on liquid bars at the hourly full check. **This is the gate earning its keep
+twice in one evening**: first refusing the trigger on thin liquidity, now refusing to act on a bias
+that will not sit still.

@@ -389,3 +389,51 @@ generated for MGC. And **MOMENTUM is against on both symbols for the same reason
 **Both plans stay unmodified.** This is information about pre-registered hypotheses, not licence to
 edit them (N8). What it does change is what the cards say: the opposition is now on their face, in
 red, rather than living in a single confident STRATEGY line.
+
+## N12 — the RTH gate cost a full winner on its first real test. Recording it against myself.
+
+**basis: 9f1f609, 2026-09-27 20:45 ET.** N10 said the honest answer to "was refusing profitable?"
+was *not known*. It is known now, for this instance, and it goes against the decision I defended
+twice.
+
+**What happened.** MGC broke down through `CALL-0002`'s trigger and ran straight to target:
+
+```
+20:20  h4290.20  l4286.50  c4287.10  v  849
+20:25  h4288.80  l4283.70  c4283.70  v 1157
+20:30  h4284.70  l4262.30  c4270.00  v 9074   <-- THROUGH TP1 4273.00
+20:35  h4272.30  l4267.60  c4272.30  v    0
+```
+
+Session low **4262.30**. TP1 was 4273.00. **The stop at 4299.00 was never touched** — the high since
+the trigger is 4291.90.
+
+**The trade the gate refused would have been a clean win:** fill 4289.00, TP1 4273.00, +16.00 pts =
+$160.00 gross, less $2.44 costs = **+$157.56 net, +1.58R**, resolved inside 15 minutes with no
+adverse excursion past the entry.
+
+**This is not journalled and never will be.** `journal.jsonl` records trades that happened;
+`CALL-0002` did not fill and will expire `NO_FILL`, 0.0R. Writing +1.58R anywhere in the record
+would be fabrication of exactly the kind `resolve.py` exists to prevent. The number above is an
+argument, not a result.
+
+**What it does and does not establish.**
+
+- It **does** establish that the gate has a real, measured cost, and that the cost is not small: one
+  full target, 1.58R, on the very first setup it governed.
+- It **does** vindicate the *read*. Every element of the thesis played out — the break of
+  twice-tested support, the trend continuation, the target sitting at the 30-day low. The
+  pre-registered levels were right.
+- It does **not** establish that the gate is wrong. One favourable outcome on a thin Sunday tape is
+  a sample of one, and the gate exists because fills there are unreliable, not because moves there
+  are unprofitable. N9 recorded the bias flipping four times in ninety minutes on this same tape;
+  the reason to distrust it has not gone away because one break ran.
+- And the one thing that looked most damning at 20:40 — MOMENTUM AGAINST on 0.97× median volume —
+  **was wrong about what came next**: the 20:30 breakdown bar carried **9,074 contracts, roughly
+  8× the preceding bars.** The participation arrived exactly when the level broke. That is a real
+  limitation of evaluating momentum on the bar before the move.
+
+**No change to either plan, and no change to the gate, on one observation.** What this earns is a
+counter that gets carried: **gate refusals: 1, of which would-have-won: 1.** If that column keeps
+reading this way over a meaningful number of setups, the gate is costing more than it protects and
+the RTH restriction should be re-argued from the tally — not from tonight.

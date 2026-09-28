@@ -5310,3 +5310,70 @@ repository has ever measured, and **CALL-0002's window opens.** CALL-0002 has ne
 its `created_bar_ts` is stamped in the future (N30), so the first thing to establish after 08:20 is whether
 `resolve.py` now sees it at all — and if it does, it will be seeing six hours of price it was never shown,
 which is why the plan is to be retired with an honest non-outcome rather than allowed to resolve.
+
+## N145 — THE REVERSAL FIRED ON MNQ, it decomposes 93% PRICE, and CALL-0005 is pre-registered. First callout of the session.
+
+`reversal('MNQ')` at 08:19 returns **`called: True`** with an empty failure list:
+
+    called True   headline BULLISH   prior BEARISH   held 16 checks   agreeing_frames [1, 5, 1440, 10080]
+
+All five conditions met. The last one to fall was location, which reached **72.5%** of [30535.00, 30753.25] —
+above the 60% gate by **12.5 percentage points**, not marginally.
+
+### The decomposition, which N132 committed me to doing before treating it as a signal
+
+| | 08:14 | 08:19 | moved |
+|---|---|---|---|
+| 15m close | 30639.75 | **30693.25** | **+53.50** |
+| 60% threshold | 30670.00 | 30665.95 | **−4.05** |
+| window high | 30760.00 | 30753.25 | −6.75 |
+| `fetch.py` 15m | — | **`+1 new`** | a new bar exists |
+
+Total gap closed 57.55 points, of which **53.50 is price and 4.05 is the window: 93% / 7%.** And per N140's
+rule a price move is only possible when `new` > 0 — it is, and the new `08:00` 15m bar is
+`o 30639.75 h 30712.25 l 30610.50 c 30693.25`, a **101.75-point** bar. **This is the price case.** Had it been
+the window I was committed to reporting the headline and not trading it; it is not, so N130's plan applies.
+
+### CALL-0005 — MNQ LONG, pre-registered
+
+    BUY LIMIT   30595.88     50% retracement of the settled up-leg 30547.75 (06:00) -> 30644.00 (07:00),
+                             leg 96.25 = 2.27x ATR 42.34, clears the 2.0x minimum.
+                             97.37 points BELOW the 30693.25 market -> a pullback, not a chase.
+    STOP        30540.00     7.75 under the anchoring swing low. 55.88 pts = 1.32x ATR, clear of rule 4's 21.17.
+    SIZE        1 contract   55.88 x $2 = $111.75 = 46.6% of the $240 permitted, inside the $120 cap (+$8.25).
+    TP1         30679.69     1.5R, executable.
+    TP2/TP3     30735.56 / 30791.44    NEEDS 3 LOTS. Pure R multiples, named as such.
+    EXPIRY      the 09:30 bar   strict '>' (N86) so the resolver needs the 09:45 bar, in hand ~10:01.
+    created_bar_ts  08:00       deliberately the newest bar I have SEEN, so the plan is never evaluated on it.
+
+**Every N130 condition passed and each was checked, not assumed.** The `created_bar_ts` choice matters: setting
+it to the newest *settled* bar (07:45) would have let the resolver evaluate the `08:00` bar I had already looked
+at. It could not have filled — that bar's low is 30610.50, above the 30595.88 limit — but the principle is the
+point, and it is the exact defect that made CALL-0002 inert (N30) approached from the other direction.
+
+**Stated weaknesses, in the plan and here:** it may never fill, which is how both resolved plans died and is
+this desk's dominant failure mode; rule 2 puts the alignment condition it leans on at **z = −4.09**; rule 7 calls
+sub-hourly a graveyard; `profiles.py` **excludes FIBONACCI for MNQ** with the recorded reason that MNQ's legs are
+the shortest-lived, so the entry geometry is untested on this symbol and doubted by its own author; MNQ's 4h went
+CONFLICTED at 08:00 leaving only DAILY and WEEKLY bullish with no margin; and the 60m is BEARISH 0-3 unanimous,
+so the plan is counter to the 60m frame by construction.
+
+## N146 — MGC is rallying hard too, and its 15m has held BEARISH for 349 consecutive checks
+
+MGC's `08:00` 15m bar: `o 4180.90 h 4199.80 l 4178.70 c 4197.10` — a **21.10-point** bar, 2.57x its 8.20 ATR,
+and the largest MGC bar of the session by a wide margin. Its 1m is BULLISH 3-0 unanimous, 5m BULL 2-1, and its
+**trend component has gone MIXED** (4197.10 > EMA20 4190.37, but the EMA is still falling). Location 31.4% of
+[4172.60, 4250.60], up from 10.8% five minutes ago.
+
+`reversal('MGC')` returns `held: 349` — its 15m headline has been BEARISH for **349 consecutive recorded
+checks** — and `prior: None`, so it fails on *"no prior directional headline to reverse from"* as well as
+unanimity. MGC has nothing to reverse *from*, which with N117's unreachable HTF gate is now two structural and
+one circumstantial reason its reversal path is closed.
+
+No MGC call. This is a 21-point rally into the RTH open with the 15m still 0-1 bearish and the 60m unanimous
+bearish; there is no pre-committed MGC method that fires on it, and building one now after watching a 21-point
+bar would be the fitting N75 exists to prevent.
+
+**MGC RTH opens in one minute.** Three plans PENDING now: CALL-0005 (new), CALL-0001 (adverse 354+),
+CALL-0002 (inert, window opening now). Ledger before this callout: open 0, closed 0, equity $50,000.00,
+drawdown $0.00.

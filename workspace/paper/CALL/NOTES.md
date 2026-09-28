@@ -3427,3 +3427,57 @@ CALL-0004 resolves on the 06:00 ET bar, ~30 minutes out. That is the moment the 
 stops being blocked by N52, and MGC will by then have a confirmed lower high at 4185.20 and a confirmed
 lower low at 4172.60 to compute a retracement from — which is a better geometry than it had when I
 declined at 04:46.
+
+## N75 — pre-committing the METHOD for the post-06:00 MGC plan, before the price exists, so that pre-registration means something when I write it
+
+CALL-0004 resolves on the 06:00 ET bar, ~25 minutes out, and N52 said the MGC retracement short becomes
+legitimate once it has an outcome instead of an open trigger. There is an obvious hazard in that: at
+06:00 I will have watched another 25 minutes of price and could write a plan fitted to where MGC
+happens to be. A new `call_id` does not launder that any more than it did at 04:46.
+
+So the method gets fixed now, while the entry price does not exist yet, and at 06:00 I fill in the
+numbers the settled data gives. Written down in advance means this is checkable against what I actually
+do:
+
+1. **Direction** is SHORT only if, at 06:00, MGC's settled 15m series still shows a lower high AND a
+   lower low, and 15m and 60m are both still bearish. If any of those has flipped, there is no plan and
+   I say so rather than substituting a different one.
+2. **Entry** is the 50% retracement of the settled down-leg measured from the confirmed swing high to
+   the confirmed swing low as they stand at 06:00 — the same construction CALL-0004 used, which
+   CALLOUT.md's own framework supports (FIBONACCI is one of the six families MGC's profile actually
+   generates). Computed forward, so it must sit **above** the then-current price; if the 50% level is at
+   or below price, the setup is a chase and there is no plan.
+3. **Stop** goes just beyond the 61.8% retracement of the same leg, because through 61.8% the 50%
+   thesis is dead. It must be **at least 0.5x ATR14(15m)** (rule 4) and I will state the multiple. If the
+   resulting stop is tighter than 0.5 ATR, the stop widens to 0.5 ATR and the entry moves with it, not
+   the reverse.
+4. **Size** is 1 contract, and the plan is void if `stop_points x $10` exceeds **$120**, the 50%
+   discretionary cap on the $240 permitted at $0 drawdown. I will re-measure ATR at 06:00 rather than
+   using tonight's 9.11.
+5. **Targets** TP1 1.5R executable, TP2 2.5R and TP3 3.5R marked `NEEDS 3 LOTS`, and I will say plainly
+   which land on structure and which are bare R multiples rather than dressing the latter as levels.
+6. **Expiry** the 08:20 ET bar — MGC's RTH open, which is the first moment tonight anything enters a
+   session this repository has measured. A retracement that has not filled by the open is a different
+   trade in a different regime.
+7. **Stated weakness, in advance:** no fib level in this repository has ever been tested against a
+   random-level control, and rule 8 is that FVG and order-block fill rates *were* reproduced by random
+   zones. The plan borrows a tested shape, not an edge. It may also never fill — which is exactly how
+   CALL-0004 died, and writing a nearer trigger because the last one did not fill is the temptation this
+   whole note exists to fence off.
+
+If at 06:00 conditions 1, 2 or 4 fail, the honest output is NO TRADE journalled with the reason, and I
+will say which condition failed.
+
+## N76 — 05:35 state: both symbols bouncing, 5m still bearish, nothing to act on
+
+Newest settled 15m is `05:00` on both; `05:15` settles at 05:43. MGC forming `05:15` c 4179.30 (high
+4181.00) off its 4172.60 settled low; MNQ forming c 30580.50 (high 30591.00), holding above the
+30571.00 level it swept. Locations MGC 5.3% of [4172.60, 4299.20], MNQ 12.4% of [30535.00, 30900.50].
+
+Fast frames have turned up on both — MGC 1m BULL 2-0, MNQ 1m BULL **3-0 unanimous** — while 5m, 15m and
+60m stay bearish on both (MNQ's 5m is unanimous 0-3). That is the seventh 1m state change tonight and,
+per N54, "unanimous" on a 1m frame means unanimous for one bar.
+
+No call. The reversal test is false on both symbols, the bounce is the rule 8 sweep from N74, and the
+MGC plan waits on CALL-0004's resolution and on the conditions in N75 rather than on how the bounce
+looks.

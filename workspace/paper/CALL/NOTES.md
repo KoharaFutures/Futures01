@@ -3782,3 +3782,66 @@ No call. The reversal test is false on both symbols. MGC has now retraced 14.30 
 is 1.55x ATR, and its 15m structure is still lower highs and lower lows. The pre-committed plan remains
 VOID on the risk cap; **CALL-0004's expiry is now expected at ~06:31-06:35** per N86, and I will report the
 resolver's own line when it appears.
+
+## N89 — MGC's newest bar high is above its lower high, and N70's test says that is NOT a break. Also: the T+28 settle threshold is now MEASURED, not coincidental
+
+MGC's newest 15m bar (`05:45`, completed 06:00, still revising) prints a high of **4190.00**, which is
+above the most recent confirmed lower high of **4185.20**. That matters directly: **N75's condition 1
+requires a lower high AND a lower low**, so if MGC's lower-high sequence is broken there is no plan at
+all, regardless of the risk cap.
+
+So I measured the high-revision distribution, which N70 never did — it covered lows only, because a low
+was what was in question then.
+
+| 15m HIGH revisions | MGC | MNQ |
+|---|---|---|
+| largest overall | 10.90 (`09-27T18:00`) | 36.25 (`09-27T18:00`) |
+| **largest excluding session-open bars** | **6.20** | **19.75** |
+| observations | 56 | 54 |
+
+**MGC's break is 4190.00 − 4185.20 = 4.80 points, against a 6.20-point maximum comparable high revision.
+That is INSIDE revision range, so by N70's own bands it is not a break.** The same pattern as the two
+breaks at 05:16: the chart shows a level exceeded, the distribution says the number could still move
+that far on its own. Condition 1 therefore still holds, provisionally, and will be re-tested when the
+`05:45` bar settles.
+
+Note the asymmetry now on record: the session-open bar is again the single largest revision on both
+symbols and both sides — lows 74.00/20.00, highs 36.25/10.90. Three independent measurements, one
+conclusion: **the 18:00 ET bar is a different object and must be excluded from every calibration.**
+
+### The settle threshold, measured
+
+`T + 28` was chosen by reasoning I later found to be wrong (N87), and I said it was "coincidentally about
+right." It is not coincidence — it is right, and here is the measurement. For every 15m bar, the time of
+its **last** observed revision relative to its completion:
+
+| | MGC | MNQ |
+|---|---|---|
+| median | **+12.3m** | **+12.3m** |
+| 90th percentile | **+14.2m** | **+14.2m** |
+| n | 40 | 40 |
+
+A 15m bar stops changing about 12 minutes after it completes, and 90% are done by 14.2 minutes.
+Completion is `stamp + 15`, so a bar is settled at about **`stamp + 29`** at the 90th percentile. The
+`T + 28` threshold I have been using is within one minute of the measured figure and I am keeping it,
+now with a reason rather than an accident behind it. (The distribution has a long tail — max ~300m —
+which belongs to the session-open and window-edge bars that revise for other reasons.)
+
+This also retires a loose end: N49 defined settling as `T + bar_length + feed_lag` using the 5m frame's
+~12-minute lag as a stand-in. The correct form is `T + bar_length + revision_tail`, and the revision tail
+happens to be ~12-14 minutes on this feed for 15m bars, which is why the wrong derivation gave the right
+number.
+
+## N90 — 06:05 state: both symbols continuing to lift, settled structure unchanged
+
+CALL-0004 has **not** expired: the newest 15m bar is `05:45` and per N86 expiry needs a bar stamped after
+06:00, i.e. the `06:15` bar, expected in hand ~06:31-06:35.
+
+MGC newest 15m `05:45` h 4190.00 l 4182.50 c 4187.50 — up 14.90 from the 4172.60 low, 1.62x ATR. MNQ
+c 30594.00. Locations MGC 12.2% of [4172.60, 4295.20], MNQ 16.1% of [30535.00, 30900.50]. Fast frames
+bullish on both (MGC 1m unanimous 3-0, 5m 2-1; MNQ 1m 2-1, 5m 2-0); **15m and 60m still unanimous bearish
+on both symbols and have not changed once in the entire session.**
+
+No call. The reversal test is false on both. The bounce is now 1.62x ATR on MGC and is the rule 8 sweep
+continuation; the structure that would have to change for a plan to exist has not changed on settled data,
+and the one apparent change is inside measured revision noise.

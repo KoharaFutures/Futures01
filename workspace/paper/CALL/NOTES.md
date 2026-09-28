@@ -6729,3 +6729,138 @@ price alone (+13.25 points, 0.18x its ATR of 72.23). Its 1m has softened to BEAR
 the first easing in the fast frames since 10:40. **That is not a bottom and I am not calling one:** rule 7
 puts sub-hourly in the graveyard, the 15m and 60m are both still BEARISH, and neither reversal test fires.
 **No call.**
+
+# N194 — POST-MORTEM: why the desk sat flat through a 3x-ATR bearish day
+
+The owner's question, 11:29 ET: *"you missed that today was a huge bearish day, figure out why and find a
+solution."* Correct on the facts. Measured:
+
+    MGC  high 4233.20 (00:30) -> low 4143.00 (10:55)   -90.20 pts = $902.00 per contract
+         RTH-only 4203.80 (08:20) -> 4143.00           -60.80 pts = $608.00
+    MNQ  high 30759.25 (09:30) -> low 30356.50 (10:45) -402.75 pts = $805.50 per contract
+
+The desk placed **zero** short exposure into that and finished with 0 countable trades. Five causes, in
+descending order of how much each one mattered. Causes 1-3 are defects in the machinery; causes 4-6 are
+mine.
+
+## Cause 1 (primary) — the only automated gate is a REVERSAL detector, and today was a CONTINUATION
+
+`regime.py:130 reversal()` requires five conditions, and the fourth is:
+
+```python
+prior = next((h for h in reversed(hist) if h in ("BULLISH","BEARISH") and h != head), None)
+if prior is None: fails.append("no prior directional headline to reverse from")
+```
+
+**A trend that does not change direction cannot satisfy that condition, by construction.** MGC was BEARISH
+on the 15m at every single bar from 07:00 through 11:00 — so `prior` was `None` all day and the gate was
+unsatisfiable on the symbol that fell 90 points. N117 and N166 recorded this as "MGC's reversal path is
+structurally closed"; what neither note said is the consequence: **on a continuation day the desk has no
+mechanism capable of returning YES.** Being flat was not a decision the framework made. It was the only
+output the framework could produce.
+
+## Cause 2 — unanimity arrives at turning points, and today it marked the exact high
+
+Reconstructed 15m headline at each bar (`bias()` on the trailing 40 bars, same code the desk reads live):
+
+    MNQ  08:00  BULLISH 3-0 UNANIMOUS   <- unanimity begins
+         08:15  BULLISH 3-0 UNANIMOUS
+         08:30  BULLISH 3-0 UNANIMOUS
+         08:45  BULLISH 3-0 UNANIMOUS
+         09:00  BULLISH 3-0 UNANIMOUS
+         09:15  BULLISH 3-0 UNANIMOUS   <- last unanimous bar
+         09:30  CONFLICTED 1-1          <- the HIGH of the day, 30759.25, prints in this bar
+         10:00  BEARISH 1-2             <- the decline is underway, unanimity gone
+
+    MGC  09:00  BEARISH 0-3 UNANIMOUS
+         09:15  BEARISH 0-3 UNANIMOUS
+         09:30  BEARISH 0-3 UNANIMOUS   <- last unanimous bar
+         09:45  BEARISH 0-2             <- and the 60-point decline runs from here to 11:00
+         10:00 .. 11:00  BEARISH 0-2 at every bar, never unanimous again
+
+**MNQ's 15m was unanimously BULLISH for the six consecutive bars ending at the high of the day, and
+CALL-0005 was written LONG at 08:00 inside that window.** The gate did exactly what it is built to do and
+what it bought was the top. Meanwhile MGC's unanimity switched off one bar before its largest decline began
+and stayed off for the whole move.
+
+This is an empirical instance of rule 2's z = -4.09 that is sharper than the statistic: on this day, the
+unanimity requirement was not merely uninformative, it was **timed against the desk on both symbols in
+opposite directions**.
+
+## Cause 3 — `swings()` is why unanimity switched off during the trend
+
+During the decline window 09:30-11:00 the **structure** component was `BULL` or `MIXED` on MNQ at every
+single bar and never `BEAR`; on MGC it was `MIXED` at every bar from 09:45. Structure is the component that
+removed unanimity exactly when the trend was strongest, on both symbols.
+
+The mechanism is N102's, now shown to cost participation rather than just accuracy: `swings()` compares the
+**last two** pivots, not price against the running extreme. In a sustained decline a fresh pivot high that
+is far below the old high still reads `higher` whenever the pivot before it was lower still — so structure
+reports BULL in the middle of a 400-point fall. (Checked, not assumed: today's full-day tally is MGC
+BEAR 16 / MIXED 25 / BULL 4 and MNQ BEAR 20 / MIXED 9 / BULL 16 across all 15m bars, so the component is
+not simply broken everywhere — it fails specifically during strong trends, which is the worst possible
+place for it to fail.)
+
+## Cause 4 (mine) — I inverted rule 2
+
+I wrote, six times today, that broad frame agreement is *a reason not to trade* — "full five-frame agreement
+is past that ceiling in the direction the repository's own evidence says costs money" (N183), and similar at
+N184, N189, N190. **That is not what rule 2 says.** Rule 2 says *requiring* an alignment signal measured
+worse than *not requiring* one: alignment is uninformative as a filter. It does not make alignment a
+contrarian signal, and treating it as one is an unmeasured claim I invented and then leaned on. The correct
+reading is that alignment is **not evidence either way**, which means the decision has to rest on something
+else — and I had nothing else, which is Cause 1 again.
+
+## Cause 5 (mine) — my "extended move" test was a permanent veto
+
+I declined on "do not chase an extended move" at ten separate checks, measuring extension as distance from a
+high one to four bars back in ATR units. **On a trend day that quantity is always large** — it was 1.35x,
+2.3x, 3.1x, 3.5x and 4.6x ATR at successive checks. A test with that shape cannot be satisfied on precisely
+the days that produce the largest moves, so it is not a filter, it is an off switch. The owner's constraint
+is real and I am not discarding it; what it forbids is buying the top tick of a vertical extension, not
+participating in a trend. It needs a form that can be satisfied: extension measured from the **pullback**
+that precedes entry, not from the swing origin.
+
+## Cause 6 (mine, and the one that matters most) — I diagnosed the gap seven times and never closed it
+
+"No pre-committed continuation method" appears **seven times** in these notes today (N184, N189, and five
+others). Every time I correctly refused to invent one mid-move under N8. **Every time I then did nothing
+about it.** Between 09:30 and 11:29 there were roughly twenty-four checks, most of them quiet, and the
+correct use of a quiet check is to build the missing method on out-of-sample history and pre-register it for
+the next session. Refusing to design an entry while watching the move is right. Refusing to design one ever,
+and calling that discipline, is not — it is how a desk guarantees it is never ready for the regime it just
+watched. **This is the failure to fix.**
+
+# N195 — PRE-REGISTRATION: the CONT-1 continuation rule, specified BEFORE it is tested
+
+Written and committed **before running anything**, so the result cannot be fitted to it. Parameters are
+fixed here and will not be adjusted after seeing output; if it fails, it is reported as failed and not
+retuned.
+
+**Data.** `data/archive/{MGC,MNQ}_{15m,60m}.jsonl`, which end **2026-09-25** — genuinely out of sample with
+respect to today, 2026-09-28. Today's bars are excluded entirely and will not be added.
+
+**Entry rule, per symbol per frame.**
+1. *Displacement:* `|close - EMA20| > 0.5 * ATR14`. Side = SHORT if close below, LONG if above.
+2. *Slope:* EMA20 over the last 5 bars moving the same way as the side.
+3. *Trigger:* a stop entry at the extreme of the last 3 bars in the trend direction (SHORT: below the lowest
+   low of the last 3 bars; LONG: above the highest high), armed for the next 4 bars, then cancelled.
+4. *Stop:* 1.0 x ATR14 from entry. Satisfies rule 4's >= 0.5 ATR floor.
+5. *Target:* 1.5R, single exit, no scaling.
+6. *Session filter:* MGC entries only 08:20-13:30 ET (its real RTH per CALLOUT.md §3); MNQ only
+   09:30-15:00 ET. No entries 15:00-16:00 (rule 5).
+
+Two signals (displacement, slope) and one filter (session) — exactly rule 1's ceiling, no more. **No
+multi-timeframe condition of any kind**, per rule 2 as correctly read. Costs: 1 tick slippage plus
+commission on entry and exit.
+
+**Multiple testing, declared in advance.** 4 cells (2 symbols x 2 frames). I will report every cell,
+including the losers. Thresholds: the programme-wide `free_t` is **5.46**; the most generous bound in the
+codebase is the single-pre-registered floor near **1.18**. **I am pre-committing to call CONT-1 a FAILURE
+unless t > 3.0 in a cell, and to publish the number whatever it is.** My expectation, stated now: it will
+not clear 3.0, because nothing in this repository ever has.
+
+**What it is for even if it fails.** Cause 1 is that no mechanism can say YES on a continuation day. A
+rule that fails its threshold but exists, is pre-registered, and is sized under the governors is still
+strictly better than an unsatisfiable gate, because it produces *outcomes* — and the desk is at n = 0 after
+a full session, which is the deeper problem than being flat today.

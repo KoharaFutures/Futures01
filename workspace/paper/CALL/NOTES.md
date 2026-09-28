@@ -4598,3 +4598,27 @@ structures BULL. Both reversal tests false — and per N117 MGC's is unreachable
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
 opens 08:20 ET, 1h04m out.
+
+## N121 — 07:21: timing refinement on the pivot I flagged, and MGC's rejection bar has widened again
+
+No new settled bar — `06:45` remains newest settled on both; the `07:00` bar settles at **07:28**. Newest
+real 5m `07:10` on both, lag 11.3m.
+
+**Correcting my own timing from 07:16.** I wrote that "when the `07:00` bar settles at 07:28 its high of
+4193.40 becomes a candidate pivot." True, but a pivot needs a bar on **each** side, so on the settled series
+4193.40 cannot confirm until the `07:15` bar is itself settled — `07:15 + 28` = **~07:43**, not 07:28. At
+07:28 the `07:00` bar is merely settled; the comparison it might change is decided fifteen minutes later.
+Same class of error as N86's expiry arithmetic: I quoted the moment the *bar* settles rather than the moment
+the *test* can run. Stating the corrected time now rather than discovering it at 07:28.
+
+**The rejection bar has widened.** MGC's `07:00` 15m bar now reads `h 4193.40 l 4181.50 c 4183.80` — the low
+revised down from 4182.10, so the bar spans **11.90 points against an 8.33 ATR = 1.43x ATR**, and MGC is
+sitting near the bottom of its own widest bar of the session having touched the top of it. MNQ's `07:00` bar
+is `h 30644.00 l 30585.75 c 30596.75`, 58.25 points, 1.28x its 45.41 ATR.
+
+Frames: MGC 1m back to **BEAR 0-3 unanimous**, 5m BEAR 0-1, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. MNQ 1m BEAR
+0-1, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. Both structures still BULL on the unchanged
+sub-noise differences. Locations MGC 12.9% of [4172.60, 4259.50], MNQ 21.4% of [30535.00, 30823.50].
+
+No call. Both reversal tests false; MGC's unreachable per N117. Two plans PENDING; ledger unchanged at
+open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 59 minutes out.

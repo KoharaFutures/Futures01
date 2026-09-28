@@ -2893,3 +2893,104 @@ all night.
 No new call. MNQ at the exact low is the most extended point of the entire move and is the single
 worst place to sell it; the MGC retracement idea remains blocked by N52 until CALL-0004 resolves on
 the 06:00 ET bar. Neither reason has changed in five minutes, and neither should be expected to.
+
+## N57 — THE SEVEN-FRAME TABLE IS NOT SEVEN OBSERVATIONS OF THE SAME MOMENT. Its frames range from 10 minutes stale to 3.2 DAYS stale, and I have shown them side by side all night as if they were parallel
+
+N32 deferred "per-frame lag in the seven-frame table" to a full check. This is that check, and the
+numbers are much worse than the deferral assumed. Read from `feed_lag.jsonl`, latest fetch
+`2026-09-28T08:54:27Z`, identical on both symbols:
+
+| frame | newest real bar | lag |
+|---|---|---|
+| 1m | 04:44 | **10 min** |
+| 5m | 04:40 | **14 min** |
+| 15m | 04:30 | **24 min** |
+| 60m | **03:00** | **114 min** |
+| 4h (240m) | 00:00 | **294 min** |
+| daily (1440m) | **00:00, 2026-09-25** | **4,614 min = 3.2 DAYS** |
+
+So every check tonight, the row I printed as `daily BULL 3-0 unanimous` was computed from a series
+whose newest bar is **Friday 2026-09-25** — before the weekend, three days before the tape I was
+reporting on. And `60m BEAR 0-3 unanimous`, which I have been leaning on all night as "the settled
+frame that has not moved," **does not contain the last two hours** — which is the entire window in
+which MGC fell from 4188.90 to 4174.30. The 60m frame has not yet seen the move I have been
+describing.
+
+CALLOUT.md warns about exactly this in two places and I read both, twice, tonight: *"never state a
+level as current unless you fetched it in this turn"*, and the `as-of` card field, *"the timestamp of
+the newest bar you actually hold."* I honoured those for the 5m close and violated them for four of
+the seven rows in the same table, because `fetch.py` returns all six frames in one call and I treated
+one call as one moment. It is not. `FRAMES` requests 60m over 30 days, 240m over 60, 1440m over 365,
+and the vendor's per-interval behaviour differs; a frame silently ending early is CALLOUT.md's
+documented "empty frame with no error" failure in a partial form.
+
+**This does not flip any conclusion I reached, and I want to be exact about that rather than
+overclaim a retraction.** The declines at N44, N51, N52 and N56 rested on MGC's location inside its
+40-bar 15m range, on rule 2, and on N52's pre-registration argument — none of which used the 60m,
+4h or daily rows. So no call changes. What changes is that a table I have put in front of the owner
+roughly a dozen times was misleading in a way he had no way to detect, and the two rows I described
+as the stable, trustworthy ones (15m and 60m) are not the same kind of object: 15m is 24 minutes
+behind, 60m is nearly two hours behind.
+
+### The fix, and what I am doing about it right now
+
+From this check the seven-frame table **carries each row's lag**, and any row staler than roughly two
+of its own bar lengths is marked. A frame whose newest bar predates the move under discussion cannot
+corroborate a read of that move and must not be counted in any confluence statement — which, note,
+also means the "both symbols aligned bearish on every intraday frame" line from N56 was partly built
+on a 60m row that had not seen the relevant bars. That sentence should have read "on 1m, 5m and 15m,
+with 60m not yet current."
+
+Deferred, because it is a code change and not a reporting change: `fetch.py` should record per-frame
+lag into `vendor_events` (N38's item) and `regime.py` should refuse to emit a frame whose lag exceeds
+a stated multiple of its bar length rather than printing a confident BULL/BEAR label from stale bars.
+Until that exists the discipline is manual, which is exactly how this went unnoticed for six hours.
+
+This is the ninth self-correction tonight, and unlike the others it is not a slip in one sentence —
+it is a defect in the standard artefact this desk produces every five minutes.
+
+## N58 — full-check ledger at 04:54 ET
+
+| quantity | value |
+|---|---|
+| journal entries | 14 |
+| callouts with a resolved outcome | **1** |
+| closed trades | **0** |
+| wins / losses | 0 / 0 |
+| win rate | **undefined — no closed trade** |
+| payoff | **undefined** (rule 3 forbids one without the other; here neither exists) |
+| expectancy in R | **undefined**, n = 0 |
+| the one resolution | CALL-0003, `NO_FILL`, expired untriggered, $0.00, **0.0R** |
+| NO TRADE entries | 5, of which **2** carry `declined_despite_qualifying: true` |
+| equity | **$50,000.00** |
+| peak equity | $50,000.00 |
+| drawdown | **$0.00** |
+| distance to the $2,800 absorbing state | **$2,800.00**, the full width |
+| permitted risk at $0 drawdown | $240, ladder ×1.0, 50% discretionary cap = $120 |
+| ambiguous bars | 0 encountered by resolve.py this session |
+
+Rule 3 compliance, stated rather than assumed: I am not quoting a win rate because there is no
+closed trade to compute one from, and a rate over zero trades would be a number without a payoff to
+sit beside. One plan has resolved all session and it resolved as a non-fill at exactly 0.0R.
+
+Three plans remain PENDING: CALL-0001 (MNQ LONG, direction wrong by 318.25), CALL-0002 (inert,
+defective `created_bar_ts`, never evaluated — N30), CALL-0004 (MGC SHORT, direction right with target
+distance covered, trigger 39.30 away, expiring on the 06:00 ET bar).
+
+Cadence verified by listing rather than by memory, per N45: `CronList` shows `33ba414e` present. No
+`send_later` chain armed, deliberately, so the owner is not double-sent.
+
+## N59 — MGC's 04:40 5m close was revised +2.90 with zero new bars, and the 5m lag stretched to 14.5m
+
+The 08:54Z fetch returned `new=0 revised=1` on both symbols' 5m frames: no bar advanced, one existing
+bar changed. MGC's `04:40` close went 4178.70 -> 4181.60, MNQ's 30595.00 -> 30588.50. The 5m lag rose
+from 11.0m to 14.5m across three minutes of wall clock, i.e. the feed did not advance at all while
+time did.
+
+MGC's 1m frame consequently reads **BULLISH 2-0** at 04:54, having been CONFLICTED 0-0 three minutes
+earlier and unanimous BEARISH 0-3 thirteen minutes before that. That is the sixth 1m state change
+tonight and it happened on a fetch that delivered no new 5m bar.
+
+Nothing here is actionable; it is recorded because "the feed advanced" and "I fetched" are different
+events, and a check that fetches successfully can still hold strictly older information than the
+minute suggests.

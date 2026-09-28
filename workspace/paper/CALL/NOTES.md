@@ -7361,3 +7361,43 @@ pullback continuing 68.75 points past the entry, which is the most ordinary way 
 
 **No new call.** MNQ has now rallied to 30621.00 and MGC to 4165.70, and re-entering short after being
 stopped, on the same signal, at a worse price, is revenge dressed as conviction.
+
+## N208 — 12:38: the stop did its job. Price ran another 84.50 points past it.
+
+Five minutes after CALL-0006 was stopped at 30618.00, MNQ is **30705.50** and printed **30722.00** on the
+`12:25` 5m bar.
+
+    stopped at            30618.00   realised -$118.44  -1.021R
+    price now             30705.50   -> 87.50 points further against the short
+    had the stop not been there: 145.50 points adverse = -$291.00 = -2.51R unrealised
+
+**The governor bounded the loss to a quarter of what carrying it would have cost by now**, and that is the
+one finding in this whole repository that clears its own deflation threshold — governors that shrink or cap
+exposure are net protective, |z| 6.164/5.543 against `free_t` 2.2293. Today it is not a statistic, it is
+$172.56 of paper that did not leave the account. Worth writing down on the day a stop hurt, because that is
+the only day the lesson is available.
+
+The move is now a full regime turn: MNQ from **30356.50 (10:45) to 30722.00 (12:25) = 365.50 points = 4.5x
+ATR14(15m) 81**, in one hour forty minutes. MGC from 4143.00 to 4181.00, +38.00 = 3.1x its ATR of 12.3.
+
+    MGC 15m  CONFLICTED 0-0  trend MIXED 4179.90 > EMA20 4169.36 but the EMA still FALLS
+             structure MIXED | location MIXED 55.0% of [4143.00, 4210.10]
+    MNQ 15m  BULLISH 1-0     trend MIXED 30705.50 > EMA20 30569.61 with the EMA still FALLING
+             structure MIXED | location BULL 86.7% of [30356.50, 30759.25]
+
+MNQ's location has gone **4.7% -> 86.7% in under two hours** on the same range endpoints, so all of it is
+price. Both symbols' 1m are BULLISH 3-0 unanimous and both 5m are 2-0, against a 60m that is still BEARISH on
+each (MGC 0-3 unanimous, MNQ 0-2).
+
+**No call, and the reason is the one I got wrong this morning and then measured.** Neither reversal test
+fires — both fail on "held only 1 consecutive check". Beyond that, this is a 4.5x-ATR extension and the
+entry that this configuration invites is a long stop-entry above the 3-bar high in the direction of an
+established displacement, which is **exactly the shape CHECK_PROCEDURE.md now prohibits** at z -2.61 to
+-4.72 versus random in 4 of 4 cells. The prohibition was written for a down move; it binds identically on the
+way up. And re-entering short after being stopped, on the same signal, at a worse price, is revenge dressed
+as conviction.
+
+Ledger unchanged since N207: **measured n = 1, 0 wins, 1 loss, win rate 0.0% with payoff UNDEFINED,
+expectancy -1.021R, measured equity $49,881.56, measured drawdown $118.44, $2,681.56 to the absorbing
+state.** `state.json` reads equity $50,038.12 and drawdown $118.44, the difference being CALL-0002's
+excluded +$156.56.

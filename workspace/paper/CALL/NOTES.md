@@ -1151,3 +1151,85 @@ CALL-0003 stands at 30767.25, 77.75 away, expiring 02:00 ET in about 88 minutes.
 If the bounce carries another 78 points it fills on its own terms, at the number
 written before any of this was visible. That is the outcome I want, and the only
 reason it is available is that nobody moved it.
+
+## N24 — added a status badge and a letter grade to the card. The grade's first version was worthless and I had to rebuild it.
+
+00:46 AM EDT, at the owner's request: a live status badge (`AWAITING FILL` /
+`ACTIVE · IN POSITION` / `CLOSED ±xR`), a letter grade in glyphs as large as the
+symbol, and larger type for BUY/LONG and SCALP/SWING.
+
+The badges are mechanical: `live_status()` reads `state.json` and the plan's own
+`status`, so the badge answers "is money at risk right now" from the account
+rather than from how the callout is worded.
+
+### The grade needed two attempts and the first one was a fake
+
+Version one scored each criterion and mapped `int(round(pts)) + 3` onto a ten-step
+scale. Every one of the four live plans came out **B+**, the ceiling. A grade that
+assigns the same letter to four different plans is not measuring anything — it is
+decoration that flatters the book. The cap was doing all the work and the criteria
+none of it.
+
+Rebuilt to score as a **fraction of the credit actually available** (`CREDITS_MAX
+= 11.0`, declared next to the criteria so adding one without updating it would be
+obvious rather than silently inflating every grade ever printed). Result:
+
+```
+CALL-0001  MNQ LONG  SWING   C
+CALL-0002  MGC SHORT SCALP   C+
+CALL-0003  MNQ LONG  SWING   C
+CALL-0004  MGC SHORT SCALP   C
+```
+
+Those are honest letters for DISCRETIONARY plans built from untested families, and
+they discriminate, which the first version did not.
+
+### The ceiling is B+ and it is unreachable by design
+
+`GRADE_CEILING = "B+"`. Nothing in this repository has a measured edge — largest
+*t* 3.923 against `free_t` 5.46, and the best of a 21,060-strategy index search is
+3.82 and belongs to a placebo. So the grade measures **construction only** and
+stops where construction runs out. "A" and "A+" cannot be earned, not because
+tonight's plans fell short but because no measurement here could justify printing
+them. The card prints `GRADE · CEILING B+` directly under the letter so it can
+never be read as validation. The owner asked for "+A or something" and is getting
+a scale whose top is deliberately shut; that is a change to what he asked for and
+it is stated rather than quietly imposed.
+
+### Cross-checked the grader against a callout it did not come from
+
+The grader has to apply to this desk on the same terms it applied to someone
+else's call, or the letter is worthless. Fed it the Discord MGC long I scored
+**4/10 by hand** forty minutes ago:
+
+```
+DISCORD  MGC LONG  4230 / SL 4224.2 / TP 4300   ->  C-
+   · stop 0.65xATR clears rule 4 but only just
+   · stop sits 0.10 from the 40-bar extreme - on the cluster
+   · risk $58 is 24% of permitted, inside the 50% cap
+   · LIMIT entry - price must come to it, not chased
+   · SCALP label vs reach 7.88xATR - mislabelled
+   · 2 agree / 4 against - at rule 1's 2+1 ceiling
+```
+
+It found the same three faults I found by eye — stop on the cluster, rule 4 only
+just cleared, horizon mislabelled — and landed at C- against my 4/10. It also
+correctly credited the two things I said were good, the limit entry and the small
+size. That the mechanical score agrees with the manual one on a call the criteria
+were not written around is the only evidence available that the grade is reading
+the plan rather than reciting my opinion.
+
+**And it ranks my own book one notch above it, not five.** CALL-0001 through 0004
+grade C to C+ against the Discord call's C-. That is the honest gap and I would
+rather print it than a flattering one: the desk's plans are better constructed in
+where the stop sits, and worse in that three of four use families never generated
+for their symbol.
+
+### The criterion that will look wrong and is not
+
+Criterion 6 scores confluence with a PEAK, not a slope: 2-3 agreeing families earns
+full credit and **4 or more loses a point.** That inverts the intuition that more
+agreement is better, and it is rule 1 — measured in this repository — that two
+signals plus one filter is the ceiling and past it more agreement is worse. So
+CALL-0002 and CALL-0004 are each docked for having four families agree. Anyone
+reading the card will think that is a bug. It is the finding.

@@ -247,6 +247,211 @@ def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> 
     return out
 
 
+def live_status(plan: dict) -> tuple:
+    """(badge text, colour) for where this plan actually stands RIGHT NOW.
+
+    Read from `state.json` and the plan's own `status`, never inferred from how the plan
+    reads. The owner wants to know at a glance whether money is at risk, and that is a
+    question about the account, not about the callout's wording.
+    """
+    cid = plan.get("call_id")
+    st = {}
+    try:
+        st = json.loads((HERE / "state.json").read_text())
+    except Exception:
+        pass
+    for o in st.get("open", []) or []:
+        if o.get("call_id") == cid:
+            return "ACTIVE · IN POSITION", (60, 220, 130)
+    for c in st.get("closed", []) or []:
+        if c.get("call_id") == cid:
+            r = c.get("r_multiple")
+            tag = f"CLOSED {r:+.2f}R" if isinstance(r, (int, float)) else "CLOSED"
+            return tag, (60, 220, 130) if (r or 0) > 0 else (255, 60, 80)
+    s = (plan.get("status") or "").upper()
+    if s == "PENDING":
+        return "AWAITING FILL", (255, 190, 40)
+    return (s or "UNKNOWN"), (170, 172, 178)
+
+
+# The grade's hard ceiling. Nothing in this repository has a measured edge: the largest
+# t-statistic is 3.923 against a `free_t` of 5.46, and the best of a 21,060-strategy index
+# search is 3.82 and belongs to a placebo. A plan built from those parts can be well
+# CONSTRUCTED and still have no demonstrated expectancy, so the grade measures construction
+# only and is capped where construction alone runs out. An "A" on this card would assert
+# something no measurement in this repo supports, so "A" and "A+" are unreachable BY
+# DESIGN, not because tonight's plans fell short. The cap is printed on the card next to
+# the grade so the letter can never be read as validation.
+GRADE_CEILING = "B+"
+# The sum of every credit a flawless plan could collect below. Kept beside the criteria so
+# that adding one without updating this would be obvious rather than silently inflating
+# every grade ever printed.
+CREDITS_MAX = 11.0
+_SCALE = ["D", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+"]
+
+
+def grade(plan: dict, spec, fill, stop, tgts, risk) -> tuple:
+    """Grade the CONSTRUCTION of a pre-registered plan. Mechanical, capped, and auditable.
+
+    Returns (letter, [reason lines]). Every criterion is one this desk has already applied
+    to someone else's callout, so it must apply to its own on the same terms - that is the
+    only thing that makes the letter worth printing.
+    """
+    import importlib.util as _iu
+    sym, side = plan["symbol"], plan["side"]
+    pts = 0.0
+    why = []
+
+    # --- bars, for ATR and the 40-bar envelope on the plan's own frame
+    atr = lo40 = hi40 = None
+    try:
+        _s = _iu.spec_from_file_location("_ft", HERE / "fetch.py")
+        _ft = _iu.module_from_spec(_s)
+        _s.loader.exec_module(_ft)
+        d_ = _ft.stored(sym, int(plan.get("bar_minutes", 15)))
+        bars = []
+        for k in sorted(d_):
+            o, h, l, c, v = d_[k]
+            if v == 0 and h == l:
+                continue                     # N5 stub guard
+            bars.append((o, h, l, c))
+        tr = [max(bars[i][1] - bars[i][2], abs(bars[i][1] - bars[i - 1][3]),
+                  abs(bars[i][2] - bars[i - 1][3])) for i in range(1, len(bars))]
+        atr = sum(tr[-14:]) / 14
+        hi40 = max(b[1] for b in bars[-40:])
+        lo40 = min(b[2] for b in bars[-40:])
+    except Exception:
+        pass
+
+    sp = float(plan.get("stop_points") or 0)
+
+    # 1. rule 4 - stops are never tighter than ~0.5 ATR. Measured, and the one place a
+    #    tight stop is not "better risk control" but a coin flip paid for with commission.
+    if atr:
+        x = sp / atr
+        if x < 0.5:
+            pts -= 2.0
+            why.append(f"stop {x:.2f}xATR BREACHES rule 4's 0.5 floor")
+        elif x < 0.8:
+            pts += 0.5
+            why.append(f"stop {x:.2f}xATR clears rule 4 but only just")
+        elif x <= 2.0:
+            pts += 2.0
+            why.append(f"stop {x:.2f}xATR sits in the 0.8-2.0 band")
+        else:
+            pts += 0.5
+            why.append(f"stop {x:.2f}xATR is wide - risk per point is real")
+
+    # 2. A stop parked ON the 40-bar extreme is a stop parked on the market's stop cluster.
+    if atr and lo40 is not None:
+        edge = min(abs(stop - lo40), abs(stop - hi40))
+        if edge < 0.10 * atr:
+            pts -= 3.0
+            why.append(f"stop sits {edge:.2f} from the 40-bar extreme - on the cluster")
+        elif edge < 0.25 * atr:
+            pts -= 0.5
+            why.append(f"stop only {edge/atr:.2f}xATR clear of the 40-bar extreme")
+        else:
+            pts += 1.0
+            why.append(f"stop {edge/atr:.2f}xATR clear of the 40-bar extreme")
+
+    # 3. Size. The one finding that clears its own deflation threshold is that governors
+    #    shrinking position size are net protective (|z| 6.164/5.543 vs free_t 2.2293).
+    frac = risk / 240.0 if risk else 0
+    if frac <= 0.50:
+        pts += 1.5
+        why.append(f"risk ${risk:,.0f} is {frac*100:.0f}% of permitted, inside the 50% cap")
+    else:
+        pts -= 1.5
+        why.append(f"risk ${risk:,.0f} is {frac*100:.0f}% of permitted - over the cap")
+
+    # 4. Forward entry vs a reclaim already behind the market.
+    tt = (plan.get("trigger_type") or "")
+    if tt.startswith("LIMIT"):
+        pts += 1.5
+        why.append("LIMIT entry - price must come to it, not chased")
+    elif "FORWARD-PROJECTED" in (plan.get("trigger_basis") or ""):
+        pts += 1.0
+        why.append("trigger projected forward, not a level already traded")
+    else:
+        pts += 0.0
+        why.append("STOP entry on a reclaim - reactive by construction")
+
+    # 5. Does the SCALP/SWING label match the arithmetic it claims?
+    hz = (plan.get("horizon") or "").upper()
+    if atr and tgts:
+        reach = abs(tgts[0][2] - fill) / atr
+        if hz == "SCALP" and reach < 2.0:
+            pts += 1.0
+            why.append(f"SCALP label matches reach {reach:.2f}xATR (<2.0)")
+        elif hz == "SWING" and reach >= 2.0:
+            pts += 1.0
+            why.append(f"SWING label matches reach {reach:.2f}xATR (>=2.0)")
+        else:
+            pts -= 1.0
+            why.append(f"{hz or 'no'} label vs reach {reach:.2f}xATR - mislabelled")
+
+    # 6. rule 1 - two signals plus one filter is the CEILING. Agreement past that is
+    #    measurably WORSE, so this score PEAKS in the middle and falls off above it.
+    try:
+        _s2 = _iu.spec_from_file_location("_cf2", HERE / "confluence.py")
+        _cf2 = _iu.module_from_spec(_s2)
+        _s2.loader.exec_module(_cf2)
+        rows = _cf2.evaluate(sym, side, plan["trigger_price"])
+        ag = sum(1 for r in rows if r["verdict"] == "AGREE")
+        ct = sum(1 for r in rows if r["verdict"] == "AGAINST")
+        if ag <= 1:
+            pts += 0.5
+            why.append(f"{ag} family agrees - thin, but not over-subscribed")
+        elif ag <= 3:
+            pts += 2.0
+            why.append(f"{ag} agree / {ct} against - at rule 1's 2+1 ceiling")
+        else:
+            pts -= 1.0
+            why.append(f"{ag} families agree - PAST rule 1's ceiling, a warning not support")
+    except Exception:
+        pass
+
+    # 7. Was this strategy family ever built and tested for THIS symbol?
+    sb = (plan.get("strategy_basis") or "")
+    if "EXCLUDES" in sb or "never generated" in sb:
+        pts -= 1.0
+        why.append("family not generated for this symbol - untested shape")
+    elif "backtested" in sb or "generates" in sb:
+        pts += 1.0
+        why.append("family is one this symbol's profile actually generates")
+
+    # 8. Do the targets land on anything, or are they arithmetic wearing a label?
+    note = (plan.get("display_targets_note") or "")
+    if "PURE R MULTIPLE" in note.upper() and "lands on structure" in note:
+        pts += 0.5
+        why.append("targets state honestly which are structural and which are R multiples")
+    elif "PURE R MULTIPLE" in note.upper():
+        pts += 0.0
+        why.append("all targets are pure R multiples - no structure claimed")
+
+    # 9. RTH. A fill outside the session is outside everything this repo has measured.
+    rn = (plan.get("rth_note") or "")
+    if rn.startswith("NOT RTH") or "DELIBERATELY NOT RTH" in rn:
+        pts -= 0.5
+        why.append("not RTH-gated - a fill outside session is outside all measurement")
+    elif rn:
+        pts += 0.5
+        why.append("RTH-gated")
+
+    # Score as a FRACTION of the credit available, not an absolute offset. The first
+    # version added 3 to the raw points and landed every plan on the B+ cap, which made
+    # the letter decorative - a grade that cannot distinguish two plans is not a grade.
+    frac = max(0.0, pts) / CREDITS_MAX
+    idx = max(0, min(len(_SCALE) - 1, int(round(frac * (len(_SCALE) - 1)))))
+    letter = _SCALE[idx]
+    cap = _SCALE.index(GRADE_CEILING)
+    if idx > cap:
+        letter = GRADE_CEILING
+        why.append(f"capped at {GRADE_CEILING}: construction only, no measured edge exists")
+    return letter, why
+
+
 def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     """A 2.5:1 landscape card: price panels stacked left, reasoning right.
 
@@ -266,7 +471,8 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     spec, fill, stop, tgts, risk = mech(plan)
 
     fsym = ImageFont.truetype(MONO_B, sc(92))
-    fdir = ImageFont.truetype(MONO_B, sc(34))
+    fdir = ImageFont.truetype(MONO_B, sc(52))   # owner asked for BUY/LONG larger
+    fbadge = ImageFont.truetype(MONO_B, sc(27))  # SCALP/SWING + live status, enlarged
     fnum = ImageFont.truetype(MONO_B, sc(46))
     flab = ImageFont.truetype(MONO_B, sc(19))
     fsub = ImageFont.truetype(MONO, sc(15))
@@ -303,30 +509,61 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     d = ImageDraw.Draw(ov)
     hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd, img=ov)
 
-    # ---- header: symbol and direction on one baseline
+    # ---- header: symbol, GRADE, direction, horizon and live status on one baseline
+    #
+    # The owner asked for the grade in letters as big as the symbol, and for the
+    # direction and SCALP/SWING to be larger. All four sit in the same 52..159 band so
+    # STRATEGY below keeps its position - the band is set by the 92px symbol and the
+    # grade box is built to that height rather than adding a new row.
     gd.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=(*las, 210))
     d.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=WHITE)
     symw = d.textlength(plan["symbol"], font=fsym)
+
+    letter, gwhy = grade(plan, spec, fill, stop, tgts, risk)
+    gx = PAD + symw + sc(34)
+    glw = d.textlength(letter, font=fsym)
+    gbw, gbh = int(glw) + sc(36), sc(104)
+    gby = sc(50)
+    d.rounded_rectangle([gx, gby, gx + gbw, gby + gbh], radius=sc(10),
+                        fill=(0, 0, 0, 150), outline=(*las, 235), width=sc(3))
+    gd.rounded_rectangle([gx, gby, gx + gbw, gby + gbh], radius=sc(10),
+                         outline=(*las, 205), width=sc(4))
+    d.text((gx + sc(18), gby + sc(2)), letter, font=fsym, fill=WHITE)
+    gd.text((gx + sc(18), gby + sc(2)), letter, font=fsym, fill=(*las, 200))
+    gcap = f"GRADE · CEILING {GRADE_CEILING}"
+    d.text((gx, gby + gbh + sc(2)), gcap, font=fmeta, fill=(*las, 150))
+
     glyph = "\u25b2" if side == "LONG" else "\u25bc"
     dtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
-    dx = PAD + symw + sc(40)
-    d.text((dx, sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 255))
-    gd.text((dx, sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 185))
-    # SCALP / SWING badge, on the same baseline as the direction
+    dx = gx + gbw + sc(42)
+    dy = sc(52) + sc(18)
+    d.text((dx, dy), dtxt, font=fdir, fill=(*las, 255))
+    gd.text((dx, dy), dtxt, font=fdir, fill=(*las, 185))
+
+    # SCALP / SWING and the live status, same baseline, both enlarged
+    bx = dx + int(d.textlength(dtxt, font=fdir)) + sc(40)
+    bh2 = sc(56)
+    by2 = sc(52) + sc(24)
     hz = plan.get("horizon")
     if hz:
-        bx = dx + int(d.textlength(dtxt, font=fdir)) + sc(38)
-        bw, bh = sc(150), sc(42)
-        by0 = sc(52) + sc(42)
-        d.rounded_rectangle([bx, by0, bx + bw, by0 + bh], radius=sc(8),
+        bw2 = int(d.textlength(hz, font=fbadge)) + sc(44)
+        d.rounded_rectangle([bx, by2, bx + bw2, by2 + bh2], radius=sc(9),
                             fill=(0, 0, 0, 140), outline=(*las, 230), width=sc(2))
-        tw3 = d.textlength(hz, font=flab)
-        d.text((bx + (bw - tw3) / 2, by0 + sc(10)), hz, font=flab, fill=(*WHITE, 245))
-        gd.rounded_rectangle([bx, by0, bx + bw, by0 + bh], radius=sc(8),
+        gd.rounded_rectangle([bx, by2, bx + bw2, by2 + bh2], radius=sc(9),
                              outline=(*las, 200), width=sc(3))
+        d.text((bx + sc(22), by2 + sc(13)), hz, font=fbadge, fill=(*WHITE, 248))
+        bx += bw2 + sc(20)
+
+    stxt, scol = live_status(plan)
+    bw3 = int(d.textlength(stxt, font=fbadge)) + sc(44)
+    d.rounded_rectangle([bx, by2, bx + bw3, by2 + bh2], radius=sc(9),
+                        fill=(0, 0, 0, 150), outline=(*scol, 235), width=sc(2))
+    gd.rounded_rectangle([bx, by2, bx + bw3, by2 + bh2], radius=sc(9),
+                         outline=(*scol, 205), width=sc(3))
+    d.text((bx + sc(22), by2 + sc(13)), stxt, font=fbadge, fill=(*scol, 250))
 
     yy = sc(58)
-    for m in (f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
+    for m in (f"{plan['call_id']}   {stxt}",
               f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"):
         d.text((W - PAD - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
         yy += sc(26)
@@ -498,6 +735,8 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         by += sc(30)
 
     for hdr, txt, col, lines in (
+            (f"GRADE {letter} — CONSTRUCTION ONLY, CEILING {GRADE_CEILING}",
+             " · ".join(gwhy), (*las, 150), 3),
             ("HORIZON", plan.get("horizon_basis", ""), (*las, 150), 2),
             ("STRATEGY BASIS", plan.get("strategy_basis", ""), (*las, 150), 2),
             ("TARGETS", plan.get("display_targets_note", ""), (*las, 150), 2),

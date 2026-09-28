@@ -4719,3 +4719,54 @@ BEAR 0-3 unanimous. MNQ 1m BEAR 0-1, 5m BULL 1-0, 15m BEAR 1-2, 60m BEAR 0-3 una
 
 Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens
 08:20 ET, 50 minutes out; MNQ RTH 09:30.
+
+## N126 — MNQ has broken out on the session's largest volume, sigma is through the threshold, and it STILL cannot qualify — exactly as N118 predicted
+
+MNQ at 07:35: location has gone **19.8% -> 34.0%** of [30535.00, 30823.50] in five minutes, 5m is **BULL 3-0
+unanimous**, 1m BULL 2-0, and the 15m has left bearish altogether for **CONFLICTED 1-1**. `reversal_setup`:
+
+    MNQ  qualifies False  side SHORT  sigma +1.55  htf_bearish []  climax_x 4.27
+
+**Sigma is +1.55 — through the |1.5| threshold for the first time tonight in either direction on either
+symbol.** And it still returns `qualifies: False`, on the single remaining condition: **zero bearish higher
+timeframes**, because MNQ's 4h, DAILY and WEEKLY are all bullish. This is precisely what N118 wrote at 07:11:
+*"MNQ is extended upward and cannot qualify for a SHORT because its 4h, DAILY and WEEKLY are all bullish —
+zero bearish HTFs, and that will not change on a 5m push."* Sigma crossed; the HTF count did not. Eleventh
+machinery prediction tonight to hold.
+
+**Volume, measured rather than taken from the detector's single number.** MNQ 5m volumes against a 4,022
+rolling median:
+
+| 5m bar | high | low | close | volume | x median |
+|---|---|---|---|---|---|
+| 07:00 | 30644.00 | 30585.75 | 30613.50 | 17,162 | **4.27x** |
+| 07:05 | 30618.00 | 30588.50 | 30609.50 | 6,835 | 1.70x |
+| 07:10 | 30610.50 | 30587.50 | 30592.75 | 4,237 | 1.05x |
+| 07:15 | 30629.25 | 30588.00 | 30592.50 | 11,854 | **2.95x** |
+| 07:20 | 30639.75 | 30588.25 | 30639.00 | 5,346 | 1.33x |
+| 07:25 | 30641.00 | 30632.00 | 30633.00 | **0** | — |
+
+So the 4.27x the detector reports belongs to the **07:00** bar, 35 minutes old, not to the newest one — worth
+knowing before quoting "4.27x volume" as a description of the current bar. The move has had real volume
+behind it though: 4.27x then 2.95x on the two impulse bars.
+
+**And the newest 5m bar has volume 0 with high != low** — `h 30641.00 l 30632.00 v 0`. That is the exact shape
+the stub guard is written to pass (`volume > 0 OR high != low`) and the one recorded earlier in the session:
+a forming bar whose volume backfills later. **The close of 30633.00 I would otherwise have quoted comes from a
+bar with no volume in it.** The newest bar carrying volume is `07:20` at c 30639.00. Reporting both, labelled.
+
+**No call, and the reason is the cleanest of the night: this is a chase.** MNQ is +1.55 sigma extended
+**upward**. N124's pre-committed method wants a BUY LIMIT at the settled higher low of 30547.75 — now **85
+points below the market** — and explicitly voids if that level is at or above price, which it is not, but the
+method's condition 1 requires `qualifies: True` and it is False. Buying a breakout at +1.55 sigma after a
+4.27x volume bar is the definition of chasing an extended move, which the procedure forbids outright. The
+pre-committed plan asked for a pullback; the market delivered a breakout; **the plan does not fire and I am not
+substituting a different one after watching the price.**
+
+MGC meanwhile: sigma −0.04, climax 0.97, htf_support empty — sitting exactly on its mean on median volume,
+location 16.0% of [4172.60, 4257.40], 1m BULL 1-0, 5m CONFLICTED, 15m BEAR 1-2, 60m BEAR 0-3 unanimous. Two
+symbols, the same five minutes, and one of them did not move at all.
+
+Newest settled 15m `07:00` on both; `07:15` settles at **07:43**, which is also when MGC's 4193.40 pivot
+resolves on the settled series per N121. Two plans PENDING; ledger unchanged at open 0, closed 0, equity
+$50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 45 minutes out; MNQ RTH 09:30.

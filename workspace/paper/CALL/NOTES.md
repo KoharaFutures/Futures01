@@ -5427,3 +5427,57 @@ No new call. Three plans PENDING: CALL-0005 (unfilled, 96 below market), CALL-00
 first evaluable bar ~08:46). Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800
 to the absorbing state. **MGC RTH has been open four minutes** — the tape is now inside the only session this
 repository has ever measured.
+
+## N149 — MNQ is running away from CALL-0005's limit, and that makes a pattern in my own entry construction worth naming
+
+MNQ at 08:28: 5m `08:15` bar `h 30727.50 l 30699.50 c 30708.50`; settled 15m `08:00` close **30703.00**;
+location **77.0%** of [30535.00, 30753.25], up from 71.9%. **REVERSAL BULLISH still called, `held 22`.**
+
+**CALL-0005's 30595.88 limit is now about 112 points below the market**, having come within 14.62 points at its
+closest. MNQ is up ~168 points from the 30535.00 session low. The directional call is working and **the plan is
+not in it.**
+
+### The pattern, stated against my own method
+
+| plan | direction | fill |
+|---|---|---|
+| CALL-0003 | — | `NO_FILL`, expired untriggered, 0.0R |
+| CALL-0004 | **right** — fav 75.70 against a 19.04 target distance, target covered ~4x | `EXPIRED_UNTRIGGERED`, 0.0R |
+| CALL-0005 | **right so far** — MNQ +168 from the low since registration | unfilled, limit 112 below market |
+
+**Three pre-registered plans, zero fills, and on the two where direction is measurable the direction was right.**
+The common factor is not the read. It is the **entry construction**: every plan tonight has used a retracement
+limit placed away from the market — CALL-0004 a 50% fib above a falling market, CALL-0005 a 50% fib below a
+rising one — on the explicit reasoning that entering at market would be chasing an extended move.
+
+That reasoning is correct as far as it goes, and it is the procedure's own instruction. But **the result is a
+desk that is directionally accurate and structurally unable to participate**, and I should say that plainly
+rather than keep reporting each non-fill as an individual disappointment. Either the retracement depth is too
+deep for this tape (a 50% pull on a trending 15m frame), or a with-trend entry needs a construction that is
+neither a market order nor a half-leg pullback — a break-and-retest of a nearer level, a partial-retracement
+limit at 23.6% or 38.2%, or a stop-entry above the prior bar. **None of those is tested here, and rule 8 is the
+standing warning that level constructions in this repository did not survive random-zone controls.**
+
+So I am **not** changing CALL-0005 — editing a pre-registered plan after watching price is exactly N8, and the
+whole value of tonight's discipline is that the plan stands or fails as written. What I am doing is recording
+that the *method* has a measurable signature after three attempts: **n = 3, direction-right where measurable,
+fill rate 0/3.** That is not a statistical result and I will not treat it as one. It is a specific, falsifiable
+claim about this desk's entry geometry that the next few plans will confirm or refute, and it belongs on the
+record before the outcome rather than after.
+
+## N150 — MGC's 21-point bar has settled and its 15m still reads BEARISH
+
+MGC's `08:00` 15m bar has settled: `h 4199.80 l 4178.70 c 4198.30`, a 21.10-point bar. Settled close 4198.30,
+so MGC is up **25.70 from the 4172.60 low**. Its 1m is now **BULLISH 3-0 unanimous** and 5m BULL 2-0.
+
+And the 15m still reads **BEARISH 0-1**: trend **MIXED** (4198.30 above a still-falling EMA20 4190.49),
+structure **MIXED** with both legs inside noise, location **BEAR at 32.9%** of [4172.60, 4250.60]. One component
+bearish, two mixed, none bullish — so the headline is BEARISH on a tally of 0-1 after a 25-point rally. That is
+not a defect, it is what these three components say, and it is a useful illustration of how slowly a
+three-component 15m headline turns: MGC needs location above 60% (≈4219.40) and the EMA20 to stop falling before
+its 15m can go bullish at all.
+
+MGC's reversal remains closed on all three counts (`prior None`, `held 349`, N117's HTF gate). No MGC call.
+
+Three plans PENDING. CALL-0002's first evaluable bar is still `08:30`, in hand ~08:46. Ledger unchanged: open 0,
+closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.

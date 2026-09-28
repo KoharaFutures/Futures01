@@ -2172,3 +2172,73 @@ No call. MNQ fails on extension, MGC fails on the structural HTF veto (0 bullish
 frames, daily and weekly disqualified). MNQ's 1m has gone **BULLISH 3-0 unanimous** for the
 first time tonight, against a unanimous bearish 15m and 60m — one frame, and the frame with
 the shortest memory.
+
+## N37 — the flush and the extension finally co-occurred, which corrects N36. The trade is still declined, and this time the reason is arithmetic: it cannot be sized.
+
+03:33 AM EDT. MGC broke to **4188.70**. And MNQ's detector returned something it had not
+produced all night:
+
+```
+sigma        -1.83     clears |1.5|
+htf_support  4h, DAILY, WEEKLY
+climax_x      1.94     "flush"
+trigger      30637.75
+qualifies     TRUE
+```
+
+### First, a correction to N36, thirty minutes old
+
+N36 tabulated seven readings in which sigma and climax had **never** both cleared, and
+concluded: *"anchoring displacement to a fixed pivot would let the extension reading survive
+the slowdown that produces the flush, which is the only way both conditions could ever hold
+at once."*
+
+**That last clause is wrong.** They have now held at once, on the eighth reading, with no fix
+applied. What happened is that price resumed falling hard enough to re-extend sigma while
+volume was still elevated from the prior flush — so the two can coincide during a *second*
+acceleration, not only under an anchored reference. The anti-correlation N36 measured is real
+and the mechanism is real; the word "only" was an overreach from seven samples. Recording it
+because I built a prediction on it and the tape refuted it inside half an hour.
+
+### Declined, and the reason is new and arithmetic
+
+Not a rehash of N34. **The trade cannot be sized.**
+
+```
+ATR14(15m)        38.64
+session low    30581.25
+entry considered 30649.25   the 15m lower-high - chosen deliberately ABOVE the
+                            detector's slid 30637.75, so the trigger is HARDER, not cheaper
+
+stop 30575.00   74.25 pts = $148.50 = 61.9% of permitted    1.92x ATR
+stop 30565.00   84.25 pts = $168.50 = 70.2% of permitted    2.18x ATR
+stop 30589.00   60.25 pts = $120.50 = 50.2% of permitted    1.56x ATR  <- ABOVE the low
+```
+
+Any stop that clears the session low costs **62–70% of the $240 permitted**, breaching the
+50% cap that applies while confidence is `DISCRETIONARY`. The only stop inside the cap sits
+**7.75 points above the session low** — inside price action already traded. That is exactly
+the flaw I graded the Discord call **C-** for at 00:42, and which took that trade out 25
+minutes later. MNQ is **$2/point with a 1-contract floor**, so there is no smaller expression
+to fall back on.
+
+**At this volatility, against this budget, the trade does not exist.** That is a cleaner
+reason than any of the five in N34, because it does not depend on my judgement about the
+detector at all — it is division.
+
+It also answers the counter-argument I raised against myself in N34, that refusing six times
+means I have disabled the detector. Tonight the detector was not the binding constraint on
+call six. MNQ's 15m ATR has widened to 38.64 and a $240 budget cannot buy a defensible stop
+on a 30,600-point index at that volatility. **The right fix is not to the detector, it is to
+notice that MNQ at this ATR is too large an instrument for this account's per-trade budget
+and to say so** — which is a sizing finding, not a signal finding, and it belongs in the
+report to the owner rather than in another round of detector surgery.
+
+Journalled at the decision as `CALL-NT-0004` with `declined_despite_qualifying: true` and
+`decline_reason_primary` naming the sizing breach, per N25/N34.
+
+The N34 reasons that still stand, secondary now: the trigger has slid **129.50 points** from
+CALL-0003's 30767.25, monotone; CALL-0003 expired NO_FILL with a 263-point adverse excursion;
+sigma re-extended because price accelerated (N22), so −1.83 reports selling speed rather than
+an imminent turn; MNQ's 15m and 60m are both unanimous bearish; and rule 2 puts the MTF
+alignment behind `htf_support` at z = −4.09.

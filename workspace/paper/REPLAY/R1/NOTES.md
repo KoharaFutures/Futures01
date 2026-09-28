@@ -1936,3 +1936,58 @@ understating them:
 
 **Nothing anywhere in this record clears its own threshold.** The largest |z| produced by nine agents is
 **+4.30**, and it belongs to **a broken volume field on the 18:00 bar** — not to a trade.
+
+### Search width, summed as instructed — and why I had resisted summing it
+
+The check-in was right to push on this. I had kept the ledger unsummed by family, on the grounds that
+adding a diagnostic test to a trading thesis conflates different things. **That reasoning is sound for
+deflating a claim *within* a family and wrong for deflating a claim drawn from the *whole body of work* —
+which is what every headline in this file is.** Both numbers are needed; only one was here.
+
+| count | family |
+|---|---|
+| 20 | trading theses (desk-level) |
+| 105 | thesis-5 predicate cuts (E8) |
+| 23 | hour-of-day cells (E6, including the undeclared 23rd) |
+| 36 | geometry cells × arms (A) |
+| 98 | random-walk diagnostics (E2) |
+| 15 | levels: touch buckets, side, trend alignment (mine) |
+| **297** | **TOTAL** |
+
+> **`free_t = sqrt(2·ln 297) = 3.37`**, up from 2.45 at n = 20.
+
+E4's 3,102 and E5's 3,318 stay out: they are **sample sizes** — one hypothesis evaluated at many bars — and
+folding them in would inflate the threshold as dishonestly as omitting the searches deflated it.
+
+**Every borderline claim restated against 3.37:**
+
+| z | claim | verdict |
+|---|---|---|
+| **+4.30** | 18:00 bar is the widest overnight hour (E6) — **a data-structure fact, not a trade** | **CLEARS** |
+| +2.52 | levels bounce arm under a fair control (E9) | **fails** |
+| +2.10 | best thesis-5 predicate cut (E8) | **fails** |
+| +1.90 | rule-4 floor separation | **fails** |
+| +1.76 | fresh-extreme break rate | **fails** (already retracted) |
+
+**So the conclusion hardens rather than changes: exactly one finding in this entire record clears its own
+deflated threshold, and it is a broken volume field.** Not a pattern, not a level, not a filter, not an
+hour. The +2.52 that appeared when E9 fixed my control — which I was careful not to call an edge — is now
+comfortably short of the threshold the desk's own search width demands.
+
+**Outstanding: nothing.** All nine of E1–E9 reported and are consolidated above. Mode is back to
+`1 AGENT [OPEN]` (18:11 ET Monday, market reopened); no further agents spawned — the extra nine were a
+temporary owner override, not a new default.
+
+### Resumed solo. Bars 1685→1735. Cursor **1735/11287**, equity **$50,688.86**, 2 closed trades.
+
+1 callout, no trade, carrying the `LEAN:NONE` token. Bar 1734 is 03:00 ET on 23,918 with price mid a
+5948.0–6163.0 range after 1/27's violent 128-point down session and a partial recovery.
+
+**What the audit changed is what I am no longer allowed to reach for.** Thesis 5 is retired, so the
+failed-retest read is unavailable whatever the chart shows. The scenario map still runs but as a **geometry
+calculator only** — its odds are withdrawn and both branches are unweighted. At a desk-wide `free_t` of
+3.37, standing aside is not caution; it is the only position the evidence supports.
+
+Counterfactual (n=43): always-long +0.224R vs control +0.208R (**z +0.96**), always-short +0.035R (z +0.26),
+coin-flip +0.123R (z +0.61). **Nothing above |z| 2.** The long arm's creep has stopped rising (+0.99 → +1.08
+→ +0.96) as the control moved with it, which is what drift rather than judgement looks like.

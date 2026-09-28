@@ -4159,3 +4159,57 @@ Locations MGC 13.5% of [4172.60, **4284.70**] and MNQ 11.4% of [30535.00, **3087
 rolled down again as old bars left the window (N53, sixth and seventh sightings).
 
 No call. Reversal test false on both symbols; `regime.py` names MNQ's missing condition.
+
+## N104 — MGC's 15m has now also left unanimity, so for the first time all session NEITHER symbol's 15m is unanimous
+
+The 15m frame was unanimous bearish on both symbols continuously from the start of the session until 06:19,
+when MNQ went 0-2 (N95). At 06:38 **MGC has followed: 15m BEARISH 0-2, not 0-3.** The component that
+flipped is structure, which `chart.py` now reports as **MIXED** on MGC — swing highs `4185.20 -> 4191.40`
+(higher) against lows `4174.30 -> 4172.60` (lower).
+
+So the position at 06:38 is:
+
+| | MGC | MNQ |
+|---|---|---|
+| 15m | BEAR **0-2** | BEAR **1-2** |
+| 15m structure | **MIXED** (higher high, lower low) | **BULL** (higher high, higher low) |
+| 60m | BEAR 0-3 unanimous | BEAR 0-3 unanimous |
+| 1m / 5m | BULL 3-0 unanimous / BULL 2-0 | BEAR 0-3 unanimous / BEAR 0-3 unanimous |
+
+**This is the first real degradation of the bearish regime on a mid frame, and it is on both symbols within
+twenty minutes of each other.** It is worth reporting as that and nothing more, because both structure
+labels rest on differences already measured against their own noise: MGC's higher high is 6.20 points,
+*equal* to its largest non-session-open 15m high revision (N99); MNQ's is 2.50 points, 13% of its 19.75
+(N95). The 60m frames, which have not moved once tonight, remain unanimous bearish on both.
+
+Note also the fast frames now point opposite ways between symbols — MGC 1m unanimous BULLISH, MNQ 1m
+unanimous BEARISH. Per N91 that is a statement about two independent series, and per N54 a 1m unanimity
+lasts about one bar.
+
+## N105 — the condition-1 failure predicted at 06:33 is still on track and has not happened yet
+
+MGC's **settled** swing highs still read `4193.10 -> 4185.20`, i.e. LOWER, because 4191.40 sits on the
+`06:00` bar and needs the `06:15` bar inside the settled set to confirm as a pivot. `06:15` settles at
+**06:43**. Its high has printed at **4190.40** — below 4191.40, so the pivot will confirm and the settled
+sequence will become `4185.20 -> 4191.40` = HIGHER, failing N75 condition 1 exactly as
+`CALL-NT-0005-AMEND-N99` states.
+
+Recording that the 4190.40 figure is 0.70 above the ~4189.70 I estimated from 5m data at 06:33, and that
+the conclusion is unchanged because what matters is only whether it stays under 4191.40, with 1.00 point of
+margin. If the `06:15` bar's high revises above 4191.40 before 06:43 the pivot does not form and condition
+1 survives — that needs a 1.00-point upward high revision against a 6.20-point observed maximum, so it is
+entirely possible. **I am not calling it either way before 06:43**, which is the whole point of having
+written the prediction down with its mechanism rather than its conclusion.
+
+## N106 — 06:38 state
+
+Newest settled 15m `06:00` on both (MGC c 4187.50, MNQ c 30567.75); `06:15` settles 06:43. Newest real 5m
+`06:25` on both, lag 13.5m. MGC unsettled 4189.20, MNQ 30566.75. Locations MGC 14.8% of
+[4172.60, 4284.70], MNQ 9.3% of [30535.00, 30874.75].
+
+Two plans PENDING: CALL-0001 (MNQ LONG, 354.25 adverse, expires on the 16:00 bar) and CALL-0002 (inert,
+never evaluated, window opens 08:20). Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown
+$0.00, full $2,800 to the absorbing state.
+
+No call. Reversal test false on both and `regime.py` now names the missing condition on **both** symbols.
+The MGC plan stays void on the risk cap. MGC RTH opens 08:20 ET, 1h42m out.

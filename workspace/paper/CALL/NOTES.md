@@ -4336,3 +4336,28 @@ Frames: MGC 1m BULL 3-0 unanimous, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unani
 
 Two plans PENDING: CALL-0001 (MNQ LONG, adverse), CALL-0002 (inert, window opens 08:20). Ledger: open 0,
 closed 0, equity $50,000.00, drawdown $0.00. No call. MGC RTH opens 08:20 ET, 1h33m out.
+
+## N112 — 06:52: MGC grinding up inside its own noise band, nothing settled, no call
+
+No new settled bar — `06:15` remains newest settled on both symbols; `06:30` settles at **06:58**. Newest
+real 5m `06:40` on both, lag 12.8m.
+
+MGC's `06:30` 15m bar has printed a high of **4192.00**, which is 0.60 above the confirmed 4191.40 pivot and
+1.10 below the 4193.10 pivot that has since rolled out of the last-two comparison. If 4192.00 confirms, the
+settled sequence becomes `4191.40 -> 4192.00` — higher by **0.60 of a point**, which against MGC's 6.20-point
+maximum high revision is under a tenth of the noise floor. **A structure reading that advances by 0.60 is
+not information.** Recording it so that when `chart.py` prints "higher" at 06:58 the number behind the word
+is on the record next to it.
+
+The more useful framing: MGC's last three candidate swing highs are 4185.20, 4191.40, 4192.00 — a 6.80-point
+span, less than one ATR (8.2-8.9). MGC is grinding sideways inside a band narrower than a single bar's
+typical range, which is exactly what sigma −0.08 said at 06:47. Locations MGC 17.1% of [4172.60, 4273.50],
+MNQ 13.2% of [30535.00, 30857.00].
+
+Frames unchanged in substance: MGC 1m BULL 2-0, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h BEAR
+0-2. MNQ 1m BULL 1-0, 5m BEAR 0-1, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h/DAILY/WEEKLY bull. Both
+structures BULL; both reversal tests still false with the reasons from N109 unchanged in kind.
+
+No call. Two plans PENDING: CALL-0001 (MNQ LONG, adverse), CALL-0002 (inert, window opens 08:20). Ledger:
+open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. MGC RTH opens
+08:20 ET, 1h28m out — and the hourly backstop is due about now, which will be the full check.

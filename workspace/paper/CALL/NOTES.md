@@ -1103,3 +1103,51 @@ returns no call on either. CALL-0003 sits at 30767.25 with 88.50 to go and
 expires at 02:00 ET; the bounce has made it *closer* for the first time tonight,
 which is exactly the situation N8 exists for — the trigger stays where it was
 written.
+
+## N23 — N22's prediction came true one check later, and it is now the reason there is no call
+
+00:32 AM EDT. Keeping this short because it is a confirmation of a claim already
+written, not a new finding — but it is the first time this desk has made a
+falsifiable prediction about its own instrument and then watched it happen.
+
+N22 said a `|sigma| >= 1.5` gate "can only fire during acceleration away from the
+mean, which is precisely when a reversal has not yet started", and that every
+setting therefore fires too early or not at all. Measured now:
+
+```
+MNQ  reversal_setup  trigger 30704.75   price 30689.50   distance  15.25
+                     htf_support 4h, DAILY, WEEKLY       (three, intact)
+                     reasons ["only -1.02 sigma ... needs |1.5|"]
+     5m headline     BEARISH 0-1        (was 0-3 at 00:18, 0-2 at 00:27)
+     1m headline     BULLISH 3-0
+```
+
+**The trigger is finally within 15.25 points — and the extension test has decayed
+out from under it.** Every other condition is satisfied: three higher timeframes
+bullish, the 5m bear case down to one component of three, the 1m unanimously
+bullish. The single blocker is a statistic that relaxed *because the bounce it was
+supposed to detect is happening.* That is the "not at all" branch of N22, arriving
+one check after it was written down.
+
+One nuance N17 did not have: **the trigger has stopped sliding.** 30767.25 →
+30735.25 → 30704.75 → 30704.75 → 30704.75, stable across the last three checks.
+The slide was never about time, it was about new lows — the 40-bar window only
+drops its highest bars when price keeps making lower ones. So the descent halts
+the moment the move does, which means an anchored reference (the N22 fix) and the
+trailing one agree during a bounce and diverge only during a plunge. That narrows
+where the fix actually matters and is worth knowing before writing it.
+
+### Still no call, and the reasons are the ones already on the record
+
+Not calling a reversal: the test does not return true on all conditions, and the
+procedure permits a REVERSAL call only when it does. Not pre-registering an MNQ
+long at ~30705 either, for N15's two reasons unchanged — CALL-0001 and CALL-0003
+are already MNQ LONG stop-entries, so a third fills on the same move and stacks
+correlated risk; and a new long 62.50 points below CALL-0003's trigger is the
+cheaper-entry-as-the-trade-improves inversion N15 declined, just pointing the
+other way now that price is rising into it rather than falling away from it.
+
+CALL-0003 stands at 30767.25, 77.75 away, expiring 02:00 ET in about 88 minutes.
+If the bounce carries another 78 points it fills on its own terms, at the number
+written before any of this was visible. That is the outcome I want, and the only
+reason it is available is that nobody moved it.

@@ -1454,3 +1454,42 @@ Counterfactual this burst (n=42): always-long +0.253R vs control +0.239R (**z +1
 +0.060R (z +0.38), coin-flip +0.149R (z +0.73). **Nothing above |z| 2.** The long arm continues to creep
 (+0.36 → +0.99 → +1.08) as the tape trends; the control's own long arm moves with it, which is what drift
 looks like.
+
+---
+
+## Burst 13 — OWNER OVERRIDE: 9 extra agents for 30 minutes. Cursor held at 1685.
+
+The account owner overrode the agent-count rule directly: **9 extra agents for 30 minutes to speed up
+research.** That supersedes `mode.py` for the window, which spans the 18:00 ET reopen — so for ~17:37–18:07
+ET the desk runs 9 agents *through* a market open, by explicit instruction. `mode.py` resumes governing
+afterwards and a wake-up is set to revert. **The cursor stays at 1685 regardless: one cursor cannot be
+traded in parallel, and nothing here advances it.**
+
+### The design decision, because the obvious use of 9 agents would have been wrong
+
+The tempting move is to point nine agents at nine of the 13 strategy families and hunt for edge. **I did
+not, and the reason is the whole point of this repository:** that is precisely the generate-and-rank
+activity the programme has already spent ~2,975,629 evaluations on, where not one strategy ever cleared its
+own multiple-testing threshold and placebos ranked alongside real signals. Nine more family sweeps would
+have inflated my search width — already corrected from 8 to 20 this evening — for an outcome the programme
+has established in advance. `BRIEF.md` is explicit that *"a finding of the form 'this family is widely used
+and our harness cannot express it' is worth more than another expectancy table."*
+
+So all nine go at **diagnostic** questions — things that explain the nulls already in hand, or test whether
+those nulls are real:
+
+| agent | question |
+|---|---|
+| **E1** | Reconcile the open contradiction inside C: 91 firings at −0.113R vs C's own script printing 442 at +0.023R. Which answers the question, and did C misrepresent its own artefact? |
+| **E2** | **Is MES 60m simply a random walk?** Autocorrelation, Lo–MacKinlay variance ratio, runs test, Hurst — each against a *synthetic random walk of the same length*, so the tests report their own power. If yes, it explains every null at once. |
+| **E3** | A dedicated **look-ahead audit** of every `why` field: any price presented as observed whose first occurrence in the tape is at or after the bar it was written at. The 5987.5 breach was found by accident; this is systematic. |
+| **E4** | **Price the owner's own session rule.** The 16:00 flat forces exits and has never been costed — including whether "runway at entry", which I have declined trades on repeatedly, actually matters. |
+| **E5** | **How much of every null is transaction cost?** "No structure at 60m" and "structure smaller than the spread" are different conclusions and only one is about trading. Includes the $2.69 round-turn this desk has never put in an R. |
+| **E6** | Independently test **rules 5 and 6**, which are in apparent tension — rule 5 is an hours filter claimed to work, rule 6 says hours filters don't. With `free_t ≈ 2.49` for 22 hours. |
+| **E7** | **Correctness review of my own tooling.** Four silent-failure defects shipped so far, every one found by luck. Hunting the fifth, ranked by whether it moves a number or only a label. |
+| **E8** | Try to build the **pre-registered predicate** thesis 5 is on probation pending — and expect to fail, with the threshold stated before the winner and a time-split out-of-sample check. |
+| **E9** | **Audit the controls themselves.** Every null here rests on one. Are the stand-down bars and the all-bars control balanced on hour-of-day and ATR regime, or is every z measuring composition rather than judgement? |
+
+**E9 is the one that could overturn the most.** If my stand-downs cluster at thin overnight hours and the
+control does not, then the counterfactual's null is a composition artefact and the headline finding of this
+whole record is unsafe. I would rather find that from an agent told to look for it than not find it.

@@ -708,3 +708,37 @@ migrates. On 2026-09-28 MGC's location went 1.8% -> 5.2% across six minutes whil
 0.40 points, entirely because the range low re-printed 3.90 lower (N46). A bare percentage is
 therefore not comparable between two checks. Always write it as `5.2% of [4178.10, 4303.50]`,
 so a reader can see which end moved.
+
+## MEASURED PROHIBITION — do not breakout-enter in the direction of displacement
+
+Added 2026-09-28 after the post-mortem on missing a 3x-ATR bearish day (NOTES.md N194-N199).
+
+**Never enter on a break of a short-term extreme in the direction of an already-established displacement.**
+Concretely: when `|close - EMA20| > 0.5 * ATR14` with the EMA20 slope agreeing, do NOT place a stop entry
+at the extreme of the last few bars in that same direction. That is the entry the tape invites on a trend
+day and it is the entry that loses.
+
+Measured out of sample on `data/archive/` (ends 2026-09-25), pre-registered before the run, 4 cells:
+
+| cell | n | E[R] | t | vs random entry |
+|---|---|---|---|---|
+| MGC 15m | 121 | −0.3640 | −3.617 | **z = −2.61** |
+| MGC 60m | 444 | −0.2757 | −5.082 | **z = −4.72** |
+| MNQ 15m | 125 | −0.3595 | −3.632 | **z = −3.25** |
+| MNQ 60m | 498 | −0.2257 | −4.331 | **z = −2.97** |
+
+Random entries through the identical exits lose only −0.02 to −0.10R, which is the cost drag. This entry
+loses two to seven times that, in **4 of 4 cells**, on both symbols and both frames. MGC 60m alone is
+−$25,235 over two years. The harness is `cont1.py`; the placebo control is described in N196.
+
+**Why this is installed when nothing else is.** A prohibition and a permission do not need the same
+evidence. A wrong prohibition costs foregone trades; a wrong permission costs money. Nothing in this
+repository has ever cleared `free_t` 5.46, so no entry rule gets installed — but a veto at |z| 2.6–4.7
+against placebo in every cell tested is worth acting on, and it is the single largest effect this desk has
+measured for itself.
+
+**What it does NOT license.** It is not a reason to take the opposite side. That was tested too — FADE-1,
+pre-registered, the same rule with the position inverted, on MES and MCL which this desk had never touched:
+largest t **+1.245** against a declared 3.0, and MCL's larger 60m cell negative. Inverting raises the win
+rate 10–16 points and lowers the payoff, and expectancy lands at zero (rule 3, as a result rather than a
+reporting rule). **Do not fade it either. Just do not take that entry.**

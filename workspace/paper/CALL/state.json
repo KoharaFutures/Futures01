@@ -4,7 +4,35 @@
   "peak_equity": 50156.56,
   "drawdown": 118.44,
   "realized_pnl": 38.12,
-  "open": [],
+  "open": [
+    {
+      "call_id": "CALL-0007",
+      "symbol": "MGC",
+      "side": "SHORT",
+      "bar_minutes": 15,
+      "entry_price": 4159.0,
+      "entry_bar_ts": "2026-09-28T19:15:00-04:00",
+      "initial_stop": 4163.4,
+      "stop": 4163.4,
+      "risk_points": 4.4,
+      "contracts": 1,
+      "remaining": 1,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.5,
+          "fraction": 1.0,
+          "price": 4152.4,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 44.0,
+      "realized": 0.0,
+      "triggered_at_utc": "2026-09-28T23:36:32+00:00",
+      "basis_at_trigger": "e341ba3",
+      "entry_fill_note": "resting limit filled at its price, no slippage charged"
+    }
+  ],
   "closed": [
     {
       "call_id": "CALL-0002",

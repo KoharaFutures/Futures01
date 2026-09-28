@@ -554,3 +554,80 @@ directions, and the plain reading is that neither trigger style is the
 problem — the problem is that this desk has no measured edge telling it
 *which* to use in *which* regime, so it is guessing, and each guess fails
 in its own characteristic way. Registering more plans does not fix that.
+
+## N16 — asked "MGC buy or sell right now at 4235", and the first honest answer is that 4235 is not a price you can trade
+
+23:10 ET. The owner asked for a decision at 4235. Before any opinion, the
+arithmetic:
+
+```
+22:50  o 4237.30  h 4239.20  l 4233.30  c 4234.70  v 2109
+22:55  o 4234.70  h 4235.10  l 4227.30  c 4230.10  v 3090   <- high 4235.10
+23:00  o 4230.10  h 4231.00  l 4228.20  c 4229.00  v    0   <- ZERO volume
+```
+
+**4235 traded, was rejected, and is now above the market.** The 22:55 bar
+tagged 4235.10 and closed 4.90 lower at the 40-bar low of 4227.30. So "buy
+or sell at 4235" is not a decision about the current price at all — it is a
+sell-LIMIT 5.10 above the market, or a buy-STOP 5.10 above it. Answering
+"sell, we're in a downtrend" without saying that would let the owner believe
+he could get short at 4235 on a touch, when getting there requires a 1.0x
+ATR(5m) rally first. Feed lag is 10.3 minutes, so even 4230.10 is ten
+minutes old.
+
+**Flagging the 23:00 bar: volume 0, range 2.80.** The stub guard is
+`volume > 0 OR high != low`, so this bar passes — h 4231.00 != l 4228.20 —
+and its 4229.00 close is what `chart.py` and `regime.py` are reading. But a
+gold bar with a 2.80 range and *no* volume is not a bar anyone traded. This
+is a shape N5 did not cover: N5's stub was `v==0 AND h==l`, the flat
+placeholder. This one is `v==0 AND h!=l`. I do not yet know whether the
+vendor is interpolating, or whether volume simply lags price on the forming
+bar. **Every number I quote tonight therefore uses 22:55 (c 4230.10) as the
+last bar with real participation**, and 4229.00 is labelled provisional.
+Not changing the guard on one observation — logging it and watching whether
+volume backfills on the next fetch.
+
+### The read, and why it is NO TRADE on both sides
+
+```
+confluence at 4235   SHORT  5 AGREE / 1 AGAINST      LONG  1 AGREE / 5 AGAINST
+frames               1m 0-3  5m 0-2  15m 0-3  60m 0-3  4h 0-2  (daily/weekly NOT ELIGIBLE)
+RSI14                7.9
+sigma                -1.82
+climax_x             1.85    "flush"  <- volume 3090 on the 22:55 low
+40-bar low           4227.30 on all of 5m / 15m / 60m
+ATR14                4.93 (5m)  11.01 (15m)  19.77 (60m)
+```
+
+**Against selling.** Confluence is 5-1 for short and in this repository that
+is an argument *against* the trade, not for it. Rule 1 was measured here:
+two signals plus one filter is the ceiling, and beyond it more agreement is
+worse, not better. Rule 2 puts MTF alignment at **z = -4.09** — alignment is
+a negative coefficient. So "everything is bearish" is the single most
+over-subscribed reason on this desk, and it is pointing at a sell-limit
+5.10 above a 40-bar low, into RSI 7.9, on the bar that printed 1.85x median
+volume. That is selling the capitulation candle. CALL-0004 is also already
+a live MGC SHORT; a second one is one position described twice.
+
+**Against buying.** The long is the more interesting side, and it is the one
+that got *better* in the last twenty minutes: N15 recorded MNQ's setup
+failing on participation at climax 0.59x, and MGC has now printed **1.85x —
+a real flush.** RSI 7.9 and -1.82 sigma are genuine exhaustion. But
+`reversal_setup("MGC")` returns `qualifies: false` for one reason:
+**0 higher timeframes bullish, needs 2.**
+
+And that veto is structural, not marginal. MGC's daily and weekly are
+`NOT ELIGIBLE` — the roll audit fails at p<0.0001 (gap sum +2.9584 against
+intraday -2.0079). So MGC has exactly **two** HTF frames it is allowed to
+carry a bias on, 4h and 60m, and both are bearish. **MGC cannot satisfy a
+"two higher timeframes agree" test tonight no matter what price does**, because
+the data that would have to agree has been disqualified. The correct
+response to a test that cannot be passed is to notice that and decline, not
+to quietly lower it to one frame because the flush looks good. That is the
+same failure as N15's sliding trigger, wearing better clothes.
+
+So: **NO TRADE at 4235, both directions.** Not a hedge — the two vetoes are
+different and each is sufficient on its own. The short is forbidden by what
+this repo measured about confluence and by chasing a 40-bar low; the long is
+forbidden by an HTF test MGC is structurally unable to pass. No new
+pre-registration, and no edit to CALL-0004.

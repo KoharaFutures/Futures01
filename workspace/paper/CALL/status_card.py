@@ -59,7 +59,12 @@ def gather() -> dict:
             "cap_x": CAP / (a * SPEC[sym]["pv"]),
         })
     basis = (HERE / "BASIS").read_text().strip()
-    return {"state": st, "pending": pending, "rows": rows, "basis": basis}
+    cost = ""
+    try:
+        cost = (HERE / "standdown_cost.txt").read_text().strip()
+    except OSError:
+        pass
+    return {"state": st, "pending": pending, "rows": rows, "basis": basis, "cost": cost}
 
 
 def render(out: pathlib.Path, reason: str) -> pathlib.Path:
@@ -105,7 +110,14 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
             f"MEASURED  n={len(closed)}  wins {len(wins)}  losses {len(closed)-len(wins)}"
             f"   E[R] {exp:+.3f}   ${2800 - st['drawdown']:,.0f} to the floor",
             font=f_sm, fill=las)
-    y += C.sc(38)
+    y += C.sc(34)
+    # THE PRICE OF THE CAUTION. A veto that is never costed always looks free (DECISIONS.md),
+    # so when a stand-down binds the card carries what it has foreclosed since it went on -
+    # the movement actually available, as an upper bound, beside the marginal cost given that
+    # the reversal gate may not have fired at all. The owner should not have to ask.
+    if any(r["stood"] for r in d["rows"]) and d.get("cost"):
+        dr.text((C.sc(44), y), d["cost"], font=f_sm, fill=(255, 190, 90))
+        y += C.sc(32)
     for line in reason.split("\n")[:3]:
         dr.text((C.sc(44), y), line, font=f_sm, fill=C.WHITE)
         y += C.sc(30)

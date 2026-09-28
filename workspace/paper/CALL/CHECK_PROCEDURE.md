@@ -849,3 +849,35 @@ above a wall of text he is scrolling past.
 **The text report still goes in the terminal and the notes still go in `NOTES.md`** — they are
 the record and the record matters. But they are not the delivery. **If a check ends without a
 card having been sent, the check did not report, whatever was written.**
+
+## EVERY DECISION IS AN ACTION AND EVERY ACTION HAS A COST. Price it, in `DECISIONS.md`.
+
+Added 2026-09-28 at the owner's instruction: *"every call and stand down is an action you are
+making… everything has an opportunity loss and i would like you to reflect everytime you change
+your decision or make an update."*
+
+**The omission this fixes was structural, not an oversight of mine on one day.** `journal.jsonl`
+records plans, `state.json` records fills, and **nothing recorded a refusal.** Eleven consecutive
+checks of "empty book, measured reason" left no trace that a decision had been made at all. A
+veto costs nothing to write, so if it is never priced it always looks free, and it therefore
+wins every argument against a trade by default. That is an accounting error with a direction.
+
+**The rule.** Every decision gets a row in `DECISIONS.md` carrying three separate numbers:
+
+- **FORECLOSED (upper bound)** — the movement available in the decision's window, in points,
+  dollars and R at the maximum permitted stop. Assumes a perfect entry at the turn, which
+  nobody gets. Computable from the tape; never an estimate of a trade I did not write.
+- **MARGINAL** — the cost *given the rest of the machinery*. If the reversal gate produced no
+  unanimous bar in that window, no plan could have existed and the veto's marginal cost is
+  **zero**. Stating that is arithmetic, not an excuse.
+- **REALIZED** — actual dollars in `state.json`. Only fills produce this.
+
+**Report both the upper bound and the marginal number, always.** Quoting only the marginal is
+how a veto flatters itself; quoting only the upper bound is how a trade does.
+
+**A change of mind is a decision too.** Installing a rule, retiring a plan, changing the cadence,
+changing what gets reported — each gets a row, and the reflection is part of making the change,
+not something added afterwards if there is time.
+
+**On the card.** When a stand-down is binding, the card carries what it has foreclosed so far.
+The owner should be able to see the price of the desk's caution without asking for it.

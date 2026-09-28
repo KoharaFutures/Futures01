@@ -7806,3 +7806,61 @@ a number there would smuggle it back in.
 CHECK_PROCEDURE.md now carries the rule: **every check sends a card — plan cards when plans
 exist, the status card when they do not. If a check ends without a card, the check did not
 report, whatever was written.** The text report stays as the record; it is not the delivery.
+
+# N218 — 14:48, the owner's third correction: a stand-down is an ACTION, and I never priced one
+
+Owner, verbatim: *"keep in mind that every call and stand down is an action you are making.
+please understand that everything has an opportunity loss and i would like you to reflect
+everytime you change your decision or make an update."*
+
+**The omission was structural, not a lapse on one day.** `journal.jsonl` records plans.
+`state.json` records fills. **Nothing in this desk recorded a refusal.** So eleven consecutive
+checks of "empty book, measured reason" left no trace that any decision had been taken — and a
+veto costs nothing to write, so if it is never priced it looks free and therefore wins every
+argument against a trade by default. That is an accounting error with a direction, and I built
+two vetoes into the procedure today without once asking what either one costs.
+
+## Priced, now, with both numbers
+
+`DECISIONS.md` created, every decision of the day given a row and three columns: FORECLOSED
+(upper bound from the tape), MARGINAL (cost given the rest of the machinery), REALIZED (dollars
+in `state.json`). Reporting only the marginal is how a veto flatters itself; reporting only the
+upper bound is how a trade does. Both, always.
+
+**The volatility stand-down, 13:02 to now:**
+
+    foreclosed (upper bound)   MGC 21.40 pts = $214 = 1.78R   MNQ 131.50 pts = $263 = 2.19R
+    marginal                   $0
+
+Marginal zero because **zero unanimous 15m bars printed on either symbol since 13:00** — the
+reversal gate could not have fired, so no plan would have existed to veto. Reconstructed bar by
+bar, not asserted. **But that is luck, not vindication**: three failures overlapped — the gate
+couldn't fire, the cadence was dead for 44 of those minutes, and the best legs (13:05-13:15)
+fell inside that outage. The first unanimous bar that prints while the stand-down is on, this
+starts costing real money, and it goes on the card that check.
+
+## The row that actually matters, and it is not the stand-down
+
+| decision | foreclosed | marginal |
+|---|---|---|
+| **09:30-11:30 declining ~10 checks on "extended move"** | **MGC $902/ct, MNQ $805/ct** | **the full amount** |
+
+Marginal equals the upper bound there because N194 established the gate was *unsatisfiable* on a
+continuation day — no other part of the machinery would have caught it either. **Every other
+decision on the sheet is noise beside that one**, including the stand-down I have been quoting
+eleven times an hour, and I would not have seen the proportions without being told to write
+them down.
+
+One row worth keeping visible for its shape: **fixing `resolve.py`'s entry-bar stop check at
+12:33 ADDED a loss to my own record** (−$118.44 that was already true but unrecorded). A change
+that can only make my own numbers worse is the only kind that is safe to make mid-session, and
+it is the form every future change should take.
+
+## Installed
+
+- `DECISIONS.md` — the ledger, one row per decision, three cost columns.
+- CHECK_PROCEDURE.md — **every decision gets a row; a change of mind is a decision; the
+  reflection is part of making the change, not an optional extra afterwards.**
+- `status_card.py` — when a stand-down binds, the card carries an amber **STAND-DOWN COST** line
+  with the foreclosed upper bound and the marginal cost side by side, so the price of the desk's
+  caution is visible without anyone asking for it.

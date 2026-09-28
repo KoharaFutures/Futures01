@@ -236,21 +236,33 @@ def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> 
 
 
 def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
+    """A 2.5:1 landscape card: price panels stacked left, reasoning right.
+
+    The five numbers a reader acts on - SL, ENTRY, TP1, TP2, TP3 - run down a single
+    column so they can be read as a ladder, top to bottom, in the order price would meet
+    them. Everything that explains them sits to the right.
+
+    EACH TARGET SAYS WHY IT IS THERE. The owner asked whether the TPs are key levels, and
+    the answer differs per target, so the card states it per target: TP1 was PLACED on a
+    structural level, while TP2 and TP3 are R multiples that land wherever the arithmetic
+    puts them. `confluence.level_context` measures the distance to the nearest real level
+    and says "pure R multiple" when there is none within half an ATR. Claiming structure
+    for all three would be inventing significance.
+    """
     side = plan["side"]
     las = LASER[side]
     spec, fill, stop, tgts, risk = mech(plan)
 
-    fsym = ImageFont.truetype(MONO_B, 108)
-    fdir = ImageFont.truetype(MONO_B, 36)
-    fbig = ImageFont.truetype(MONO_B, 62)
-    fmid = ImageFont.truetype(MONO_B, 50)
-    flab = ImageFont.truetype(MONO_B, 21)
-    fsub = ImageFont.truetype(MONO, 18)
-    fkv = ImageFont.truetype(MONO_B, 24)
-    fkl = ImageFont.truetype(MONO_B, 16)
-    fbody = ImageFont.truetype(MONO, 20)
-    fmeta = ImageFont.truetype(MONO, 18)
-    fsub2 = ImageFont.truetype(MONO_B, 23)
+    fsym = ImageFont.truetype(MONO_B, 92)
+    fdir = ImageFont.truetype(MONO_B, 34)
+    fnum = ImageFont.truetype(MONO_B, 46)
+    flab = ImageFont.truetype(MONO_B, 19)
+    fsub = ImageFont.truetype(MONO, 15)
+    fkv = ImageFont.truetype(MONO_B, 22)
+    fkl = ImageFont.truetype(MONO_B, 15)
+    fbody = ImageFont.truetype(MONO, 17)
+    fmeta = ImageFont.truetype(MONO, 16)
+    fstrat = ImageFont.truetype(MONO_B, 21)
 
     def trim(text, width, maxl):
         import re
@@ -267,160 +279,138 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
             o.append("(full thesis in pending.jsonl)")
         return o
 
-    why = trim(plan.get("why_short") or plan["why"], 116, 5)
-    weak = trim(plan.get("invalidation", ""), 116, 3)
-
-    W = 1760
-    H = 1130 + (len(why) + len(weak)) * 26 + 470   # + confluence panel   # strategy header + basis block
+    W, H = 2500, 1000                      # 2.5 : 1
+    PAD = 78
     img = backdrop(W, H, side).convert("RGBA")
-    # content is composed at interior size, then mounted in the bezel below
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
+    hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd, img=ov)
 
-    M = 0
-    PAD = M + 64      # content gutter: clears the 30px rail plus breathing room
-    frame = (M, M, W - M - 1, H - M - 1)
-    hud_frame(d, frame, las, gd=gd, img=ov)
-
-    # header: symbol and direction on ONE baseline, strategy beneath
-    gd.text((PAD + 4, 112), plan["symbol"], font=fsym, fill=(*las, 210))
-    d.text((PAD + 4, 112), plan["symbol"], font=fsym, fill=WHITE)
+    # ---- header: symbol and direction on one baseline
+    gd.text((PAD, 52), plan["symbol"], font=fsym, fill=(*las, 210))
+    d.text((PAD, 52), plan["symbol"], font=fsym, fill=WHITE)
     symw = d.textlength(plan["symbol"], font=fsym)
     glyph = "\u25b2" if side == "LONG" else "\u25bc"
-    dirtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
-    dx, dy = PAD + 4 + symw + 46, 112 + 50          # optically centred on the symbol's cap height
-    d.text((dx, dy), dirtxt, font=fdir, fill=(*las, 255))
-    gd.text((dx, dy), dirtxt, font=fdir, fill=(*las, 185))
-    strat = plan.get("strategy", "")
-    if strat:
-        d.text((PAD + 10, 242), "STRATEGY", font=fkl, fill=(*las, 150))
-        d.text((PAD + 10, 266), strat, font=fsub2, fill=(*WHITE, 234))
+    dtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
+    d.text((PAD + symw + 40, 52 + 44), dtxt, font=fdir, fill=(*las, 255))
+    gd.text((PAD + symw + 40, 52 + 44), dtxt, font=fdir, fill=(*las, 185))
 
-    meta = [f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
-            f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"]
-    yy = 116
-    for m in meta:
-        d.text((W - PAD - 4 - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
-        yy += 30
+    yy = 58
+    for m in (f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
+              f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"):
+        d.text((W - PAD - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
+        yy += 26
     pu = "PAPER — UNVALIDATED"
-    d.text((W - PAD - 4 - d.textlength(pu, font=flab), yy + 4), pu, font=flab, fill=WHITE)
+    d.text((W - PAD - d.textlength(pu, font=flab), yy + 2), pu, font=flab, fill=WHITE)
 
-    # ---- row 1: ENTRY (laser) | SL (RED)
-    y0, ph = 360, 176
-    gapx, inner = 30, W - 2 * (PAD)
-    ew = int(inner * 0.60)
-    sw = inner - ew - gapx
-    ex = PAD
-    sx = ex + ew + gapx
-
-    panel(d, (ex, y0, ex + ew, y0 + ph), las)
-    panel(gd, (ex, y0, ex + ew, y0 + ph), las)
-    d.text((ex + 28, y0 + 20), "ENTRY", font=flab, fill=(*las, 230))
-    d.text((ex + 28, y0 + 52), f"{fill:g}", font=fbig, fill=WHITE)
-    gd.text((ex + 28, y0 + 52), f"{fill:g}", font=fbig, fill=(*las, 150))
-    d.text((ex + 28, y0 + 132), f"stop-entry {'below' if side=='SHORT' else 'above'} "
-                                f"{plan['trigger_price']:g} · at trigger or worse",
-           font=fsub, fill=(*WHITE, 200))
-
-    panel(d, (sx, y0, sx + sw, y0 + ph), RED)
-    panel(gd, (sx, y0, sx + sw, y0 + ph), RED)
-    d.text((sx + 28, y0 + 20), "SL", font=flab, fill=(*RED, 255))
-    d.text((sx + 28, y0 + 52), f"{stop:g}", font=fbig, fill=RED)
-    gd.text((sx + 28, y0 + 52), f"{stop:g}", font=fbig, fill=(*RED, 190))
-    d.text((sx + 28, y0 + 132), f"{plan['stop_points']:g} pts · ${risk:,.0f} on "
-                                f"{plan['contracts']} contract", font=fsub, fill=(*RED, 215))
-
-    # ---- row 2: TP1 / TP2 / TP3
-    ty, th = y0 + ph + 30, 158
-    tw = (inner - 2 * gapx) // 3
-    for i, (lab, r, px_, ok) in enumerate(tgts[:3]):
-        x = PAD + i * (tw + gapx)
-        panel(d, (x, ty, x + tw, ty + th), las, dim=not ok)
-        if ok:
-            panel(gd, (x, ty, x + tw, ty + th), las)
-        d.text((x + 26, ty + 18), lab, font=flab, fill=(*las, 255 if ok else 150))
-        d.text((x + 26, ty + 48), f"{px_:g}", font=fmid,
-               fill=WHITE if ok else (*WHITE, 165))
-        if ok:
-            gd.text((x + 26, ty + 48), f"{px_:g}", font=fmid, fill=(*las, 150))
-        note = f"{r}R · EXECUTABLE" if ok else f"{r}R · NEEDS 3 LOTS"
-        d.text((x + 26, ty + 118), note, font=fsub,
-               fill=(*las, 225) if ok else (*WHITE, 130))
+    d.text((PAD + 4, 160), "STRATEGY", font=fkl, fill=(*las, 150))
+    d.text((PAD + 4, 182), plan.get("strategy", ""), font=fstrat, fill=(*WHITE, 236))
 
     # ---- mechanics strip
-    sy = ty + th + 26
-    kv = [("R:R", f"{tgts[0][1]}"), ("SIZE", f"{plan['contracts']} contract"),
-          ("RISK", f"${risk:,.0f} of $240"), ("LADDER", f"x{plan.get('ladder_mult',1.0):.2f}"),
-          ("WINDOW", f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
-                     f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")]
-    x = PAD
-    for lab, val in kv:
-        d.text((x, sy), lab, font=fkl, fill=(*las, 150))
-        d.text((x, sy + 22), val, font=fkv, fill=WHITE)
-        x += int(d.textlength(val, font=fkv)) + 62
+    sy = 224
+    x = PAD + 4
+    for lab, val in (("R:R", f"{tgts[0][1]}"), ("SIZE", f"{plan['contracts']} contract"),
+                     ("RISK", f"${risk:,.0f} of $240"),
+                     ("LADDER", f"x{plan.get('ladder_mult', 1.0):.2f}"),
+                     ("WINDOW", f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
+                                f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")):
+        d.text((x, sy), lab, font=fkl, fill=(*las, 145))
+        d.text((x, sy + 20), val, font=fkv, fill=WHITE)
+        x += int(d.textlength(val, font=fkv)) + 54
 
-    # ---- reasoning
-    by = sy + 78
-    d.line([PAD, by - 14, W - PAD, by - 14], fill=(*las, 70), width=1)
-    # ---- confluence: computed, and framed as DISAGREEMENT rather than a score
+    # ---- left column: the price ladder, in the order price would meet it
     try:
         import importlib.util as _iu
         _cs = _iu.spec_from_file_location("_cf", HERE / "confluence.py")
         _cf = _iu.module_from_spec(_cs)
         _cs.loader.exec_module(_cf)
-        crows = _cf.evaluate(plan["symbol"], plan["side"], plan["trigger_price"])
     except Exception:
-        crows = []
+        _cf = None
+
+    def why_level(px):
+        if _cf is None:
+            return ""
+        try:
+            return _cf.level_context(plan["symbol"], px)
+        except Exception:
+            return ""
+
+    rows = [("SL", stop, RED, f"{plan['stop_points']:g} pts · ${risk:,.0f} risk", True)]
+    rows.append(("ENTRY", fill, las,
+                 f"trigger {plan['trigger_price']:g} · at trigger or worse", True))
+    for lab, r, px_, ok in tgts[:3]:
+        rows.append((lab, px_, las, f"{r}R · {why_level(px_)}", ok))
+    if side == "SHORT":
+        rows = [rows[0], rows[1]] + rows[2:]
+
+    cw, ph, gap = 600, 122, 9
+    cy = 300
+    for lab, px_, col, sub, ok in rows:
+        panel(d, (PAD, cy, PAD + cw, cy + ph), col, dim=not ok)
+        if ok:
+            panel(gd, (PAD, cy, PAD + cw, cy + ph), col)
+        d.text((PAD + 22, cy + 12), lab, font=flab,
+               fill=(*col, 255) if ok else (*col, 150))
+        d.text((PAD + 22, cy + 36), f"{px_:g}", font=fnum,
+               fill=col if lab == "SL" else (WHITE if ok else (*WHITE, 160)))
+        if ok:
+            gd.text((PAD + 22, cy + 36), f"{px_:g}", font=fnum, fill=(*col, 140))
+        # Keep the level reason on EVERY target. The owner asked why the TPs are where
+        # they are, and "not executable" is a separate fact from "sits on no level" -
+        # dropping the first to show the second answers a question nobody asked.
+        tag = sub if ok else f"{sub}  ·  NEEDS 3 LOTS"
+        for i, ln in enumerate(textwrap.wrap(tag, 68)[:2]):
+            d.text((PAD + 22, cy + 88 + i * 17), ln, font=fsub,
+                   fill=(*WHITE, 205) if ok else (*WHITE, 135))
+        cy += ph + gap
+
+    # ---- right column: confluence, then the reasoning
+    rx = PAD + cw + 46
+    rw = (W - rx - PAD) // 10
+    by = 300
+    crows = []
+    if _cf is not None:
+        try:
+            crows = _cf.evaluate(plan["symbol"], side, plan["trigger_price"])
+        except Exception:
+            crows = []
     if crows:
-        d.text((PAD, by), "CONFLUENCE ACROSS THE 13 FAMILIES — agreement is NOT confidence "
-                          "(rule 1: more confluence measured WORSE)", font=fkl, fill=(*las, 150))
-        by += 26
+        d.text((rx, by), "CONFLUENCE ACROSS THE 13 FAMILIES — agreement is NOT confidence "
+                         "(rule 1: more confluence measured WORSE; rule 2: alignment is not a virtue)",
+               font=fkl, fill=(*las, 150))
+        by += 22
         for r in crows:
             if r["verdict"] == "N/A":
                 continue
             col = (*las, 240) if r["verdict"] == "AGREE" else (*RED, 235)
-            d.text((PAD, by), f"{r['verdict']:8s}", font=fkv, fill=col)
-            d.text((PAD + 116, by + 2), r["family"], font=fbody, fill=(*WHITE, 238))
-            tag = "" if r["tested"] else "  ·  NEVER TESTED ON THIS SYMBOL"
-            d.text((PAD + 116 + 230, by + 2), r["why"][:74] + tag, font=fmeta,
-                   fill=(*WHITE, 150) if r["tested"] else (*RED, 185))
-            by += 28
+            d.text((rx, by), f"{r['verdict']:8s}", font=fkv, fill=col)
+            d.text((rx + 104, by + 2), f"{r['family']:17s}", font=fbody, fill=(*WHITE, 238))
+            tail = r["why"] if r["tested"] else r["why"] + "   [NEVER TESTED ON THIS SYMBOL]"
+            d.text((rx + 104 + 200, by + 3), tail[:118], font=fmeta,
+                   fill=(*WHITE, 150) if r["tested"] else (*RED, 190))
+            by += 25
         na = ", ".join(r["family"] for r in crows if r["verdict"] == "N/A")
-        d.text((PAD, by), f"N/A (not evaluable from OHLCV here): {na}", font=fmeta,
-               fill=(*WHITE, 130))
-        by += 34
+        d.text((rx, by), f"N/A (not evaluable from OHLCV here): {na}", font=fmeta,
+               fill=(*WHITE, 125))
+        by += 30
 
-    sb = plan.get("strategy_basis", "")
-    if sb:
-        d.text((PAD, by), "STRATEGY BASIS", font=fkl, fill=(*las, 150))
-        by += 24
-        for ln in textwrap.wrap(sb, 116)[:4]:
-            d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 212))
-            by += 26
-        by += 14
-    d.text((PAD, by), "TARGETS", font=fkl, fill=(*las, 150))
-    by += 24
-    for ln in textwrap.wrap(plan.get("display_targets_note", ""), 116)[:3]:
-        d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 205))
-        by += 26
-    by += 12
-    d.text((PAD, by), "WHY", font=fkl, fill=(*las, 150))
-    by += 24
-    for ln in why:
-        d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 235))
-        by += 26
-    if weak:
-        by += 12
-        d.text((PAD, by), "THE WEAKNESS, STATED NOT HEDGED", font=fkl, fill=(*RED, 190))
-        by += 24
-        for ln in weak:
-            d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 235))
-            by += 26
-    by += 14
-    d.text((PAD, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
-                         f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
+    for hdr, txt, col, lines in (
+            ("STRATEGY BASIS", plan.get("strategy_basis", ""), (*las, 150), 3),
+            ("TARGETS", plan.get("display_targets_note", ""), (*las, 150), 2),
+            ("WHY", plan.get("why_short") or plan["why"], (*las, 150), 4),
+            ("THE WEAKNESS, STATED NOT HEDGED", plan.get("invalidation", ""), (*RED, 190), 2)):
+        if not txt:
+            continue
+        d.text((rx, by), hdr, font=fkl, fill=col)
+        by += 21
+        for ln in trim(txt, rw, lines):
+            d.text((rx, by), ln, font=fbody, fill=(*WHITE, 232))
+            by += 22
+        by += 9
+    d.text((rx, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
+                     f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
            font=fmeta, fill=(*las, 195))
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(7)))
@@ -428,7 +418,6 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     card.save(out)
     return out
-
 
 
 def main() -> int:

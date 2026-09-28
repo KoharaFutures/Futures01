@@ -180,3 +180,56 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# ---------------------------------------------------------------- level context
+
+def levels(symbol: str, frame: int = 15) -> list[tuple[str, float]]:
+    """Structural levels this desk can actually point at, from bars it holds."""
+    b15 = _rs.load_bars(symbol, frame)
+    b60 = _rs.load_bars(symbol, 60)
+    out: list[tuple[str, float]] = []
+    if b60:
+        out.append(("30-day high", max(x["h"] for x in b60)))
+        out.append(("30-day low", min(x["l"] for x in b60)))
+    # prior completed ET session
+    from datetime import datetime
+    byd: dict = {}
+    for x in b15:
+        byd.setdefault(datetime.fromisoformat(x["ts"]).date(), []).append(x)
+    days = sorted(byd)
+    if len(days) >= 2:
+        prev = byd[days[-2]]
+        out.append(("prior session high", max(x["h"] for x in prev)))
+        out.append(("prior session low", min(x["l"] for x in prev)))
+    # swing points in the recent window
+    w = b15[-60:]
+    for i in range(1, len(w) - 1):
+        if w[i]["h"] > w[i - 1]["h"] and w[i]["h"] > w[i + 1]["h"]:
+            out.append(("swing high", w[i]["h"]))
+        if w[i]["l"] < w[i - 1]["l"] and w[i]["l"] < w[i + 1]["l"]:
+            out.append(("swing low", w[i]["l"]))
+    return out
+
+
+def level_context(symbol: str, price: float, frame: int = 15) -> str:
+    """Say whether a target sits on a level, or is pure arithmetic.
+
+    The account owner asked why the TPs are where they are. The honest answer differs per
+    target and must not be smoothed over: TP1 was PLACED on a level, TP2 and TP3 are R
+    multiples that land wherever the arithmetic puts them. Claiming structure for all three
+    would be inventing significance, which is the same failure as a confluence score.
+    """
+    bars = _rs.load_bars(symbol, frame)
+    if not bars:
+        return "no bars"
+    a = atr(bars[-60:]) or 1.0
+    near = [(abs(price - v), n, v) for n, v in levels(symbol, frame)]
+    near.sort()
+    if near and near[0][0] <= a * 0.5:
+        d, n, v = near[0]
+        return f"{n} {v:g}, {d:+.2f} away (within 0.5 ATR {a:.2f})"
+    if near:
+        d, n, v = near[0]
+        return f"NO level within 0.5 ATR — nearest is {n} {v:g}, {d:.2f} away. Pure R multiple."
+    return "no levels found"

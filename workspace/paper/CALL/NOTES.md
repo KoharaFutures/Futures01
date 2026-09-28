@@ -4501,3 +4501,74 @@ unanimous bearish, both reversal tests false. Locations MGC 18.3% of [4172.60, 4
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC
 RTH opens 08:20 ET, 1h13m out.
+
+## N117 — MGC can NEVER produce a reversal call tonight, and that is structural, not circumstantial
+
+`reversal_setup()` counts higher-timeframe support from **4h, DAILY and WEEKLY** and requires **two** of
+them. On MGC, **DAILY and WEEKLY are NOT ELIGIBLE** — the SERIES_AUDIT roll failure, p<0.0001, gap sum
++2.9584 against intraday −2.0079. So MGC has exactly **one** eligible higher timeframe, the 4h. **The
+two-HTF condition cannot be met on MGC in either direction, at any price, for as long as daily and weekly
+remain ineligible.**
+
+Confirmed on both sides this check:
+
+    MGC  side LONG   sigma -0.39  htf_support []     - "only 0 higher timeframe(s) bullish, needs 2"
+    (at 07:02, price above the mean)  side SHORT  htf [4h]  - "only 1 higher timeframe(s) bearish, needs 2"
+
+I have reported "the reversal test is false on both symbols" roughly twenty times tonight as though it were a
+statement about the market. **On MGC it is partly a statement about the data substrate.** Even a textbook
+capitulation with sigma −3 and a 4x volume flush would return `qualifies: False` on MGC, because the
+denominator of the HTF condition is 1 and it needs 2. That is worth knowing because it means **the reversal
+path is closed on MGC for this entire session**, and any MGC callout would have to come from a different
+construction — the fib retracement method of N75/N77, or something else pre-registered — never from
+`reversal_setup`.
+
+Not a defect to fix in my lane: the HTF ineligibility is correct (MGC daily really is roll-contaminated) and
+`reversal_setup` is right to refuse to count a contaminated series. The finding is that a correct rule plus a
+correct data exclusion combine into an unreachable gate, and nobody wrote that down. Deferred to the parent
+session as a note rather than a change, since `regime.py` is mine to read and not to redesign: **either the
+2-HTF requirement needs a rule for symbols with fewer than 2 eligible HTFs, or MGC needs a separate reversal
+construction.** Recorded here so it is not rediscovered.
+
+## N118 — MNQ has had its first real volume event in hours, and it cannot qualify either — for the opposite reason
+
+MNQ's `07:00` 5m bar: **h 30644.00, l 30585.75, c 30624.75** — a 58.25-point range, up ~32 points, on
+**climax_x 2.09 labelled "flush"**. That is the first genuine volume expansion since the 04:00 hour, and it
+is to the **upside**.
+
+    MNQ  side SHORT  sigma +1.21  htf_bearish []  climax 2.09 "flush"
+         - only +1.21 sigma from the 20-bar mean, needs |1.5|
+         - only 0 higher timeframe(s) bearish (none), needs 2
+
+So MNQ is now **extended upward** at +1.21 sigma with a real flush, and it cannot qualify for a SHORT because
+its 4h, DAILY and WEEKLY are **all bullish** — zero bearish HTFs, and that will not change on a 5m push. It
+also cannot qualify for a LONG, because a LONG needs sigma ≤ −1.5 and price is on the wrong side of the mean.
+**MNQ is therefore also unable to fire a reversal call right now, in either direction**, though for a
+circumstantial reason rather than N117's structural one: if MNQ sells back down through its mean to −1.5
+sigma with its HTFs still bullish, a LONG would qualify immediately.
+
+**That is the thing to watch and it is watched at the level, not chased:** MNQ has HTF support for a LONG
+standing by (4h/DAILY/WEEKLY all bullish) and needs only a displacement of −1.5 sigma to complete the test.
+It was at −1.87 and −1.83 twice tonight and I declined both (N110), and those setups then decayed. If it
+comes back, the decision is already on record as owed.
+
+## N119 — MGC spiked 4193.40 and rejected 8.20 points inside one 5m bar; the 15m frame has not seen it
+
+MGC's `07:00` **5m** bar: `h 4193.40 l 4184.10 c 4185.20`, a 9.30-point range on an 8.33 ATR, spiking through
+the 4193.10 level I had flagged and closing **8.20 points below its own high**.
+
+Two precisions, because the frames differ and conflating them is the N99 error:
+
+1. **4193.40 is a 5m high. The structure test runs on 15m.** MGC's newest **15m** bar is `06:45` with
+   `h 4191.90`, and the `07:00` 15m bar has not been published (it completes 07:15). So the 15m swing
+   sequence is unchanged at `4191.40 -> 4192.00`, and "MGC broke 4193.10" is a statement about a different
+   frame from the one the structure reading uses. When the `07:00` 15m bar publishes it will carry
+   h >= 4193.40 and the comparison will move; not before.
+2. **The rejection is the more interesting half and it is not tradeable here.** An 8.20-point fade from the
+   high of a single 5m bar is a rejection wick, and rule 8 is the standing answer: FVG and order-block fill
+   rates in this repository were reproduced by **random zones**, and no wick or level construction here has
+   been tested against a random-level control. It is a thing that happened, not a signal.
+
+No call. Locations MGC 16.2% of [4172.60, 4265.40], MNQ 17.4% of [30535.00, 30825.25]. Newest settled 15m
+`06:30` on both; `06:45` settles 07:13. Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown
+$0.00. MGC RTH opens 08:20 ET, 1h09m out.

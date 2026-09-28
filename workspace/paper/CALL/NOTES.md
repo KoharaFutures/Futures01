@@ -3155,3 +3155,53 @@ swing lows read 30571.00 -> 30571.00, i.e. a **double bottom on the settled 15m 
 non-lower low either symbol has printed tonight. Not a reversal call — regime.py's reversal test
 returns false on both symbols and per the standing rule a REVERSAL is only called when every condition
 is true. Recorded as the thing to watch, and it is watched at the level, not chased.
+
+## N65 — N63's edge prediction confirmed, and the 60m frame revises its newest bar AFTER nominal completion, which unifies N41 across every frame
+
+The 05:06 fetch reported `60m +0 new, 1 revised` on both symbols. N63's rule predicts the revised bar
+sits at one of the two window edges. It does: the revised bar is **`2026-09-28T04:00`**, the newest
+one. Close 4179.10 -> 4178.40, volume 15324 -> 16035.
+
+The 04:00 hour completed at 05:00, so this is a **completed** 60m bar still being revised seven
+minutes later. Put together with what N60 and N62 established, the 60m frame's behaviour is:
+
+1. it publishes nothing for a bar until that bar's hour has finished (no partial `04:00` bar existed
+   before 05:00 — eight consecutive fetches showed `new=0 rev=0` while the hour ran), **then**
+2. it publishes the completed bar within ~2 minutes, **and then**
+3. it keeps revising that newest bar afterwards.
+
+So N41's provisional-bar rule is not a fast-frame phenomenon. **The newest bar of every frame is
+provisional, including the 60m, and including after its nominal completion.** The only difference
+between frames is whether a partial bar is visible while it forms (15m yes, 60m no) — which changes
+what you can see, not whether the newest value is settled. The `T + bar_length + δ` settle rule from
+N49 therefore applies to 60m as well, with δ ~2 minutes for that frame rather than ~12.
+
+That is three consecutive machinery predictions that held: N60's "60m will advance at 05:00" (N62),
+N63's "revisions only at the edges" (here), and N55's "two checks in three carry no new settled bar"
+(N61). After a run of eight retractions the mechanism model is now making correct calls, which is the
+point of having written the retractions down.
+
+## N66 — both symbols are holding above their lows and MNQ's settled double bottom is intact; still no reversal call
+
+No new settled 15m bar this check — `04:30` remains the newest settled on both symbols, so the settled
+comparison is unchanged from 05:02: MGC +4.60, MNQ −33.50. The `04:45` bar settles at 05:13.
+
+What the forming `04:45` bar shows, labelled as forming: MGC low **4176.90** against the session low
+4174.30, and MNQ low **30575.75** against 30571.00. Neither has taken out its low. MNQ's settled swing
+lows read 30571.00 -> 30571.00 — the double bottom from N64 is still standing — and MGC's still read
+4182.70 -> 4174.30, a lower low.
+
+Locations: MGC 3.2% of [4174.30, 4300.60], MNQ 3.6% of [30571.00, 30900.50]. Both at the extreme.
+
+**No reversal call, and no long.** `regime.py`'s reversal test returns false on both symbols and the
+standing rule is that a REVERSAL is called only when every condition is true. Beyond that rule, buying
+a double bottom into a stack that is bearish on 1m, 5m, 15m and 60m simultaneously would be a
+counter-trend entry justified by a chart level, and rule 8 is specifically that level-based entries in
+this repository do not survive a random-zone control — FVG and order-block fill rates were reproduced
+by random zones. I have no level-based long that is distinguishable from a guess, so I am not dressing
+one up.
+
+The honest summary of the state: the decline has stopped extending on both symbols without either
+printing a reversal signal the desk can test. That is a wait, not a setup. CALL-0004 resolves on the
+06:00 ET bar, ~54 minutes out, and that is the point at which the MGC retracement short stops being
+blocked by N52.

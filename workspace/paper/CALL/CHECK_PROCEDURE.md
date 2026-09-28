@@ -625,3 +625,49 @@ touch them, it only refreshes the context panels around them.
 **A plan that has left `PENDING` gets no card.** Once it fills, resolves or expires it
 belongs in the ledger, not in the live book. Do not keep showing a card for a trade that
 is over.
+
+## The 5-minute cadence when the owner's PC is off — a CHAIN, and every firing must re-arm it
+
+Established 2026-09-28 at the owner's request: he shuts his PC down and receives these on
+his phone. The session runs in a cloud container and does **not** depend on his machine, but
+the *cadence* does depend on something waking this session, and the obvious mechanisms fail:
+
+| mechanism | verdict |
+|---|---|
+| `/loop` + `CronCreate` | **session-only, in-memory.** Verified dead: `CronList` returned empty 30 minutes after scheduling `7a85b979`, with no firing in between (N17). Does not survive between turns, let alone a PC shutdown. |
+| recurring Routine at `*/5` | **hard-capped.** Verified: `failed to create trigger: cron expression "*/5 * * * *" may fire runs as little as 5 minutes apart; the minimum interval is 1 hour`. |
+| hourly Routine | durable, survives everything — but hourly, not 5-minute. |
+| chained one-shot `send_later` | **works.** `delay_minutes` has a minimum of 1, and the hourly floor applies only to `cron_expression`. Delivery survives container restarts. |
+
+**So the 5-minute cadence is a CHAIN of one-shot reminders, and it is only as alive as its
+last link.** `send_later` fires once and disables itself. If a firing ends without calling
+`send_later` again, **the chain is dead and the owner gets nothing until the hourly Routine
+fires.** There is no recurring schedule underneath to catch it.
+
+Therefore, on every chained fast check:
+
+```
+LAST ACTION OF THE TURN, after the commit and push:
+  send_later(delay_minutes=5, name="CALL desk fast check (chained)",
+             message=<the same fast-check instructions, INCLUDING this re-arm instruction>)
+```
+
+Re-arm **even when the check was quiet** — especially then, because a quiet check is exactly
+where it feels skippable. The only reason not to re-arm is a stop condition from the section
+below, and then say so explicitly rather than falling silent.
+
+**The hourly Routine is the chain's repair mechanism, not just a backstop.** It now begins by
+calling `list_triggers`, looking for a pending one-shot named `CALL desk fast check
+(chained)`, and re-arming it if absent — then reporting that it repaired a gap and roughly
+how long the gap was. A silent gap is the failure mode; a reported gap is recoverable.
+
+**What reaches the phone.** Two different channels, and they are not the same thing:
+
+- **The session transcript.** Every check, card and report appears in the Claude app when he
+  opens it. This needs no notification and is the actual record.
+- **`PushNotification`.** An actual alert that pulls attention to the phone. Use it for
+  something he would want to know *now* — a plan filling, a stop hit, a trade resolving, the
+  drawdown crossing a floor, or the chain breaking. **Do NOT push a quiet check.** Twelve
+  pushes an hour saying "nothing happened" trains him to ignore the one that matters, and
+  the tool's own guidance is that an unnecessary notification is annoying in a way that
+  accumulates. Quiet checks go to the transcript only.

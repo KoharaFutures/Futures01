@@ -43,7 +43,10 @@ WHITE = (238, 246, 255)
 
 # ---------------------------------------------------------------- metal chassis
 
-FRAME = 58          # width of the machined bezel around the card
+# NOTE: brushed_metal / bevel / screw built the outer bezel. The owner asked for
+# everything OUTSIDE the rail removed, so the rail is now the card's outer edge and
+# those helpers are unused. Kept, not deleted, because reinstating a bezel is a
+# layout decision that may come back, and they are exact arithmetic worth keeping.
 
 
 def brushed_metal(W: int, H: int) -> Image.Image:
@@ -176,12 +179,13 @@ def mech(p):
 
 
 def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> pathlib.Path:
-    """The empty shell: chassis, rail and laser channel, with every content element
-    removed. Useful for judging the frame on its own, and for laying out a new card.
+    """The empty shell: the rail and its laser channel with all content removed.
 
-    It writes to its own filename and touches nothing else - no plan, no journal, no
-    ledger. "Delete the content of the card" is a rendering choice; deleting the record
-    would be a different act entirely and is not what this does.
+    The rail is the card's OUTER EDGE - there is no bezel, chassis or margin beyond it.
+    Useful for judging the frame alone and for laying out a new card.
+
+    It writes its own file and touches nothing else: no plan, journal, ledger or snapshot.
+    Emptying a rendering is a different act from deleting the record.
     """
     las = LASER[side]
     img = backdrop(W, H, side).convert("RGBA")
@@ -189,37 +193,9 @@ def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> 
     gd = ImageDraw.Draw(glow)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
-    M = 54
-    hud_frame(d, (M, M, W - M, H - M), las, gd=gd)
+    hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd)
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
-    interior = Image.alpha_composite(img, ov)
-
-    CW, CH = W + FRAME * 2, H + FRAME * 2
-    chassis = brushed_metal(CW, CH).convert("RGBA")
-    cg = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
-    cgd = ImageDraw.Draw(cg)
-    co = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
-    cd = ImageDraw.Draw(co)
-    cd.rounded_rectangle([3, 3, CW - 4, CH - 4], radius=22, outline=(232, 236, 244, 120), width=2)
-    bevel(cd, (6, 6, CW - 7, CH - 7))
-    ch = FRAME - 20
-    cd.rounded_rectangle([ch, ch, CW - ch - 1, CH - ch - 1], radius=16,
-                         fill=(14, 15, 18, 255), outline=(10, 11, 13, 255), width=2)
-    for i, a in ((0, 255), (2, 120), (4, 55)):
-        cd.rounded_rectangle([ch + 5 + i, ch + 5 + i, CW - ch - 6 - i, CH - ch - 6 - i],
-                             radius=12, outline=(*las, a), width=2 if i == 0 else 1)
-    cgd.rounded_rectangle([ch + 5, ch + 5, CW - ch - 6, CH - ch - 6], radius=12,
-                          outline=(*las, 255), width=5)
-    bevel(cd, (FRAME - 5, FRAME - 5, CW - FRAME + 4, CH - FRAME + 4),
-          light=(200, 206, 216), dark=(8, 9, 11), w=4)
-    for sx2, sy2 in ((FRAME // 2 + 2, FRAME // 2 + 2), (CW - FRAME // 2 - 2, FRAME // 2 + 2),
-                     (FRAME // 2 + 2, CH - FRAME // 2 - 2),
-                     (CW - FRAME // 2 - 2, CH - FRAME // 2 - 2)):
-        screw(cd, sx2, sy2, 15, las)
-    chassis = Image.alpha_composite(chassis, cg.filter(ImageFilter.GaussianBlur(9)))
-    chassis = Image.alpha_composite(chassis, co)
-    chassis.paste(interior, (FRAME, FRAME), interior)
-    chassis.convert("RGB").save(out)
+    Image.alpha_composite(img, ov).convert("RGB").save(out)
     return out
 
 
@@ -267,9 +243,9 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
 
-    M = 54
+    M = 0
     PAD = M + 64      # content gutter: clears the 30px rail plus breathing room
-    frame = (M, M, W - M, H - M)
+    frame = (M, M, W - M - 1, H - M - 1)
     hud_frame(d, frame, las, gd=gd)
 
     # header: symbol and direction on ONE baseline, strategy beneath
@@ -384,48 +360,11 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
            font=fmeta, fill=(*las, 195))
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
-    interior = Image.alpha_composite(img, ov)
-
-    # ---- mount the card in a machined bezel with a recessed laser channel
-    CW, CH = W + FRAME * 2, H + FRAME * 2
-    chassis = brushed_metal(CW, CH).convert("RGBA")
-    cg = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
-    cgd = ImageDraw.Draw(cg)
-    co = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
-    cd = ImageDraw.Draw(co)
-
-    # outer edge of the chassis
-    cd.rounded_rectangle([3, 3, CW - 4, CH - 4], radius=22,
-                         outline=(232, 236, 244, 120), width=2)
-    bevel(cd, (6, 6, CW - 7, CH - 7))
-
-    # recessed channel, cut into the metal, with the laser running in it
-    ch = FRAME - 20
-    cd.rounded_rectangle([ch, ch, CW - ch - 1, CH - ch - 1], radius=16,
-                         fill=(14, 15, 18, 255), outline=(10, 11, 13, 255), width=2)
-    for i, a in ((0, 255), (2, 120), (4, 55)):
-        cd.rounded_rectangle([ch + 5 + i, ch + 5 + i, CW - ch - 6 - i, CH - ch - 6 - i],
-                             radius=12, outline=(*las, a), width=2 if i == 0 else 1)
-    cgd.rounded_rectangle([ch + 5, ch + 5, CW - ch - 6, CH - ch - 6], radius=12,
-                          outline=(*las, 255), width=5)
-
-    # inner lip where the bezel meets the card face
-    bevel(cd, (FRAME - 5, FRAME - 5, CW - FRAME + 4, CH - FRAME + 4),
-          light=(200, 206, 216), dark=(8, 9, 11), w=4)
-
-    # fasteners at the four corners
-    for sx2, sy2 in ((FRAME // 2 + 2, FRAME // 2 + 2), (CW - FRAME // 2 - 2, FRAME // 2 + 2),
-                     (FRAME // 2 + 2, CH - FRAME // 2 - 2),
-                     (CW - FRAME // 2 - 2, CH - FRAME // 2 - 2)):
-        screw(cd, sx2, sy2, 15, las)
-
-    chassis = Image.alpha_composite(chassis, cg.filter(ImageFilter.GaussianBlur(9)))
-    chassis = Image.alpha_composite(chassis, co)
-    chassis.paste(interior, (FRAME, FRAME), interior)
-    chassis = chassis.convert("RGB")
+    card = Image.alpha_composite(img, ov).convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
-    chassis.save(out)
+    card.save(out)
     return out
+
 
 
 def main() -> int:

@@ -1821,3 +1821,43 @@ claim than "did my judgement add value", and I have occasionally written the bro
 **The lesson, which is the same one three times tonight.** A's defects, E3's reclassification and now E9's
 control audit all land in the same place: **the code is where my errors are cheapest to find and the prose
 is where they hide.** Every one of these was invisible until someone was told to go looking specifically.
+
+### E7 — code review: 34 findings, and the worst one was live in a decision tool
+
+**34 findings: 5 critical, 8 major, 10 moderate, 11 minor/latent**, each tagged NUMBER (moves a published
+figure) or LABEL (misdescribes one). Full list in `agents/E7_codereview.md`.
+
+**Clean, with evidence — and these are the ones that matter most:** **no look-ahead leak anywhere in the
+code**, no bare excepts, and **`mode.py`'s CME schedule correct at every boundary.** Combined with E3's
+zero look-ahead breaches in the record, the walk-forward integrity of this replay is now audited from both
+ends — the data and the code.
+
+**C1, the worst finding, and I verified every part of it in my own files.** `scenario.py:60` published
+`P1_BOUNCE/P1_BREAK = 0.457/0.543` **as measured**. It was not:
+
+- **`levels.py:141` hard-filters `if touches < 2: continue`** — so **the shipped study cannot produce a
+  1-touch bucket at all.** The 45.7% came from an ad-hoc inline script I ran once, **unreproducible from
+  this repository.**
+- **The random control draws `choice([2,2,3,4])` and therefore contains zero 1-touch lines.** So the
+  study's one "positive" result **compared a 1-touch treatment against a 2+-touch control.** A category
+  mismatch, not a noisy estimate.
+- **Every level in today's live map is 1-touch**, each printing *"BREAK is the majority case"*.
+
+**This is independent of E9's finding and compounds it.** E9 showed the control was unfair (fabricated
+counts, 31% higher ATR, wrong density). E7 shows the comparison was **category-mismatched as well** — and
+that the number was never reproducible from shipped code in the first place.
+
+**It steered a live decision.** At bar 1684 I declined a trade citing *"my own measurement says a fresh
+extreme BREAKS 54.3% of the time"*. The decline was right for other reasons — thin hour, non-result z — but
+**that is the second time a fabricated figure has entered a live decision**, after the phantom shelf at bar
+1502. Both times it happened to push me toward the safer action; **that is luck, not a safeguard.**
+
+**Acted on immediately rather than noted for later, because it is a decision tool and it was wrong right
+now.** `scenario.py`'s odds are **withdrawn**: the constants are set to `None`, the header prints why, and
+every level now reads *"odds WITHDRAWN … Treat BOTH branches as unweighted; plan them, do not bet the
+direction."* The map's actual value — pre-computed entry, stop, target, contracts, dollar risk and
+floor-compliance for all four branches before price arrives — is untouched. **What is gone is the only part
+that pretended to forecast.**
+
+The remaining 33 findings are catalogued and will be worked through in order of the NUMBER tag; none of the
+others is live in a decision path.

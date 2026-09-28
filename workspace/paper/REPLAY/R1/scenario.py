@@ -56,8 +56,22 @@ import levels as LV
 
 rows, N = LV.rows, LV.N
 ACCOUNT_RISK, POINT_VALUE, TICK = 240.0, 5.0, 0.25
-P_BOUNCE, P_BREAK, P_CTRL = 0.537, 0.463, 0.550
-P1_BOUNCE, P1_BREAK = 0.457, 0.543      # fresh single-touch extremes
+# ODDS WITHDRAWN 2026-09-28 — do not restore without a rerun against a fair control.
+#
+# These figures were published here as "measured" and they were not. Two
+# independent audits killed them:
+#   E7/C1 — levels.py study() line 141 hard-filters `touches < 2`, so the shipped
+#     code CANNOT produce a 1-touch bucket. The 0.457/0.543 came from an ad-hoc
+#     inline script, unreproducible from this repository. Worse, the random control
+#     draws choice([2,2,3,4]) and so contains NO 1-touch lines at all: the one
+#     "positive" result compared a 1-touch treatment against a 2+-touch control.
+#   E9 — under a side-, ATR- and regime-matched control the fresh-extreme effect
+#     halves and reverses in z, -8.8pp/z 1.76 -> -3.9pp/z -0.73.
+#
+# It steered a live decision at bar 1684, where this desk declined a trade citing
+# "my own measurement says a fresh extreme BREAKS 54.3% of the time". The decline
+# was right for other reasons; the number was not a measurement.
+P_BOUNCE = P_BREAK = P_CTRL = P1_BOUNCE = P1_BREAK = None
 
 
 def fmt_branch(name, side, entry, stop, target, a):
@@ -86,9 +100,10 @@ def report(i=None):
 
     print(f"SCENARIO MAP   bar {i}  {rows[i]['ts']}   close {px}   ATR14 {a:.2f} "
           f"(0.5 floor {a/2:.2f})")
-    print(f"measured branch odds at a detected level: bounce {P_BOUNCE:.1%} / "
-          f"break {P_BREAK:.1%}   random-line control bounce {P_CTRL:.1%}")
-    print("=> the branches are NOT weighted. Plan both; trade whichever happens.\n")
+    print("branch odds: WITHDRAWN. The published rates were measured against a control")
+    print("with fabricated touch counts, 31% higher ATR, and zero 1-touch lines. The")
+    print("branches were never weighted and now are not even nominally weighted.")
+    print("=> Plan both branches. Do not bet the direction.\n")
 
     for tag, group in (("RESISTANCE ABOVE", above), ("SUPPORT BELOW", below)):
         print(f"  {tag}")
@@ -97,12 +112,9 @@ def report(i=None):
             continue
         for L, t in group:
             d = abs(L - px)
-            if t == 1:
-                odds = (f"fresh/untested -> bounce {P1_BOUNCE:.0%} / break "
-                        f"{P1_BREAK:.0%}  (BREAK is the majority case)")
-            else:
-                odds = (f"retested -> bounce {P_BOUNCE:.0%} / break {P_BREAK:.0%}  "
-                        f"(= the random-line control, so uninformative)")
+            odds = ("odds WITHDRAWN - the published bounce/break rates were measured "
+                    "against an invalid control (see header). Treat BOTH branches as "
+                    "unweighted; plan them, do not bet the direction.")
             print(f"    level {L:.2f}   {t} distinct touch(es)   {d:+.2f}pt away "
                   f"({d/a:.2f} ATR)")
             print(f"      odds  {odds}")

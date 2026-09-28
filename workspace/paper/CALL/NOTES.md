@@ -3584,3 +3584,49 @@ bar, ~16 minutes out, should be followed by NO TRADE with condition 4 named, not
 No call this check. Reversal test false on both symbols; MGC 1m/5m 0-2, MNQ 1m 0-1 and 5m unanimous 0-3,
 15m and 60m unanimous bearish on both as they have been all session. Locations unchanged from 05:40
 because no new 15m bar arrived: MGC 4.6% of [4172.60, 4299.20], MNQ 14.3% of [30535.00, 30900.50].
+
+## N81 — the swing-low detector has now registered MNQ's break, closing the loop N74 opened
+
+N74 flagged that two of my own numbers disagreed: MNQ's **raw settled low** had broken 30571.00 while
+`chart.py`'s **swing-low detector** still printed `30571.00 -> 30571.00`, because a pivot needs bars on
+both sides to confirm. I said those were different statements about different objects and that the
+detector would catch up.
+
+At 05:49 it has: MNQ structure now reads swing lows **`30571.00 -> 30535.00`**. The detector confirmed
+the lower low once the `05:15` low had bars either side of it. Fourth machinery prediction tonight that
+held without amendment (after N62, N65, N72/N74).
+
+MGC's swing highs have also stepped down again, `4185.20 -> 4181.00`, so MGC is printing successively
+lower highs on the settled series while its low holds at 4172.60.
+
+## N82 — N77's VOID re-confirmed at 05:49 with the leg recomputed from settled data
+
+Recomputed at this moment rather than carried forward, per N77's own requirement and N80's reason:
+
+    MGC leg  4299.20 (09-27T19:45)  ->  4172.60 (09-28T05:00)   high precedes low: yes
+             126.60 points = 13.75x ATR14(15m) 9.21          [passes the 2.0x minimum]
+             50% entry   4235.90
+             61.8% level 4250.84  ->  stop 4251.24
+             stop distance 15.34 points x $10 = $153.39   against the $120 cap
+
+**VOID on condition 4**, third independent recomputation reaching the same answer ($155, $154, $153.39 as
+the window slid). The number is stable because the leg length is stable; the cap binds at about 12.0 MGC
+stop points and this geometry needs 15.34. There is no arrangement of a 50%/61.8% fib plan on this leg
+that fits $120 at 1 contract, and the 1-contract floor means size cannot be reduced further.
+
+CALL-0004 expires on the **06:00 ET bar**, ~11 minutes away. Bar-based, so per N32 the journal entry will
+land roughly 13 minutes after the wall clock and I will report what the resolver writes, not what the
+clock says. Expected `EXPIRED_UNTRIGGERED` / NO_FILL / 0.0R, with MGC 4177.90 against a 4287.60 trigger.
+The N77 prediction of NO TRADE with condition 4 named still stands.
+
+## N83 — 05:49 state
+
+Newest settled 15m `05:15` on both; `05:30` settles at 05:58. Forming `05:30`: MGC c 4177.90 (l 4174.40
+h 4180.40), MNQ c 30573.50 (l 30558.25 h 30592.25) — MNQ has given back 13.75 of the settled bounce
+inside the unsettled window, consistent with N79.
+
+Locations MGC 4.2% of [4172.60, 4299.20], MNQ 10.5% of [30535.00, 30900.50] — MNQ's fell from 14.3%
+partly because its range low moved to 30535.00 when the detector confirmed it, N53's mechanism again.
+
+Fast frames: MGC 1m BULL 2-0 with 5m BEAR 1-2; MNQ 1m **CONFLICTED 0-0** with 5m BEAR 0-2. 15m and 60m
+unanimous bearish on both, unchanged for the entire session. No call; reversal test false on both.

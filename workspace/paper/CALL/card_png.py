@@ -270,6 +270,23 @@ def live_status(plan: dict) -> tuple:
             return tag, (60, 220, 130) if (r or 0) > 0 else (255, 60, 80)
     s = (plan.get("status") or "").upper()
     if s == "PENDING":
+        # A plan whose `created_bar_ts` is in the FUTURE is not awaiting a fill - it is not
+        # being looked at. `resolve.py` selects `b["ts"] > plan["created_bar_ts"]`, so with a
+        # future stamp that list is empty and the plan is skipped on every pass: it cannot
+        # trigger, fill, resolve or expire. CALL-0002 carries 2026-09-28T08:20 (MGC's RTH
+        # open, written where the creation bar belonged) and has therefore been inert for
+        # ~6 hours while this card said AWAITING FILL. Detected and labelled rather than
+        # repaired here: setting the stamp back would open a 6-hour window to retroactive
+        # triggering, which is manufacturing an outcome after watching price (N8, N30).
+        try:
+            import datetime as _dt
+            cb = plan.get("created_bar_ts")
+            if cb:
+                t = _dt.datetime.fromisoformat(cb)
+                if t > _dt.datetime.now(t.tzinfo):
+                    return "INERT · NOT EVALUATED", (255, 80, 90)
+        except Exception:
+            pass
         return "AWAITING FILL", (255, 190, 40)
     return (s or "UNKNOWN"), (170, 172, 178)
 

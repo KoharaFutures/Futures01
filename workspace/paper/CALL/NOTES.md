@@ -1621,3 +1621,96 @@ is 0-2, not unanimous."* Worth watching; not tradeable, because rule 1 makes com
 disagreement a reason not to trade rather than a weaker reason to trade.
 
 CALL-0003 is 87.00 out with 42 minutes left and will almost certainly journal NO_FILL.
+
+## N30 — the owner was right that NO_FILL hides the diagnosis, and building the tool to show it exposed a plan that has never been evaluated at all
+
+01:23 AM EDT. Newest 5m bar 01:10, lag 13.3m. Nothing triggered, nothing resolved.
+
+### What the owner asked for, and why it matters more than it sounds
+
+His point: when recording the result of a callout, account for the case where **the entry
+never filled but price still went the predicted way.** Both cases journal 0.0R — correctly,
+because no position was held and inventing a number would be fabrication — but 0.0R alone
+collapses two opposite diagnoses into one symbol:
+
+```
+direction right, entry unreachable  ->  fix the TRIGGER
+direction wrong                     ->  fix the READ
+```
+
+A ledger of nothing but 0.0R cannot tell you which repair you need. Built `thesis.py` to
+measure it: for each live plan, the favourable and adverse excursion **from the price when
+the plan was written**, against the plan's own target distance. Deliberately measured from
+the reference price rather than the unfilled trigger, because the trigger is the thing
+under suspicion. It writes nothing — not to the journal, not to state.json — and says so
+in its own docstring: `resolve.py` remains the only writer of outcomes.
+
+```
+id          sym  side        ref      now     fav     adv    tgt  trig away  verdict
+CALL-0001   MNQ  LONG   30889.25 30664.50   11.25  251.75   96.0     109.25  DIRECTION WRONG
+CALL-0003   MNQ  LONG   30742.75 30664.50   17.25  105.25   83.2      24.50  DIRECTION WRONG
+CALL-0004   MGC  SHORT   4248.30  4224.80   25.90    0.30  19.04      39.30  DIRECTION RIGHT,
+                                                            TARGET DISTANCE COVERED
+```
+
+**CALL-0004 is the case he was describing, and it is worse than I had understood.** From
+4248.30 the plan needed 19.04 points of downside for TP1. It got **25.90**, with an adverse
+excursion of **0.30 points**. A short that would have gone almost immediately into profit,
+never drawn more than a third of a point against, and paid its full first target — and it
+captured nothing, because the sell limit sat **39.30 points above** the reference price
+waiting for a retracement that never came. That is not a marginal miss. The read was right,
+the risk was near zero, and the trigger made it unreachable.
+
+The two MNQ longs are the opposite and the distinction earns its keep immediately:
+CALL-0003's adverse excursion is **105.25** against a 52-point stop. Had it filled it would
+almost certainly have stopped out. **Not filling saved money there and cost money on
+CALL-0004**, and without this table both look like the same 0.0R.
+
+### And building it found something I would not otherwise have caught
+
+`thesis.py` reported `CALL-0002: no bars since creation`. The cause:
+
+```
+CALL-0002  created_bar_ts  2026-09-28T08:20:00-04:00     <- SEVEN HOURS IN THE FUTURE
+```
+
+08:20 is MGC's RTH open. When I wrote that plan I put the *window I wanted it to fire in*
+into the field that means *the bar it was created on*. And `resolve.py` line 155 is:
+
+```python
+all_bars = [b for b in load_bars(sym, plan["bar_minutes"]) if b["ts"] > plan["created_bar_ts"]]
+if not all_bars:
+    continue
+```
+
+With a future stamp that list is empty and the plan is **skipped on every pass**. CALL-0002
+has been PENDING for about six hours and has **never once been evaluated** — it cannot
+trigger, fill, resolve or expire. Meanwhile its card has said `AWAITING FILL` at every
+check. It was not awaiting anything. Nothing was looking at it.
+
+This is the N20 failure class and the worst one this desk has: not a wrong outcome, an
+absent one, displayed as live.
+
+### What I fixed, and what I deliberately did not
+
+**Fixed, because it is display and it was false:** `live_status()` now detects a
+future-dated `created_bar_ts` and renders **`INERT · NOT EVALUATED`** in red instead of
+`AWAITING FILL`. The card stops asserting something untrue.
+
+**Did NOT fix the plan, and this one is important.** Setting `created_bar_ts` back to the
+real creation bar would hand `resolve.py` six hours of bars it has never seen, and MGC
+traded near 4299 in that window against a 4289.10 trigger — so the edit could manufacture a
+triggered position, and possibly a resolved outcome, *from a change I made after watching
+the price*. That is precisely N8. Repairing the metadata and repairing the trade are
+different acts and only the first is available to me.
+
+So CALL-0002 needs **retirement, not repair** — `CHECK_PROCEDURE.md` already says a stranded
+plan gets said so and a fresh pre-registration considered rather than retro-fitted. It
+should be retired with an honest non-outcome (`VOID — defective metadata, never evaluated`,
+0.0R, no fill), and that is a record action, so it goes at a full check with the reasoning
+attached rather than being done quietly mid-loop. Until then it stays in the book carrying
+a label that tells the truth about it.
+
+**The standing lesson for new plans:** `created_bar_ts` is the newest bar held at creation,
+full stop. An RTH or session constraint belongs in `rth_note` and in the expiry, never in
+the creation stamp — putting it there does not gate the plan, it disables it.

@@ -34,7 +34,9 @@ LAG = HERE / "feed_lag.jsonl"
 from futures_agents.data.yahoo import YahooFeed  # noqa: E402
 
 SYMBOLS = ("MGC", "MNQ")
-FRAMES = (5, 15)
+# 240m is resampled from 60m by the feed (Yahoo has no 4h bar); 10080m (weekly) is
+# resampled from daily by regime.py, since the interval table stops at 1d.
+FRAMES = ((1, 7.0), (5, 5.0), (15, 5.0), (60, 30.0), (240, 60.0), (1440, 365.0))
 
 
 def is_stub(bar) -> bool:
@@ -66,9 +68,9 @@ def main() -> int:
     lag_rows, wrote, failures = [], [], []
 
     for sym in SYMBOLS:
-        for mins in FRAMES:
+        for mins, days in FRAMES:
             try:
-                res = feed.fetch(sym, minutes=mins, days=5)
+                res = feed.fetch(sym, minutes=mins, days=days)
             except Exception as exc:                      # a failed fetch is reported, not hidden
                 failures.append(f"{sym} {mins}m: {type(exc).__name__}: {exc}")
                 continue

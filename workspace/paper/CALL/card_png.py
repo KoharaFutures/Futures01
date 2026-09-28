@@ -320,17 +320,25 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     d.text((PAD + sc(4), sc(160)), "STRATEGY", font=fkl, fill=(*las, 150))
     d.text((PAD + sc(4), sc(182)), plan.get("strategy", ""), font=fstrat, fill=(*WHITE, 236))
 
-    # ---- mechanics strip
-    sy = sc(224)
+    # ---- mechanics strip. WINDOW gets its own row: the five values do not fit across a
+    # 600px column at this weight, and silently dropping the one that says when the plan
+    # can fire would be the worst of the five to lose.
+    cw, ph, gap = sc(600), sc(112), sc(9)
+    sy = sc(216)
     x = PAD + sc(4)
     for lab, val in (("R:R", f"{tgts[0][1]}"), ("SIZE", f"{plan['contracts']} contract"),
                      ("RISK", f"${risk:,.0f} of $240"),
-                     ("LADDER", f"x{plan.get('ladder_mult', 1.0):.2f}"),
-                     ("WINDOW", f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
-                                f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")):
+                     ("LADDER", f"x{plan.get('ladder_mult', 1.0):.2f}")):
         d.text((x, sy), lab, font=fkl, fill=(*las, 145))
         d.text((x, sy + sc(20)), val, font=fkv, fill=WHITE)
-        x += int(d.textlength(val, font=fkv)) + sc(54)
+        x += int(d.textlength(val, font=fkv)) + sc(46)
+    wv = (f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
+          f"{plan['expires_bar_ts'][11:16]} ET"
+          if plan['created_bar_ts'][:10] == plan['expires_bar_ts'][:10]
+          else f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
+               f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")
+    d.text((PAD + sc(4), sy + sc(52)), "WINDOW", font=fkl, fill=(*las, 145))
+    d.text((PAD + sc(4), sy + sc(72)), wv, font=fkv, fill=WHITE)
 
     # ---- left column: the price ladder, in the order price would meet it
     try:
@@ -342,6 +350,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         _cf = None
 
     def why_level(px):
+        """Why this target is here: a named level, or an admission that it is arithmetic."""
         if _cf is None:
             return ""
         try:
@@ -349,32 +358,36 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         except Exception:
             return ""
 
-    rows = [("SL", stop, RED, f"{plan['stop_points']:g} pts · ${risk:,.0f} risk", True)]
-    rows.append(("ENTRY", fill, las,
-                 f"trigger {plan['trigger_price']:g} · at trigger or worse", True))
+    rows = [("SL", stop, RED, f"{plan['stop_points']:g} pts · ${risk:,.0f} risk", True),
+            ("ENTRY", fill, las,
+             f"trigger {plan['trigger_price']:g} · at trigger or worse", True)]
     for lab, r, px_, ok in tgts[:3]:
         rows.append((lab, px_, las, f"{r}R · {why_level(px_)}", ok))
-    if side == "SHORT":
-        rows = [rows[0], rows[1]] + rows[2:]
 
-    cw, ph, gap = sc(600), sc(122), sc(9)
-    cy = sc(300)
+    cy = sc(322)
     for lab, px_, col, sub, ok in rows:
         panel(d, (PAD, cy, PAD + cw, cy + ph), col, dim=not ok)
         if ok:
             panel(gd, (PAD, cy, PAD + cw, cy + ph), col)
-        d.text((PAD + sc(22), cy + sc(12)), lab, font=flab,
+        d.text((PAD + sc(22), cy + sc(10)), lab, font=flab,
                fill=(*col, 255) if ok else (*col, 150))
-        d.text((PAD + sc(22), cy + sc(36)), f"{px_:g}", font=fnum,
+        d.text((PAD + sc(22), cy + sc(32)), f"{px_:g}", font=fnum,
                fill=col if lab == "SL" else (WHITE if ok else (*WHITE, 160)))
         if ok:
-            gd.text((PAD + sc(22), cy + sc(36)), f"{px_:g}", font=fnum, fill=(*col, 140))
-        # Keep the level reason on EVERY target. The owner asked why the TPs are where
-        # they are, and "not executable" is a separate fact from "sits on no level" -
-        # dropping the first to show the second answers a question nobody asked.
+            gd.text((PAD + sc(22), cy + sc(32)), f"{px_:g}", font=fnum, fill=(*col, 140))
         tag = sub if ok else f"{sub}  ·  NEEDS 3 LOTS"
-        for i, ln in enumerate(textwrap.wrap(tag, 68)[:2]):
-            d.text((PAD + sc(22), cy + sc(88) + i * sc(17)), ln, font=fsub,
+        lim = cw - sc(44)
+        wrapped, cur = [], ""
+        for word in tag.split(" "):
+            trial = (cur + " " + word).strip()
+            if d.textlength(trial, font=fsub) <= lim:
+                cur = trial
+            else:
+                wrapped.append(cur)
+                cur = word
+        wrapped.append(cur)
+        for i, ln in enumerate(wrapped[:2]):
+            d.text((PAD + sc(22), cy + sc(80) + i * sc(16)), ln, font=fsub,
                    fill=(*WHITE, 205) if ok else (*WHITE, 135))
         cy += ph + gap
 
@@ -385,39 +398,55 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         _rg = _iu2.module_from_spec(_rs2)
         _rs2.loader.exec_module(_rg)
         tfs = _rg.timeframe_bias(plan["symbol"])
+        _rg.record(plan["symbol"], tfs)
         rev = _rg.reversal(plan["symbol"], tfs)
     except Exception:
         tfs, rev = [], {"called": False, "reasons": []}
 
-    tx, tw2 = PAD + cw + sc(40), sc(360)
+    tx, tw2 = PAD + cw + sc(40), sc(430)
     if tfs:
-        d.text((tx, sc(276)), "TIMEFRAMES", font=fkl, fill=(*las, 150))
-        ty = sc(300)
+        d.text((tx, sc(254)), "TIMEFRAMES", font=fkl, fill=(*las, 150))
+        ty = sc(278)
         HUE = {"BULLISH": LASER["LONG"], "BEARISH": LASER["SHORT"]}
+        rh = sc(60)
         for t in tfs:
-            hue = HUE.get(t["headline"], (170, 172, 178))
-            panel(d, (tx, ty, tx + tw2, ty + sc(102)), hue,
-                  dim=t["headline"] == "CONFLICTED")
-            if t["headline"] in HUE:
-                panel(gd, (tx, ty, tx + tw2, ty + sc(102)), hue)
-            d.text((tx + sc(18), ty + sc(12)), f"{t['frame']}m", font=flab,
-                   fill=(*WHITE, 210))
-            d.text((tx + sc(18), ty + sc(38)), t["headline"], font=fkv, fill=hue)
-            tail = f"{t['bull']}-{t['bear']}" + ("  unanimous" if t["unanimous"] else "")
-            d.text((tx + sc(18), ty + sc(70)), tail, font=fsub, fill=(*WHITE, 190))
-            ty += sc(102) + sc(9)
-        # the reversal verdict, and rule 2's caveat, sit under the column
+            elig = t["headline"] not in ("NOT ELIGIBLE", "NO DATA")
+            hue = HUE.get(t["headline"], (150, 152, 158) if elig else (120, 96, 96))
+            panel(d, (tx, ty, tx + tw2, ty + rh), hue, dim=not (elig and t["headline"] in HUE))
+            if elig and t["headline"] in HUE:
+                panel(gd, (tx, ty, tx + tw2, ty + rh), hue)
+            d.text((tx + sc(16), ty + sc(10)), _rg.label(t["frame"]), font=flab,
+                   fill=(*WHITE, 225))
+            d.text((tx + sc(132), ty + sc(8)), t["headline"], font=fkv,
+                   fill=hue if elig else (*RED, 215))
+            if elig:
+                tail = f"{t['bull']}-{t['bear']}" + ("  unanimous" if t["unanimous"] else "")
+                d.text((tx + sc(132), ty + sc(36)), tail, font=fsub, fill=(*WHITE, 185))
+            else:
+                rtxt = t.get("reason", "")
+                rlim = (tx + tw2) - (tx + sc(132)) - sc(14)
+                while d.textlength(rtxt, font=fsub) > rlim and len(rtxt) > 6:
+                    rtxt = rtxt[:-2] + "\u2026"
+                d.text((tx + sc(132), ty + sc(36)), rtxt, font=fsub, fill=(*RED, 165))
+            ty += rh + sc(5)
+        ty += sc(6)
         if rev.get("called"):
-            d.text((tx, ty + sc(6)), f"REVERSAL CALLED → {rev['headline']}", font=flab,
+            d.text((tx, ty), f"REVERSAL CALLED → {rev['headline']}", font=flab,
                    fill=HUE.get(rev["headline"], WHITE))
-            d.text((tx, ty + sc(30)), f"was {rev.get('prior')}, held {rev.get('held')} checks",
+            d.text((tx, ty + sc(24)), f"was {rev.get('prior')}, held {rev.get('held')} checks",
                    font=fsub, fill=(*WHITE, 190))
+            ty += sc(48)
         else:
-            d.text((tx, ty + sc(6)), "NO REVERSAL CALL", font=flab, fill=(*WHITE, 175))
-            for i, ln in enumerate(textwrap.wrap("; ".join(rev.get("reasons", []))[:150], 42)[:3]):
-                d.text((tx, ty + sc(30) + i * sc(17)), ln, font=fsub, fill=(*WHITE, 135))
-        d.text((tx, ty + sc(92)), "agreement across frames is NOT", font=fsub, fill=(*las, 150))
-        d.text((tx, ty + sc(109)), "confirmation — rule 2, z = −4.09", font=fsub, fill=(*las, 150))
+            d.text((tx, ty), "NO REVERSAL CALL", font=flab, fill=(*WHITE, 175))
+            ty += sc(22)
+            for ln in textwrap.wrap("; ".join(rev.get("reasons", [])), 52)[:2]:
+                d.text((tx, ty), ln, font=fsub, fill=(*WHITE, 138))
+                ty += sc(17)
+            ty += sc(6)
+        d.text((tx, ty), "agreement across frames is NOT confirmation", font=fsub,
+               fill=(*las, 150))
+        d.text((tx, ty + sc(17)), "— rule 2 measured requiring it WORSE, z = −4.09",
+               font=fsub, fill=(*las, 150))
 
     # ---- right column: confluence, then the reasoning
     rx = tx + tw2 + sc(40)
@@ -441,7 +470,10 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
             d.text((rx, by), f"{r['verdict']:8s}", font=fkv, fill=col)
             d.text((rx + sc(104), by + sc(2)), f"{r['family']:17s}", font=fbody, fill=(*WHITE, 238))
             tail = r["why"] if r["tested"] else r["why"] + "   [NEVER TESTED ON THIS SYMBOL]"
-            d.text((rx + sc(104) + sc(200), by + sc(3)), tail[:118], font=fmeta,
+            tcol = rx + sc(104) + sc(200)
+            while d.textlength(tail, font=fmeta) > (W - PAD - tcol) and len(tail) > 8:
+                tail = tail[:-2] + "\u2026"
+            d.text((tcol, by + sc(3)), tail, font=fmeta,
                    fill=(*WHITE, 150) if r["tested"] else (*RED, 190))
             by += sc(25)
         na = ", ".join(r["family"] for r in crows if r["verdict"] == "N/A")

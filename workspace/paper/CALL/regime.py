@@ -37,14 +37,55 @@ _cs = importlib.util.spec_from_file_location("_ch", HERE / "chart.py")
 _ch = importlib.util.module_from_spec(_cs)
 _cs.loader.exec_module(_ch)
 
-FRAMES = (5, 15, 60)
+FRAMES = (1, 5, 15, 60, 240, 1440, 10080)
+
+#: Frames a symbol may NOT carry a bias on, with the reason. From
+#: `workspace/studies/SERIES_AUDIT.md`, which is a GATE and not advice: a series that fails
+#: it is not eligible to carry a statistic, and printing a confident headline off one would
+#: be exactly the authoritative-looking wrongness this desk exists to avoid.
+NOT_ELIGIBLE = {
+    ("MGC", 1440): "roll audit FAILS p<0.0001 — gap sum +2.9584 vs intraday −2.0079",
+    ("MGC", 10080): "built from the same unadjusted daily; inherits the roll contamination",
+    ("MCL", 1440): "MCL_1440m holds ONE bar; CL_1440m disqualified (close −37.63)",
+    ("MCL", 10080): "no usable daily to build a week from",
+}
+
+
+def _weekly(symbol: str) -> list[dict]:
+    """Resample daily into ISO weeks. The interval table stops at 1d, so a week has to be
+    built here - and it inherits whatever is wrong with the daily series it is built from,
+    which is why MGC weekly is gated exactly as MGC daily is."""
+    from datetime import datetime
+    days = _ch.load(symbol, 1440)
+    buckets: dict = {}
+    for b in days:
+        iso = datetime.fromisoformat(b["ts"]).isocalendar()
+        buckets.setdefault((iso[0], iso[1]), []).append(b)
+    out = []
+    for k in sorted(buckets):
+        g = buckets[k]
+        out.append({"ts": g[0]["ts"], "o": g[0]["o"], "h": max(x["h"] for x in g),
+                    "l": min(x["l"] for x in g), "c": g[-1]["c"],
+                    "v": sum(x["v"] for x in g)})
+    return out
 
 
 def timeframe_bias(symbol: str, frames=FRAMES, n: int = 40) -> list[dict]:
-    """Bias per timeframe, from the same three components `chart.py` prints."""
+    """Bias per timeframe, from the same three components `chart.py` prints.
+
+    A frame the audit disqualifies returns NOT ELIGIBLE with its reason and no bias. It is
+    not scored, not counted toward agreement, and not silently omitted - an absent row
+    reads as "no opinion", which is a different and weaker statement than "this series may
+    not carry one".
+    """
     out = []
     for f in frames:
-        bars = _ch.load(symbol, f)
+        why = NOT_ELIGIBLE.get((symbol, f))
+        if why:
+            out.append({"frame": f, "headline": "NOT ELIGIBLE", "bull": 0, "bear": 0,
+                        "unanimous": False, "bars": 0, "reason": why})
+            continue
+        bars = _weekly(symbol) if f == 10080 else _ch.load(symbol, f)
         if len(bars) < 25:
             out.append({"frame": f, "headline": "NO DATA", "bull": 0, "bear": 0,
                         "unanimous": False, "bars": len(bars)})
@@ -55,13 +96,20 @@ def timeframe_bias(symbol: str, frames=FRAMES, n: int = 40) -> list[dict]:
     return out
 
 
+def label(frame: int) -> str:
+    return {1: "1m", 5: "5m", 15: "15m", 60: "60m", 240: "4h",
+            1440: "DAILY", 10080: "WEEKLY"}.get(frame, f"{frame}m")
+
+
 def record(symbol: str, tfs: list[dict]) -> None:
     """Append this check's per-frame reading. Persistence cannot be judged without it."""
     with HIST.open("a") as fh:
         fh.write(json.dumps({
             "ts": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
             "symbol": symbol,
-            "frames": {str(t["frame"]): t["headline"] for t in tfs}}) + "\n")
+            "frames": {str(t["frame"]): t["headline"] for t in tfs},
+            "agreeing_frames": [label(t["frame"]) for t in tfs
+                                if t["headline"] not in ("NOT ELIGIBLE", "NO DATA")]}) + "\n")
 
 
 def _history(symbol: str, frame: int = 15) -> list[str]:
@@ -108,7 +156,8 @@ def reversal(symbol: str, tfs: list[dict]) -> dict:
     elif prior == "CONFLICTED":
         fails.append("prior headline was CONFLICTED, so this is a resolution, not a reversal")
     # another timeframe agrees
-    others = [t for t in tfs if t["frame"] != 15 and t["headline"] == head]
+    others = [t for t in tfs if t["frame"] != 15 and t["headline"] == head
+              and t["headline"] not in ("NOT ELIGIBLE", "NO DATA")]
     if not others:
         fails.append("no other timeframe agrees")
 
@@ -124,8 +173,10 @@ def main() -> int:
         rv = reversal(sym, tfs)
         print(f"\n{sym}")
         for t in tfs:
-            print(f"   {t['frame']:>4}m  {t['headline']:<11} {t['bull']}-{t['bear']}"
-                  f"{'  unanimous' if t['unanimous'] else ''}")
+            extra = (f"   {t.get('reason','')}" if t["headline"] == "NOT ELIGIBLE"
+                     else f"{'  unanimous' if t['unanimous'] else ''}")
+            tally = "" if t["headline"] in ("NOT ELIGIBLE", "NO DATA") else f"{t['bull']}-{t['bear']}"
+            print(f"   {label(t['frame']):>7}  {t['headline']:<13} {tally}{extra}")
         if rv["called"]:
             print(f"   >>> REVERSAL CALLED: {rv['headline']} (was {rv['prior']}), "
                   f"held {rv['held']} checks, agreeing frames {rv['agreeing_frames']}")

@@ -405,6 +405,26 @@ reverted twice inside ten minutes — once because the swing *pair* being compar
 window, not because price moved (N9). A desk calling a reversal on each flip would have called
 seven and been wrong at least six times.
 
+**Seven frames: 1m, 5m, 15m, 60m, 4h, DAILY, WEEKLY.** Two of them do not exist as vendor
+intervals and are built here — **4h is resampled from 60m** (Yahoo has no native 4h bar) and
+**weekly is resampled from daily** (the interval table stops at `1d`). Say so rather than
+implying a native bar.
+
+**A frame the audit disqualifies is printed as `NOT ELIGIBLE` with its reason, never given a
+bias.** `SERIES_AUDIT.md` is a gate, not advice:
+
+| symbol · frame | ruling |
+|---|---|
+| **MGC daily** | roll audit **FAILS p < 0.0001** — gap sum +2.9584 against an intraday sum of −2.0079 |
+| **MGC weekly** | built from that same unadjusted daily, so it inherits the contamination |
+| MCL daily / weekly | `MCL_1440m` holds one bar; `CL_1440m` disqualified (close −37.63) |
+| MES / MNQ daily | **eligible** — 7.40 roll-clean years |
+
+A disqualified frame is **not** scored, **not** counted toward agreement, and **not** silently
+omitted — an absent row reads as "no opinion", which is a weaker and different statement from
+"this series may not carry one". Printing `MGC WEEKLY BEARISH` off a series whose gaps are 3.1×
+its total return would be exactly the authoritative-looking wrongness this desk exists to avoid.
+
 `reversal()` therefore requires **all four** of:
 
 1. the 15m headline has **changed sign** versus the last differing headline;

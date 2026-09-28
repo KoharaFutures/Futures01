@@ -6700,3 +6700,32 @@ a random-level control (N22). Logged, not acted on.
 MGC: 1m, 5m, 60m all 0-3 unanimous BEARISH, 15m 0-2, 4h 0-2, location **3.3% of [4146.30, 4230.80]** on the
 15m. **No call** — eleventh consecutive check with the same reason, and the 10:53 ATR measurement (cap
 binding at 0.94x MGC / 0.83x MNQ) still stands as the governor's own instruction not to size into this.
+
+## N192 — 11:11: a DOWNWARD revision of the range low RAISED MGC's location reading
+
+MGC's location went **3.8% -> 9.0%**, and `fetch.py` reported **`new=0` on the 15m frame**, so per N140 the
+changed endpoint is a revision of the `10:45` bar, not a new bar:
+
+    range      [4146.00, 4230.80]  ->  [4143.00, 4230.80]     low revised DOWN 3.00, high unchanged
+    close      4149.20             ->  4150.90                price up 1.70
+    location   3.8%                ->  9.0%                   +5.2 percentage points
+
+Decomposed: price rising 1.70 accounts for about **+2.0pp**; the low revising **down** 3.00 accounts for the
+other **+3.2pp**. **The range low fell and the location reading rose** — because `pos = (close - ll) /
+(hh - ll)` puts `ll` in both numerator and denominator, and at a close this near the bottom the numerator
+term dominates.
+
+This is N46's pathology in its least intuitive form. The first time I met it (N46) a revised-down low made
+location rise while price barely moved and I read it as strength; here the same mechanism supplies **60% of
+a 5.2-point move** that would otherwise read as MGC lifting off the low. It did lift, by 1.70 points — about
+0.13x its 15m ATR of 12.74, which is nothing.
+
+Standing rule reaffirmed with endpoints quoted, as CHECK_PROCEDURE.md requires: **9.0% of [4143.00,
+4230.80]**, and a bare percentage is not comparable across checks even when both readings come from the same
+bar.
+
+MNQ: location **13.2% of [30356.50, 30759.25]**, endpoints unchanged from 11:06, so its rise from 9.9% is
+price alone (+13.25 points, 0.18x its ATR of 72.23). Its 1m has softened to BEARISH 1-2 and 5m to 0-2 —
+the first easing in the fast frames since 10:40. **That is not a bottom and I am not calling one:** rule 7
+puts sub-hourly in the graveyard, the 15m and 60m are both still BEARISH, and neither reversal test fires.
+**No call.**

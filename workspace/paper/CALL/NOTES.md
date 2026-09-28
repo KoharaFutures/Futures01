@@ -6079,3 +6079,42 @@ not in doubt; only its timing is.
 
 No new call. MNQ at 74.5% inside a called reversal with an unreachable plan is not a new setup, and MGC's path is
 closed. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+
+## N171 — 09:38: the excluded position is at a new high of +$103 with its target 3.80 from the low. Restating the exclusion at the largest number yet
+
+MGC 5m `09:25` bar `h 4181.60 l 4174.20 c 4176.10`. **The excluded CALL-0002 short is now +10.30 points /
++$103.00 unrealised** — a new high for it — and TP1 at 4170.40 is **5.70 from the close and 3.80 from the bar's
+low**.
+
+**This is now the fifth reading at which I have restated N155's exclusion, and it is the largest:**
+
+| time | unrealised | exclusion |
+|---|---|---|
+| 08:47 | +3.80 / +$38.00 | declared |
+| 08:52 | +9.50 / +$95.00 | restated |
+| 09:09 | 0.00 / $0.00 | restated **at flat** |
+| 09:14 | +4.50 / +$45.00 | restated |
+| 09:38 | **+10.30 / +$103.00** | **restated** |
+
+The reason has not changed and cannot: **the fill is 102.70 points from the specified entry, on a plan that was
+blind for six hours because its `created_bar_ts` was future-dated and off-grid.** If MGC trades 4170.40 the
+resolver will close it at **+1.6R / +$160** and write that into `state.json` — and the desk's measured record will
+still read **0 closed trades, win rate undefined, drawdown $0.00**, because a trade nobody could have taken is
+not a result.
+
+I want to be exact about the uncomfortable part rather than leave it implied: **this position is going to make
+money, and the reason it is going to make money is that the plan was broken.** A short entered 102.70 points
+below its intended trigger, into a symbol that has since fallen another 16 points, is profitable by accident of
+the defect. That is the single strongest argument for the exclusion, not against it.
+
+MGC: location **5.8%** of [4172.60, 4233.20], every frame bearish, 15m and 60m both 0-3 unanimous, trend BEAR
+(4176.10 < EMA20 4186.37, falling), structure BEAR. Its 09:25 low of 4174.20 is 1.60 above the session low of
+4172.60.
+
+MNQ: **REVERSAL still called, `held 66`**; 1m has gone CONFLICTED 1-1, 5m BULL 2-1, 15m BULL 3-0 unanimous, 60m
+BEAR 0-1, 4h CONFLICTED, DAILY BULL 3-0 unanimous. Trend BULL (30713.00 > EMA20 30657.11, rising), structure BULL,
+location **81.4%** of [30535.00, 30753.75] — the pullback has reversed and it is heading back up. **CALL-0005's
+limit is 101.62 above the newest low** and its expiry bar has passed on the clock; the resolver writes the outcome
+on the `09:45` bar, in hand around 10:01.
+
+No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.

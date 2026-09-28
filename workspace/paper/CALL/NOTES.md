@@ -7401,3 +7401,34 @@ Ledger unchanged since N207: **measured n = 1, 0 wins, 1 loss, win rate 0.0% wit
 expectancy -1.021R, measured equity $49,881.56, measured drawdown $118.44, $2,681.56 to the absorbing
 state.** `state.json` reads equity $50,038.12 and drawdown $118.44, the difference being CALL-0002's
 excluded +$156.56.
+
+## N209 — 12:43: the book is EMPTY, which is the exact condition the post-mortem blamed this morning
+
+0 pending, 0 open, for the first time since 08:00. N199's fix (C) said: *maintain a pre-registered plan on
+both sides at all times during RTH*, because the reason no short existed at 09:30 was not that one was
+rejected — it was that none was ever written.
+
+**I am not writing one now, and the gap is real rather than resolved.** Both reversal tests fail, the move is
+4.5x ATR extended, and the entry this configuration invites is the one the procedure prohibits at z -2.61 to
+-4.72. So there is no plan here with a defensible entry, and registering something merely to keep the book
+populated would be manufacturing a callout — which is the thing the hourly prompt names explicitly.
+
+What that exposes is that **(C) is not yet implemented, only stated.** "Levels set from structure written
+down in advance" needs a method for CHOOSING those levels that does not reduce to me eyeballing a chart at
+the moment I want a trade. I do not have one, and inventing it at 12:43 on the day of the failure is the
+same mistake in a new costume. It belongs in a pre-registration built out of sample, like CONT-1 and FADE-1
+were, and unlike either of those it has to be *placeable* rather than merely measurable. Logged as
+outstanding work, not as done.
+
+Both symbols eased off the highs: MNQ 30705.50 -> 30644.75, MGC 4179.90 -> 4171.70.
+
+    MGC 15m  CONFLICTED 0-0   location MIXED 49.2% of [4143.00, 4210.10]  EMA20 4168.99 still falling
+    MNQ 15m  BULLISH 1-0      location BULL  81.1% of [30356.50, 30759.25] EMA20 30567.47 still falling
+
+Both 15m EMA20s are still FALLING while price sits above them, which is why both trend components read MIXED
+rather than BULL — the rally has not yet turned the average on either symbol. MGC's measured RTH
+(08:20-13:30 per CALLOUT.md §3) has **47 minutes** left; after that any MGC entry is outside everything this
+repository has measured.
+
+**No call.** Ledger unchanged: measured n = 1, 0 wins, 1 loss, win rate 0.0% with payoff UNDEFINED,
+expectancy -1.021R, measured equity $49,881.56, drawdown $118.44, $2,681.56 to the absorbing state.

@@ -1343,3 +1343,58 @@ either headline, and it is an argument against the MNQ long *and* the MNQ short.
 Both `reversal_setup` calls still fail on extension — MGC -0.96, MNQ -1.01, decaying
 further as N22 predicted. No call. Four plans stand unchanged; CALL-0003 expires at
 02:00 ET, 84.75 points out of reach.
+
+## N26 — both MGC grades rose two notches without either plan changing. The cause is a 3-point cliff I built into criterion 6.
+
+01:04 AM EDT. Newest 5m bar 00:50, lag 14.3m. Nothing triggered, nothing resolved.
+But the cards changed:
+
+```
+CALL-0002  C+ -> B
+CALL-0004  C  -> B
+```
+
+Neither plan was edited. Both were pre-registered hours ago and their trigger,
+stop, targets and size are untouched (N8). The letter moved because **the grade is a
+live read, not a property of the plan** — it recomputes ATR, the 40-bar envelope and
+the confluence tally from current bars every render. I knew that when I built it, and
+I said so on the card. What I did not anticipate is how much a single input can move it.
+
+The diff, isolated:
+
+```
+00:46 check   4 families agree  ->  "PAST rule 1's ceiling, a warning not support"   -1.0
+01:04 check   3 families agree  ->  "at rule 1's 2+1 ceiling"                        +2.0
+```
+
+**One family stopped agreeing and the score moved 3.0 points**, which on an 11-point
+denominator is 27% of the entire scale — two letter grades. Everything else barely
+budged: CALL-0002's stop went 1.13 -> 1.22 xATR and its reach 1.80 -> 1.94 xATR as
+ATR shrank, worth nothing in score terms.
+
+**The direction of the move is correct and is not the defect.** Rule 1 was measured in
+this repository: two signals plus one filter is the ceiling, and past it more agreement
+is worse. So a plan whose confluence falls from four to three genuinely improves on
+that criterion, and a grade that rose is the rule working. Anyone who expects a grade
+to fall when support weakens is expecting the thing rule 1 disproves.
+
+**The magnitude is the defect, and it is mine.** Criterion 6 is a step function with a
+cliff at the 3/4 boundary: `<=3` earns +2.0, `>=4` loses 1.0, with nothing in between.
+That makes a single family flipping its verdict — on OHLCV-derived heuristics, several
+of which `confluence.py` itself marks untested — worth more than the stop placement and
+the sizing put together. A grade that swings two letters on the least reliable input it
+has is not measuring construction, it is amplifying noise.
+
+Fix, specified and not written now (same rule as N17, N19, N20, and this one has the
+extra reason that I am looking at a specific pair of cards while I write it): make
+criterion 6 **continuous** rather than stepped — credit peaking smoothly at 2-3 agreeing
+and tapering above, so one vote changes the score by a fraction of a point instead of
+three. And cap any single criterion's contribution at some fraction of CREDITS_MAX so
+no lever can move the letter two notches alone. Both belong at a full check, with the
+before/after printed for all four plans so the recalibration can be seen rather than
+asserted.
+
+**Reporting the B to the owner with the caveat attached, not the B alone.** The letter
+is real and mechanically derived, and it is also two notches up on a plan nobody
+touched, for a reason that says more about my scoring function than about the trade.
+Showing the grade without that would be showing an improvement that did not happen.

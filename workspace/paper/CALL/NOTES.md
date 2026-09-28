@@ -4089,3 +4089,73 @@ MGC locations 12.5% of [4172.60, 4291.90]; MNQ 9.0% of [30535.00, 30900.50].
 No call. Reversal test false on both and `regime.py` names MNQ's missing condition. CALL-0004 has **still**
 not expired: newest 15m is `06:00`, it needs a bar stamped after `06:00`, and the `06:15` bar completes at
 06:30 — two minutes from this check — so it should appear ~06:31-06:35 exactly as N86 derived.
+
+## N101 — CALL-0004 EXPIRED, inside the predicted window. The resolver's own line:
+
+    EXPIRED CALL-0004 MGC SHORT - never triggered (window closed 2026-09-28T06:00:00-04:00)
+
+Written at **06:33:53Z** — inside the **06:31-06:35** window N86 derived and N96 confirmed the mechanism
+for. Reported from the resolver, not the clock, per N32. Eighth machinery prediction tonight to hold, and
+the one that mattered most practically: the clock said 06:00, the naive estimate said 06:13, the derived
+answer said 06:31-06:35, and the resolver wrote it at 06:33:53.
+
+Outcome: `EXPIRED_UNTRIGGERED` / NO_FILL / **0.0R** / $0.00. Ledger unchanged — open 0, closed 0, equity
+$50,000.00, drawdown $0.00. Two plans remain PENDING: CALL-0001 (MNQ LONG, 354.25 adverse) and CALL-0002
+(inert, never evaluated, N30).
+
+CALL-0004's epitaph, from its own thesis tracking: **fav 75.70 against a 19.04 target distance, adv 0.30.**
+The direction was right, the target distance was covered four times over, and the trigger was never
+approached. It is the second plan tonight to die of an unreachable trigger (CALL-0003 was the first). That
+is now the dominant failure mode on this desk and it has nothing to do with reading direction.
+
+## N102 — the block lifted, the pre-committed method ran, and it is VOID. Plus N99 is RETRACTED
+
+With CALL-0004 resolved, N52's objection is gone and N75/N77's method was executed. Journalled as
+**CALL-NT-0005**. Computed mechanically at 06:33 from the last 40 settled 15m bars:
+
+| condition | value | verdict |
+|---|---|---|
+| leg | 4291.90 (`09-27T20:15`) -> 4172.60 (`09-28T05:00`), high precedes low | ok |
+| leg >= 2.0x ATR | 119.30 pts = **13.43x** ATR 8.89 | **PASS** |
+| 1 — lower high AND lower low, settled | highs 4193.10 -> 4185.20, lows 4174.30 -> 4172.60 | **PASS** |
+| 2 — 50% entry above price | entry **4232.25** vs settled close 4187.50, +44.75 | **PASS** |
+| 3 — stop >= 0.5x ATR | stop 4246.73, 14.48 pts = **1.63x** ATR | **PASS** |
+| 4 — risk <= $120 | 14.48 x $10 x 1 = **$144.77** | **VOID** |
+
+**Four of five conditions pass and the risk cap kills it**, as predicted at 05:40 and re-derived four times
+now ($155, $154, $153.39, $144.77 as the window slid). One contract is the floor, so size cannot absorb it.
+
+### And N99 was wrong about the mechanism
+
+N99 claimed "the only level that breaks condition 1 is 4193.10", reasoning that 4191.40 < 4193.10 so the
+sequence would stay `4193.10 -> 4191.40`. I read `chart.py`'s `swings()` this check instead of inferring
+from its printed line: **it compares the LAST TWO pivots.** Once 4191.40 confirms, the comparison is
+`4185.20 -> 4191.40` = **HIGHER**. Including the unsettled `06:15` bar, `chart.py` already reports MGC
+structure **MIXED**, swing highs `4185.20 -> 4191.40 (higher)`.
+
+A pivot needs a bar after it; the `06:15` 15m bar's high is about 4189.70, below 4191.40, so the pivot
+holds. **When `06:15` settles at ~06:43, condition 1 will fail on the settled series too.** Stated in
+advance, and journalled as `CALL-NT-0005-AMEND-N99`.
+
+The outcome does not change — condition 4 had already voided it, and on the all-bars window the risk is
+$136.28, still over $120. But the reason I gave the owner for condition 1 being safe was wrong, and
+CALL-NT-0005 should be read as *failing condition 4 with condition 1 about to fail*, not as a plan whose
+only defect was size. **N99 is the ninth retraction tonight and has the same cause as N45, N60, N87 and
+N96: I described a mechanism from its output instead of reading it.** The fix is the same each time and I
+keep not applying it pre-emptively — read the function, then describe it.
+
+## N103 — MNQ's structure has turned BULL for the first time tonight
+
+`chart.py` now reports MNQ structure **BULL**: swing highs `30606.50 -> 30609.00` (higher) **and** swing
+lows `30535.00 -> 30547.75` (higher). Both sides higher, which is the first bullish structure reading on
+either symbol all session, and it comes with MNQ 15m at 1-2 rather than 0-2.
+
+The caution that applies: the higher high is 2.50 points (N95 measured that as 13% of MNQ's 19.75-point
+noise floor) and the higher low is 12.75 points — both small against a **49.68** ATR, i.e. 0.05x and 0.26x
+ATR respectively. A "structure turn" built from moves of a quarter of one bar's typical range is a label,
+not an event. MNQ's 60m remains unanimous bearish and its settled close is still 55.00 below 04:15.
+
+Locations MGC 13.5% of [4172.60, **4284.70**] and MNQ 11.4% of [30535.00, **30874.75**] — both range highs
+rolled down again as old bars left the window (N53, sixth and seventh sightings).
+
+No call. Reversal test false on both symbols; `regime.py` names MNQ's missing condition.

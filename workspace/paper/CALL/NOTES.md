@@ -5931,3 +5931,56 @@ No new call. MGC is fully bearish again with its reversal closed on all three co
 a called reversal with its plan unreachable, and buying a 37-point dip at 93.4% of range is the chase the
 procedure forbids. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing
 state. **MNQ RTH opens 09:30 — 16 minutes — which is CALL-0005's expiry bar**, resolving on `09:45` around 10:01.
+
+## N166 — MGC's 15m is unanimous bearish again, so its reversal now fails on ONE condition — the one it can never satisfy
+
+MGC's structure component has flipped back to **BEAR**: swing highs `4203.80 -> 4187.80` (lower) and lows
+`4178.70 -> 4175.00` (lower). With trend BEAR and location BEAR that makes **15m BEARISH 0-3 unanimous** for the
+first time since 07:45.
+
+Measured against the noise floors, as always:
+
+- lower high **16.00** vs a 6.20 high-revision floor -> **2.58x, established**
+- lower low **3.70** vs a 6.80 low-revision floor -> **inside noise, NOT established**
+
+So MGC's bear structure is half-established — the mirror of MNQ's position at N123, where the high was real and
+the low was not. Half a turn in each direction is now the third time tonight a `chart.py` structure label has
+rested on one real leg and one artefact.
+
+**The consequence for `reversal('MGC')` is worth spelling out.** Its failure list has shrunk to exactly one item:
+
+    no reversal call - no prior directional headline to reverse from
+
+The unanimity condition now **passes**. So MGC is one condition from a reversal call — and it is the one condition
+**MGC cannot satisfy tonight by any price action whatsoever**, because a "prior directional headline of opposite
+sign" requires its 15m to have printed BULLISH at some point, and it has printed BEARISH or CONFLICTED for 349+
+consecutive checks. **MGC would have to first go bullish in order to become eligible to be called bearish.**
+
+That is not a defect — it is what "reversal" means, and a symbol that has only ever been bearish has nothing to
+reverse. But it is worth having on the record beside N117's unreachable HTF gate: **MGC has now been within one
+condition of a reversal call twice tonight, in opposite directions, and both times the blocking condition was
+structurally unsatisfiable rather than a matter of price.**
+
+## N167 — fourteenth settled pair, and MNQ's pullback is deepening
+
+| symbol | settled `08:30` | settled `08:45` | change |
+|---|---|---|---|
+| MGC | 4177.40 | **4186.50** | **+9.10** |
+| MNQ | 30727.50 | **30739.25** | **+11.75** |
+
+Both up on settled data. Settled tally since `04:15`: MGC **+9.60**, MNQ **+116.50**.
+
+But the unsettled tape has turned: **MNQ location 93.4% -> 78.3%** of [30535.00, 30753.75], its 1m now BEARISH
+0-2, and the 5m `09:05` bar `h 30713.00 l 30696.00 c 30706.25`. The pullback from N165 is deepening —
+30753.75 down to 30696.00 is **57.75 points, 1.22x** the 47.20 ATR. `reversal()` still called, `held 54`,
+`agreeing_frames [5, 1440, 10080]`, 15m still BULL 3-0 unanimous, swing highs updated `30736.00 -> 30753.75`.
+
+**CALL-0005's limit is 100.12 below the market with 11 minutes to its 09:30 expiry.** It has closed from 130.87
+to 100.12 as the pullback deepened, which is the first sustained movement toward it all session — and still needs
+100 points in 11 minutes, about 2.1x ATR. N151's prediction is unchanged.
+
+**The excluded position**: +6.20 points / **+$62.00** unrealised. MGC is fully bearish again apart from a
+CONFLICTED 1m, location **11.9%** of [4172.60, 4234.90].
+
+No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+**MNQ RTH opens 09:30 — 11 minutes.**

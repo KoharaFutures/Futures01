@@ -5559,3 +5559,36 @@ and the prediction in N151 stands.
 No new call. MGC's reversal remains closed on all three counts; a 16-point fade from a session high with the 15m
 at 0-2 bearish is not a setup, and there is no pre-committed MGC method that fires on it. Three plans PENDING;
 ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
+
+## N154 — twelfth settled pair: MGC's rejection bar has settled as a rejection, and both symbols closed down
+
+The `08:15` bar settled. Twelfth settled pair:
+
+| symbol | settled `08:00` | settled `08:15` | change |
+|---|---|---|---|
+| MGC | 4198.30 | **4186.40** | **−11.90** |
+| MNQ | 30703.00 | **30694.75** | **−8.25** |
+
+**MGC's settled `08:15` bar is `h 4203.80 l 4186.10 c 4186.40`** — it closed **17.40 below its own high**, which
+is a rejection bar on settled data rather than a provisional impression. Its second round trip (N153) is now
+confirmed on settled bars, and MGC is **fully bearish again on every frame**: 1m 0-3 unanimous, 5m 0-1, 15m 0-2,
+60m 0-3 unanimous, 4h 0-2. Trend BEAR (4186.40 < EMA20 4189.95, falling), location **18.2%** of
+[4172.60, 4248.60], down from 32.9% two checks ago.
+
+Settled tally since `04:15`: MGC 4176.90 -> **4186.40**, net **+9.50** across five and a half hours of two full
+excursions. MNQ 30622.75 -> **30694.75**, net **+72.00**.
+
+MNQ holds its reversal: **called, `held 31`**, 15m BULL 3-0 unanimous, 5m BULL 3-0 unanimous, trend BULL
+(30694.75 > EMA20 30626.37, rising), structure BULL, location 79.5% of [30535.00, 30736.00] — off the 84.2% high
+but well inside the BULL band. 60m still BEARISH 0-3 unanimous, 4h CONFLICTED.
+
+**CALL-0005 remains unfilled**; the newest 15m low is 30688.25 against the 30595.88 limit, ~92 points away.
+
+**CALL-0002 is still not evaluated — sixth consecutive check.** MGC's newest stored 15m bar is `08:15`, and
+`08:15` is not `> 08:20`. The `08:30` bar completes at 08:45 and should be in hand around 08:46, so the next
+check is when the resolver finally looks at it. What it will see when it does: a 4289.10 short trigger against
+an MGC that has spent the last six hours between 4172.60 and 4203.80, never within 85 points of it.
+
+No new call. MGC's reversal is closed on all three counts and there is no pre-committed MGC method that fires on
+a confirmed rejection. Three plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown
+$0.00, full $2,800 to the absorbing state.

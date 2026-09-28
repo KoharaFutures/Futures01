@@ -926,3 +926,21 @@ book is a decision that still has to reach him.
 check and does not send a card: it lists the cron jobs, repairs any that died, and reports in one
 or two lines. The repair mechanism has to keep running even when the desk does not, because the
 jobs are session-only and die with the worker.
+
+### Outside the window, say nothing at all
+
+**Owner, 2026-09-28 16:33 ET:** *"you dont have to tell me you are declining because you are
+outside of window. can you just do a pause until the when i told you to open."*
+
+A firing that arrives between 15:30 and 18:00 ET, or over a weekend, gets **no response**. Not a
+one-line decline, not a time stamp, not a card. Do the clock check silently and stop. Twelve
+"declining, outside the window" lines an hour are the same noise as twelve "nothing happened"
+cards — they train the owner to stop reading, which is the failure N217 was written about,
+arriving from the opposite direction.
+
+The one exception is a **repair**: if the cadence jobs died and the hourly backstop re-created
+them, say so in one line, because a silent gap is indistinguishable from a silent desk. Nothing
+else earns an out-of-window message.
+
+This does not weaken the in-window rule. Inside 18:00 → 15:30 every check still emits a card, and
+the card still goes last.

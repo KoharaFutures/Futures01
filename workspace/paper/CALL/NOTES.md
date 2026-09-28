@@ -631,3 +631,87 @@ different and each is sufficient on its own. The short is forbidden by what
 this repo measured about confluence and by chasing a 40-bar low; the long is
 forbidden by an HTF test MGC is structurally unable to pass. No new
 pre-registration, and no edit to CALL-0004.
+
+## N17 — the rolling reference frame decays toward price, and it has now broken BOTH halves of the reversal test
+
+N15 declined MNQ's first qualifying reversal setup because its trigger had
+slid 32 points in forty minutes. Two checks later there is a third reading,
+and the slide is not noise — it is monotone and it tracks price almost
+point for point:
+
+```
+time    price ref   reversal_setup trigger   slide
+22:15   ~30800      30767.25   (CALL-0003, pre-registered)    —
+22:55    30701.75   30735.25                                -32.00
+23:58    30669.25   30704.75                                -30.50
+                                             total          -62.50
+```
+
+Price fell ~131 points over that span; the "reclaim" level the detector asks
+for fell 62.50. The trigger is derived from the 40-bar swing high, and in a
+one-way market the 40-bar window keeps dropping its highest bars off the
+back. **A reclaim level computed from a trailing window is not a fixed
+obstacle — it descends to meet the market.** Anyone who re-registers on each
+new reading is being handed a progressively cheaper entry precisely because
+the trade is going progressively worse, which is the exact inversion of what
+a threshold is for.
+
+### The same pathology has now eaten the OTHER condition, on MGC
+
+MGC's extension reading over the same window:
+
+```
+23:10   sigma -1.82   qualifies on extension, fails on HTF support
+23:28   sigma -1.82
+23:58   sigma -1.45   FAILS on extension too — "needs |1.5|"
+```
+
+MGC fell ~4 points between the second and third reading and its sigma got
+*less* extreme. Nothing mean-reverted. The 20-bar mean walked down to where
+price already was. `reasons` at 23:58 now lists **both** failures:
+
+```
+"only -1.45 sigma from the 20-bar mean, needs |1.5|"
+"only 0 higher timeframe(s) bullish (none), needs 2"
+```
+
+**This is the general defect, and it is mine, not the vendor's.** Every
+condition in `reversal_setup` is measured against a trailing window: the
+extension against a 20-bar mean, the reclaim against a 40-bar high, the
+climax against a rolling median volume. In a sustained trend all three
+references migrate toward price. So the detector's sensitivity *falls* as
+the move it is meant to catch gets larger, and a long enough one-way move
+will eventually read as unremarkable on all three axes. That is the opposite
+of the intended behaviour and it explains something I had been reading as
+bad luck: the reason nothing has qualified cleanly tonight is partly that
+the instrument keeps re-zeroing itself.
+
+I am not fixing it at 00:00 on a live loop with four plans pending — a
+reversal detector rewritten while watching a specific move is a
+post-hoc-fitted detector, which is worth less than a broken one. Recording
+the mechanism and the three measurements. The fix belongs in a full check and
+must be specified before the next fetch: candidate is to anchor the
+references to a **fixed** pivot (the session high, or the high at the moment
+the down-leg was first identified) rather than a trailing window, and then
+to check whether an anchored version would have fired anywhere in the
+archive at a rate better than a random-level control — which rule 8 already
+demands, since this repository measured FVG and order-block fill rates as
+reproducible by random zones.
+
+Meanwhile CALL-0003 stands at 30767.25, unmoved and 98 points out of reach,
+expiring 02:00 ET. It will journal NO_FILL at 0.0R. That is the honest
+outcome and it is *also* the cleanest possible illustration of this note: the
+pre-registered number is the only one in the whole apparatus that did not
+drift.
+
+### Operational, and against myself
+
+I told the owner at 23:28 that a 5-minute loop was live under cron job
+`7a85b979`. At 23:58 the job list was **empty** and no check had fired in the
+intervening thirty minutes. These cron jobs are explicitly session-only and
+in-memory, and they are not surviving between turns in this environment. So
+the "every 5 minutes" cadence is **not** self-sustaining, and I should not
+have reported it as live without saying that. What is actually durable is the
+hourly Routine `trig_01NZGwNRd8mftXdxyLvuVpdD` (next 00:52 ET), which has
+survived every turn. The honest statement to the owner is: checks happen when
+he prompts, plus hourly on the Routine.

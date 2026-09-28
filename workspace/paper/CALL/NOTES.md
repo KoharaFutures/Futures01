@@ -2846,3 +2846,50 @@ Running count of MNQ 5m states tonight: BEAR 0-1, BULL 2-0, CONFLICTED 1-1, BULL
 five states in twenty-one minutes. "Unanimous" on a fast frame means unanimous for one bar, and I
 should stop treating the word as carrying weight there. Both symbols are now bearish on all four of
 1m/5m/15m/60m, and after tonight that fact is worth roughly nothing on its own.
+
+## N55 — two checks out of every three carry no new settled data, and I have been writing them as if they did
+
+At 04:51 the newest **settled** 15m bar is `04:15` — the same bar that was newest settled at 04:46.
+Nothing settled has changed between the two checks. Everything that moved moved inside the forming
+`04:30` bar.
+
+This is arithmetic, not bad luck. The 15m frame produces a settled bar every 15 minutes; with the
+feed's ~11-13 minute lag, a bar stamped `T` is usable at about `T+28`. The cadence reports every 5
+minutes. So **roughly two checks in every three have no new settled 15m information at all**, and
+their only genuinely new content is a forming bar being re-estimated — which N49 established is not
+a price move and should not be differenced.
+
+I have written those checks as though each carried news, because the regime and location readings
+change on every one. They change because they are computed from the forming bar. That is the same
+error N49 caught, now visible as a *structural* property of the reporting schedule rather than a
+one-off slip.
+
+What follows for the reports, starting now: **say explicitly when the newest settled bar has not
+changed since the last check.** A check with no new settled bar is a legitimate and common outcome,
+and naming it is more honest than dressing a re-estimated forming bar as movement. It also gives the
+owner a way to read the cadence: the checks that matter for a 15m plan are the ones where the
+settled bar advances.
+
+This does not argue for a slower cadence. The 5-minute rhythm is what lets a *trigger* be caught
+near when it happens, and resolve.py works from every fetched bar regardless of frame. It argues
+only that the directional commentary should be pinned to settled bars while the trigger-watching
+runs at 5 minutes.
+
+## N56 — MNQ is sitting exactly on its 40-bar low and every eligible frame is now bearish on both symbols
+
+MNQ forming `04:30` bar: low **30571.00**, which is the 40-bar range low to the tick — MNQ is
+testing the session low as this check runs. Location 7.3% of [30571.00, 30900.50] (the percentage
+is above zero only because the close is off the low, not because the low held).
+
+MNQ is now BEARISH unanimous 0-3 on 1m, 5m, 15m **and** 60m simultaneously, with 4h BULL 1-0,
+DAILY BULL 3-0 unanimous and WEEKLY BULL 2-1 unchanged above it. MGC is unanimous bearish on 5m,
+15m, 60m with 1m CONFLICTED 0-0 and 4h 0-2. MGC forming low 4174.30, another new low.
+
+So both symbols are now aligned bearish across every intraday frame, and per N54 that is worth
+close to nothing on a fast frame and per rule 2 is worth *negative* as a confluence count. MNQ's
+higher frames still disagree with its intraday ones, which is the configuration that has been true
+all night.
+
+No new call. MNQ at the exact low is the most extended point of the entire move and is the single
+worst place to sell it; the MGC retracement idea remains blocked by N52 until CALL-0004 resolves on
+the 06:00 ET bar. Neither reason has changed in five minutes, and neither should be expected to.

@@ -29,7 +29,7 @@ import json
 import pathlib
 import textwrap
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 HERE = pathlib.Path(__file__).resolve().parent
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
@@ -115,47 +115,83 @@ def backdrop(W, H, side):
             fx = x / W
             t = 1.0 - abs(fx - 0.34) * 1.15 - abs(fy - 0.30) * 0.85
             t = max(0.0, min(1.0, t))
-            c = blend(deep, blend(deep, las, 0.42), t)
+            c = blend(deep, blend(deep, las, 0.24), t)
             for k in range(3):
                 if x + k < W:
                     px[x + k, y] = c
     return img
 
 
-def hud_frame(d, box, colour, gd=None, thick=30):
-    """The inner border: a CONTINUOUS closed rail of dark metal with a lit channel
-    running its entire perimeter. No corner brackets, no midpoint gaps - the light goes
-    all the way round and meets itself.
+def hud_frame(d, box, colour, gd=None, thick=34, img=None):
+    """The outer rail: near-black gloss panel with a blown-out light seam cut into it.
 
-    Built as concentric rectangle outlines rather than four bars, because bars have to be
-    mitred at the corners and any error there shows as a notch. A ring of nested outlines
-    corners itself for free, and stepping the tone across the ring is what makes it read
-    as a machined edge: bright catch on the outer lip, shadow on the inner.
+    Modelled on the reference the owner gave - a dark car body where the panels are almost
+    black and the only colour is a thin, intensely bright strip running along the seam.
+    Three things make that read, and all three matter:
+
+    1. THE PANEL IS NEARLY BLACK (tone 10-46), not mid-grey. Bright metal competes with the
+       light; near-black surrenders to it, which is why the strip looks like a light source
+       rather than a painted line.
+    2. THE SEAM CORE BLOWS OUT TO WHITE. A real emitter overexposes at its centre, so the
+       core is white and the colour sits in the falloff either side. Drawing the strip in
+       flat colour is what makes neon look like a highlighter pen.
+    3. A SPECULAR SWEEP RUNS ALONG THE RAIL. A broad soft highlight travelling diagonally
+       across the panel is the cue for gloss; without it a dark band reads as matte card.
+
+    The sweep needs the composed image, so `img` is passed in and the panel is drawn
+    through a ring mask rather than as flat outlines.
     """
     x0, y0, x1, y1 = box
     gd = d if gd is None else gd
-    m = thick // 2
+    seam = int(thick * 0.46)
+
+    # --- panel: a dark gloss profile across the rail's thickness
     for i in range(thick):
-        # Two shoulders falling away from a groove in the middle: bright at the outer lip,
-        # dark into the channel, rising again to a dimmer inner lip. That double ramp is
-        # what makes a band read as a MACHINED RAIL rather than a painted stripe.
-        if i < m:
-            t = i / max(1, m - 1)
-            v = int(132 - 104 * t)
-        else:
-            t = (i - m) / max(1, thick - m - 1)
-            v = int(26 + 62 * t)
-        d.rectangle([x0 + i, y0 + i, x1 - i, y1 - i], outline=(v, v + 1, v + 6, 255), width=1)
-    d.rectangle([x0, y0, x1, y1], outline=(206, 213, 226, 210), width=2)
-    d.rectangle([x0 + 3, y0 + 3, x1 - 3, y1 - 3], outline=(150, 157, 170, 120), width=1)
+        t = i / max(1, thick - 1)
+        if t < 0.34:                      # outer lip, a faint catch only
+            v = int(30 - 22 * (t / 0.34))
+        elif t < 0.62:                    # the seam trough, essentially black
+            v = int(5 + 4 * abs(t - 0.48) / 0.14)
+        else:                             # inner shoulder
+            v = int(7 + 21 * ((t - 0.62) / 0.38))
+        d.rectangle([x0 + i, y0 + i, x1 - i, y1 - i], outline=(v, v + 1, v + 3, 255), width=1)
+
+    # --- specular sweep: a broad diagonal highlight, masked to the rail only
+    if img is not None:
+        W, H = img.size
+        spec = Image.new("L", (W, H), 0)
+        sd = ImageDraw.Draw(spec)
+        for k in range(0, W + H, 6):
+            f = k / (W + H)
+            a = int(205 * max(0.0, 1.0 - abs(f - 0.30) * 3.0)
+                    + 130 * max(0.0, 1.0 - abs(f - 0.74) * 4.4))
+            if a > 0:
+                sd.line([k, 0, k - H, H], fill=a, width=7)
+        mask = Image.new("L", (W, H), 0)
+        md = ImageDraw.Draw(mask)
+        md.rectangle([x0, y0, x1, y1], outline=255, width=thick)
+        spec = ImageChops.multiply(spec, mask)
+        hl = Image.new("RGBA", (W, H), (210, 216, 228, 255))
+        hl.putalpha(spec)
+        img.alpha_composite(hl)
+
+    # --- crisp edges either side of the panel
+    d.rectangle([x0, y0, x1, y1], outline=(62, 66, 74, 210), width=1)
     d.rectangle([x0 + thick - 1, y0 + thick - 1, x1 - thick + 1, y1 - thick + 1],
-                outline=(96, 101, 112, 200), width=2)
-    d.rectangle([x0 + thick + 1, y0 + thick + 1, x1 - thick - 1, y1 - thick - 1],
-                outline=(6, 7, 9, 240), width=2)
-    # the channel cut into the rail, and the laser running in it
-    d.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(5, 6, 8, 255), width=9)
-    d.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(*colour, 255), width=3)
-    gd.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(*colour, 255), width=10)
+                outline=(4, 5, 7, 240), width=2)
+
+    # --- the light seam: colour falloff, then a white core that overexposes
+    sb = [x0 + seam, y0 + seam, x1 - seam, y1 - seam]
+    d.rectangle(sb, outline=(2, 3, 4, 255), width=11)
+    d.rectangle(sb, outline=(*colour, 200), width=7)
+    d.rectangle(sb, outline=(*blend(colour, (255, 255, 255), 0.55), 255), width=4)
+    d.rectangle(sb, outline=(255, 255, 255, 255), width=2)
+    gd.rectangle(sb, outline=(*colour, 255), width=14)
+
+    # --- a second, dimmer strip nearer the inner edge, as on the reference
+    ib = [x0 + thick - 4, y0 + thick - 4, x1 - thick + 4, y1 - thick + 4]
+    d.rectangle(ib, outline=(*colour, 120), width=2)
+    gd.rectangle(ib, outline=(*colour, 150), width=4)
 def panel(d, box, colour, dim=False):
     x0, y0, x1, y1 = box
     cut = 16
@@ -193,8 +229,8 @@ def render_blank(side: str, out: pathlib.Path, W: int = 1760, H: int = 1684) -> 
     gd = ImageDraw.Draw(glow)
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
-    hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd)
-    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
+    hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd, img=ov)
+    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(7)))
     Image.alpha_composite(img, ov).convert("RGB").save(out)
     return out
 
@@ -246,7 +282,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     M = 0
     PAD = M + 64      # content gutter: clears the 30px rail plus breathing room
     frame = (M, M, W - M - 1, H - M - 1)
-    hud_frame(d, frame, las, gd=gd)
+    hud_frame(d, frame, las, gd=gd, img=ov)
 
     # header: symbol and direction on ONE baseline, strategy beneath
     gd.text((PAD + 4, 112), plan["symbol"], font=fsym, fill=(*las, 210))
@@ -359,7 +395,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
                          f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
            font=fmeta, fill=(*las, 195))
 
-    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(11)))
+    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(7)))
     card = Image.alpha_composite(img, ov).convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
     card.save(out)

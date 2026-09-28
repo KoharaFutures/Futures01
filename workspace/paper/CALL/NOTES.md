@@ -3231,3 +3231,46 @@ No call, and no new reason — the reversal test is false on both symbols, both 
 and the MGC retracement short stays blocked by N52 until CALL-0004 resolves on the 06:00 ET bar,
 ~49 minutes out. The next genuinely informative moments are 05:13 (the `04:45` bar settles) and the
 06:00 bar (CALL-0004 resolves).
+
+## N68 — the settled bar advanced and both symbols fell, so N64's "they diverged" was one bar-pair over-read as a state. The settled-bar discipline fixes the measurement, not the sample size
+
+`04:45` settled on both symbols, giving the second settled-to-settled comparison of the night:
+
+| symbol | settled `04:30` | settled `04:45` | change |
+|---|---|---|---|
+| MGC | 4181.50 | 4176.70 | **−4.80** |
+| MNQ | 30589.25 | 30579.25 | **−10.00** |
+
+Both down. N64 reported the previous pair as MGC +4.60 / MNQ −33.50 and I wrote that this was *"a
+materially different state from both are falling, and I have been reporting the wrong one."* That
+sentence claimed a state from **one** settled observation. The next one reversed it.
+
+The measurement was right and the discipline that produced it was right — N49's rule genuinely
+prevents reporting revision noise as movement. What it does not do is turn a single comparison into a
+regime. I replaced "a reading taken from the wrong object" with "a reading taken from the right object
+and given weight it cannot carry," which is a smaller error but the same kind: **n = 1 is n = 1 whether
+or not the bar was settled.** Two settled pairs now exist; the honest summary across both is that MGC
+is net −0.20 and MNQ net −43.50 since `04:15`, so MNQ has been doing the falling and MGC has been
+roughly flat — which is a claim about 30 minutes and should be read as one.
+
+## N69 — MNQ's double bottom has broken on the FORMING bar and is intact on the SETTLED series, and those are both true
+
+- Forming `05:00` bar: MNQ low **30555.25**, which is **15.75 below** the 30571.00 double bottom. The
+  40-bar range low has moved to 30555.25. MGC's forming low is **4173.20**, below its 4174.30.
+- Settled series: MNQ's swing lows still read `30571.00 -> 30571.00`. The double bottom stands.
+
+Both statements are correct and they are about different objects. Five minutes ago I flagged the
+double bottom as "the thing to watch," and the honest report of what happened is that the level broke
+on provisional data and has not yet broken on settled data. It settles at 05:28. I am not calling it
+broken and I am not calling it held; the newest bar is provisional (N41/N65) and this is precisely the
+case those notes were written for — a level break on a bar that can still re-print is not yet a level
+break.
+
+MGC's swing highs have also stepped down, `4193.10 -> 4185.20`, so MGC now has both a lower high and a
+lower low on the settled series. Locations: MGC 2.2% of [4173.20, 4300.30], MNQ 2.3% of
+[30555.25, 30900.50] — the range low moved under both of them again, which per N53 is the third way a
+location reading moves without price doing anything new.
+
+No call. Selling a break of the low, on a provisional bar, at 2.3% of range, is chasing in the most
+literal available sense. MGC's retracement short remains blocked by N52 for ~44 more minutes until
+CALL-0004 resolves on the 06:00 ET bar. CALL-0001's adverse excursion widened 318.25 -> 334.00.

@@ -5199,3 +5199,64 @@ structure MIXED with both legs inside noise, location **11.5%** of [4172.60, 425
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
 **MGC RTH opens 08:20 ET, 15 minutes out** — CALL-0002's window opens with it, and that plan has never once
 been evaluated (N30), so the first thing to establish at 08:20 is whether the resolver finally sees it.
+
+## N140 — a FOURTH decomposition case, and the most dangerous one: MNQ's location gained 5.5 points on a REVISION to an already-published bar
+
+At 08:09 the fetch returned `new=0, revised=1` on both 15m frames — **no new bar** — and MNQ's location has
+nevertheless moved **41.4% -> 46.9%**, cutting the distance to the BULL threshold from +41.75 to **+29.50**.
+
+The delta files show exactly what changed. The `07:45` 15m bar, at two successive fetches:
+
+    12:05:13Z   ts 07:45   o 30644.00  h 30649.00  l 30624.25  c 30628.25   v 5,408
+    12:09:56Z   ts 07:45   o 30644.00  h 30649.00  l 30624.25  c 30640.50   v 7,298
+
+Open, high and low **identical**; the **close revised +12.25** and volume backfilled 5,408 -> 7,298. The window
+endpoints are unchanged at [30535.00, 30760.00].
+
+**So this is a fourth distinct case, and none of the previous three covers it:**
+
+| check | what moved location |
+|---|---|
+| 07:55 | **price** — a new close, toward the threshold |
+| 08:00 | **the window** — the range high rolled off |
+| 08:05 | **price** — a new close, away from the threshold |
+| 08:09 | **a REVISION to an already-published bar's close** |
+
+**This is the most dangerous of the four**, because it is indistinguishable from case 1 at the output — both
+show "the close is higher than it was" — and N49 established that differencing two readings of the same bar is
+not a price move. **12.25 of the 12.25 points of progress in the last four minutes is revision noise**, and it
+has taken a signal that needed +41.75 down to +29.50 without a single trade printing that the previous reading
+did not already contain.
+
+**Amending N132's pre-commitment accordingly, before the call can fire.** The decomposition is no longer two
+cases but **three**, and I will name which:
+
+1. **price on a NEW bar** -> about the market;
+2. **the window sliding** -> arithmetic, reported and not traded;
+3. **a revision to the newest bar** -> also arithmetic, reported and not traded, and it must be checked by
+   comparing the bar's timestamp and OHLC across fetches, not by comparing closes.
+
+The test for case 3 is exact and cheap: if `fetch.py` reports `new=0` on the 15m frame, **any** change in the
+location reading is either a revision or the window, never a price move — because no new bar exists to carry
+one. That single check would have caught this immediately, and it is now the first thing I look at.
+
+This also explains something I had noticed and not pursued: **the newest bar's close revises more than its high
+or low.** Tonight's largest measured revisions were close 68.50 / 19.70 (MNQ/MGC) against low 74.00 / 20.00 and
+high 36.25 / 10.90 — but those maxima are session-open bars. On ordinary bars the close is the field that moves
+while OHL stay put, exactly as here, because the close is the last trade and the last trade keeps being
+superseded until volume finishes arriving.
+
+## N141 — 08:09 state
+
+Newest real 5m `07:55` on both, lag **14.9m**, `new=0 revised=1` — the feed restated rather than advanced, so
+per N140 nothing this check is a price move on either symbol.
+
+MNQ: 1m BULL 2-1, 5m BULL 2-0, 15m BULLISH 2-0 with trend BULL and structure BULL, 60m BEAR 0-3 unanimous, 4h
+CONFLICTED 1-1, DAILY BULL 3-0, WEEKLY BULL 2-1. `reversal()` still fails on `"15m is 2-0, not unanimous"`;
+location MIXED at 46.9%, needing 60%.
+
+MGC: tenth consecutive inert check — structure MIXED with both legs inside noise, location **10.8%** of
+[4172.60, 4250.70], 15m BEAR 0-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
+**MGC RTH opens 08:20 ET, 11 minutes out**, and CALL-0002's window opens with it.

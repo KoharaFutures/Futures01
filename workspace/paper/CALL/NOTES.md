@@ -7236,3 +7236,27 @@ current reversal signal, sized inside the cap, with its weaknesses written down 
 
 Frames: **both symbols 15m BEARISH 0-3 unanimous** for a second consecutive check. MNQ's reversal held 26
 checks with agreeing frames [1, 5, 60]. MGC still fails the single unsatisfiable condition. **No new call.**
+
+## N205 — 12:00: MNQ's reversal has now toggled ON-OFF-ON-OFF in 23 minutes
+
+    11:37  CALLED   (15m unanimous 0-3, held 21)   -> CALL-0006 registered on this
+    11:47  off      (location MIXED at 40.8%, on price)
+    11:53  CALLED   (held 23, agreeing frames [1,5,60])
+    11:55  CALLED   (held 26)
+    12:00  off      (structure MIXED: a NEW pivot high 30531.25 above 30502.75 = HIGHER)
+
+Four state changes in 23 minutes, and the two "off" readings came from **different components** — location at
+11:47, structure at 12:00. The 12:00 flip is N102 again: `swings()` compares the last two pivots, so a fresh
+pivot high 228 points *below* the day's high still reads HIGHER because the pivot before it was lower still.
+Price meanwhile went from 30491.50 to 30493.75 across the whole 23 minutes — **2.25 points, 0.03 ATR.** The
+gate changed state four times while the market did essentially nothing.
+
+**This is the strongest evidence yet for N199's (B): the reversal gate's output is not stable enough to act
+on at this cadence**, and the instability is coming from the component I already flagged for repair. I am
+recording the count, not re-deciding CALL-0006 on it — the plan was pre-registered on the 11:37 state and N8
+governs. But when the parent session applies the `swings()` running-extreme fix, **this toggle count is the
+before-measurement**: four changes in 23 minutes on 2.25 points of price.
+
+CALL-0006 remains **0.84 ATR** from filling against a void contour of 4.16 at ~12 bars remaining, so it is
+nowhere near retirement and the new rule correctly leaves it alone. MGC is 15m and 60m BEARISH 0-3 unanimous
+and still fails only the unsatisfiable condition. **No new call.**

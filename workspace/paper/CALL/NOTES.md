@@ -2690,3 +2690,81 @@ because the trigger had already fired and the text was already queued. Worth rec
 limit of the N35/N40 remedy: updating a trigger fixes future firings, never one in transit.
 Verified before deciding, per N45's rule: `CronList` shows `33ba414e` still present and due at
 ~04:41.
+
+## N49 — N46 IS WRONG, and wrong in a way that matters more than N46 itself: I was comparing successive revisions of ONE forming bar and calling the difference a price move
+
+N46 claimed MGC's location reading rose 1.8% -> 5.2% "while price went up 0.40 points", and
+concluded the move came entirely from the denominator migrating. The denominator point stands.
+The numerator claim does not, and the error is worse than the thing it was reporting.
+
+The three MGC closes I quoted across three checks were all the **same 15m bar**, `04:15`, read at
+three moments while it was still forming:
+
+| quoted at | 15m `04:15` close as it then read | what I told the owner |
+|---|---|---|
+| 04:31 | 4184.20 | "close 4184.20" |
+| 04:37 | 4184.60 | "price rose 0.40 points" |
+| 04:41 | **4176.90** | — |
+
+A 15m bar stamped `04:15` does not complete until 04:30, and with the feed's ~12 minute lag it is
+not settled until roughly 04:42. So at 04:31 and 04:37 I was quoting a bar that had not closed
+yet, twice, and then **differenced the two quotes and called the result a 0.40-point price move.**
+It was not a price move in either direction. It was revision noise inside one unfinished bar.
+
+The settled value is 4176.90, revised **7.70 lower on the close and 4.10 lower on the low** from
+what I read at 04:37. The 5m `04:25` bar tells the same story: `c=4184.60 h=4185.80 l=4179.10` at
+04:37, `c=4176.90 h=4185.80 l=4175.00` now — 12 minutes after its nominal close, and a revision
+of nearly a full 5m ATR. Cross-frame arithmetic confirms it is real data and not a fetch error:
+the 15m `04:15` bar equals the 5m `04:15`+`04:20`+`04:25` bars exactly, volume 1015+2389+2741 =
+6145. I checked that before writing this, because the alternative explanation was an endpoint
+disagreement and asserting the wrong one would have been a third error on the same number.
+
+What actually happened to MGC between those two checks is the **opposite** of what I reported:
+price fell 7.30 points, not rose 0.40. Which makes the location pathology a sharper illustration
+than N46 managed — the reading "improved" 1.8% -> 5.2% while price was *falling*, because the
+range floor fell faster than price did.
+
+### The rule this produces, which N41 did not go far enough on
+
+N41 said the newest one or two bars are provisional. That is correct but too weak, because it
+still permits quoting them. The stronger rule, and the one that would have prevented this:
+
+**Never difference two readings of the same bar and describe the result as a price move.** If the
+bar stamped `T` is the newest, its close is not a datum until `T + bar_length + feed_lag`. Before
+that it is an estimate being updated. Two estimates of one unfinished bar have no delta worth
+reporting, and "price rose 0.40" is a sentence about a bar, not about the market.
+
+Practically: when comparing checks, compare the newest **settled** bar to the previous settled
+bar, and label the forming bar as forming. For MGC 15m with a ~12 minute lag, at 04:41 the newest
+settled bar is `04:00` (close 4188.90) and `04:15` is still forming.
+
+This is the eighth execute/describe divergence tonight and the second consecutive note that
+retracts the one before it (N42 -> N45, N46 -> N49). The pattern in both retractions is identical:
+I reported a difference between two measurements without first establishing that the two
+measurements were of different things. Owed to the owner in the reply, not just here.
+
+## N50 — ATRs are widening on both symbols, third consecutive re-measurement
+
+MGC ATR14(15m): 8.01 (03:52) -> 8.84 (04:31) -> 9.34 (04:41). A 1.0x stop now costs $93.36,
+**38.9%** of the $240 permitted, against a 50% cap.
+MNQ ATR14(15m): 38.04 (03:52) -> 44.12 (04:31) -> 44.68 (04:41). A 1.0x stop costs $89.36, 37.2%.
+
+Both remain sizeable at 1.0x ATR and both breach the 50% cap at roughly 1.3x. MGC crossing MNQ in
+cost is new tonight and comes from MGC's expansion, not MNQ's contraction. Re-measured from the
+stored bars each time and inherited from nothing, per N39/N40.
+
+## N51 — MGC declined 12 points in 15 minutes and I am still not calling it, for the same reason as N44
+
+MGC settled 15m closes: 4188.90 (`04:00`) with `04:15` forming at 4176.90, low 4175.00, a new low
+on each of the last three checks. Every eligible frame is unanimous bearish: 1m 0-3, 5m 0-3,
+15m 0-3, 60m 0-3, plus 4h 0-2. Location 1.5% of [4175.00, 4303.50].
+
+This is the third check in a row where the chart looks like an obvious short and the desk's own
+evidence says the configuration is the losing one: BRIEF.md rule 2 puts MTF alignment at z = -4.09,
+and 1.5% of range is the definition of chasing. Nothing has changed except that the move I
+declined at 04:31 has continued, which is precisely the condition under which a rule is worth
+having and feels worst to keep. Recording it a third time rather than quietly dropping it, because
+the honest test of this rule is whether it survives the move going the way the chart suggested.
+
+MNQ is at maximum internal disagreement: 1m BULL 3-0 unanimous and 5m BULL 2-0 against 15m and
+60m both BEAR 0-3 unanimous, with daily BULL 3-0. That is a no-trade configuration on its face.

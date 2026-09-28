@@ -6039,3 +6039,43 @@ has at every reading from +$38 through $0 to +$95 and now +$83.**
 
 No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
 **MNQ RTH opens in two minutes.**
+
+## N170 — MNQ RTH IS OPEN. For the first time in this entire session, a symbol is inside a window this repository has measured
+
+**09:30 ET has passed: MNQ's RTH session (09:30-16:00) is open.** Every reading, every plan and every declined
+setup from the start of this session until three minutes ago was taken **outside** both symbols' regular sessions
+— which CALLOUT.md is explicit about: *"A callout outside a contract's RTH is outside everything this repo has
+ever measured."* MGC's RTH (08:20-13:30) opened at 08:20, and MNQ's has now followed.
+
+That deserves saying plainly because it reframes the whole night's record: **roughly ten hours of checks, four
+pre-registered plans, two resolved non-fills, eleven NO TRADE entries and one defective fill, all in a regime the
+programme never tested.** Nothing about that invalidates the discipline — the corrections, the revision
+distributions, the settled-bar rule and the exclusion all hold regardless of session — but every *directional*
+observation carries that caveat, and from here they no longer do.
+
+Fifteenth settled pair, and both symbols fell:
+
+| symbol | settled `08:45` | settled `09:00` | change |
+|---|---|---|---|
+| MGC | 4186.50 | **4179.60** | **−6.90** |
+| MNQ | 30739.25 | **30708.50** | **−30.75** |
+
+Settled tally since `04:15`: MGC **+2.70**, MNQ **+85.75**.
+
+MNQ: **REVERSAL still called, `held 63`**, 15m BULL 3-0 unanimous against a **1m BEAR 0-3 unanimous**, 5m BULL
+2-1, 60m BEAR 0-1, 4h CONFLICTED, DAILY BULL 3-0 unanimous. Trend BULL (30698.00 > EMA20 30655.68, rising),
+structure BULL, location **74.5%** of [30535.00, 30753.75] — the pullback has taken it from 96.9% to 74.5% over
+five checks.
+
+MGC: every frame bearish, **15m and 60m both 0-3 unanimous**, trend BEAR (4178.60 < EMA20 4186.61, falling),
+structure BEAR, location **9.9%** of [4172.60, 4233.20]. Reversal blocked on the single unsatisfiable condition.
+
+**CALL-0005 has NOT expired.** Direct test: MNQ's newest stored 15m bar is `09:15` and there are no bars stamped
+after 09:30. The `09:45` bar completes at 10:00 and should be in hand around **10:01** — exactly as N86's
+arithmetic said when the plan was written. The limit sits far below an unreachable distance and the outcome is
+not in doubt; only its timing is.
+
+**The excluded position**: +7.80 points / **+$78.00** unrealised, TP1 8.20 away. N155's exclusion unchanged.
+
+No new call. MNQ at 74.5% inside a called reversal with an unreachable plan is not a new setup, and MGC's path is
+closed. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.

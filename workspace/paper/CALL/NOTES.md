@@ -5481,3 +5481,49 @@ MGC's reversal remains closed on all three counts (`prior None`, `held 349`, N11
 
 Three plans PENDING. CALL-0002's first evaluable bar is still `08:30`, in hand ~08:46. Ledger unchanged: open 0,
 closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+
+## N151 — CALL-0005 is now anchored to a SUPERSEDED leg, and that is the mechanism behind N149's 0/3
+
+MNQ's swing lows have updated: `30547.75 -> 30610.50` (higher). **CALL-0005's entry was computed from the leg
+30547.75 -> 30644.00**, and the low anchoring that leg is no longer the most recent swing low. A leg computed
+fresh right now would run 30610.50 -> 30736.00, putting its 50% at roughly **30673.25** — about **77 points
+above** the 30595.88 limit the plan actually carries.
+
+**This is the mechanism behind N149's 0-for-3, stated concretely rather than as a suspicion.** A retracement
+limit is anchored to a leg that exists at registration. In a trending tape the leg is replaced before the
+retracement arrives: the market makes a higher low, the old anchor drops out of the swing sequence, and the plan
+is left waiting at a level defined by geometry that no longer describes the market. **The plan does not become
+wrong — it becomes irrelevant**, which is a worse failure mode because it never generates an outcome to learn
+from. Both resolved plans died this way and CALL-0005 is on the same path.
+
+**I am not moving it.** Recomputing the entry now, from a leg that only exists because I watched price form it,
+is N8 in its purest form — and it is the exact thing N52 refused at 04:46 when the same temptation appeared on
+MGC. The plan expires on the 09:30 bar as written and its outcome goes in the journal as whatever it is. What the
+record gets is this note, written while the plan is still live, naming the mechanism and predicting the outcome:
+**CALL-0005 will most likely resolve `EXPIRED_UNTRIGGERED` / NO_FILL / 0.0R**, and if it does, that is three from
+three by the same cause and the entry construction — not the directional read — is what the desk should change.
+
+The change itself is not mine to make tonight: any new construction (shallower retracement, break-and-retest,
+stop-entry) would be untested here, and rule 8 is the standing warning that level constructions in this
+repository were reproduced by random zones. **A method that needs replacing and no tested replacement available
+is the honest position, and inventing one mid-session would be the failure N75 exists to prevent.**
+
+## N152 — 08:33 state
+
+MNQ: 5m `08:20` bar `h 30736.00 l 30688.25 c 30702.25`; **REVERSAL BULLISH still called, `held 25`**; 15m
+BULLISH 3-0 unanimous; trend BULL (30702.25 > EMA20 30627.09, rising); structure BULL with swing lows now
+`30547.75 -> 30610.50`; location **83.2%** of [30535.00, **30736.00**], the highest reading of the session on
+either symbol. 60m still BEARISH 0-3 unanimous, 4h CONFLICTED, DAILY BULL 3-0, WEEKLY BULL 2-1.
+
+MGC: 5m `08:20` bar `h 4203.80 l 4194.50 c 4195.70` — a new session high at **4203.80**. 15m still **BEARISH
+0-1** with trend MIXED (4195.70 above a still-falling EMA20 4190.84), structure MIXED and now with a **lower low**
+`4180.20 -> 4178.70`, location BEAR at 30.4% of [4172.60, 4248.60]. 1m BULL 3-0 unanimous, 5m BULL 2-0.
+`reversal()` still fails on both unanimity and `prior None`.
+
+**CALL-0002 is still not evaluated.** Direct test: MGC's newest stored 15m bar is `08:15`, and `08:15` is not
+`> 08:20`. The first qualifying bar remains `08:30`, completing 08:45 and in hand around **08:46** — so the
+answer has been "not yet" for four consecutive checks, each time for the arithmetic reason in N148 rather than
+anything new.
+
+No new call. Three plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00, full
+$2,800 to the absorbing state.

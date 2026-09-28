@@ -7754,3 +7754,55 @@ been true since the session began.
       distance to the $2,800 absorbing state: $2,681.56 (95.8% of the buffer intact)
 
 No PENDING plans, so no cards to re-render. A quiet check is a successful check.
+
+# N217 — 14:31, the owner's second correction: he reads CARDS, and I sent none for two hours
+
+Owner, verbatim: *"i feel like there were a couple of scalp reversal you missing. or at least
+you didnt generate a call out card for. keep in mind that i am busy and i would typically only
+look at the call out cards."*
+
+## The scalp reversals: they were real, and they were in the cadence hole
+
+Measured on the 5m since 12:30, against the ATRs in force:
+
+    MNQ  largest up-leg    131.50 pts = 1.69 ATR = $263   13:05 -> 13:10
+         largest down-leg  127.50 pts = 1.64 ATR = $255   13:10 -> 13:15
+    MGC  largest swing      21.40 pts = 1.91 ATR = $214   13:10 -> 13:15
+
+**Both symbols turned hard between 13:05 and 13:15, and that window sits inside the 44-minute
+cadence outage** (12:55-13:38) when the cron had died in the worker restart. I logged the
+outage at N215 and wrote *"nothing was missed in the ledger"* — true of the book, and
+**false of the opportunity**, which I should have said instead of the reassuring half of it.
+Those are the reversals he can feel; the desk was not declining them, it was absent.
+
+Whether they were *callable* is a separate question I cannot now answer honestly, because
+answering it means deciding after the fact what I would have done — the exact post-hoc
+reconstruction N8 exists to forbid. What I can say without inventing anything: MNQ's ATR at
+13:38 was 96.71 against a stand-down line of 58, so **the volatility veto would have refused
+both legs anyway**, and the 1.69-ATR up-leg against a maximum permitted stop of 60 points is
+the N214 geometry exactly.
+
+## The real failure: two hours of silence on the only channel he reads
+
+The book emptied at 12:43. `card_png.py` renders plans, so with no plans it rendered nothing,
+so **between 12:43 and 14:31 the owner received zero cards** while I wrote twenty-odd text
+reports he was never going to see. Every one of those reports said "empty book, measured
+reason" — and the measured reason, the stand-down I built this morning and was rather pleased
+with, **reached nobody.**
+
+That is worse than the trading errors. A veto that is never communicated is indistinguishable
+from inattention, and from his side of the screen the desk has looked asleep since lunch.
+
+## The fix, built and installed now
+
+`status_card.py` — a NO TRADE card in CALLOUT.md's grey (250 -> laser 190, never blue or
+orange), same 2.5:1 geometry and `--scale 3` as the plan cards, carrying: **time ET, both
+symbols' price, 15m headline with tally, ATR against its stand-down line with STOOD DOWN in
+red, book state, the measured ledger (n, wins, losses, E[R], distance to the floor), the
+binding reason in plain words, and the seven-frame table.** MGC's DAILY cell prints
+`NOT ELIG` rather than a headline, because CALLOUT.md §4 forbids using that series and putting
+a number there would smuggle it back in.
+
+CHECK_PROCEDURE.md now carries the rule: **every check sends a card — plan cards when plans
+exist, the status card when they do not. If a check ends without a card, the check did not
+report, whatever was written.** The text report stays as the record; it is not the delivery.

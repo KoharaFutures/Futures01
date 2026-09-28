@@ -818,3 +818,29 @@ be reported as one, never as "no setup".
 costs money. And the failure it prevents is not a bad trade, it is a trade whose outcome is decided in a
 window the desk cannot observe — which produces a number in the ledger that measures the feed, not the
 method.
+
+## EVERY CHECK EMITS A CARD. The owner reads cards, not reports.
+
+Added 2026-09-28 at the owner's instruction: *"keep in mind that i am busy and i would
+typically only look at the call out cards."*
+
+**The failure this fixes.** `card_png.py` renders a PLAN. Between 12:43 and 14:30 the book was
+empty, so it rendered nothing, so **the owner received no signal of any kind for nearly two
+hours** while this desk wrote long reports into a terminal he was not reading. An empty book
+is a decision. A decision that never reaches the person whose account it is has not been
+communicated, and the stand-down that produced it may as well not have been measured.
+
+**The rule.** Every check sends at least one card, without exception:
+
+- **Plans exist** → `python3 card_png.py <ids> --scale 3` for every PENDING plan, as before.
+- **No plans** → `python3 status_card.py 3 "<the binding reason>"` and send `card_STATUS.png`.
+
+`status_card.py` renders the desk state in the NO TRADE grey (never blue or orange, so it can
+never be mistaken for a direction in peripheral vision): time ET, both symbols' price, 15m
+headline with its tally, ATR against its stand-down line, book state, the measured ledger,
+the binding reason in words, and the seven-frame table. MGC's DAILY cell prints `NOT ELIG`
+rather than a headline, because CALLOUT.md §4 forbids using that series.
+
+**The text report still goes in the terminal and the notes still go in `NOTES.md`** — they are
+the record and the record matters. But they are not the delivery. **If a check ends without a
+card having been sent, the check did not report, whatever was written.**

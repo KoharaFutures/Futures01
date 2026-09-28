@@ -5173,3 +5173,29 @@ falling), structure MIXED with both legs inside noise, location **11.0%** of [41
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
 **MGC RTH opens 08:20 ET, 20 minutes out** — CALL-0002's window and the first measured session of the night.
+
+## N139 — 08:05: third decomposition, price again, and this time moving AWAY from the threshold
+
+Tracker, window unchanged:
+
+    08:00   window [30535.00, 30760.00]   close 30632.00   pos 43.1%   BULL above 30670.00  (+38.00)
+    08:05   window [30535.00, 30760.00]   close 30628.25   pos 41.4%   BULL above 30670.00  (+41.75)
+
+Endpoints identical, so the whole move is the close falling **3.75 points**. **PRICE, and away from the
+threshold** — the third decomposition in twelve minutes and the third distinct case: price toward (07:55), the
+window (08:00), price away (now). The required distance has gone +43.95 -> +38.00 -> **+41.75**.
+
+Recording this one briefly rather than at length. The decomposition discipline is established and working; from
+here it gets one line per check unless the direction of the finding changes.
+
+MNQ: 1m has gone **BEAR 1-2** and 5m out of unanimity to BULL 2-0, while 15m stays BULLISH 2-0 with trend BULL
+(30628.25 > EMA20 30610.24, rising) and structure BULL. 60m BEAR 0-3 unanimous, 4h CONFLICTED, DAILY BULL 3-0,
+WEEKLY BULL 2-1. `reversal()` still fails on `"15m is 2-0, not unanimous"`.
+
+MGC: unchanged and inert for the ninth consecutive check — trend BEAR (4181.60 < EMA20 4189.74, falling),
+structure MIXED with both legs inside noise, location **11.5%** of [4172.60, 4250.70], 15m BEAR 0-2, 60m BEAR
+0-3 unanimous, 4h BEAR 0-2.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00.
+**MGC RTH opens 08:20 ET, 15 minutes out** — CALL-0002's window opens with it, and that plan has never once
+been evaluated (N30), so the first thing to establish at 08:20 is whether the resolver finally sees it.

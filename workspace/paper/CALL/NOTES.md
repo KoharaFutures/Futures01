@@ -7432,3 +7432,32 @@ repository has measured.
 
 **No call.** Ledger unchanged: measured n = 1, 0 wins, 1 loss, win rate 0.0% with payoff UNDEFINED,
 expectancy -1.021R, measured equity $49,881.56, drawdown $118.44, $2,681.56 to the absorbing state.
+
+## N210 — 12:48: both 15m headlines are BULLISH, and MNQ's 15m EMA20 turned UP for the first time today
+
+    MGC 15m  BULLISH 1-0   trend MIXED  4170.90 > EMA20 4169.04, EMA20 still FALLING
+             structure BULL  highs 4160.90->4181.00 higher, lows 4147.40->4148.40 higher
+             location MIXED 42.1% of [4143.00, 4209.20]
+    MNQ 15m  BULLISH 2-0   trend BULL   30654.50 > EMA20 30576.40, EMA20 **RISING**
+             structure MIXED highs 30531.25->30722.00 higher, lows 30506.75->30356.50 lower
+             location BULL  74.0% of [30356.50, 30759.25]
+
+**MNQ's 15m EMA20 has turned up — the first time on either symbol today.** Every previous bullish reading
+this session had the average still falling underneath it, which is why the trend component kept printing
+MIXED. This is the settled frame changing state rather than price poking above a falling line, and it took
+two hours and 365 points to produce.
+
+MGC's structure flipped BULL on genuinely higher highs AND higher lows (4160.90 -> 4181.00, 4147.40 ->
+4148.40), so that one is not the `swings()` artefact either — though the higher low is 1.00 point, which is
+0.08x its ATR and deserves no weight.
+
+So both symbols have now completed a full morning-to-midday reversal on the 15m, against a 60m that is
+**still BEARISH on both** (MGC 0-3 unanimous, MNQ 0-2). The frames disagree across the boundary that matters.
+
+**No call.** Neither reversal test fires - MGC needs a second consecutive check, both need unanimity - and
+the case against acting is unchanged and now doubly stated: the move is 4.5x ATR extended on MNQ, and the
+long entry this configuration invites is the prohibited one. Nothing here is a level written down in advance,
+which is the only kind of entry this desk is allowed to take.
+
+Ledger unchanged. **Measured n = 1, 0 wins, 1 loss, win rate 0.0% with payoff UNDEFINED, expectancy -1.021R,
+measured equity $49,881.56, drawdown $118.44, $2,681.56 to the absorbing state.** MGC RTH ends in 42 minutes.

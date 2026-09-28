@@ -7603,3 +7603,70 @@ after CONT-1 and FADE-1 both failed is that this fails too.
 It would mean `reversal()` condition 2 is **actively harmful** and the gate should stop requiring unanimity,
 which is a change to a veto rather than a new entry. What it changes if it fails: I stop telling the story
 about unanimity marking tops, in this file and in my reports.
+
+# N214 — RESULT: the contrarian story is FALSE, and the real answer is that the desk is blind for longer than its stop is wide
+
+## N213 first: unanimity does NOT mark turns. I was wrong and the test says so.
+
+Run once as pre-registered, archive only, 2,134 unanimity onsets:
+
+    sym   frame  onsets   T=4 mean     t    T=8 mean     t   T=16 mean     t
+    MGC      15     259     0.1323  1.29      0.0747  0.51     0.0862  0.41
+    MGC      60     791     0.0650  1.45     -0.0109 -0.17     0.1555  1.61
+    MNQ      15     275    -0.0752 -0.78      0.0364  0.27     0.0181  0.09
+    MNQ      60     809    -0.0169 -0.29     -0.0170 -0.22    -0.0546 -0.49
+
+**Largest |t| anywhere is 1.61, against a declared 3.0, and the signs are mixed.** There is no contrarian
+effect. **The story I was two anecdotes from telling — "15m unanimity marks the turn against you" — does not
+survive 2,134 onsets, and I am retracting it before it becomes desk doctrine.** N194 Cause 2 and today's
+11:37 short are two instances on one day; that is exactly the sample size that manufactures a narrative.
+I was on the wrong side of the 12:16 bounce **by chance**, not because the signal is perverse.
+
+(One incidental reading, reported because leaving it out would be selective: the *baseline* row for MGC 60m
+shows a merely-directional headline followed by **+0.1575 ATR at T=16, t = 3.29** — continuation, the
+opposite of the contrarian story. One cell of twelve, it does not clear `free_t` 5.46, and I am not acting
+on it. Logged so that the next session finds it rather than rediscovering it.)
+
+## The real answer: the blind spot is wider than the stop is allowed to be
+
+The desk resolves on 15m bars and the feed publishes ~12 minutes late, so **between an event and the desk
+seeing it, 15 to 27 minutes pass.** Measured max adverse excursion inside a 27-minute window, 1m bars,
+archive, sorted by the volatility regime in force:
+
+    MNQ   ATR decile    ATR range   median exc   90th exc   P(excursion > the 60-pt cap ceiling)
+                   1    22.3-25.5        26.25      44.25                     4.4%
+                   5    32.5-35.4        29.75      74.25                    16.1%
+                   9    50.3-58.4        42.50      82.75                    22.1%
+                  10    58.4-77.5        60.00     119.50                    49.6%
+      at TODAY's ATR 97.54 (+/-25%, n=36)  median 71.00, 90th 105.25          69.4%
+
+    MGC   at TODAY's ATR 13.09 (+/-25%, n=267)  median 9.60, 90th 19.40       32.6%
+
+**At today's MNQ volatility, 69.4% of blind-spot windows move further than the largest stop this desk is
+permitted to place.** The 50% cap ceiling is $120 = 60.00 points; the median excursion is 71.00. Not the
+tail — the median.
+
+That is what happened to CALL-0006 and it was not bad luck. Its stop was 58.00 points. The blind spot
+delivered **202.50 points** (30519.50 at 12:16 to 30722.00 at 12:27). The stop was 0.29x of what the window
+was capable of. The plan was a coin flip against the clock before price did anything.
+
+**It also dissolves the framing of the owner's question.** Missing the bounce and being short into the
+bounce have the same root cause: at this volatility the desk cannot hold a position through its own
+observation gap, in either direction. Fixing the entry rule, the gate or `swings()` changes none of it.
+
+## Two consequences, one installed now and one specified
+
+**(A) INSTALLED — a volatility stand-down, as a veto.** When P(blind-spot excursion > maximum permitted
+stop) exceeds **25%**, do not place a plan on that symbol. From the table that line sits at roughly **MNQ
+ATR14(15m) 58** and **MGC ATR14(15m) 10**. Today MNQ reads 97.54 and MGC 13.09, so **both symbols are
+stood down** and that is why the book is empty — a measured reason, not a mood. A veto needs far less
+evidence than a permission, which is the same asymmetry that justified the breakout prohibition and the
+unreachable-void rule.
+
+**(B) SPECIFIED, not installed — resolve on the finest frame available.** The 15-minute half of the blind
+spot is a CHOICE; only the ~12-minute publication lag is imposed. Resolving stops and targets against 1m
+bars while keeping the 15m signal would cut the window from 15-27 minutes to ~12 and remove the entire
+class of "stop hidden inside a bar the resolver never inspects" — the same class I fixed this morning for
+the entry bar alone. It can only ever catch MORE stops, so it can only make the record worse, which is the
+safe direction. It is a change to `resolve.py`'s bar selection and it is NOT going in while I am mid-session
+on the day it was discovered; it goes to the parent session with this measurement attached.

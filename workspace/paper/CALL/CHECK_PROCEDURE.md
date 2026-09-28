@@ -790,3 +790,31 @@ chance of being *reached at all*, never mind won.
 It is not permission to abandon a plan that is merely losing, uncomfortable, or contradicted by a fresh
 read. Distance and time are the only inputs. A plan inside the contour stays, whatever I have come to think
 of it since.
+
+## VOLATILITY STAND-DOWN — when the blind spot is wider than the stop may be
+
+Added 2026-09-28 after the second post-mortem (NOTES.md N212-N214).
+
+The desk resolves on 15m bars against a feed that publishes ~12 minutes late, so **15 to 27 minutes pass
+between an event and the desk seeing it.** Measured max adverse excursion inside a 27-minute window (1m
+bars, archive, bucketed by the volatility regime in force):
+
+| MNQ ATR14(15m) | median excursion | 90th | P(excursion > the 60-pt cap ceiling) |
+|---|---|---|---|
+| 22.3–25.5 | 26.25 | 44.25 | **4.4%** |
+| 32.5–35.4 | 29.75 | 74.25 | **16.1%** |
+| 50.3–58.4 | 42.50 | 82.75 | **22.1%** |
+| 58.4–77.5 | 60.00 | 119.50 | **49.6%** |
+| ~97.5 (today) | 71.00 | 105.25 | **69.4%** |
+
+**THE RULE: do not place a plan on a symbol when P(blind-spot excursion > the maximum permitted stop)
+exceeds 25%.** From the table that is approximately **MNQ ATR14(15m) above 58** and **MGC above 10**.
+
+Re-measure both ATRs every check — that is already required — and state the stand-down explicitly in the
+report when it binds, with the ATR beside it. An empty book for this reason is a measured decision and must
+be reported as one, never as "no setup".
+
+**Why this is installed when no entry rule is.** A wrong veto costs foregone trades; a wrong permission
+costs money. And the failure it prevents is not a bad trade, it is a trade whose outcome is decided in a
+window the desk cannot observe — which produces a number in the ledger that measures the feed, not the
+method.

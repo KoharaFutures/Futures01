@@ -7670,3 +7670,29 @@ class of "stop hidden inside a bar the resolver never inspects" — the same cla
 the entry bar alone. It can only ever catch MORE stops, so it can only make the record worse, which is the
 safe direction. It is a change to `resolve.py`'s bar selection and it is NOT going in while I am mid-session
 on the day it was discovered; it goes to the parent session with this measurement attached.
+
+## N215 — 13:38: the 5-minute cron DIED in the worker restart. 44 minutes of automatic cadence lost.
+
+`CronList` returned **"No scheduled jobs"**. Job `33ba414e` is gone — killed by the worker-process restart
+at ~12:55, exactly the session-only failure CHECK_PROCEDURE.md warns about and the reason that file says to
+verify the cadence by LISTING it rather than remembering it. **Last cron-driven check was 12:54; this is
+13:38. The gap is 44 minutes**, and `fetch.py` confirms it independently: `+44 new` 1m bars on both symbols,
+`+9 new` 5m, `+3 new` 15m.
+
+Nothing was missed in the ledger — the book was empty and stayed empty, both symbols were stood down, and
+`resolve.py` on this run reports open 0, closed 2, equity $50,038.12, drawdown $118.44, unchanged. But the
+*mechanism* was dead and I did not know until I listed it. N45's lesson, re-earned.
+
+**Cadence changed to 2 minutes at the owner's instruction** (13:04 ET). New job **`a0d7e2a3`, every 2
+minutes**, carrying the fast-check prompt plus the volatility stand-down. The old 5-minute job was already
+gone, so there is no double-send risk; nothing else is armed and no `send_later` chain exists.
+
+**What a 2-minute cadence can and cannot do, stated plainly rather than argued.** The feed publishes with a
+measured 10-15 minute lag and bars land on a 5m/15m grid, so roughly **three of every five firings will see
+`new=0`** and nothing to report. That is not a fault in the cadence, and per N140 a changed reading on a
+`new=0` fetch is a revision or the window, never a price move. It also does not shrink the blind spot
+measured in N214: checking more often does not make the vendor publish sooner, so the 69.4% figure at
+today's MNQ ATR is untouched by this change. The gain is that a bar is seen within ~2 minutes of publishing
+instead of ~5.
+
+Both symbols remain **STOOD DOWN** under N214 and the book is empty for that measured reason.

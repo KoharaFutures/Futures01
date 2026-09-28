@@ -4770,3 +4770,67 @@ symbols, the same five minutes, and one of them did not move at all.
 Newest settled 15m `07:00` on both; `07:15` settles at **07:43**, which is also when MGC's 4193.40 pivot
 resolves on the settled series per N121. Two plans PENDING; ledger unchanged at open 0, closed 0, equity
 $50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 45 minutes out; MNQ RTH 09:30.
+
+## N127 — `climax_x` swung from 4.27 to 0.00 because a 0.50-point higher high moved the extreme bar onto one whose volume had not backfilled
+
+At 07:35 `reversal_setup('MNQ')` reported `climax_x 4.27`. At 07:40 it reports **`climax_x 0.00`**. I read the
+code rather than guessing this time (`regime.py:250`):
+
+    vols    = [x["v"] for x in bars5[-40:] if x["v"] > 0]
+    medv    = median(vols)
+    ext_bar = max(bars5[-12:], key=lambda x: x["h"])     # for a SHORT
+    climax  = ext_bar["v"] / medv
+
+`ext_bar` is **the bar with the highest high in the last twelve 5m bars**. Measured directly:
+
+| 5m bar | high | volume |
+|---|---|---|
+| 07:15 | 30629.25 | 11,854 |
+| 07:20 | 30639.75 | 5,346 |
+| 07:25 | 30642.75 | **3,599** (was **0** at 07:35 — backfilled since) |
+| 07:30 | **30644.50** | **0** |
+
+At 07:35 the highest high in the window was the `07:00` bar at 30644.00 with 17,162 contracts -> 4.27x. By
+07:40 the `07:30` bar has printed **30644.50 — 0.50 of a point higher** — so `ext_bar` moved to it, and its
+volume has not yet backfilled. **0 / 3,937 = 0.00.**
+
+So a **half-point** higher high swung a reported volume ratio from 4.27x to 0.00x, and the `climax_note`
+flipped from `"flush"` to `"NO capitulation volume — a drift, not a flush"` on a tape that is objectively in
+the middle of its heaviest volume of the session.
+
+**This does not affect `qualifies`.** The function's own docstring says climax volume is *"reported but NOT
+required"*, and the gate is sigma plus the HTF count, so nothing was mis-gated. It is an **interpretation**
+hazard: anyone reading `climax_note` — including me, five minutes ago, when I quoted 4.27x in a report — is
+reading a number that can invert on half a point and on whether a forming bar's volume has landed yet.
+
+It also confirms the volume-backfill timing directly: the `07:25` bar read **v=0 at 07:35** and **v=3,599 at
+07:40**, so volume arrives within about five minutes of the bar's nominal close. That is the same shape as the
+stub-guard case (`v==0 AND h!=l`) and it is now measured rather than asserted.
+
+Deferred to the parent session, since `regime.py` is mine to read and not to edit: **`ext_bar` should exclude
+bars with `v == 0`**, or `climax_x` should be reported as `unavailable` rather than `0.00` when the extreme
+bar has no volume. Reporting 0.00 and labelling it "a drift, not a flush" is the worst of the options, because
+it looks like a measurement. Same family as N115's `side` artefact and the N26/N27/N28 grade artefact: fields
+that move for mechanical reasons and read as market information.
+
+## N128 — MNQ is now +1.71 sigma with both fast frames unanimous bullish, and still fails on the same single condition
+
+    MNQ  qualifies False  side SHORT  sigma +1.71  htf_bearish []  (climax unreliable, see N127)
+    MGC  qualifies False  side LONG   sigma -0.06  htf_support []  climax 1.00
+
+MNQ: 1m **BULL 3-0 unanimous** and 5m **BULL 3-0 unanimous** together for the first time tonight, 15m
+CONFLICTED 1-1, 60m BEAR 0-3 unanimous, 4h/DAILY/WEEKLY bull. Location **37.1%** of [30535.00, 30823.50], up
+from 19.8% twenty minutes ago. Sigma has gone +1.21 -> +1.55 -> **+1.71** across three checks. Still zero
+bearish higher timeframes, so still no qualification — the condition has not budged and will not while
+4h/DAILY/WEEKLY stay bullish.
+
+MGC: sigma **−0.06**, climax 1.00, zero HTF support, location 18.3% of [4172.60, 4257.40]. Fifth consecutive
+check with MGC within 0.4 sigma of its own mean. It is not participating.
+
+No call. MNQ is extended upward and buying it here is the chase the procedure forbids; N124's pre-committed
+method wants a limit 94 points below the market and requires `qualifies: True`, which is False. MGC has no
+displacement to trade and an unreachable reversal gate (N117).
+
+Newest settled 15m `07:00` on both; `07:15` settles at **07:43** — three minutes out — which also resolves
+MGC's 4193.40 pivot on the settled series. Two plans PENDING; ledger unchanged at open 0, closed 0, equity
+$50,000.00, drawdown $0.00. MGC RTH opens 08:20 ET, 40 minutes out.

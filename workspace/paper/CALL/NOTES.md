@@ -954,3 +954,78 @@ series underneath a trade I am currently watching.
 are the only thing a 15m plan is resolved against. The 1m frame, which is the
 one I have been treating as supplementary, is the only frame that has not lost
 a bar tonight.
+
+## N21 — the hole is in ALL THREE frames, N20's "1m lost nothing" was wrong, and partial 1m coverage makes reconstruction asymmetrically unsafe
+
+00:18 ET. Feed healthy — newest 5m bar 00:05, lag 13.5m, +1 new on 5m and 15m.
+The 15m frame's `+1 new` looked like the hole filling. It was not: the new bar
+is **00:00**, and the 23:45 bar is absent. Gap scan across every frame, since
+20:00 ET, identical on both symbols:
+
+```
+ 1m   248 bars   gap 23:58 -> 00:00  ( 2m)   <- 23:59 missing
+ 5m    48 bars   gap 23:45 -> 00:00  (15m)   <- 23:50, 23:55 missing
+15m    16 bars   gap 23:30 -> 00:00  (30m)   <- 23:45 missing
+```
+
+**Every frame lost the same wall-clock window, 23:46-23:59, expressed in its
+own granularity.** N20 closed with "the 1m frame is the only frame that has not
+lost a bar tonight." That is wrong and I am correcting it: 1m lost 23:59. It
+lost the *least* — one minute against fifteen and thirty — but the difference
+between "least" and "nothing" is exactly what the backfill plan rests on.
+
+### The correction breaks the repair I specified one check ago, in a useful way
+
+N20's rule was: reconstruct 5m and 15m gaps by aggregating 1m, and *refuse
+where 1m coverage is partial*. Applied to tonight:
+
+```
+5m  23:50  needs 1m 23:50-23:54   5 of 5 present   -> reconstructible
+5m  23:55  needs 1m 23:55-23:59   4 of 5 present   -> REFUSED (23:59 missing)
+15m 23:45  needs 1m 23:45-23:59  14 of 15 present   -> REFUSED (23:59 missing)
+```
+
+So the rule as written repairs one bar out of three and declines the two that
+matter most — including the 15m bar that three of the four live plans would be
+resolved against. A single missing minute at the right-hand boundary vetoes the
+whole containing bar.
+
+**And loosening it is not symmetric, which is the finding.** An aggregate built
+from 14 of 15 minutes yields a high and a low that are a **subset** of the true
+envelope: the range can only be understated, never overstated. For the two
+things `resolve.py` does with a bar, that cuts opposite ways:
+
+- **Trigger detection.** Understating the range can only cause a *missed* fill,
+  never a phantom one. A trade that should have filled is recorded NO_FILL at
+  0.0R. Conservative, and it costs a winner or saves a loser at random.
+- **Stop detection.** Understating the range can only cause a *missed stop*.
+  A position that was actually stopped out keeps running to its target on the
+  next bar and gets journalled as a **win**. That is not conservative. That is
+  the ledger flattering itself, and it is the same class of error as N5a
+  ($122/contract from a stub) and the reason resolve.py already gives the stop
+  priority when one bar holds both.
+
+So the spec from N20 needs a clause it did not have: **a reconstructed bar with
+incomplete 1m coverage may be used to decline a fill, and must never be used to
+decline a stop.** Where coverage is partial and a position is open, the honest
+outcome is `UNDETERMINED` — the same verdict N10 reached — not a resolved one.
+Writing that down now, before the code exists, so the code cannot be shaped by
+whatever tonight's trades happen to need.
+
+Still not implementing at 00:18 with four plans pending. Same rule as N17, N19,
+N20: specified here, written at a full check.
+
+### What actually changed in the read
+
+The 15m EMA20 and location updated for the first time in three checks now that
+a 15m bar finally landed:
+
+```
+MGC  location 1.8% -> 4.8% of range [4224.20, 4332.30]   structure lows 4227.30 -> 4224.20
+MNQ  location 8.1% -> 5.8% of range [30637.50, 30935.25]  new low 30637.50
+```
+
+MGC's 1m headline has fallen apart — BULLISH 3-0 two checks ago, CONFLICTED 1-1
+now — which is N9's finding repeating: the 15m headline flipped seven times in
+three hours on ~90 points, and the 1m is worse. MNQ's 1m is BEARISH 1-2, also
+not unanimous. Nothing to trade off either.

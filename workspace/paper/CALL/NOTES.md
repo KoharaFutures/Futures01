@@ -2038,3 +2038,85 @@ it should be built and acted on; if it cannot be made trustworthy, it should be 
 than left firing into a permanent veto. Leaving it in place and declining forever is the worst
 of the three options, and that is currently what I am doing. That work belongs at a full check,
 with the random-level control rule 8 demands, and it is now the most overdue item on this desk.
+
+## N35 — the 5-minute chain DIED at 02:12 and I did not notice for 41 minutes, because the owner's manual prompts made the cadence look alive
+
+02:55 AM EDT, hourly full check. Its first instruction is to verify the chain, and the chain
+was **gone**. `list_triggers` returned only the REPLAY desk's routine and this backstop — no
+pending `CALL desk fast check (chained)` one-shot.
+
+Reconstructing it: the last link I armed was `trig_017Yxz5Aq6ZXrMMKb7csczR8`, which fired at
+06:12:07Z (**02:12 ET**). That turn ran the check, committed, reported — and never called
+`send_later`. The chain ended there. Re-armed now as `trig_012n6cmkKM3dG973h9PHvKMq`.
+
+**Gap: 02:12 to 02:55, about 43 minutes with no self-sustaining cadence.**
+
+### Why it stayed invisible, which is the part worth keeping
+
+The nine checks between 02:14 and 02:52 all happened — and every one was **user-typed**. The
+owner was still awake and prompting. So the desk kept producing 5-minute checks on schedule
+while the mechanism that was supposed to produce them was dead. From inside the session there
+was no signal at all: same cadence, same output, same commits.
+
+That is a specific and nasty failure shape. **A redundant manual path masked the failure of the
+automatic one.** The chain's whole purpose is to run when the owner is *not* there, and the only
+window in which its death is invisible is the window in which he is. Had he stopped prompting at
+02:14 and gone to sleep — which is exactly what he told me he was about to do — the next check
+would have been the 03:52 hourly backstop, and he would have woken to a 100-minute hole.
+
+### What I got wrong, precisely
+
+Not the design — the backstop worked, caught it on its first firing after the break, and cost
+43 minutes rather than the night. What I got wrong is that **I wrote the re-arm obligation into
+`CHECK_PROCEDURE.md` and then failed to honour it on a turn I was executing manually.** The
+procedure says re-arm every chained fast check. The 02:12 turn *was* a chained firing — it came
+from the chain — and I treated it as an ordinary user check because it looked like one in the
+transcript. The instruction was in the file and I still missed it.
+
+Two changes, both already made:
+
+- The re-arm is now the **last action before writing the reply**, not after it, in the chain
+  prompt itself. Ordering it after the reply text is how it gets dropped: the reply feels like
+  the end of the turn.
+- The chain prompt now states outright that **a user-typed prompt arriving in the same window
+  does not re-arm the chain and does not excuse skipping it.** That is the exact reasoning error
+  that killed it.
+
+I am not adding a third safeguard. The hourly backstop already bounds the damage, it
+demonstrably works, and piling on more machinery to protect against my own inattention has its
+own failure modes.
+
+### Full check content
+
+`CALLOUT.md` unchanged at `1948339`. Feed healthy, newest 5m bar 02:45 at 10.5m lag. Nothing
+triggered, nothing resolved.
+
+Frame currency, verified rather than assumed:
+
+```
+MGC  1m 02:45 lag 10.7m | 5m 02:45 lag 10.7m | 15m 02:30 lag 25.7m | 60m 01:00 lag 115.7m | 240m 20:00 lag 415.7m
+MNQ  identical
+```
+
+The 60m is again 115.7 minutes stale — the vendor has not published the 02:00 hour — so both 60m
+headlines below describe the 01:00 hour, the same caveat as N32.
+
+```
+MGC 60m BEARISH 0-3 unanimous   close 4211.90 < EMA20 4278.55   0.3% of [4211.50, 4351.60]
+MNQ 60m BEARISH 0-3 unanimous   close 30650.00 < EMA20 30774.23  39.7% of [30420.50, 30998.50]
+```
+
+MNQ's 60m location is **39.7%** against its 15m's 13.4% — the N25 observation holding: MNQ is
+mid-range on the hour and only extended on the quarter-hour, and that argues against both sides.
+
+```
+LEDGER
+journal records        13   (7 directional, 6 NO TRADE, 4 amendments)
+declines of a qualifying setup   1   (CALL-NT-0003)
+plans resolved          1   CALL-0003 NO_FILL 0.0R
+pending                 3   (1 INERT)        open  0        CLOSED TRADES  0
+win rate               N/A      expectancy  N/A      ambiguous bars  0
+equity          $50,000.00      drawdown  $0.00      realized  $0.00
+to the $2,600 operational floor   $2,600.00
+to the $2,800 absorbing state     $2,800.00
+```

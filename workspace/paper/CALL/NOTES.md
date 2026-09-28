@@ -6453,3 +6453,35 @@ travelled 1.35x its 15m ATR in ten minutes — and the desk has no pre-committed
 a breakdown, because building one while watching it break down is the N8 laundering refused five times
 already. Both symbols sitting near the bottom of their 40-bar range with every fast frame agreeing is the
 configuration rule 2 prices at z = -4.09.
+
+## N185 — 10:23: the CALL-0005 counterfactual would now be STOPPED OUT at a full -1R
+
+MNQ made a new session low on the `10:10` 5m bar: **30521.00**, and the 40-bar range low moved 30535.00 ->
+30521.00 with location at **4.7% of [30521.00, 30759.25]**.
+
+    CALL-0005 (never filled):  entry 30595.88   stop 30540.00   stop_points 55.88
+    MNQ 5m 10:10 low           30521.00   -- 19.00 points BELOW the stop
+
+**Had it filled, it would be closed at -1R by now: -$111.75, not the +$76.24 I was quoting twenty-three
+minutes ago.** The sequence in full, one counterfactual tracked at every check since it stopped being live:
+
+    10:00   +38.12 pts   +$76.24    +0.68R   open
+    10:18   -23.63 pts   -$47.26    -0.42R   open
+    10:23   stopped      -$111.75   -1.00R   closed
+
+That is the third consecutive check at which I have restated this number, twice against my own earlier
+framing. **The plan's failure to fill was protective.** N149/N151 diagnosed the desk's 0-for-4 fill rate as
+producing "no outcome to learn from"; this instance produced one, and it points the opposite way from the
+complaint — a retracement limit that price reaches only after the window closes is a limit that was, on this
+occasion, correctly not filled.
+
+**What that is worth: almost nothing, and I am saying so before the number can be leaned on.** n = 1, on a
+hypothetical, on a symbol whose 15m ATR expanded 73% this morning. It does not vindicate the entry method and
+it does not justify keeping it; it does close off the argument that the 90-minute window was too short, which
+at 10:00 I already refused to make on principle and can now also refuse on evidence. **The general lesson is
+the one N179 stated: a counterfactual is not a result, and the sign of this one has changed twice in
+twenty-three minutes.**
+
+Frames: MGC BEARISH on all five eligible for a third consecutive check; MNQ BEARISH on 1m/5m/15m/60m with 4h
+CONFLICTED. Neither reversal fires. No call — MNQ has fallen 124.00 points from 30656.25 at 10:09, about 2.3x
+its 15m ATR in fourteen minutes, and chasing that is exactly what the owner's constraint forbids.

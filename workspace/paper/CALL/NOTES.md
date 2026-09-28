@@ -3074,3 +3074,84 @@ Fast frames: MGC 1m BULL 1-0 (from BULL 2-0, from CONFLICTED, from BEAR 0-3 unan
 to BEAR 0-3 unanimous. Both 5m unanimous bearish. No new call: nothing in the decline's structure has
 changed, MNQ remains near its low, and the MGC retracement stays blocked by N52 until CALL-0004
 resolves on the 06:00 ET bar, now ~63 minutes out.
+
+## N62 — N60's prediction came true on schedule, which is the first thing tonight that confirmed rather than retracted
+
+N60 said the 60m frame was not stale and would advance at 05:00. At 05:02 the fetch returned
+`MGC 60m (+1 new, 0 revised)` and `MNQ 60m (+1 new, 0 revised)`, the new bar being `04:00`, and the
+60m lag fell **117m -> 62m**. The bar carries MGC `o 4187.50 h 4191.20 l 4174.30 c 4179.10` — it
+contains the decline, exactly as predicted, and the 60m row now reflects the move it could not
+reflect before.
+
+Recording this deliberately. Eight of tonight's findings have been corrections of my own work, two of
+them corrections of corrections. This is the first prediction I made about the machinery that came
+true unchanged, and it is worth the same shelf space as the errors, otherwise the record is a list of
+failures rather than a record of a process. It also settles N57 versus N60 empirically rather than by
+argument: a stale frame does not advance on the exact minute its bar completes.
+
+Incidental measurement that came out of it: the 60m frame's publishing delay is about **2 minutes**
+(the `04:00` bar completed at 05:00 and was in hand at 05:02), against the 5m frame's ~12 minutes.
+The frames do not share a publishing delay, so the single "median feed lag 12.9 min" figure the desk
+has been carrying is a 5m-frame number and should not be applied to the others.
+
+## N63 — the 4h frame's "revisions" are a WINDOW-EDGE artefact, and revisions happen at both ends of a lookback window but never in the middle
+
+At 05:02 the 240m frame reported `+0 new, 1 revised`. N60 had said 240m and 1440m show `new=0 rev=0`
+and characterised them as non-revising; this falsifies that as stated, so I checked what actually
+revised before writing anything. The revised bar is **`2026-07-30T04:00:00-04:00`** — two months old.
+
+A vendor rewriting two-month-old history would be serious. It is not that. `FRAMES` requests 240m over
+**60 days**, and 60 days before 2026-09-28 is **2026-07-30**. The revised bar is the bar sitting on
+the *oldest edge of the lookback window*. Every 240m delta this session tells the same story:
+
+| fetch | revised bar | where it sits |
+|---|---|---|
+| 02:03Z, 03:10Z | `07-29T20:00` | oldest edge |
+| 04:04Z, 05:04Z, 06:03Z, 07:02Z | `07-30T00:00` | oldest edge, drifted forward |
+| 08:01Z, 09:02Z | `07-30T04:00` | oldest edge, drifted forward again |
+| 06:14Z | `09-27T20:00` | newest edge |
+| 08:06Z, 08:07Z, 08:10Z | `09-28T00:00` | newest edge |
+
+**Revisions occur only at the two edges, never in the middle**, and the oldest-edge bar walks forward
+as the window slides. The mechanism is that the 4h bar is resampled from 60m (fetch.py's own comment
+says the vendor has no native 4h bar), so the bar at the window boundary is built from however many
+60m bars happen to fall inside the requested span — and that count changes every time the span slides
+forward. It is a truncated bar, not a corrected one.
+
+**The rule: the oldest bar of any rolling-lookback request is truncated and must never be used.** Not
+for an ATR, not for a range, not for a swing point. This applies to every frame, not just 240m; 240m
+is simply where it was visible because a 4h bar is large enough for the truncation to matter and the
+60-day window puts the edge in plain sight.
+
+It also means N60's "never revise" phrasing was too strong and its table should have read `new=0
+rev=0` **on those eight consecutive fetches**, which is what I observed, rather than as a property of
+the frame. The substantive claim in N60 — that the lag figures are arithmetic and no frame is stale —
+is untouched by this and was independently confirmed by N62.
+
+## N64 — the first legitimate settled-to-settled comparison of the night, and it says the two symbols DIVERGED
+
+The `04:30` 15m bar crossed the settle threshold at 04:58, so at 05:02 there are two settled bars to
+compare and the N49 rule can finally be applied as intended rather than as a prohibition:
+
+| symbol | settled `04:15` | settled `04:30` | change |
+|---|---|---|---|
+| MGC | 4176.90 | 4181.50 | **+4.60** |
+| MNQ | 30622.75 | 30589.25 | **−33.50** |
+
+MGC rose and MNQ fell. Every check for the last half hour has described them as falling together,
+because the forming bars moved together; on settled data they did not. MGC's settled close is up 4.60
+from the previous settled close while MNQ's is down 33.50, and MNQ's `04:30` low of 30571.00 is the
+40-bar low while MGC has bounced 7.20 off its 4174.30 low.
+
+This is the first genuinely new market fact the settled-bar discipline has produced rather than
+suppressed, and it points the opposite way to the narrative the fast frames supported. It does not
+change the decision — MGC's 15m location is 3.8% of [4174.30, 4300.60] and MNQ's 6.0% of
+[30571.00, 30900.50], both still at the extreme, and the MGC retracement remains blocked by N52 until
+CALL-0004 resolves on the 06:00 ET bar, now ~58 minutes out. But "they are diverging" is a materially
+different state from "both are falling," and I have been reporting the wrong one.
+
+MGC structure has also made a lower low on the settled series: swing lows 4182.70 -> 4174.30. MNQ's
+swing lows read 30571.00 -> 30571.00, i.e. a **double bottom on the settled 15m series**, the first
+non-lower low either symbol has printed tonight. Not a reversal call — regime.py's reversal test
+returns false on both symbols and per the standing rule a REVERSAL is only called when every condition
+is true. Recorded as the thing to watch, and it is watched at the level, not chased.

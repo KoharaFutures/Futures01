@@ -8162,3 +8162,72 @@ default.
 
 The owner found a transcription hazard I had been walking past all day. Worth recording as that,
 not as a styling tweak.
+
+---
+
+# N223 — 19:52 hourly: CALL-0007 filled and sits at breakeven; CALL-0008 unfilled with its gate re-called
+
+`basis eeb652a`. Cadence verified: all three UTC jobs alive (`5b6f90c7`, `697d7750`, `13cbeeca`).
+Clocks both ways — UTC 23:52, ET 19:52, inside the window. Newest 5m `19:40`, lag 12.4m, `new=0`.
+
+## The book, which changed for the first time in six hours
+
+**CALL-0007 FILLED at 19:36** — MGC SHORT @ 4159.00, entry bar 15m `19:15`, stop 4163.40, TP1
+4152.40, 1 contract, $44 risk. It is the desk's first fill since CALL-0006 stopped out this
+morning. Currently **4159.10, +0.10 adverse, −$1, −0.02R**: dead flat, 16 minutes in.
+
+**CALL-0008 PENDING** — MNQ LONG limit 30588.00, price 30603.00, **15.00 above and receding**.
+`thesis.py` reads *"DIRECTION RIGHT, target distance not covered"*: favourable 13.00 against a
+34.50 target reach. The direction was right and the entry never came, which is the exact shape of
+N149/N151 and would be the fifth limit on this desk to die of a level price never returned to.
+
+Plans: 3 EXPIRED, 3 TRIGGERED, 1 VOID_UNREACHABLE, 1 PENDING — 8 total.
+
+## Three things worth recording about how CALL-0007 filled
+
+1. **It filled on a gate that had already lapsed.** I flagged that risk at 19:00 and 19:16 and
+   refused to void the plan for it. The risk materialised. That is a real cost of N8 and it should
+   be counted as one, not excused.
+2. **It filled inside the blind spot** — entry bar stamped `19:15`, detected by the resolver at
+   19:36, 21 minutes later. Exactly the window N214 measures. I did not see this fill happen.
+3. **Its unrealised P&L has been meaningless all evening.** Across nine checks the position printed
+   −0.50R, −0.25R, −0.20R, +0.14R, −0.18R, −0.16R, −0.02R, and **every one of those swings came from
+   a restatement of the same unclosed bar, not from price**. On a 4.40-point stop with a feed that
+   revises 1–2 points routinely, intra-position R is noise. The only honest number is at resolution.
+
+## Two revision artifacts I reported as real, and one that was real
+
+Worth writing plainly because I got the first two wrong in the moment:
+
+- **19:00** — MGC's reversal "lapsed" on a higher low. `new=0 revised=1`. It came back at 19:02.
+- **19:08** — MNQ's reversal "lapsed" on location slipping. `new=0 revised=1`. Back by 19:10.
+- **19:16** — both lapsed on the **settled** `19:00` bar, `new=1`. That one was real.
+
+**The discipline that mattered: I never acted on any of them.** Had I installed a "gate lapsed"
+void rule at 19:00, it would have killed CALL-0007 on a number that no longer existed two minutes
+later. N8 is not a rule about tidiness; today it was the thing standing between the desk and a
+decision made on a phantom.
+
+## The read
+
+MGC 15m 0-2 (trend BEAR 4159.10 < EMA20 4159.40 falling, structure MIXED, location BEAR 32.1% of
+[4143.00, 4193.20]). 60m has **softened to 0-2**: still trend BEAR with close 4153.90 against
+EMA20 4189.84, but structure flipped MIXED on a higher low 4143.00→4143.90, and location is 5.6%
+of [4143.00, 4336.00] — the very bottom of a 30-bar range. Its 5m is now unanimous BULL against my
+short.
+
+MNQ 15m **3-0 unanimous BULL**, reversal called, held 50 checks, agreeing frames [1m, 5m, DAILY,
+WEEKLY]. Its 60m also softened to 0-1 on a higher low 30356.50→30531.75.
+
+Both ATRs at session lows: MGC **5.76** vs 10, MNQ **29.64** vs 58. MNQ's has halved since the
+open. Neither veto binds; the evening is compressing, not expanding.
+
+## Ledger
+
+Equity **$50,038.12**, peak $50,156.56, drawdown **$118.44**. **$2,681.56** to the $2,800 absorbing
+state. Nothing realised since CALL-0006, so these are unchanged.
+
+**Measured record, CALL-0002 EXCLUDED per N155:** n=1, 0 wins, 1 loss, **win rate 0% with payoff
+0.00** — no win exists to size a payoff against, and quoting either alone breaches rule 3 in
+whichever direction flatters. Expectancy −1.021R. 0 ambiguous bars. CALL-0007 will make it n=2 when
+it resolves, whichever way it goes.

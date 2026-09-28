@@ -841,6 +841,11 @@ headline with its tally, ATR against its stand-down line, book state, the measur
 the binding reason in words, and the seven-frame table. MGC's DAILY cell prints `NOT ELIG`
 rather than a headline, because CALLOUT.md §4 forbids using that series.
 
+**ORDER: the card goes LAST, at the bottom of the response.** Owner's instruction,
+2026-09-28 14:42. Write the text report first, then send the card as the final act of the
+check, so the thing he actually reads is the last thing on his screen rather than buried
+above a wall of text he is scrolling past.
+
 **The text report still goes in the terminal and the notes still go in `NOTES.md`** — they are
 the record and the record matters. But they are not the delivery. **If a check ends without a
 card having been sent, the check did not report, whatever was written.**

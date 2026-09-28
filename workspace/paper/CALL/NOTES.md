@@ -1029,3 +1029,77 @@ MGC's 1m headline has fallen apart — BULLISH 3-0 two checks ago, CONFLICTED 1-
 now — which is N9's finding repeating: the 15m headline flipped seven times in
 three hours on ~90 points, and the 1m is worse. MNQ's 1m is BEARISH 1-2, also
 not unanimous. Nothing to trade off either.
+
+## N22 — the extension test decays on BOTH price paths, so a correct reversal call switches the detector off. Measured, not argued.
+
+00:23 ET. Feed healthy, newest 5m bar 00:10, lag 13.2m. Both symbols are
+bouncing — MNQ 30678.75, up 41.25 from its 30637.50 low; MGC 4232.00, up 7.80
+from 4224.20. MNQ's 1m has gone BULLISH 3-0 and so has MGC's.
+
+**MNQ's reversal setup no longer qualifies, and it now fails for the opposite
+reason it used to.** At 22:55 and 23:58 it passed extension and the HTF test.
+Now:
+
+```
+reasons: ["only -1.27 sigma from the 20-bar mean, needs |1.5|"]
+htf_support: ["4h", "DAILY", "WEEKLY"]     <- still three, unchanged
+trigger: 30704.75                           <- unchanged from 23:58
+```
+
+The HTF support it always needed is intact. What broke is the extension — and
+it broke *because price bounced*. The detector was pointing at a reversal; the
+reversal began; the detector switched off.
+
+### The measurement that makes this more than a complaint
+
+N17 recorded sigma decaying while price kept falling, and attributed it to the
+20-bar mean chasing price down. Tonight's full sequence shows the decay is
+indifferent to direction:
+
+```
+MNQ    22:55  price 30701.75   sigma -2.12
+       23:58  price 30669.25   sigma -1.55     price FELL  32.50, sigma decayed 0.57
+       00:23  price 30678.75   sigma -1.27     price ROSE   9.50, sigma decayed 0.28
+
+MGC    23:10  price  4229.00   sigma -1.82
+       23:28  price  4225.60   sigma -1.82     price fell,  sigma flat
+       23:58  price  4225.60   sigma -1.45     price flat,  sigma decayed 0.37
+       00:23  price  4232.00   sigma -1.09     price ROSE,  sigma decayed 0.36
+```
+
+**Falling, flat and rising price all produced decay.** So the accurate statement
+is not "the mean chases price down" — it is that a z-score against a trailing
+mean measures *acceleration*, not displacement. It stays extended only while
+price keeps outrunning its own 20-bar average. The moment price merely
+continues, stalls, or turns, the reading relaxes toward zero.
+
+That is a real defect for this specific job. A reversal detector gated on
+|sigma| >= 1.5 is therefore structurally incapable of confirming a reversal: it
+can only fire during acceleration *away* from the mean, which is precisely when
+a reversal has not yet started. Every configuration of it either fires too
+early (mid-plunge, no evidence of a turn) or not at all (after the turn, when
+the evidence exists). This is not a threshold to tune. It is the wrong
+statistic for the question.
+
+The fix belongs with N20/N21's backfill work at a full check, and it is the same
+shape: **anchor the reference.** Measure displacement from a *fixed* pivot — the
+high at which the down-leg was identified — rather than from a trailing mean.
+A fixed anchor does not relax when price turns, so an extension measured against
+it survives the bounce it is meant to catch. Then test it against a random-level
+control before believing anything, per rule 8.
+
+I am not going to pretend this makes tonight's non-calls look better. Two
+qualifying setups were declined for reasons I still hold — N15's sliding trigger
+and correlated stacking, N16's structural HTF veto on MGC. But the honest
+addition is that the instrument was also miscalibrated for the task, in a way I
+can now state precisely, and some of what I read as "nothing qualified" was the
+statistic relaxing rather than the market being quiet.
+
+### State
+
+MNQ has retraced 41.25 of its decline and MGC 7.80, both on non-unanimous
+lower-frame readings and with 5m/15m/60m still bearish on both. `reversal()`
+returns no call on either. CALL-0003 sits at 30767.25 with 88.50 to go and
+expires at 02:00 ET; the bounce has made it *closer* for the first time tonight,
+which is exactly the situation N8 exists for — the trigger stays where it was
+written.

@@ -779,3 +779,85 @@ no rejection. I will arm off the next cycle's structure.
 
 **Stopped at:** cursor **1393/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0,
 permitted $240 (×1.00), **2 closed trades, 2 wins**, 6 theses.
+
+---
+
+## Burst 8 — bars 1393→1563. basis `ad933be` (2026-09-28)
+
+**Nothing to escalate.** `score` next due at bar 2,000. No absorbing state (drawdown $0, at peak).
+39 callouts / 39 unique ids. Series not ended. Briefs and harness unchanged since burst 6 — the roll
+finding is still on the branch, unabsorbed.
+
+### Result: 170 bars, 5 callouts, **0 trades taken**, equity unchanged at $50,688.86
+
+Roughly **145 of 170** bars passed over without a candidate. Two triggers armed, both disarmed.
+
+### The finding that matters: rule 4 did the opposite of its job this burst
+
+Three would-be entries resolved, and the pattern in them runs **against** a rule I have been leaning on.
+
+| bar | what | rule 4 verdict | outcome |
+|---|---|---|---|
+| **1502** | pattern fired at broken 5845.0; stop above 5849.0 = **6.75 pts = 0.35 ATR** vs a 9.55 floor | **REFUSED** | would have **won ≈ +2R** — stop held at 5846.5, target 5830.25 filled on bar 1504 |
+| **1535** | armed 5868.0 fired; stop 33 pts | **permitted** | would have **lost −1R** |
+| **1538** | armed 5868.0 fired; stop 34.5 pts | **permitted** | would have **lost −1R** |
+
+**Rule 4 refused the winner and permitted both losers.** Net roughly a wash, and the 0.5-ATR floor
+inverted its purpose in this sample.
+
+**This does not overturn rule 4 and I am not proposing to drop it.** n = 3 is noise; the rule comes from
+measurements across ~3M evaluations, and one burst cannot touch that. But **a record in which every rule
+I cite always turns out to have helped me would be a record I had curated**, so the sample where it hurt
+goes in at the same prominence as the samples where it saved me. This is also exactly what rules 3 and 4
+jointly predict — a sub-floor stop buys win rate at the cost of payoff, so refusing it must sometimes
+decline trades that would have paid. The surprise would be a floor test that only ever helped.
+
+**The level-quality objection I raised at bar 1502 I would make again regardless of the outcome.** Price
+had crossed 5845.0 **four times in six bars** (1497, 1498, 1499, 1502), making it the midpoint of a chop
+zone rather than broken support being retested. My two winners were at levels with a single decisive
+rejection — 5801 at bar 452, a three-touch 5985.75–5987.5 shelf at bar 1340. **One good outcome does not
+make a trigger shape at a chop midpoint the same event as a rejection at a clean shelf**, and if I let it,
+the pattern degrades into a pattern-shaped reflex.
+
+### Armed triggers: three bursts running of being protected by silence, then three firings missed
+
+- **5987.25 (armed bar 1442)** — never reached; price fell away from it. Correctly silent.
+- **5868.0 (armed bar 1503)** — **fired three times** (bars 1515, 1535, 1538) while I advanced 50, and
+  all three would have lost as the tape reversed 5809.0 → 6001.25 in three sessions.
+
+So the 50-bar advance that cost me winners in bursts 3 and 5 **saved me two losers here**. The cadence
+question genuinely cuts both ways, which is an argument for the placebo comparison being the only honest
+arbiter rather than my own tally of what I nearly did.
+
+### Detector: a second false positive, a second fix, and an implementation bug of my own
+
+It flagged bars 1446–1449 (mean range 29.31, bands 8.25/7.0) — an ordinary RTH balance area after a
+110-point session, with normal continuity and a clean volume ramp (46k → 58k → 149k → 181k). **False
+positive.**
+
+The missing discriminator: **a merge must jump between its two bands at some boundary.**
+`max |open[i] − close[i−1]|` is **74.5** in the real merge (0.88 of its mean range) against **0.25**
+(0.009) in both false positives. **Median is the wrong statistic** — half the real merge's boundaries are
+continuous — so the test is on the max.
+
+**And I got the fix wrong first:** applying the jump test inside the run-growth loop killed every run at
+its first continuous bar and silenced the detector entirely, including on the real merge. It has to be
+evaluated on the completed run. Caught it because I re-ran against the known positive.
+
+**That is now two tuning rounds and one implementation bug against a single positive example.** The
+overfitting caveat in the code stands *stronger* for having been fixed twice: it is a screen that makes me
+look, never a verdict, and every flag is read by eye. It now reports one run in 1,563 bars — the real one,
+`max-jump 74.5` — and stayed silent through 12/18's 241-point session, 12/20's 185-point range, 1/10's
+111-point session and 1/13–1/15's 192-point reversal.
+
+### Distinct theses tried: **6**, unchanged
+
+Everything this burst was thesis 5. The detector is diagnostics. Nothing added.
+
+### Carried forward
+
+**Nothing armed.** The 6068.25 → 5809.0 decline reversed hard: 192 points up in three sessions to 6001.25,
+price 5988.75. Both my short levels are dead. ATR14 ~19–20, so the floor is ~10 — wide stops required.
+
+**Stopped at:** cursor **1563/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0,
+permitted $240 (×1.00), 2 closed trades, 2 wins, 6 theses.

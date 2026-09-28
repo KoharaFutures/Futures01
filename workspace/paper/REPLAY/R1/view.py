@@ -46,7 +46,7 @@ for i, r in enumerate(rows[-detail:], start=len(rows) - detail):
 # envelope, highs clustered in 13.5 pts and lows in 20.75 pts. See NOTES.md
 # burst 6. SERIES_AUDIT.md's four checks all pass on such bars, so this is the
 # fifth check: envelope constancy. Real volatility MOVES the envelope.
-def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0):
+def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0, jump_frac=0.50):
     """Runs of >=k consecutive bars whose high-band and low-band are both tight
     relative to the mean bar range, while that range is >= blow x the prior
     median AND >= min_range absolute. Returns (start,end,mean_range,hi,lo).
@@ -56,7 +56,17 @@ def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0):
     an ordinary balanced consolidation, a FALSE POSITIVE. The real merge sits at
     0.16/0.25 of an 84-point range. NOTE: tuning a detector on a single positive
     example is overfitting, so treat this as a SCREEN THAT MAKES ME LOOK, never
-    as a verdict - every flag gets read by eye before it changes a decision."""
+    as a verdict - every flag gets read by eye before it changes a decision.
+
+    SECOND FALSE POSITIVE, burst 8: bars 1446-1449 (mean range 29.31, bands
+    8.25/7.0) - an ordinary RTH balance area after a 110-point session, with
+    normal continuity. The missing discriminator is that a MERGE must jump
+    between its two bands at some boundaries: max |open[i] - close[i-1]| is
+    74.5 there, 0.88 of the mean range, against 0.25 (0.009) in both false
+    positives. Median is the wrong statistic - half the real merge's
+    boundaries are continuous - so this tests the MAX. That is now two
+    tuning rounds against one positive example; the overfitting caveat above
+    is stronger, not weaker, for having been fixed twice."""
     out, i = [], 25
     med = lambda v: sorted(v)[len(v) // 2]
     while i < len(rows) - k:
@@ -74,9 +84,16 @@ def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0):
         if j - i >= k:
             seg = rows[i:j]
             mr = sum(r["h"] - r["l"] for r in seg) / len(seg)
-            out.append((i, j - 1, round(mr, 2),
-                        round(max(r["h"] for r in seg) - min(r["h"] for r in seg), 2),
-                        round(max(r["l"] for r in seg) - min(r["l"] for r in seg), 2)))
+            # A merge must JUMP between its two bands at some boundary. Tested on
+            # the completed run, never inside the growth loop: half of the real
+            # merge's boundaries are continuous, so an in-loop test kills the run
+            # at its first continuous bar and the detector goes silent entirely.
+            gaps = [abs(rows[x]["o"] - rows[x - 1]["c"]) for x in range(i + 1, j)]
+            if gaps and max(gaps) >= jump_frac * mr:
+                out.append((i, j - 1, round(mr, 2),
+                            round(max(r["h"] for r in seg) - min(r["h"] for r in seg), 2),
+                            round(max(r["l"] for r in seg) - min(r["l"] for r in seg), 2),
+                            round(max(gaps), 2)))
             i = j
         else:
             i += 1
@@ -84,6 +101,6 @@ def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0):
 
 _f = roll_flags(rows)
 print(f"\nroll-merge detector: {len(_f)} suspect run(s) in {len(rows)} visible bars")
-for a, b, mr, hs, ls in _f:
+for a, b, mr, hs, ls, mg in _f:
     print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
-          f"mean range {mr}  high-band {hs}  low-band {ls}  << DO NOT TRADE")
+          f"mean range {mr}  high-band {hs}  low-band {ls}  max-jump {mg}  << DO NOT TRADE")

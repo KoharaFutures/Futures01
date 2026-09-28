@@ -2359,3 +2359,82 @@ Nothing triggered, nothing resolved. MGC 4189.20 at 3.6% of range, MNQ 30600.00 
 MNQ's 1m has gone CONFLICTED while its 5m, 15m and 60m stay unanimous bearish; `reversal()`
 returns no call on either symbol, so there is no plan to build right now regardless — the
 correction above is about not having foreclosed the option.
+
+## N40 — full check: the already-armed chain link was still carrying N39's retracted claim, and I caught it only because the backstop made me look
+
+03:55 AM EDT, hourly full check. Chain **intact** — `trig_01TBQFtjeZxd3w1gxkHyhTCn` pending,
+fires 03:57, no repair needed. `CALLOUT.md` unchanged at `1948339`.
+
+But the backstop's chain check found something it was not looking for. The armed link's stored
+prompt still read:
+
+> *"MNQ was UN-SIZEABLE regardless of signal... MGC at ~$10/point with a far smaller ATR has
+> been the only sizeable one of the two."*
+
+That is the claim I **retracted three minutes earlier in N39**. I closed N39 with "Corrected in
+the next chain prompt" — but the next chain prompt had already been armed at 03:51, *before* I
+wrote the correction at 03:52. So the retraction existed in NOTES and the falsehood existed in
+the thing that actually executes. Updated the live trigger's prompt in place via
+`update_trigger`, so the 03:57 firing gets the corrected version: both symbols sizeable, the
+constraint is entry-to-stop distance, size the stop first.
+
+**This is the fourth instance of one pattern and now the pattern is the finding.** N30: a card
+asserting `AWAITING FILL` on a plan nothing was evaluating. N35: a chain whose death was masked
+by manual prompts. N39: a false constraint written into a self-perpetuating prompt. Now N40: a
+correction that did not reach the artefact it was correcting.
+
+Every one is the same shape — **state that executes, diverging from state that describes.**
+NOTES.md, the journal, and my replies are the describing layer; the cards, the chain prompts and
+`pending.jsonl` are the executing layer. I have been careful about the first and repeatedly
+sloppy about the second, and the executing layer is the one the owner acts on while asleep.
+
+The operational rule, and it is cheap: **when a correction lands, ask what is already armed that
+carries the old version.** A note is not a fix. Three of the four instances would have been
+caught by that single question.
+
+It is also worth saying plainly that only the hourly backstop's mandatory chain check made me
+look at that prompt at all. I had no intention of re-reading it — I had just written the
+correction and felt done. The procedural requirement to verify the chain, added for a different
+reason entirely, is what surfaced it.
+
+### Full check content
+
+Feed healthy, newest 5m bar 03:45 at 10.5m lag, +1 new / 2 revised. Nothing triggered, nothing
+resolved. MGC 4185.70, MNQ 30589.75 — both still grinding at their lows, MGC printing 4185.20.
+
+Frame currency, verified:
+
+```
+MGC  1m 03:45 lag 10.7m | 5m 03:45 lag 10.7m | 15m 03:30 lag 25.7m | 60m 02:00 lag 115.7m | 240m 20:00 lag 475.7m
+MNQ  identical
+```
+
+The 60m is again ~116 minutes stale (the vendor has not published the 03:00 hour) and the 240m
+is now nearly 8 hours old, so both 60m headlines below describe the **02:00** hour — the N32
+caveat, third occurrence:
+
+```
+MGC 60m BEARISH 0-3 unanimous   close 4196.50 < EMA20 4270.50    1.5% of [4194.20, 4351.60]
+MNQ 60m BEARISH 0-3 unanimous   close 30646.50 < EMA20 30763.76  31.5% of [30485.00, 30998.50]
+```
+
+MNQ's 60m location is **31.5%** against its 15m's 6.9%. That gap has held all night and is the
+most durable single fact in the read: MNQ is mid-range on the hour and extended only on the
+quarter-hour, which argues against a directional commitment either way.
+
+```
+LEDGER
+journal records        14   (7 directional, 7 NO TRADE, 4 amendments)
+declines of a qualifying setup   2   (CALL-NT-0003, CALL-NT-0004)
+plans resolved          1   CALL-0003 NO_FILL 0.0R
+pending                 3   (1 INERT)     open  0     CLOSED TRADES  0
+win rate               N/A       expectancy  N/A      ambiguous bars  0
+equity          $50,000.00       drawdown  $0.00      realized  $0.00
+to the $2,600 operational floor   $2,600.00
+to the $2,800 absorbing state     $2,800.00
+```
+
+`thesis.py`: CALL-0001 DIRECTION WRONG with adverse excursion now **318.25** against a 60-point
+stop; CALL-0004 DIRECTION RIGHT at 64.10 favourable against a 19.04 target with 0.30 adverse.
+No call — `reversal()` declines on both, MGC on its structural HTF veto and MNQ on the 15m/60m
+lower frames agreeing with the downtrend rather than against it.

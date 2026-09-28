@@ -960,3 +960,89 @@ which I consolidate when the desk returns to 1:
 
 **Stopped at:** cursor **1563/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
 mode **1 AGENT (market open)**.
+
+---
+
+## Burst 10 — key levels, scenario branches, and a negative result with one live finding
+
+basis `ac35f95`. Bars 1613→1618 (5 advanced). Mode **1 AGENT** (market open, 16:40 ET Mon).
+2 callouts, 0 trades, equity unchanged **$50,688.86**.
+
+The owner asked for the thing chartists do — detect the level, draw both branches, and **account for the
+level not holding**. Built `levels.py` (measure what actually happens at levels) and `scenario.py` (the
+map). Both read only `visible.jsonl`; level detection is walk-forward, a k-bar fractal pivot is only known
+from bar j+k, and the outcome measurement looks forward only into bars the cursor has already passed.
+
+### The headline is a negative result, and my own first version manufactured a false positive
+
+**My first run reported an 83.1% bounce rate at detected levels.** It was an artefact of my own
+thresholds: I scored a **bounce** on a high/low touch at 0.75 ATR against a **break** on a *close* at
+0.40 ATR — two different strengths of evidence at two different distances. The tell was the control:
+**random price lines scored 77%.** Made symmetric (both on a close, same distance):
+
+| | n | bounce | break | bounce trade | break trade |
+|---|---|---|---|---|---|
+| **fresh swing extreme (1 touch)** | 162 | **45.7%** | **54.3%** | +0.048R | +0.045R |
+| retested level (2+ touches) | 175 | 53.7% | 46.3% | +0.060R | +0.063R |
+| **random price lines (control)** | 200 | **55.0%** | 45.0% | +0.036R | −0.127R |
+
+> **Retested levels sit on top of the random control and carry nothing.** 53.7% vs 55.0% — if anything
+> marginally worse. A scenario tree drawn on a retested level is decoration.
+
+**Every chartist refinement I tested died against the control:**
+
+- **Touch count.** 2/3/4/5/6+ touches → 48.6 / 52.9 / 63.6 / 70.0 / 54.3%. Looks monotonic to 5, then
+  collapses at 6+, and the control runs 53.6 / 54.7 / 60.0 the same way. n=10 at the 5-touch peak.
+- **Support vs resistance.** Support bounces 59.4%, resistance 47.9% — but the *bounce trade* is
+  **−0.084R at support and +0.213R at resistance**, the exact inverse. Rule 3 again: the rate and the
+  payoff cancel.
+- **Trend alignment.** With-trend 55.7% vs against-trend 52.0%; the control runs 54.3% vs **55.8%**,
+  i.e. against-trend bounces *more* in the control. Nothing.
+- **Clustering bug, mine:** the first version reported levels with "56 touches" because it counted every
+  pivot in a 0.30-ATR band over 300 bars. Fixed to count **distinct** touches — separated by more than
+  2K bars, the way a chartist counts times price came back.
+
+### The one finding worth keeping, with its own deflation stated
+
+**A fresh, untested swing extreme BREAKS more often than it holds — 45.7% bounce, ~9 points below the
+random control.** It is the largest deviation from control anywhere in the study, and it is actionable in
+the sense that it says *don't assume the new high holds*.
+
+**Do not bank it.** On the rate that is **z ≈ 1.76**, which clears this codebase's single-pre-registered-
+hypothesis floor of 1.177 but **not the ~2.33 my real search width demands** — I tested touch buckets,
+side, trend alignment and 1-touch separately, so the honest trial count is a dozen or more, not one. And
+it earns nothing: the bounce and break arms return +0.048R and +0.045R at z +0.08 and +1.17.
+
+### The fourth branch, learned live: GAPPED THROUGH
+
+`scenario.py` originally had three branches (holds / breaks / neither). **A live armed plan voided at bar
+1616 and taught me a fourth.** I armed 6032.00 with both branches pre-computed. Bar 1615 closed exactly
+*on* 6032.00; bar 1616 then **opened 6042.75 across the holiday weekend — a 10.75-point gap** — and
+closed 6039.25, technically triggering my break branch.
+
+But the entry was now 6039.0 against a planned 6037.17 with the stop unchanged: **R:R fell from 2.00 to
+1.55** and the stop from 0.80 to 0.94 ATR. I declined it, because the measured break-trade expectancy is
++0.045R *at* 2.00 R:R — at 1.55 there is nothing left to pay for the risk.
+
+**So a level resolves three ways, not two: it holds, it breaks tradeably, or it is gapped through —
+resolved at a price nobody could have transacted.** `SERIES_AUDIT` §3 already measured
+`open[i+1] != close[i]` on 57–80% of MES 60m boundaries; this is that statistic arriving as a voided
+trade. The rule now in the map: **if the gap cuts R:R below 1.5 the plan is VOID, not late — re-arm from
+the new structure rather than chase.**
+
+### What the map is therefore *for*
+
+Not forecasting. The branches **cannot be weighted** — that is the measured result, and treating the
+bounce as the likely case is exactly the error the owner warned against. What it does is have both
+branches' entry, stop, target, contracts, dollar risk and rule-4 floor compliance worked out **before**
+price arrives, so the bar is execution rather than invention, and the branch that *happens* is the one
+traded instead of the one hoped for.
+
+### Search width: distinct theses now **8**
+
+Declaring the cost honestly — this burst added two: **(7)** key-level bounce (trade away from a level that
+holds) and **(8)** key-level break (trade through a level that fails). Previous six unchanged. Every
+statistic above is deflated against a trial count of 8+, not 1.
+
+**Stopped at:** cursor **1618/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
+8 theses, one level armed at 6045.50 with all four branches pre-computed.

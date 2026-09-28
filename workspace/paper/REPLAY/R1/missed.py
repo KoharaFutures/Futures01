@@ -103,13 +103,20 @@ def is_pivot(f, tol=1):
 
 def evaluate(f):
     """Best available R at bar f, both directions, plus the pivot tag."""
-    S = atr(f - 1)                          # ATR known at the DECISION bar
-    if S is None:
+    # STOP_ATR WAS A DEAD CONSTANT (found by agent A, burst 12). It was declared,
+    # PRINTED in the report header as "1.0 ATR stop", and never read - the stop was
+    # bare ATR. The published numbers were right only because STOP_ATR happened to
+    # be 1.0; setting it to 0.5 would have relabelled the header and changed nothing
+    # in the arithmetic. A label that lies while the number stays right is the exact
+    # defect family DEFECTS.md keeps cataloguing, so it is fixed here, not papered over.
+    a = atr(f - 1)                          # ATR known at the DECISION bar
+    if a is None:
         return None
+    S = STOP_ATR * a
     L, Sh = simulate(f, "LONG", S), simulate(f, "SHORT", S)
     if L is None or Sh is None:
         return None
-    return {"atr": S, "long": L, "short": Sh, "pivot": is_pivot(f),
+    return {"bar": f, "atr": a, "stop_pts": S, "long": L, "short": Sh, "pivot": is_pivot(f),
             "best": max(L[0], Sh[0]), "best_side": "LONG" if L[0] >= Sh[0] else "SHORT"}
 
 
@@ -165,10 +172,14 @@ sd_long = [e["long"][0] for c, e in res]
 sd_short = [e["short"][0] for c, e in res]
 ct_long = [e["long"][0] for e in ctrl]
 ct_short = [e["short"][0] for e in ctrl]
-# coin-flip arm: direction fixed by a deterministic parity of the bar index, so it
+# coin-flip arm: direction fixed by a deterministic parity of the BAR INDEX, so it
 # is chosen WITHOUT reference to the outcome - the placebo logic applied here.
-sd_flip = [(e["long"][0] if c["visible_bars"] % 2 == 0 else e["short"][0]) for c, e in res]
-ct_flip = [(e["long"][0] if i % 2 == 0 else e["short"][0]) for i, e in enumerate(ctrl)]
+#   FIXED (agent A, burst 12): the control used to key on enumerate() LIST POSITION
+#   while the sample keyed on bar index. Equal in expectation on a symmetric sample,
+#   so the published figures did not move - but they were not the same statistic, and
+#   a control indexed by its own position in a list is not indexed by anything real.
+sd_flip = [(e["long"][0] if e["bar"] % 2 == 0 else e["short"][0]) for c, e in res]
+ct_flip = [(e["long"][0] if e["bar"] % 2 == 0 else e["short"][0]) for e in ctrl]
 sd_best = [e["best"] for c, e in res]
 ct_best = [e["best"] for e in ctrl]
 

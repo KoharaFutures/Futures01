@@ -1157,3 +1157,55 @@ Each is pointed at a claim of mine and asked to try to break it, not to confirm 
 
 Consolidation is scheduled for the 17:30 ET return to 1 agent, with the instruction to name
 contradictions rather than smooth them.
+
+### Agent A — geometry sweep: the null survives, and two of my defects did not
+
+**A's verdict: the null holds at every geometry. 0 of 36 honest cell × arm combinations reach |z| ≥ 2.0;
+the largest is |z| 1.33** (1.0 ATR stop, 3R target, always-LONG), nowhere near 2.0 let alone the
+`free_t ≈ 2.68` that 36 tests demand. An off-grid 0.25-ATR probe also holds (max 1.77). The baseline cell
+reproduces `missed.py`'s published table exactly, so the other 11 are comparable.
+
+**So "my stand-downs cost nothing measurable" is not a single-geometry artefact.** I verified the
+direction of it myself rather than taking it on trust — running `missed.py` at 0.5 / 1.0 / 1.5 ATR gives
+stand-down z of 0.72 / 0.99 / 1.12, flat and small, matching A.
+
+**The only |z| ≥ 2 anywhere is the hindsight arm** (+2.73 at 1.5 ATR / 1.5R). That does not weaken the
+null, it sharpens it: my stand-down bars *were* more eventful than arbitrary bars, **with no predictable
+sign.** Eventfulness I can detect; direction I cannot. That is a cleaner statement of the result than I
+had.
+
+**Two defects in `missed.py`, found by A, verified by me, fixed — both latent, neither corrupting.**
+
+1. **`STOP_ATR` was a dead constant.** Declared at line 41, **printed in the report header** as the
+   geometry, and never read — `simulate()` was handed bare ATR. The published numbers were right only
+   because `STOP_ATR` happened to equal 1.0. Set it to 0.5 and the header would have relabelled itself
+   while the arithmetic stayed at 1.0. **A label that lies while the number stays right** is the exact
+   family `DEFECTS.md` catalogues, and it is the second time this desk has shipped a silent-failure defect
+   (after `watch.py`'s swallowed error). Fixed; re-ran and every published figure is unchanged; then
+   *proved the parameter live* by sweeping it.
+2. **The coin-flip control keyed on list position, the sample on bar index.** `enumerate(ctrl)` parity
+   versus `visible_bars` parity — equal in expectation on a symmetric sample, so nothing moved, but they
+   were not the same statistic and a control indexed by its position in a list is indexed by nothing real.
+   Fixed to use the bar index on both sides.
+
+**A finding that bears on how I have been applying rule 4, and I am recording the tension rather than
+resolving it.** A reports rule 4 reproducing **as a smooth gradient, not a floor**: expectancy runs
+−0.267R at 0.25 ATR to +0.033R at 1.5 ATR, tracking slippage from 9.4% to 1.6% of 1R, **with no knee at
+0.5.** My own probe agrees in direction. I have been treating 0.5 ATR as a cliff and refusing sub-floor
+stops categorically — most consequentially at bar 1502, where the refusal cost a +2R winner.
+
+**I am not overturning rule 4 and will keep applying it.** `REPLAY.md` is explicit that `BRIEF.md` wins
+on precedence, rule 4 comes from ~3M evaluations, and A measured 1,635 bars of one symbol. But the
+*mechanism* is now clearer: it is continuous cost drag, not a threshold, so a sub-floor stop is **more
+expensive**, not invalid. Rule 3 also reproduced cleanly in A's grid — control win rate spans 26.7–41.3%
+while control mean R stays inside −0.106R…+0.094R.
+
+**The gap A could not close, and my fix for it going forward.** All 42 `NO_TRADE` callouts carry
+`side: null`, so an "intended direction" arm — did the way I was *leaning* pay? — is unbuildable. That is
+the most interesting arm and it does not exist. The schema is harness-written so I cannot change it, but I
+can make the arm buildable prospectively: **from here every `notrade --why` begins with an explicit
+`LEAN:LONG` / `LEAN:SHORT` / `LEAN:NONE` token**, parseable out of the `why` text. It does not recover the
+42 already recorded; it means the arm exists by bar ~2,500.
+
+Files: `agents/A_grid.py`, `agents/A_geometry.md`. A also logged an error of its own making, per the desk
+convention.

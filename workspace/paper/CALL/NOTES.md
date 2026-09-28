@@ -3951,3 +3951,59 @@ unanimous bearish. MGC 1m and 5m both BULL 2-0. Locations MGC 12.8% of [4172.60,
 [30535.00, 30900.50].
 
 No call. Reversal test false on both symbols. MGC RTH opens **08:20 ET**, 2h06m out.
+
+## N95 — MNQ's 15m frame is out of unanimity for the first time all session, and its structure reads MIXED. But the higher high is 2.50 points against a 19.75 noise floor
+
+Two genuine firsts at 06:19, both on MNQ:
+
+1. **`regime.py` reports MNQ 15m as BEARISH 0-2, not 0-3.** The 15m frame has been unanimous bearish on
+   both symbols continuously since the session began — this is the first time either symbol's 15m has
+   dropped out of unanimity. `regime.py` says so itself in its reversal line: *"15m is 0-2, not
+   unanimous."*
+2. **`chart.py` reports MNQ structure as MIXED**, swing highs `30606.50 -> 30609.00` (**higher**) against
+   lows `30571.00 -> 30535.00` (lower). An expanding range rather than a downtrend.
+
+Before treating either as a turn, the test from N70/N89: **MNQ's higher high is 30609.00 − 30606.50 =
+2.50 points, against a 19.75-point largest non-session-open 15m high revision.** That is deep inside
+noise — 13% of the observed maximum. The "higher high" is not established, and the detector labelling the
+structure MIXED is reacting to a difference smaller than the feed's own restatements.
+
+The 15m frame losing unanimity is a different matter, because it is a count of three sub-signals rather
+than a level comparison, and 0-2 versus 0-3 means one sub-signal flipped. That is real but small, and it
+has happened while MNQ **fell 40 points in five minutes** — 30606.50 -> 30566.00 on the 5m frame — so the
+bounce that produced the higher high is already failing. MNQ location has gone 15.6% -> **8.5%** of
+[30535.00, 30900.50] in one check, and its 1m and 5m frames have flipped back to bearish (1-2 and 0-1)
+from unanimous bullish 3-0 five minutes ago. That is the ninth and tenth 1m/5m state change tonight.
+
+So: no reversal call, no long, no change of stance. The reversal test returns false on both symbols and
+explicitly names the missing condition on MNQ. What has actually happened is that MNQ's range has widened
+at both ends, which is what a 30.6% ATR expansion looks like from the inside.
+
+## N96 — N86's expiry arithmetic confirmed to the tick: the `06:00` bar exists and does NOT expire CALL-0004
+
+The 15m frame advanced this fetch, `+1 new`, and the new bar is stamped **`2026-09-28T06:00:00-04:00`** —
+exactly CALL-0004's `expires_bar_ts`. Tested directly:
+
+    newest 15m is 2026-09-28T06:00:00-04:00
+    needs > 2026-09-28T06:00:00-04:00   ->   NOT YET
+
+This is the strict comparison doing precisely what N86 said it would and what the 06:13 estimate I had
+been repeating all night could not account for. The plan needs the **`06:15`** bar, which completes at
+06:30 and — on the measured 0.5-4.6 minute publication delay — should be in hand about **06:31-06:35**.
+
+Seventh machinery prediction tonight to hold without amendment. It is also the one with the most
+practical value of any of them: without it I would have reported CALL-0004 as expired at 06:13, from the
+clock, when the resolver had not written anything, which is the exact failure mode N32 exists to prevent.
+
+## N97 — 06:19 state
+
+Newest settled 15m `05:45` on both (MGC c 4188.30, MNQ c 30592.00); the `06:00` bar settles at **06:28**.
+Newest real 5m `06:05` on both, lag 14.5m.
+
+MGC unsettled 4187.50 with the `06:00` 15m bar's high at 4191.40 — still 1.70 short of the 4193.10 swing
+high, and the excess over 4185.20 is 6.20, now exactly at the measured maximum high revision rather than
+inside it. Worth watching at the next settle. MGC's 40-bar high fell again, 4295.20 -> **4291.90**, as
+another old bar rolled out of the trailing window (N53, fifth sighting). Location 12.5% of
+[4172.60, 4291.90].
+
+MGC 1m BULL unanimous 3-0, 5m BULL 2-0; 15m and 60m unanimous bearish, unchanged all session. No call.

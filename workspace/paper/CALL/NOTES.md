@@ -4361,3 +4361,68 @@ structures BULL; both reversal tests still false with the reasons from N109 unch
 No call. Two plans PENDING: CALL-0001 (MNQ LONG, adverse), CALL-0002 (inert, window opens 08:20). Ledger:
 open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. MGC RTH opens
 08:20 ET, 1h28m out — and the hourly backstop is due about now, which will be the full check.
+
+## N113 — hourly full check, 06:54 ET. ATRs have CONTRACTED for the first time tonight, which loosens the constraint that killed every plan
+
+Cadence verified by listing, per N45: `CronList` shows `33ba414e` present. No `send_later` chain armed.
+CALLOUT.md, BRIEF.md and SERIES_AUDIT.md unchanged since `1948339` (09-27 19:37), so there is no new
+disagreement with CHECK_PROCEDURE.md to record.
+
+**ATRs re-measured from settled bars — and both have turned down:**
+
+| symbol | ATR14(15m) | session path | 1.0x stop | % of $240 | 50% cap binds at |
+|---|---|---|---|---|---|
+| MGC | **8.33** | 8.01 -> 9.34 -> 9.21 -> **8.33** | $83.29 | 34.7% | **1.44x ATR** |
+| MNQ | **45.41** | 38.04 -> 49.68 -> **45.41** | $90.82 | 37.8% | **1.32x ATR** |
+
+This is the **first contraction of the session on either symbol**, and on MNQ it reverses a 30.6% expansion.
+It matters because the single constraint that killed every MGC plan tonight was stop distance against the
+$120 cap: an hour ago the cap bound at 1.21x ATR on MNQ, now 1.32x, and MGC has gone from 1.30x to 1.44x.
+The room is widening. It is not yet enough — the void'd MGC plan needed 14.48 stop points and the cap allows
+12.0 — but the direction of travel is the one that eventually makes a plan expressible, and it is worth
+watching rather than re-deriving VOID from memory next time.
+
+**Direction, formed fresh.** Newest settled 15m `06:15` on both (MGC 4190.80, MNQ 30575.75); `06:30` settles
+06:58. MGC: 1m CONFLICTED 0-0, 5m BULL 2-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2, daily/weekly
+NOT ELIGIBLE. MNQ: 1m BULL 2-0, 5m BEAR 0-1, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h BULL 1-0, daily BULL
+3-0 unanimous, weekly BULL 2-1. **Both 15m structures read BULL; both 15m tallies are 1-2; both 60m frames
+remain unanimous bearish and have not moved once since the session began.** Both `trend` components still
+read BEAR with EMA20 falling on both (MGC 4188.50 < 4193.52, MNQ 30577.50 < 30604.60).
+
+The read: a shallow bounce that has flipped the structure component on both symbols without touching trend
+or the 60m frame, on moves measured in fractions of the feed's own revision noise (N112: MGC's last three
+candidate swing highs span 6.80 points, less than one ATR). Locations MGC 15.8% of [4172.60, 4273.50], MNQ
+13.2% of [30535.00, 30857.00]. Per-frame coverage: 1m through 06:44, 5m 06:40, 15m 06:30, 60m 05:00 (next
+07:00), 4h 00:00 (next 08:00), daily Friday 09-25.
+
+### The ledger, in full
+
+| quantity | value |
+|---|---|
+| journal entries | **18** |
+| callouts with a resolved outcome | **2** (was 1 at the 05:53 check) |
+| **closed trades** | **0** |
+| wins / losses | 0 / 0 |
+| **win rate** | **undefined — no closed trade** |
+| **payoff** | **undefined** |
+| expectancy in R | **undefined**, n = 0 |
+| the resolutions | CALL-0003 `NO_FILL` **0.0R**; CALL-0004 `EXPIRED_UNTRIGGERED` **0.0R** |
+| NO TRADE entries | **11**, of which **2** carry `declined_despite_qualifying: true` |
+| realized P&L | $0.00 |
+| equity / peak | **$50,000.00 / $50,000.00** |
+| drawdown | **$0.00** |
+| distance to the $2,800 absorbing state | **$2,800.00**, the full width |
+| ambiguous bars encountered by resolve.py | 0 |
+
+Rule 3, stated rather than assumed: no win rate is quoted because there is no closed trade to compute one
+from, and a rate without its payoff is forbidden regardless.
+
+**Both resolutions are non-fills at exactly 0.0R.** That is the session's whole trading record: two
+pre-registered plans, both correct on direction, neither reachable. CALL-0004's tracking read fav 75.70
+against a 19.04 target distance. Two plans PENDING: CALL-0001 (MNQ LONG, 354.25 adverse, expires on the
+16:00 bar) and CALL-0002 (inert, never evaluated per N30, window opens 08:20).
+
+**No callout.** Both reversal tests return false with the reasons measured at N109 — MGC cannot satisfy the
+two-higher-timeframe condition at all tonight, since its daily and weekly are NOT ELIGIBLE and its 4h is
+bearish. MGC RTH opens **08:20 ET**, 1h26m out: CALL-0002's window, and the first moment tonight anything
+enters a session this repository has measured. MNQ RTH 09:30.

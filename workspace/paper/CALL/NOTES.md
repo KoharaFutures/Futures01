@@ -1548,3 +1548,76 @@ flickers. Ranking is stable and is the part worth reading: **MGC's two plans abo
 MNQ's two, every check tonight**, which comes from the fixed criteria — MGC's stops sit
 ~4x ATR clear of the 40-bar extreme, MNQ's CALL-0001 sits 3.50 points off it. That
 ordering has not changed once, through two grader rewrites and four confluence flips.
+
+## N29 — the Discord call I graded C- filled and stopped out inside 25 minutes, on exactly the flaw I named. One datum, and I made nothing being right.
+
+01:18 AM EDT. MGC broke to a new low **4222.40** and closed 4223.00. That number
+settles the callout the owner asked me to rate at 00:42.
+
+```
+Discord:  MGC LONG 4230 · SL 4224.2 · Target 4300 · 1 con        my grade: C- (4/10)
+
+00:40  o 4228.80 h 4232.30 l 4228.80 c 4230.80   ENTRY 4230 touched  -> FILLED
+00:45  o 4230.80 h 4231.50 l 4229.40 c 4230.10
+00:50  o 4230.10 h 4230.40 l 4228.00 c 4228.80
+00:55  o 4228.90 h 4229.70 l 4226.70 c 4227.40
+01:00  o 4227.40 h 4230.80 l 4227.10 c 4228.00
+01:05  o 4228.00 h 4228.20 l 4222.40 c 4223.00   SL 4224.2 TOUCHED   -> STOPPED
+```
+
+Filled at 4230, stopped at 4224.20. **-5.80 points, -$58 on one contract**, plus
+$1.44 round-turn commission and exchange fees and ~$1 of stop slippage at this
+vendor's one-tick assumption — call it **-$60, in about 25 minutes.** The 70-point
+target never came within 68 points of being relevant.
+
+### The critique was specific, and this is the specific thing that happened
+
+What I wrote at 00:42: *"the stop is exactly on the 40-bar low — 0.00 away. That's not
+near the low, that's at it... A one-tick probe ends the trade. This is the whole thing,
+and it's why the 12R is an illusion: the geometry is only as good as the stop's survival
+odds, and that stop is parked on the trapdoor."*
+
+The low printed **4222.40** — **1.80 points** through the stop — and price closed
+4223.00, back above it. It was a probe, not a collapse. The trade did not fail because
+gold fell 70 points the wrong way; it failed because the stop sat on the one price every
+other stop in the market was sitting on, and the market went there and came back.
+
+I also proposed the fix: *"Move the stop under the low — 4221 or 4219."* Neither would
+have been touched by 4222.40. The position would still be open.
+
+### What this is worth, stated honestly, because the temptation is to overclaim
+
+**It is n=1.** A stop 1.8 points lower surviving one probe is a single observation, and
+a stop that survives a probe can still lose later. The general claim — that stops parked
+on the obvious swing low get taken — is not proved by one instance, and this repository's
+whole posture is that nothing here has a measured edge. Had the low printed 4218 instead
+of 4222.40, my proposed stop would have gone too and the critique would look identical
+while being equally unproven.
+
+**What it does establish** is narrower and still worth having: the failure mode I named
+was the failure mode that occurred, within the window I named it in, at the price I named
+it at. That is the correct shape of evidence for a critique even at n=1, because the
+prediction was specific enough to have been wrong.
+
+**And I made nothing being right.** Both my MGC shorts are unfilled and now further away
+than at any point tonight — CALL-0002 needs +66.10, CALL-0004 +64.60. My read of gold's
+direction was correct for four straight hours and my own book has captured exactly $0 of
+it, because both plans require a 60-point retracement first. That is the N18 lesson
+again: a limit entry solves being late by refusing to participate. Being right about
+someone else's trade and flat in your own is not a good night, it is a well-documented
+one.
+
+**No journal entry for this.** It is not this desk's trade and writing it into
+`journal.jsonl` would inflate the record with a position nobody here took. It belongs in
+NOTES as a graded critique that got tested, which is what it is.
+
+### State
+
+MGC is at **0.5% of its 40-bar range** [4222.40, 4332.30] — a new low, all five eligible
+frames bearish. MNQ has diverged: its 15m dropped to **0-2 NOT UNANIMOUS** with structure
+**MIXED** — swing lows **30637.50 -> 30666.75, HIGHER** — the first higher low on either
+symbol tonight. `reversal()` explicitly names that as why there is still no call: *"15m
+is 0-2, not unanimous."* Worth watching; not tradeable, because rule 1 makes component
+disagreement a reason not to trade rather than a weaker reason to trade.
+
+CALL-0003 is 87.00 out with 42 minutes left and will almost certainly journal NO_FILL.

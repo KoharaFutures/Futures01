@@ -47,33 +47,32 @@ FRAME = 58          # width of the machined bezel around the card
 
 
 def brushed_metal(W: int, H: int) -> Image.Image:
-    """A machined bezel: vertical tone ramp, horizontal brush striations, diagonal sheen.
+    """A DARK machined bezel - gunmetal, not bright steel.
 
-    Deterministic by construction - a fixed seed and pure arithmetic - because a card that
-    renders differently on each run cannot be compared against the one that was sent.
+    Tone stays in a 22-92 band so the laser reads as light emitted BY the card rather than
+    as a highlight on a shiny surface. Bright metal competes with neon; dark metal carries
+    it. Deterministic by construction (fixed seed, pure arithmetic), because a card that
+    renders differently on each run cannot be checked against the one that was sent.
     """
     import random
     rng = random.Random(20260927)
     img = Image.new("RGB", (W, H))
     px = img.load()
-    # per-row brush jitter, drawn once and reused across the width
-    jitter = [rng.randint(-9, 9) for _ in range(H)]
+    jitter = [rng.randint(-5, 5) for _ in range(H)]
     for y in range(H):
         fy = y / H
-        # tone ramp: dark at top, bright shoulder at a third, mid below
-        base = 58 + int(120 * (1.0 - abs(fy - 0.33) * 2.1)) if fy < 0.78 else 46 + int(26 * (1 - fy))
-        base = max(28, min(196, base)) + jitter[y]
+        base = 34 + int(42 * (1.0 - abs(fy - 0.30) * 1.9))
+        base = max(22, min(80, base)) + jitter[y]
         for x in range(0, W, 2):
-            sheen = int(26 * max(0.0, 1.0 - abs((x / W) + fy - 0.85) * 2.4))
-            v = max(18, min(228, base + sheen))
-            c = (v, v, int(v * 1.03) if v < 240 else v)
+            sheen = int(14 * max(0.0, 1.0 - abs((x / W) + fy - 0.85) * 2.4))
+            v = max(18, min(94, base + sheen))
+            c = (v, v + 1, v + 5)
             px[x, y] = c
             if x + 1 < W:
                 px[x + 1, y] = c
     return img
 
-
-def bevel(d, box, light=(226, 230, 238), dark=(16, 18, 22), w=3):
+def bevel(d, box, light=(168, 175, 188), dark=(8, 9, 11), w=3):
     """Top/left catch the light, bottom/right fall into shadow - the cue that reads as
     'machined edge' rather than 'drawn rectangle'."""
     x0, y0, x1, y1 = box
@@ -86,8 +85,8 @@ def bevel(d, box, light=(226, 230, 238), dark=(16, 18, 22), w=3):
 
 def screw(d, cx, cy, r, las):
     """Hex-socket fastener with a lit rim - the laser catches the metal."""
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(74, 78, 86, 255),
-              outline=(210, 216, 226, 190), width=2)
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(44, 47, 54, 255),
+              outline=(150, 157, 170, 175), width=2)
     d.ellipse([cx - r + 3, cy - r + 3, cx + r - 3, cy + r - 3], fill=(38, 41, 47, 255))
     k = r - 6
     pts = [(cx + k * __import__("math").cos(__import__("math").radians(a)),
@@ -120,27 +119,60 @@ def backdrop(W, H, side):
     return img
 
 
-def hud_frame(d, box, colour, width=3, arm=58, radius=0):
-    """Corner brackets rather than a closed rectangle - the frame reads as a HUD."""
+def lit_bar(d, gd, x0, y0, length, las, thick=15, horiz=True):
+    """A dark-metal strut with a lit channel cut down its centre.
+
+    This is the inner border. Metal first - a tone ramp across the bar's short axis, a
+    bright catch on the lit edge and shadow on the other - then a recessed groove, then
+    the laser inside the groove. Light running THROUGH metal, not drawn on top of it.
+    """
+    for i in range(thick):
+        t = i / max(1, thick - 1)
+        v = int(100 - 66 * t)
+        if horiz:
+            d.line([x0, y0 + i, x0 + length, y0 + i], fill=(v, v + 1, v + 5, 255))
+        else:
+            d.line([x0 + i, y0, x0 + i, y0 + length], fill=(v, v + 1, v + 5, 255))
+    if horiz:
+        d.line([x0, y0, x0 + length, y0], fill=(182, 189, 202, 185), width=1)
+        d.line([x0, y0 + thick - 1, x0 + length, y0 + thick - 1], fill=(9, 10, 12, 225), width=1)
+        cy = y0 + thick // 2
+        d.line([x0 + 4, cy, x0 + length - 4, cy], fill=(7, 8, 10, 255), width=max(3, thick // 3))
+        d.line([x0 + 6, cy, x0 + length - 6, cy], fill=(*las, 255), width=2)
+        gd.line([x0 + 6, cy, x0 + length - 6, cy], fill=(*las, 255), width=6)
+    else:
+        d.line([x0, y0, x0, y0 + length], fill=(182, 189, 202, 185), width=1)
+        d.line([x0 + thick - 1, y0, x0 + thick - 1, y0 + length], fill=(9, 10, 12, 225), width=1)
+        cx = x0 + thick // 2
+        d.line([cx, y0 + 4, cx, y0 + length - 4], fill=(7, 8, 10, 255), width=max(3, thick // 3))
+        d.line([cx, y0 + 6, cx, y0 + length - 6], fill=(*las, 255), width=2)
+        gd.line([cx, y0 + 6, cx, y0 + length - 6], fill=(*las, 255), width=6)
+
+
+def hud_frame(d, box, colour, gd=None, arm=170):
+    """The inner border: corner struts of dark metal with light running through them,
+    plus thinner lit rails along each edge with a deliberate gap at the midpoint."""
     x0, y0, x1, y1 = box
-    c = (*colour, 255)
+    gd = d if gd is None else gd
+    T, R = 15, 7
+    midx, midy = (x0 + x1) // 2, (y0 + y1) // 2
+    # corners
     for (cx, cy, dx, dy) in ((x0, y0, 1, 1), (x1, y0, -1, 1), (x0, y1, 1, -1), (x1, y1, -1, -1)):
-        d.line([cx, cy, cx + dx * arm, cy], fill=c, width=width)
-        d.line([cx, cy, cx, cy + dy * arm], fill=c, width=width)
-    # thin connecting rails, inset, with a gap at the midpoint of each edge
-    mid = (x0 + x1) // 2
-    r = (*colour, 90)
-    d.line([x0 + arm, y0, mid - 70, y0], fill=r, width=1)
-    d.line([mid + 70, y0, x1 - arm, y0], fill=r, width=1)
-    d.line([x0 + arm, y1, mid - 70, y1], fill=r, width=1)
-    d.line([mid + 70, y1, x1 - arm, y1], fill=r, width=1)
-    ymid = (y0 + y1) // 2
-    d.line([x0, y0 + arm, x0, ymid - 60], fill=r, width=1)
-    d.line([x0, ymid + 60, x0, y1 - arm], fill=r, width=1)
-    d.line([x1, y0 + arm, x1, ymid - 60], fill=r, width=1)
-    d.line([x1, ymid + 60, x1, y1 - arm], fill=r, width=1)
-
-
+        bx = cx if dx > 0 else cx - arm
+        by = cy if dy > 0 else cy - T
+        lit_bar(d, gd, bx, by, arm, colour, T, True)
+        vx = cx if dx > 0 else cx - T
+        vy = cy if dy > 0 else cy - arm
+        lit_bar(d, gd, vx, vy, arm, colour, T, False)
+    # edge rails with a midpoint gap
+    lit_bar(d, gd, x0 + arm + 16, y0 + 4, midx - 96 - (x0 + arm + 16), colour, R, True)
+    lit_bar(d, gd, midx + 96, y0 + 4, (x1 - arm - 16) - (midx + 96), colour, R, True)
+    lit_bar(d, gd, x0 + arm + 16, y1 - T + 4, midx - 96 - (x0 + arm + 16), colour, R, True)
+    lit_bar(d, gd, midx + 96, y1 - T + 4, (x1 - arm - 16) - (midx + 96), colour, R, True)
+    lit_bar(d, gd, x0 + 4, y0 + arm + 16, midy - 86 - (y0 + arm + 16), colour, R, False)
+    lit_bar(d, gd, x0 + 4, midy + 86, (y1 - arm - 16) - (midy + 86), colour, R, False)
+    lit_bar(d, gd, x1 - T + 4, y0 + arm + 16, midy - 86 - (y0 + arm + 16), colour, R, False)
+    lit_bar(d, gd, x1 - T + 4, midy + 86, (y1 - arm - 16) - (midy + 86), colour, R, False)
 def panel(d, box, colour, dim=False):
     x0, y0, x1, y1 = box
     cut = 16
@@ -209,8 +241,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     M = 54
     frame = (M, M, W - M, H - M)
-    hud_frame(gd, frame, las, width=4)
-    hud_frame(d, frame, las, width=3)
+    hud_frame(d, frame, las, gd=gd)
 
     # header: symbol and direction on ONE baseline, strategy beneath
     gd.text((86, 84), plan["symbol"], font=fsym, fill=(*las, 210))

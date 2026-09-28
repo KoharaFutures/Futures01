@@ -1,10 +1,11 @@
 {
   "starting_equity": 50000.0,
-  "equity": 50000.0,
-  "peak_equity": 50000.0,
+  "equity": 50156.56,
+  "peak_equity": 50156.56,
   "drawdown": 0.0,
-  "realized_pnl": 0.0,
-  "open": [
+  "realized_pnl": 156.56,
+  "open": [],
+  "closed": [
     {
       "call_id": "CALL-0002",
       "symbol": "MGC",
@@ -16,22 +17,31 @@
       "stop": 4196.4,
       "risk_points": 10.0,
       "contracts": 1,
-      "remaining": 1,
+      "remaining": 0,
       "tps": [
         {
           "label": "TP1",
           "r": 1.6,
           "fraction": 1.0,
           "price": 4170.4,
-          "hit": false
+          "hit": true,
+          "hit_bar_ts": "2026-09-28T09:30:00-04:00",
+          "qty": 1
         }
       ],
       "risk_dollars": 100.0,
-      "realized": 0.0,
+      "realized": 156.56,
       "triggered_at_utc": "2026-09-28T12:48:04+00:00",
       "basis_at_trigger": "113d290",
-      "entry_fill_note": "gapped through the trigger; filled at the bar open"
+      "entry_fill_note": "gapped through the trigger; filled at the bar open",
+      "exit_price": 4170.4,
+      "exit_bar_ts": "2026-09-28T09:30:00-04:00",
+      "exit_reason": "TARGET TP1",
+      "ambiguous": false,
+      "closed_at_utc": "2026-09-28T13:47:47+00:00",
+      "net": 156.56,
+      "r_multiple": 1.566,
+      "result": "WIN"
     }
-  ],
-  "closed": []
+  ]
 }

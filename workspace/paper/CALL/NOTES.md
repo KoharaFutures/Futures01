@@ -6179,3 +6179,70 @@ within about fifteen minutes of each other.**
 MGC: location **5.8%** of [4172.60, 4233.20] region, every frame bearish, 15m and 60m both 0-3 unanimous, trend
 BEAR, structure BEAR. No new call. 1 open (excluded, about to close), 2 pending; equity $50,000.00, drawdown
 $0.00.
+
+## N174 — CALL-0002 CLOSED: WIN, +$156.56, +1.566R. Equity $50,156.56. EXCLUDED, exactly as declared six times
+
+    CALL-0002 TP1 hit @ 4170.4 (1 lot) bar 2026-09-28T09:30:00-04:00 net $+156.56
+    CLOSED CALL-0002 WIN TARGET TP1 net $+156.56 (+1.566R)
+    open 0  closed 1  equity $50,156.56  drawdown $0.00
+
+Exactly as N172 predicted at 09:43, on the bar it predicted, resolved at the minute it predicted. The net is
+$156.56 rather than the arithmetic $160.00 because costs were charged — so the R is **+1.566**, not +1.600.
+
+**`state.json` now reads 1 closed trade, 1 win, 100% win rate, +1.566R, equity $50,156.56. The desk's measured
+record is unchanged: 0 countable closed trades, win rate undefined, payoff undefined, expectancy undefined at
+n = 0, measured drawdown $0.00.** The exclusion was declared at +$38 and restated at +$95, at $0.00 flat, at
++$45, at +$103 and at certainty. It is now applied to the realised number, which is the only place it was ever
+going to matter.
+
+For the avoidance of any doubt about what was excluded and why: a SHORT specified at **4289.10** filled at
+**4186.40** — 102.70 points away — because the plan's `created_bar_ts` was future-dated and off the 15m grid,
+leaving it blind for the six hours in which MGC actually fell from 4289 to 4172. The +$156.56 is the size of
+that defect. **The correct action was to retire the plan at N30 and I did not, which is my error and is on the
+record with the profit it produced.**
+
+## N175 — THE REVERSAL HAS LAPSED, and the call is now underwater on its own terms
+
+`reversal('MNQ')` no longer fires: **`no reversal call - 15m is 1-0, not unanimous`.** MNQ's 15m has gone from
+BULLISH 3-0 unanimous to **BULLISH 1-0** — trend **MIXED** (30647.75 < EMA20 30656.31 while the EMA still rises)
+and location **MIXED at 50.3%** of [30535.00, 30759.25], down from 81.4%. Structure is the only component still
+BULL. The call held **66+ consecutive checks** and has ended.
+
+**The honest accounting of that call, stated plainly.** I called REVERSAL BULLISH at 08:19 with MNQ's 15m close at
+**30693.25**. It is now **30647.75**. **The call is 45.50 points underwater on its own terms.** In between it ran
+to 30759.25 — 66.00 points in favour — so the sequence is: right for an hour, then wrong.
+
+MNQ's `09:30` 15m bar is the reason: `h 30759.25 l 30617.25 c 30647.75`, a **142.00-point range** and **3.01x the
+47.20 ATR**, the largest bar of the session on either symbol by a wide margin. That is the RTH open, and it went
+the other way.
+
+**CALL-0005's thesis tracking has flipped to `DIRECTION WRONG`** — fav 56.25, adv 85.75 against an 83.82 target
+distance. So the plan I could not fill is now one I would not have wanted filled. **That is the first time all
+night the unreachable-entry failure mode has been to my benefit**, and it deserves the same scepticism as the
+excluded win: it is luck, not process. N149's 0-for-3 stands; what changes is that the third one would have lost.
+
+## N176 — and CALL-0005 can still fill, on a REVISION, within the measured revision range
+
+This is live and precise. CALL-0005's fill window is bars with `ts <= 09:30`, and the `09:30` 15m bar **is in
+window**:
+
+    09:30 15m bar:  h 30759.25  l 30617.25  c 30647.75
+    limit 30595.88  ->  21.37 BELOW the bar's low, so not touched
+    expiry needs a bar with ts > 09:30  ->  none yet; the 09:45 bar lands ~10:01
+
+The bar completed at 09:45 and will keep revising until roughly 10:00 (N89: median +12.3m, 90th +14.2m after
+completion). **MNQ's largest non-session-open 15m low revision is 27.25 points (N70), and the limit is 21.37
+below the current low. A revision large enough to fill this plan is INSIDE the measured range.**
+
+So the plan's fate now rests on whether an already-completed bar restates its low by 21.37 points — and per N140
+that would not be a price move at all. **If it fills that way I will say so explicitly**: the entry would be
+awarded by a data restatement rather than by the market trading there, which is a different object from a real
+fill and the journal will record which one it was. Stating that now, before the resolution, for the same reason
+N155 was declared before its outcome.
+
+MGC: CALL-0002 is closed, so MGC has nothing live. Every frame bearish, 15m and 60m 0-3 unanimous, trend BEAR
+(4179.90 < EMA20 4185.68, falling), structure BEAR, location 17.9% of [**4168.30**, 4233.20] — a new session low
+at 4168.30 on the 5m `09:35` bar.
+
+Ledger: **0 open, 1 closed (excluded), 2 pending. `state.json` equity $50,156.56, drawdown $0.00. Measured equity
+$50,000.00, measured drawdown $0.00, measured closed trades 0.**

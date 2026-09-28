@@ -154,8 +154,10 @@ for f in range(FMIN, fmax + 1):
 
 REG = ["A"] + [f"B{H}" for H in HORIZONS] + ["C"]
 LBL = {"A": "A  FLAT16 (owner's rule)", "C": "C  FLAT16x2 (one extra cycle)"}
+SHORTLBL = {"A": "FLAT16", "C": "FLAT16x2"}
 for H in HORIZONS:
     LBL[f"B{H}"] = f"B  HOLD, no time exit, cap {H} bars"
+    SHORTLBL[f"B{H}"] = f"HOLD cap {H}"
 
 
 # ---- stats ----------------------------------------------------------------
@@ -243,11 +245,22 @@ P("")
 bydate = defaultdict(list)
 for i, r in enumerate(rows):
     bydate[r["ts"][:10]].append(i)
-no16 = [d for d, ix in sorted(bydate.items()) if not any(IS16[i] for i in ix)]
-P(f"dates with bars: {len(bydate)}; dates with NO 16:00 ET bar: {len(no16)}")
+# a date that carries a DAY session (any bar at or after 09:00 ET) but no 16:00
+# bar is a truncated session. Dates holding only 18:00-23:00 bars are the opening
+# leg of the NEXT cycle and are not missing anything.
+no16 = [d for d, ix in sorted(bydate.items())
+        if not any(IS16[i] for i in ix)
+        and any("09" <= rows[i]["ts"][11:13] <= "16" for i in ix)]
+evening_only = [d for d, ix in sorted(bydate.items())
+                if not any(IS16[i] for i in ix) and d not in no16]
+P(f"dates with bars: {len(bydate)}    16:00 ET bars: {sum(IS16)}")
+P(f"dates carrying a day session but NO 16:00 bar -> TRUNCATED SESSIONS: {len(no16)}")
 for d in no16:
     ix = bydate[d]
     P(f"  {d}  {len(ix):>2} bars  {rows[ix[0]]['ts'][11:16]}..{rows[ix[-1]]['ts'][11:16]} ET")
+P(f"dates holding only evening bars (18:00-23:00) - the opening leg of the next")
+P(f"cycle, nothing missing: {len(evening_only)} (Sundays and the Friday-evening-free")
+P(f"weekday pattern of this tape)")
 P("")
 P("These are abbreviated sessions: 2024-11-29 (day after Thanksgiving) and")
 P("2024-12-24 (Christmas Eve) run on a 30-minute-offset grid 09:30..12:30 and stop")

@@ -456,6 +456,41 @@ def main():
               f"(= ${edge*5:.3f}/contract) against a round-turn cost of ~1.04 pts")
         print(f"    (2.69/5.0 commission + 1 tick each way) -> {edge/1.04:.3f}x cost")
 
+    # ---------------- 5b. EMPIRICAL power curve
+    print("\n" + "=" * 78)
+    print("5b. EMPIRICAL POWER - inject a known AR(1) edge and see if I catch it")
+    print("=" * 78)
+    print("  1000 AR(1) series per row, length n, sd matched to the real tape.")
+    print("  'lag1' = P(|rho_1| clears the 1.96/sqrt(n) band).")
+    print("  'VR2'  = P(|z2| > 1.96 at q=2).  This is the honest power statement:")
+    print("  it says what size of real edge this sample WOULD have found.")
+    print(f"\n{'true rho':>9} {'lag1 power':>11} {'VR2 power':>10} "
+          f"{'mean rho_1':>11} {'edge pts/bar':>13} {'x cost':>7}")
+    rng3 = np.random.default_rng(SEED + 2)
+    for rho_true in (0.0, 0.02, 0.04, 0.05, 0.068, 0.08, 0.10, 0.15):
+        hit1 = hit2 = 0
+        rhos = []
+        REP_POW = 1000
+        for _ in range(REP_POW):
+            e = rng3.normal(0, sd * math.sqrt(1 - rho_true ** 2), n + 200)
+            x = np.empty(n + 200)
+            x[0] = e[0]
+            for t in range(1, n + 200):
+                x[t] = rho_true * x[t - 1] + e[t]
+            x = x[200:]
+            a1 = acf(x, 1)[0]
+            rhos.append(a1)
+            if abs(a1) > band_95:
+                hit1 += 1
+            _, _, z2 = variance_ratio(x, 2)
+            if abs(z2) > 1.96:
+                hit2 += 1
+        edge = rho_true * mean_abs_pts
+        print(f"{rho_true:>9.3f} {hit1/REP_POW:>11.3f} {hit2/REP_POW:>10.3f} "
+              f"{np.mean(rhos):>+11.4f} {edge:>13.4f} {edge/1.04:>7.2f}")
+    print("\n  Read the rho = 0.000 row as the false-positive rate: it should sit")
+    print("  at ~0.05, confirming the test is calibrated and not merely quiet.")
+
     # ---------------- 6. robustness: drop session-break returns
     print("\n" + "=" * 78)
     print("6. ROBUSTNESS - drop returns spanning the session break (no 17:00 bar)")

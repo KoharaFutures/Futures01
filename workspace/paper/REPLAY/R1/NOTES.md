@@ -1991,3 +1991,45 @@ calculator only** — its odds are withdrawn and both branches are unweighted. A
 Counterfactual (n=43): always-long +0.224R vs control +0.208R (**z +0.96**), always-short +0.035R (z +0.26),
 coin-flip +0.123R (z +0.61). **Nothing above |z| 2.** The long arm's creep has stopped rising (+0.99 → +1.08
 → +0.96) as the control moved with it, which is what drift rather than judgement looks like.
+
+---
+
+## Burst 14 — bars 1735→2000. basis `3c3ba38`. Mode **1 AGENT [OPEN]**.
+
+265 bars, 2 callouts, **0 trades**, equity unchanged **$50,688.86**. Roughly **263 of 265** bars passed over
+without a candidate — the expected state now that thesis 5 is retired and the scenario map names nothing as
+likely. Tape covered 2025-01-28 → 2025-02-12, chop inside 5935.5–6154.5 with a narrowing 6011.5–6123.25 at
+the end. Roll detector: still one run, the known one.
+
+### `score` at bar 2,000 — and it prints a number that will mislead whoever reads it next
+
+```
+REAL     n 2  mean +1.8744R  sd 0.0289  t +91.660  win 100.0%
+PLACEBO  n 2  mean +0.8935R  sd 1.3584  t  +0.930  win  50.0%
+real - placebo: +0.9810R   Welch z +1.021   free_t(20) 2.448   does NOT clear
+```
+
+**`t +91.660` on the REAL arm is an arithmetic artefact, not a result, and I am flagging it loudly because
+it is exactly the shape of number that triggers a false alarm — or worse, a celebration.** My two trades
+returned **+1.8949R and +1.8540R**. For n=2, `sd = |a−b|/√2 = 0.0289`, so
+`t = 1.8744/(0.0289/√2) = 91.7`. **Two near-identical outcomes collapse the denominator.** It says nothing
+about skill, leak, or edge.
+
+**The leak test is the separation from the placebo, which is `z +1.021` — nowhere near the |z| = 4.5 stop
+condition, and short of `free_t(20)` 2.448 too.** A future burst reading `t +91` and reaching for the leak
+protocol would be misreading the harness; one reading it as evidence of skill would be worse.
+
+**Two thresholds, both quoted, because they answer different questions:** `free_t(20) = 2.448` is right for
+this score line, which concerns the 20 distinct *trading* theses that produced the trades. **`free_t(297) =
+3.37` is right for any claim drawn from the whole body of analysis**, including the nine agents' searches.
+Neither is cleared by anything here.
+
+### Counterfactual (n=45)
+
+always-long +0.198R vs control +0.199R (**z +0.95**), always-short +0.071R (z +0.66), coin-flip +0.155R
+(z +0.90). **Nothing above |z| 2.** The always-long arm's control has now converged on the sample almost
+exactly (+0.198 vs +0.199) — the clearest demonstration yet that the long arm's earlier creep was the tape's
+drift, present in both, and not judgement.
+
+**Stopped at:** cursor **2000/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0, 2 closed
+trades, 20 trading theses / 297 desk-wide, nothing armed.

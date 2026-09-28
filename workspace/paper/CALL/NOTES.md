@@ -4645,3 +4645,77 @@ sub-noise differences; both reversal tests false, MGC's unreachable per N117.
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
 opens 08:20 ET, 54 minutes out.
+
+## N123 — tenth settled pair. MNQ's higher HIGH is now established beyond its noise floor; its higher LOW is not, and MGC's is neither
+
+The `07:00` bar settled. Tenth settled pair: MGC `06:45` 4187.60 -> `07:00` **4182.30** (**−5.30**); MNQ
+30585.50 -> **30592.75** (+7.25). Settled tally since `04:15`: MGC **+5.40**, MNQ **−30.00**.
+
+`chart.py` now reports, on the all-bars series, **both** symbols with fresh higher highs:
+
+| symbol | swing highs | size | its noise floor (max non-session-open 15m HIGH revision) | established? |
+|---|---|---|---|---|
+| MGC | `4192.00 -> 4193.40` | **1.40** | 6.20 | **no — 23% of the floor** |
+| MNQ | `30609.00 -> 30644.00` | **35.00** | 19.75 | **YES — 1.77x the floor** |
+
+And the higher lows, against the low-revision floors measured in N70:
+
+| symbol | swing lows | size | floor (max non-session-open 15m LOW revision) | established? |
+|---|---|---|---|---|
+| MGC | `4172.60 -> 4183.90` | **11.30** | 6.80 | **YES — 1.66x** |
+| MNQ | `30535.00 -> 30547.75` | **12.75** | 27.25 | **no — 47% of the floor** |
+
+**So neither symbol has a fully established bullish structure, and they fail on opposite legs.** MNQ's
+higher high is real and its higher low is inside noise; MGC's higher low is real and its higher high is
+inside noise. Both `chart.py` labels read `BULL` with equal confidence, and the measurement says each is
+half a turn. That is the most useful thing the revision-distribution work (N70/N89) has produced — it
+separates two identical-looking labels into one real leg and one artefact, per symbol, in opposite places.
+
+Per N121's timing correction: on the **settled** series MGC's comparison is still `4191.40 -> 4192.00`,
+because 4193.40 sits on the `07:00` bar and needs `07:15` settled to confirm — **~07:43**. The all-bars
+series has confirmed it; the settled series has not. Both statements are in the table above and they are
+about different objects.
+
+## N124 — pre-committing an MNQ LONG method now, before the price exists. As written, it currently FAILS
+
+MNQ is the only symbol that can reach a qualifying reversal tonight (N117: MGC's 2-HTF gate is unreachable),
+its 4h/DAILY/WEEKLY are all bullish, and it twice presented a fully qualifying LONG that I declined and that
+then decayed (N110). If it comes back, the decision is owed. So the method goes down **now**, while MNQ sits
+near its mean and no entry price exists, on the same discipline as N75/N77 — and with the leg-selection hole
+N77 found closed from the start:
+
+1. **Direction LONG only**, and only if `reversal_setup('MNQ')` returns `qualifies: True` — which requires
+   sigma **≤ −1.5** and **≥ 2** bullish higher timeframes. No discretionary override, in either direction.
+2. **Structure gate, both legs, both established:** the settled 15m series must show a higher high **and** a
+   higher low, and **each must exceed MNQ's measured noise floor** — 19.75 points for the high, 27.25 for the
+   low. A leg inside its floor does not count. (On today's numbers the high passes at 35.00 and the low
+   **fails** at 12.75, so as written this condition is **not met right now**.)
+3. **Entry** is a BUY LIMIT at the settled higher low, placed **below** the market so it waits for price to
+   come to it. If the higher low is at or above price the setup is a chase and there is no plan.
+4. **Stop** goes below the lower of the two swing lows in the sequence, at least **0.5x ATR14(15m)** away
+   (rule 4), ATR re-measured at the time and inherited from nothing.
+5. **Size** 1 contract; **void if `stop_points x $2 > $120`**. At MNQ's current 45.41 ATR that allows a
+   60-point stop, so this is the one constraint that is *not* currently binding — the opposite of the MGC
+   plan's problem.
+6. **Targets** TP1 1.5R executable, TP2 2.5R and TP3 3.5R marked `NEEDS 3 LOTS`, with bare R multiples named
+   as such rather than dressed as levels.
+7. **Expiry** the MNQ RTH open bar, **09:30 ET**. Overnight is outside everything this repository measured;
+   a setup that has not filled by the open is a different trade in a different regime.
+8. **Weakness stated in advance:** rule 2 puts MTF alignment at z = −4.09 and this plan leans on HTF
+   agreement, which is the configuration the programme measured as negative. Rule 7 says sub-hourly is a
+   graveyard. Nothing here has an edge; the method is structure for a discretionary read. And per N110 the
+   honest risk is that MNQ's sigma decays out of qualification again before price reaches the limit, in which
+   case this expires unfilled exactly as CALL-0003 and CALL-0004 did.
+
+**Right now conditions 1 and 2 both fail** — sigma is near zero and the higher low is inside its noise floor
+— so there is **no callout**. The value of writing it down is that if MNQ sells back to −1.5 sigma in the next
+hour, the plan is already specified and cannot be fitted to whatever the chart looks like then.
+
+## N125 — 07:30 state
+
+Newest real 5m `07:20` on both, lag 10.8m. MGC 4182.70, MNQ 30592.25. Locations MGC 11.9% of
+[4172.60, **4257.40**], MNQ 19.8% of [30535.00, 30823.50]. MGC 1m BEAR 0-2, 5m BEAR 0-2, 15m BEAR 1-2, 60m
+BEAR 0-3 unanimous. MNQ 1m BEAR 0-1, 5m BULL 1-0, 15m BEAR 1-2, 60m BEAR 0-3 unanimous.
+
+Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens
+08:20 ET, 50 minutes out; MNQ RTH 09:30.

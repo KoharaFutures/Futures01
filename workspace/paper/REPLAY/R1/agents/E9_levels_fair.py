@@ -349,3 +349,49 @@ for nm, ev in (("real level tests", realx), ("control A (published)", evA), ("co
     hasv = [e for e in ev if "atr" in e and "bar" in e]
     print(f"  {nm:<40} {len(hasv):>5} {mean([e['atr'] for e in hasv]):>9.2f} "
           f"{mean([bvel(e) for e in hasv]):>11.3f} {mean([e['bar'] for e in hasv]):>13.0f}")
+
+# ---------------------------------------------------------------------------
+print("\n" + "="*84)
+print("THE LEVELS CONTROL'S OWN COMPOSITION BIAS: it tests in a MORE VOLATILE tape")
+print("="*84)
+allatr = sorted(e["atr"] for e in realx)
+qq = [allatr[int(len(allatr)*f)] for f in (0.25, 0.5, 0.75)]
+def aqL(a): return "Q1" if a <= qq[0] else "Q2" if a <= qq[1] else "Q3" if a <= qq[2] else "Q4"
+print(f"ATR quartile cuts from the REAL level tests: {qq[0]:.2f} / {qq[1]:.2f} / {qq[2]:.2f}")
+print(f"{'population':<28} " + " ".join(f"{q:>7}" for q in ("Q1","Q2","Q3","Q4")))
+pops = {"real level tests": real, "control A (published)": controls["A"], "control D (fair)": controls["D"]}
+for nm, ev in pops.items():
+    c = Counter(aqL(e["atr"]) for e in ev); n = len(ev)
+    print(f"{nm:<28} " + " ".join(f"{c[q]/n:>6.1%}" for q in ("Q1","Q2","Q3","Q4")))
+
+print("\nATR-MATCHED re-run of the PUBLISHED control A (post-stratified on ATR quartile,")
+print("weights = the real level tests' own ATR mix):")
+def matched_stat(ev_real, ev_ctrl, fn, ispred=False):
+    num_r = num_c = 0.0; wsum = 0.0
+    for q in ("Q1","Q2","Q3","Q4"):
+        rs = [e for e in ev_real if aqL(e["atr"]) == q]
+        cs = [e for e in ev_ctrl if aqL(e["atr"]) == q]
+        if len(rs) < 2 or len(cs) < 2: continue
+        w = len(rs) / len(ev_real); wsum += w
+        if ispred:
+            num_r += w * (sum(1 for e in rs if fn(e)) / len(rs))
+            num_c += w * (sum(1 for e in cs if fn(e)) / len(cs))
+        else:
+            num_r += w * mean([fn(e) for e in rs if fn(e) is not None])
+            num_c += w * mean([fn(e) for e in cs if fn(e) is not None])
+    return (num_r/wsum, num_c/wsum) if wsum else (0, 0)
+
+for k in ("A", "D"):
+    ev = controls[k]
+    br_raw = [e["bounce_r"] for e in ev if e["bounce_r"] is not None]
+    bk_raw = [e["break_r"] for e in ev if e["break_r"] is not None]
+    r1, c1 = matched_stat(real, ev, lambda e: e["outcome"] == "BOUNCE", ispred=True)
+    r2, c2 = matched_stat(real, ev, lambda e: e["bounce_r"])
+    r3, c3 = matched_stat(real, ev, lambda e: e["break_r"])
+    print(f"\n  control {k}")
+    print(f"    bounce RATE   raw real {sum(1 for e in real if e['outcome']=='BOUNCE')/len(real):6.1%}  "
+          f"raw ctrl {sum(1 for e in ev if e['outcome']=='BOUNCE')/len(ev):6.1%}  "
+          f"diff {sum(1 for e in real if e['outcome']=='BOUNCE')/len(real)-sum(1 for e in ev if e['outcome']=='BOUNCE')/len(ev):+6.1%}")
+    print(f"    bounce RATE   ATR-matched real {r1:6.1%}  ctrl {c1:6.1%}  diff {r1-c1:+6.1%}")
+    print(f"    bounce TRADE  raw diff {mean(rb)-mean(br_raw):+.3f}R   ATR-matched diff {r2-c2:+.3f}R")
+    print(f"    break  TRADE  raw diff {mean(rk)-mean(bk_raw):+.3f}R   ATR-matched diff {r3-c3:+.3f}R")

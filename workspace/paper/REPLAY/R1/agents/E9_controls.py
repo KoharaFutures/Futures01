@@ -425,3 +425,121 @@ print(f"random lines landing within the 0.25-ATR test band of a REAL level: "
       f"{hits}/{tot2} = {hits/tot2:.1%}")
 
 print("\ndone.")
+
+# ===========================================================================
+print("\n" + "=" * 78)
+print("[1d] THE SPECIFIC WORRY: are the stand-downs an OVERNIGHT sample?")
+print("=" * 78)
+def sess(e):
+    h = e["hour"]
+    return "RTH 09-16" if 9 <= h <= 16 else "eve 18-23" if h >= 18 else "o/n 00-08"
+for nm in ("o/n 00-08", "eve 18-23", "RTH 09-16"):
+    ps = sum(1 for e in res if sess(e) == nm) / len(res)
+    pc = sum(1 for e in ctrl if sess(e) == nm) / len(ctrl)
+    print(f"  {nm:<12} stand-down {ps:>6.1%}   control {pc:>6.1%}   ratio {ps/pc:.2f}")
+print("  -> the feared '60% overnight vs 25% control' is NOT what this sample is.")
+print(f"  16:00 forbidden bars: stand-down {sum(1 for e in res if e['hour']==16)}/{len(res)}"
+      f" = {sum(1 for e in res if e['hour']==16)/len(res):.1%}   "
+      f"control {sum(1 for e in ctrl if e['hour']==16)/len(ctrl):.1%}")
+h16 = [e for e in ctrl if e["hour"] == 16]
+print(f"  a 16:00 bar's whole trade is ONE bar: control 16:00 bars return "
+      f"long {mean([e['long'][0] for e in h16]):+.3f}R vs {mean([e['long'][0] for e in ctrl]):+.3f}R overall")
+
+print("\n" + "=" * 78)
+print("[3b] THE REAL PARITY PROBLEM: the SAMPLE's parity mix, not the tape's")
+print("=" * 78)
+sde = sum(1 for e in res if e["bar"] % 2 == 0)
+p = 0.5; n = len(res)
+zbin = (sde - n * p) / math.sqrt(n * p * (1 - p))
+print(f"  stand-down bars: {sde} even / {n-sde} odd.  Binomial z vs 50/50 = {zbin:+.2f}")
+print("  The flip arm therefore reads 69% LONG-side on the sample and 50% on the control.")
+print(f"  On a tape where long {mean([e['long'][0] for e in ctrl]):+.3f}R and short "
+      f"{mean([e['short'][0] for e in ctrl]):+.3f}R at an arbitrary bar, that mix alone shifts")
+ctrl_flip_matched = (sde/n) * mean([e["long"][0] for e in ctrl]) + \
+                    ((n-sde)/n) * mean([e["short"][0] for e in ctrl])
+raw = mean([e["flip"] for e in ctrl])
+a = [e["flip"] for e in res]
+print(f"  the control's own flip mean from {raw:+.3f}R to {ctrl_flip_matched:+.3f}R "
+      f"(shift {ctrl_flip_matched-raw:+.3f}R).")
+se = (sd(a)**2/len(a) + sd([e['flip'] for e in ctrl])**2/len(ctrl))**0.5
+print(f"  coin-flip arm published    diff {mean(a)-raw:+.3f}R   z {welch(a,[e['flip'] for e in ctrl]):+.2f}")
+print(f"  coin-flip arm PARITY-MATCHED diff {mean(a)-ctrl_flip_matched:+.3f}R   "
+      f"z {(mean(a)-ctrl_flip_matched)/se:+.2f}")
+
+print("\n" + "=" * 78)
+print("[1e] ARE THE SEs HONEST? overlap + self-inclusion")
+print("=" * 78)
+print("  (i) the stand-down bars are THEMSELVES members of the control population:")
+resbars = set(e["bar"] for e in res)
+ctrl_ex = [e for e in ctrl if e["bar"] not in resbars]
+for lbl, fn in ARMS.items():
+    a2 = [fn(e) for e in res]
+    print(f"      {lbl:<20} z with sample in control {welch(a2,[fn(e) for e in ctrl]):+.2f}"
+          f"   z with it removed {welch(a2,[fn(e) for e in ctrl_ex]):+.2f}")
+print("\n  (ii) control bars share forward windows, so 1659 is not 1659 independent")
+print("       observations. Lag-1 autocorrelation of the control's arm values:")
+for lbl, fn in ARMS.items():
+    v = [fn(e) for e in ctrl]
+    m = mean(v); num = sum((v[i]-m)*(v[i+1]-m) for i in range(len(v)-1))
+    den = sum((x-m)**2 for x in v)
+    print(f"      {lbl:<20} rho1 {num/den:+.3f}")
+print("\n  (iii) stationary block bootstrap of the always-LONG arm (block=24 bars,")
+print("        2000 resamples of the CONTROL) - a z that respects the overlap:")
+vals = [e["long"][0] for e in ctrl]
+obs = mean([e["long"][0] for e in res]) - mean(vals)
+rngb = random.Random(3); B, L = 2000, 24
+boot = []
+for _ in range(B):
+    s = []
+    while len(s) < len(res):
+        st = rngb.randrange(len(vals) - L)
+        s.extend(vals[st:st + L])
+    boot.append(mean(s[:len(res)]))
+bm, bs = mean(boot), sd(boot)
+print(f"        observed stand-down mean {mean([e['long'][0] for e in res]):+.3f}R")
+print(f"        block-bootstrap null: mean {bm:+.3f}R  sd {bs:.3f}")
+print(f"        z = {(mean([e['long'][0] for e in res]) - bm)/bs:+.2f}   "
+      f"(Welch as published: {published['always LONG'][3]:+.2f})")
+pv = sum(1 for x in boot if x >= mean([e['long'][0] for e in res])) / B
+print(f"        one-sided bootstrap p = {pv:.3f}")
+
+print("\n" + "=" * 78)
+print("[1f] THE RIGHT NULL: a CIRCULAR-SHIFT PLACEMENT TEST")
+print("=" * 78)
+bars = sorted(e["bar"] for e in res)
+gaps = [b - a2 for a2, b in zip(bars, bars[1:])]
+print(f"  stand-down bars span {bars[0]}..{bars[-1]}; gaps: min {min(gaps)} median "
+      f"{sorted(gaps)[len(gaps)//2]} max {max(gaps)}; "
+      f"{sum(1 for g in gaps if g < 24)} of {len(gaps)} gaps under one session")
+print("  So the SAMPLE is mostly non-overlapping - the block bootstrap above was")
+print("  over-conservative. The honest null keeps the sample's OWN spacing and")
+print("  slides the whole pattern along the tape (preserving the tape's serial")
+print("  dependence and, when the shift is a multiple of 23 bars, the hour mix).")
+lo_b, hi_b = 20, N - 1
+byb = {e["bar"]: e for e in ctrl}
+def placement(fn, step=1, label=""):
+    obs = mean([fn(e) for e in res])
+    span = bars[-1] - bars[0]
+    null = []
+    for off in range(-(bars[0] - lo_b), (hi_b - bars[-1]) + 1, step):
+        v = [byb[b + off] for b in bars if (b + off) in byb]
+        if len(v) < len(bars) * 0.9:
+            continue
+        null.append(mean([fn(e) for e in v]))
+    if len(null) < 20:
+        return None
+    m2, s2 = mean(null), sd(null)
+    pv = sum(1 for x in null if x >= obs) / len(null)
+    return obs, m2, s2, (obs - m2) / s2 if s2 else 0.0, pv, len(null)
+
+print(f"\n  {'arm':<20} {'design':<28} {'diff':>8} {'z':>7} {'p(1-sided)':>11} {'placements':>11}")
+for lbl, fn in ARMS.items():
+    for step, dn in ((1, "shift: any offset"), (23, "shift: whole sessions (hour-matched)")):
+        r2 = placement(fn, step)
+        if r2:
+            print(f"  {lbl:<20} {dn:<28} {r2[0]-r2[1]:>+7.3f}R {r2[3]:>+7.2f} {r2[4]:>11.3f} {r2[5]:>11}")
+    a3 = [fn(e) for e in res]
+    print(f"  {lbl:<20} {'(published Welch)':<28} "
+          f"{mean(a3)-mean([fn(e) for e in ctrl]):>+7.3f}R "
+          f"{welch(a3,[fn(e) for e in ctrl]):>+7.2f}")
+    print()

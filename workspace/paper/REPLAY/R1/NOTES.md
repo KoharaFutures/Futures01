@@ -1683,3 +1683,86 @@ hypothesis. It does **not** raise the desk's count of distinct *trading theses*,
 searched for a filter *within* one thesis, not for new theses. But **any future claim about a thesis-5
 filter must be deflated against 105+, not 20**, and that is now on the record so a later burst cannot
 quietly reset it.
+
+### E6 — rules 5 and 6 tested here. Rule 6 holds; rule 5 measures something a census cannot see
+
+**Rule 6 holds, emphatically.** **0 of 22 hours clear `free_t` 2.486 — and 0 of 22 clear even a naive
+1.96.** The gap between those two counts is **zero**, largest |z| anywhere 1.329, and the best available
+single-hour filter buys +0.005R at z −1.26. No hours filter improves expectancy on this tape.
+
+**But the multiple-testing discipline still earned its keep**, in a way worth recording: an **undeclared
+23rd cell** — the 16:00 flat bar — comes in at **z −2.441** and *would* have passed 1.96. It is **entirely
+one tick of slippage**: long −0.0519 vs short −0.0524, symmetric. **Cost, not direction.** A cell that looks
+significant, is perfectly symmetric, and is pure friction.
+
+**Rule 5 does not replicate here — and E6 explains why that is not a refutation.** The 15:00 hour measures
+n=72 bars / 144 trades, mean **+0.0024R**, median **−0.019R**, **z +0.10** — wrong sign against the reported
+z −4.43 and median −0.617R.
+
+**The reason is arithmetic, and I verified it.** For a two-sided census, long fills at O+t and short at O−t,
+so if both exit at the same price `R_long + R_short = −2t/S` **exactly** — at median ATR 10.43 that is
+**−0.0479R**. **A symmetric two-sided population is near zero-sum by construction, so a median of −0.617R is
+arithmetically unreachable from one.** Rule 5 must therefore have been measured on **direction-selected
+signals**, not a census. Long-only 15:00 here is −0.115R at z −1.26 — right direction, not a result.
+
+> **So E6 does not overturn rule 5. It shows my test and rule 5's test are different instruments**, and
+> that a census can never reproduce a direction-selected finding. I keep rule 5. n=91 sessions on one
+> symbol refutes nothing about a programme measurement.
+
+**The 18:00 bar, diagnosed far more sharply than agent C managed.** C called it "a missing volume field".
+E6 pins it, and I verified both halves:
+
+- **The zero-volume defect splits perfectly by weekday.** Mon 15/15, Tue 14/14, Wed 14/14, Thu 15/15 all
+  zero — **Sunday 15/15 populated.** So it is the **daily 17:00–18:00 halt boundary**, not liquidity, and
+  not the weekend reopen.
+- **The price field contradicts the volume field.** 18:00 is the **widest** overnight hour, mean range/ATR
+  **0.694** against 0.519, 0.526, 0.443, 0.427, 0.389 for 19:00–23:00 — monotonically declining after it.
+  ATR-normalised **z +4.30**.
+
+**That +4.30 is the largest |z| anywhere in this entire record — and it is a data-structure finding, not an
+edge.** The one thing on this desk that clears every threshold comfortably is a statement about a broken
+volume field. **Never condition on 18:00 volume: on Mon–Thu it is a constant.**
+
+### E4 — the owner's 16:00 flat costs nothing measurable. And it corrects a habit of mine.
+
+3,102 trials, four exit regimes scored on one exactly-paired population.
+
+| regime | n | mean R | win% | TIME% |
+|---|---|---|---|---|
+| **A — flat at 16:00 (the rule)** | 3030 | −0.0200 | 35.0% | 12.2% |
+| B — hold to resolution (48 / 120 bar cap) | 3030 | −0.0168 | 32.8% | 0.0% |
+| C — flat at the *next* 16:00 | 3030 | −0.0164 | 32.8% | 0.1% |
+
+**The forced flat costs 0.0032R per trade.** Paired, z(week, 15 clusters) **−0.47**; 95% week-clustered CI
+**[0.016R saved, 0.022R spent]**. A clean null *with a tight bound* — it rules out the rule bleeding tenths
+of an R.
+
+**The mechanism is elegant and is the whole result:** only the 12.2% time-exited slice can differ, and there
+the flat **scratches winners** (224 trades, 0.107R forgone) and **rescues losers** (145 trades, 0.100R
+saved). **Those cancel.**
+
+**And a direct correction to my own conduct.** I have declined trades repeatedly on "not enough runway to
+the flat" — at bars 201, 431, 455, 923, 1109, 1342 among others. **E4: runway does not predict expectancy.**
+Every bucket (1–2, 3–6, 7–12, 13+ bars) sits within 0.02R of the rest, Welch |z| ≤ 0.39 throughout, and the
+paired cost of the flat is flat across buckets too.
+
+**But E4 also rescues the defensible half of my reasoning, correctly narrowed:** at 1–2 bars of runway the
+flat decides **79%** of outcomes; at 7+ bars it decides **under 2%**. So a short-runway trade is *mostly a
+bet on the flat print rather than on the bracket* — **an honest reason to decline one, but not "worse
+expectancy", and I should have said the former rather than the latter.** Corrected rule going forward:
+decline short-runway trades because the bracket does not get to operate, never because the R is worse.
+
+E4's own caveats, which I accept: the population is arbitrary entries (base rate −0.020R), so this prices
+the flat on arbitrary entries rather than on a strategy with multi-day follow-through; and regime B holds
+through halts and weekends with no gap charge, so **the measured cost is an upper bound** on what releasing
+the rule could earn. **Conclusion: keep the rule.** Its non-R benefits — overnight headline risk, margin,
+the operator being asleep — come free.
+
+### A process fault of mine, flagged by two agents
+
+Both E4 and E6 noted that a broad `git add` swept their in-flight files into commits mid-run. **That was
+me**, not agent E5 as E6 supposed: I ran `git add -A workspace/paper/REPLAY` to satisfy a clean-tree hook
+while agents were still writing. It captured partial files and mis-attributed authorship in the history.
+Harmless here because each agent's finished file landed later and I recorded nothing from a partial read —
+but the convention is wrong. **A desk that spawns concurrent writers should commit paths it owns, not the
+whole lane.**

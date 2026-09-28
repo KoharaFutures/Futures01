@@ -3347,3 +3347,35 @@ getting harder to express a trade in, which is a sizing fact rather than a direc
 No call. Three hours of one-way tape with both symbols at range extremes, no reversal test true on
 either, and the MGC retracement short still blocked by N52 for ~39 minutes until CALL-0004 resolves on
 the 06:00 ET bar.
+
+## N72 — N70's test crossed its own threshold on MNQ, and the break deepened instead of reverting
+
+Four minutes after N70 defined the test, the input moved past its threshold. MNQ's forming `05:00` low
+went 30538.25 -> **30536.25**, so the break of the 30571.00 double bottom is now **34.75 deep** against
+the 27.25 largest non-session-open 15m low revision ever observed on this symbol. N70's bands put that
+in the "deeper than the observed maximum, safe to treat as real" category, where four minutes ago it
+was "in between, near the top." The low revised *downward*, i.e. the bar moved away from undoing the
+break rather than toward it.
+
+The test earns little credit here because the bar settles at **05:28**, three minutes out, which
+resolves it by observation rather than by inference. The value is that the verdict moved for a
+legible reason and in the direction the subsequent data confirmed — that is the first time tonight one
+of these constructions has been exercised while it mattered rather than after.
+
+MGC is doing the opposite: forming low unchanged at 4172.60 with the close recovering to 4176.40, and
+its 1m frame has gone **CONFLICTED 1-1**, the first non-bearish MGC fast read in some time. Its own
+break remains 1.70 deep against a 6.80 revision maximum, so by the same test it is still **not a
+break**. Per N68 I am not calling this a divergence state on one observation; it is what two bars look
+like right now.
+
+## N73 — 05:25 state
+
+Newest settled 15m `04:45` on both symbols, unchanged; `05:00` settles at 05:28 and will be the first
+settled bar carrying tonight's low on either symbol. Locations MGC 3.0% of [4172.60, 4300.30], MNQ 1.9%
+of [30536.25, 30900.50]. MGC 5m/15m/60m unanimous bearish with 1m conflicted; MNQ 1m unanimous bearish,
+5m 0-2, 15m/60m unanimous.
+
+No call. Reversal test false on both, both at range extremes, MGC's retracement short blocked by N52
+for ~35 more minutes. CALL-0004 resolves on the 06:00 ET bar and, at 39.30 points from its trigger with
+MGC 107 points below it, will resolve `EXPIRED_UNTRIGGERED` / NO_FILL at 0.0R — reported from the
+resolver when it happens, not from the clock (N32).

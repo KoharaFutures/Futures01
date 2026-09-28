@@ -1538,3 +1538,48 @@ bears directly on thesis 5's probation. E1 also notes Tier B's "1 per 18 bars" u
 **Net effect on the record:** C's substantive conclusion stands — the mechanised pattern has no edge — but
 it now rests on Tier A at z +0.59, not on Tier B's larger-looking negative. One open contradiction closed,
 one of my own errors added to the corrections list.
+
+### E3 — the leak audit: **zero look-ahead breaches**, and my own correction was overstated
+
+**This is the most important audit result in the record, because the whole exercise rests on one rule.**
+E3 checked **678 in-range price mentions** (429 in callouts, 249 in this file) against first-occurrence in
+`visible.jsonl`.
+
+> **Genuine look-ahead breaches: 0. Zero in `callouts.jsonl` at all.**
+> `as_of == visible.jsonl[visible_bars − 1].ts` on **45/45**. `bar_index == visible_bars − 1` on **45/45**.
+> **Zero forward bar references.**
+
+Of 35 prices that never print or print late, all are chosen stops and targets, harness fill prices,
+non-tick ATR-derived geometry (.83/.13/.64 — arithmetically impossible as MES prints), or whole-point
+roundings of visible extremes. Only 3 fall outside the visible envelope and all 3 are explicitly labelled
+targets. **The leak rule held, and it has now been tested rather than assumed.**
+
+**And E3 reclassifies the one breach I thought I had found — my correction was wrong, in the direction of
+over-indicting myself.** I wrote that the "three-touch 5985.75–5987.5 shelf" used "a price I had not yet
+seen". Verified:
+
+- **5987.5 first prints at bar 1392.** The text was written at bar **1502/1503** (callout `R1-00037`) and
+  in burst 7–8 notes, by which time it was long visible. **So it is not look-ahead.**
+- **The shelf is real and belongs to `R1-00035` at bar 1443**, which cites 5985.75, 5987.25 *and* 5987.5
+  together — a genuine three-touch shelf, correctly described, on visible bars.
+- `R1-00037` **transplanted that shelf onto the bar-1340 trade**, which was actually at 5982.75. The
+  bar-1340 decision itself is clean: its own `why` names 5982.75 and discloses the level as single-touch and
+  not pre-armed.
+
+**So it is an attribution error, not a visibility failure, and I am re-filing it as such.** My earlier
+phrasing "using a price I had not yet seen" is **retracted** — it accused me of the one thing the audit
+shows did not happen. An overstated self-correction is as inaccurate as a flattering one, and leaving it to
+stand because it sounds suitably contrite would be its own dishonesty.
+
+**What remains serious, and E3 agrees:** I described a one-touch post-hoc level as a three-touch shelf,
+overstating the setup's quality — **and that false precedent then steered a live decision.** At bar 1502 I
+declined a trade partly on the grounds that "my two winners were at levels with a single decisive rejection:
+5801 at bar 452 and a three-touch 5985.75–5987.5 shelf at bar 1340." One half of that standard never
+existed. A fabricated attribution influenced a real decline. That is the finding; the timestamp is not.
+
+**One further slip, minor:** `R1-00019` describes bar 608's "open 6020.75" when 6020.75 is that bar's
+**high** (open 6020.5). A 0.25-point bookkeeping error on a visible bar; no decision turned on it.
+
+**Corrections list, amended.** The B-round entry "imported a price from the future" is **wrong** and is
+replaced by "transplanted bar 1443's shelf onto the bar-1340 trade". The count of B's prose errors stands;
+their *character* is narrower than I wrote — sloppy attribution and arithmetic, not look-ahead.

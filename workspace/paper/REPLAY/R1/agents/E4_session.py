@@ -283,13 +283,14 @@ for tag, ts in (("ALL TRIALS (rolled included)", trials),
                 ("CLEAN ONLY (rolled excluded)", kept)):
     P(f"## regimes - {tag}")
     P("")
-    P(f"{'regime':<34} {'n':>5} {'meanR':>8} {'sd':>6} {'win%':>7} "
-      f"{'TIME%':>7} {'meanR|TIME':>11}")
-    P(line())
+    P(f"{'regime':<35} {'n':>5} {'meanR':>8} {'sd':>6} {'win%':>7} "
+      f"{'TIME n':>7} {'TIME%':>7} {'meanR|TIME':>11}")
+    P(line(90))
     for reg in REG:
         s = desc(ts, reg)
-        P(f"{LBL[reg]:<34} {s['n']:>5} {s['mean']:>+8.4f} {s['sd']:>6.2f} "
-          f"{s['win']:>6.1%} {s['tshare']:>6.1%} {s['tmean']:>+11.4f}")
+        tm = f"{s['tmean']:+.4f}" if s["tn"] else "-"
+        P(f"{LBL[reg]:<35} {s['n']:>5} {s['mean']:>+8.4f} {s['sd']:>6.2f} "
+          f"{s['win']:>6.1%} {s['tn']:>7} {s['tshare']:>6.1%} {tm:>11}")
     P("")
 
 P("## HEADLINE - the paired price of the forced flat")
@@ -307,7 +308,7 @@ for tag, ts in (("all trials", trials), ("clean only", kept)):
     P("  " + line(76))
     for rb in REG[1:]:
         p = pdiff(ts, "A", rb)
-        P(f"  {'A vs ' + LBL[rb].split('  ')[1][:22]:<28} {p['n']:>5} "
+        P(f"  {'FLAT16 vs ' + SHORTLBL[rb]:<28} {p['n']:>5} "
           f"{p['d']:>+10.4f} {p['z']:>9.2f} {p['zs']:>8.2f} {p['zw']:>8.2f}"
           f"   (clusters {p['ks']}/{p['kw']})")
     P("")
@@ -342,6 +343,53 @@ P("TIME-exited slice. The per-trade figure is the lift on that slice times its")
 P("share - which is the arithmetic printed above, and it reconciles with the")
 P("headline table.")
 P("")
+P("THE MAXIMUM HORIZON IS NOT BINDING. Every clean trial resolves by stop or")
+bl = max(t["B120"][1] - t["f"] + 1 for t in kept)
+bm = m([t["B120"][1] - t["f"] + 1 for t in kept])
+P(f"target well inside 48 bars: longest resolution {bl} bars, mean {bm:.1f} bars.")
+P("So B48 and B120 are the same experiment on this tape and give identical")
+P("numbers; the 120-bar arm is reported only to show the cap is slack. 'No time")
+P("exit' is therefore a genuine hold-to-resolution, not a second time exit in")
+P("disguise.")
+P("")
+P("### was the flat cutting winners short, or losers loose?")
+P("")
+P("Split regime A's TIME exits by whether the trade was in profit at the flat.")
+P("This is the shape the owner would feel: a rule that scratches winners is a")
+P("different complaint from one that rescues losers.")
+P("")
+P(f"{'at the flat':<22} {'n':>5} {'A meanR':>9} {'B120 meanR':>11} {'lift':>8} "
+  f"{'z(week)':>8}  resolution under B120")
+P(line(94))
+tt = [t for t in kept if t["A"][2] == "TIME"]
+for nm, sel in (("in profit (R > 0)", [t for t in tt if t["A"][0] > 0]),
+                ("under water (R <= 0)", [t for t in tt if t["A"][0] <= 0])):
+    if not sel:
+        continue
+    p = pdiff(sel, "A", "B120")
+    cnt = defaultdict(int)
+    for t in sel:
+        cnt[t["B120"][2]] += 1
+    P(f"{nm:<22} {len(sel):>5} {m([t['A'][0] for t in sel]):>+9.4f} "
+      f"{m([t['B120'][0] for t in sel]):>+11.4f} {-p['d']:>+8.4f} {p['zw']:>8.2f}  "
+      f"{', '.join(f'{k} {v}' for k, v in sorted(cnt.items()))}")
+P("")
+P("### sanity check: did truncating the population at f_max bias regime A?")
+P("")
+fullA = []
+for f in range(FMIN, N):
+    a, cap = ATR[f - 1], nxt16[f]
+    if a is None or a <= 0 or cap is None:
+        continue
+    for side in ("LONG", "SHORT"):
+        fullA.append(resolve(f, side, STOP_ATR * a, cap)[0])
+P(f"regime A over EVERY bar with a 16:00 ahead (no B/C resolvability filter):")
+P(f"  n={len(fullA)}  mean {m(fullA):+.4f}R  vs the common population's "
+  f"{m([t['A'][0] for t in trials]):+.4f}R  (Welch z "
+  f"{welch(fullA, [t['A'][0] for t in trials]):+.2f})")
+P(f"  the common population drops the last {max(HORIZONS)-1} bars of the tape "
+  f"({(len(fullA)-len(trials))/2} bars, {(len(fullA)-len(trials))/len(fullA):.1%} of trials).")
+P("")
 
 P("## RUNWAY AT ENTRY - the deliverable")
 P("")
@@ -351,9 +399,9 @@ P("filled at that bar's open and flattened at that bar's close. The decision bar
 P("is f-1, so an agent standing at the decision bar sees runway+1 bars ahead.")
 P("Rolled trials have no meaningful runway and are excluded from this section.")
 P("")
-P(f"{'runway':<9} {'n':>5} | {'A meanR':>8} {'A win%':>7} {'A TIME%':>8} "
+P(f"{'runway':<9} {'n':>5} | {'A meanR':>8} {'A win%':>7} {'TIMEn':>6} {'TIME%':>7} "
   f"{'A R|TIME':>9} | {'B120 meanR':>10} | {'d=A-B120':>9} {'z(sess)':>8} {'z(week)':>8}")
-P(line(96))
+P(line(103))
 bk = []
 for lo, hi in BUCKETS:
     sub = [t for t in kept if lo <= t["runway"] <= hi]
@@ -363,9 +411,17 @@ for lo, hi in BUCKETS:
     p = pdiff(sub, "A", "B120")
     nm = f"{lo}-{hi}" if hi < 10**6 else f"{lo}+"
     bk.append((nm, sub, a, b, p))
-    P(f"{nm:<9} {a['n']:>5} | {a['mean']:>+8.4f} {a['win']:>6.1%} "
-      f"{a['tshare']:>7.1%} {a['tmean']:>+9.4f} | {b['mean']:>+10.4f} | "
+    tm = f"{a['tmean']:+.4f}" if a["tn"] else "-"
+    P(f"{nm:<9} {a['n']:>5} | {a['mean']:>+8.4f} {a['win']:>6.1%} {a['tn']:>6} "
+      f"{a['tshare']:>6.1%} {tm:>9} | {b['mean']:>+10.4f} | "
       f"{p['d']:>+9.4f} {p['zs']:>8.2f} {p['zw']:>8.2f}")
+P("")
+P("Note the TIME% column, which is the mechanical content of the rule: the forced")
+P("flat only BINDS on trades that have not already resolved. It binds on most")
+P("short-runway trades and on almost none with real runway, so the rule's whole")
+P("footprint is concentrated in the 1-6 bar band - and the R|TIME cells for the")
+P("7-12 and 13+ buckets rest on the handful of trials in the TIMEn column and")
+P("should not be read as estimates of anything.")
 P("")
 P("same buckets, regime C (one extra cycle) and B48:")
 P(f"{'runway':<9} {'n':>5} {'C meanR':>9} {'d=A-C':>9} {'z(week)':>8}   "

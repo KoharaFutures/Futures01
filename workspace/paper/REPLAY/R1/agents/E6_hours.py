@@ -381,6 +381,88 @@ print(f"    18:00 bars that are a pure doji (h==l): {sum(1 for r in h18rows if r
 print(f"    18:00 bars whose range is 0 < range <= 1.0 pt: "
       f"{sum(1 for r in h18rows if 0 < r['h']-r['l'] <= 1.0)}")
 
+# ---- 5. follow-ups raised by sections 1-4 ---------------------------------
+print("\n" + "-" * 108)
+print("5.  FOLLOW-UPS RAISED BY THE ABOVE  (robustness views of the same 22 cells, not new searches)")
+print("-" * 108)
+
+print("\n  5a. why the zero-volume 18:00 mean R is EXACTLY 0.0 (it is not a bug):")
+zr = [r for r in byh["18"] if r["v"] == 0]
+from collections import Counter
+print("      bar-R value counts: " + str(dict(Counter(round(r["bar"], 4) for r in zr))))
+print("      38 bars at +0.5 (one TARGET, one STOP) and 19 at -1.0 (both STOP): 38*0.5 - 19*1 = 0.")
+print("      With ~0% SESSION_CLOSE exits at this hour the distribution is quantised to {+0.5,-1.0},")
+print("      so an exact zero is an arithmetic coincidence of a 2-valued sample.")
+
+print("\n  5b. the 18:00 zero-volume bars are MON-THU ONLY; the 15 that carry volume are ALL SUNDAYS:")
+import datetime
+dow_z = Counter(datetime.date.fromisoformat(r["ts"][:10]).strftime("%a")
+                for r in rows if r["ts"][11:13] == "18" and r["v"] == 0)
+dow_n = Counter(datetime.date.fromisoformat(r["ts"][:10]).strftime("%a")
+                for r in rows if r["ts"][11:13] == "18" and r["v"] > 0)
+print("      zero-volume 18:00 by weekday : " + str(dict(dow_z)))
+print("      volume-bearing 18:00 by weekday: " + str(dict(dow_n)))
+print("      The Sunday 18:00 weekly reopen reports volume; the Mon-Thu 18:00 reopen after the")
+print("      daily 17:00-18:00 maintenance halt reports zero. That is a field tied to the HALT,")
+print("      not to liquidity - a genuinely dead hour would not be dead only on four weekdays.")
+
+print("\n  5c. rule 5 read as the COMBINED 15:00+16:00 window (what '15:00-16:00' literally spans):")
+win = [r["bar"] for r in recs if r["hour"] in ("15", "16")]
+restw = [r["bar"] for r in recs if r["hour"] not in ("15", "16")]
+tw = [r["long"] for r in recs if r["hour"] in ("15", "16")] + \
+     [r["short"] for r in recs if r["hour"] in ("15", "16")]
+print(f"      window n_bars {len(win)} mean {mean(win):+.4f} SE {se(win):.4f} "
+      f"median(bar) {median(win):+.4f} median(trades) {median(tw):+.4f}")
+print(f"      rest   n_bars {len(restw)} mean {mean(restw):+.4f}   Welch z {welch(win, restw):+.3f}"
+      f"  -> {'CLEARS' if abs(welch(win,restw))>=FREE_T else 'does NOT clear'} free_t {FREE_T:.3f}")
+
+print("\n  5d. the 16:00 flat-bar cell is the ONLY cell on the tape near significance. It is a COST:")
+r16 = [r for r in recs if r["hour"] == FLAT_HOUR]
+v16b = [r["bar"] for r in r16]
+n_sc = sum(1 for r in r16 for x in r["why"] if x == "SESSION_CLOSE")
+n_st = sum(1 for r in r16 for x in r["why"] if x == "STOP")
+tick_cost = mean([-TICK / r["atr"] for r in r16])
+print(f"      Welch z vs the 22-hour grid {welch(v16b, ALL):+.3f}   free_t(22) {FREE_T:.3f}, "
+      f"free_t(23) {math.sqrt(2*math.log(23)):.3f} -> does NOT clear either")
+print(f"      long-only {mean([r['long'] for r in r16]):+.5f}  short-only {mean([r['short'] for r in r16]):+.5f}"
+      f"  <- near-identical, so SYMMETRIC: a cost, not a direction")
+print(f"      exits: SESSION_CLOSE {n_sc}, STOP {n_st} of {2*len(r16)} trades")
+print(f"      mechanics alone predict ({n_sc} x {tick_cost:.5f} + {n_st} x -1.0)/{2*len(r16)} = "
+      f"{(n_sc*tick_cost + n_st*-1.0)/(2*len(r16)):+.5f}; observed {mean(v16b):+.5f}")
+print("      i.e. one tick of slippage plus 8 stop-outs on a one-bar hold. No market claim survives.")
+
+print("\n  5e. is the 18:00 bar's WIDTH unusual, independent of its volume field?")
+def anr(hs):
+    v = []
+    for i, r in enumerate(rows):
+        if i < 15 or r["ts"][11:13] not in hs:
+            continue
+        a = atr(i - 1)
+        if a and a > 0:
+            v.append((r["h"] - r["l"]) / a)
+    return v
+a18, blk = anr({"18"}), anr({"19", "20", "21", "22", "23", "00", "01", "02"})
+a18z = [(r["h"]-r["l"])/atr(i-1) for i, r in enumerate(rows)
+        if i >= 15 and r["ts"][11:13] == "18" and r["v"] == 0 and atr(i-1)]
+a18n = [(r["h"]-r["l"])/atr(i-1) for i, r in enumerate(rows)
+        if i >= 15 and r["ts"][11:13] == "18" and r["v"] > 0 and atr(i-1)]
+print(f"      ATR-normalised range   18:00 mean {mean(a18):.3f}  |  19:00-02:00 block mean {mean(blk):.3f}"
+      f"  Welch z {welch(a18, blk):+.3f}")
+print(f"      zero-volume 18:00 only: n {len(a18z)} mean {mean(a18z):.3f}  z vs that block {welch(a18z, blk):+.3f}")
+print(f"      Sunday volume-bearing 18:00: n {len(a18n)} mean {mean(a18n):.3f}")
+print("      The bar that reports NO volume is WIDER than all eight volume-bearing hours after it.")
+h18i = [(i, r) for i, r in enumerate(rows) if r["ts"][11:13] == "18"]
+h19i = [(i, r) for i, r in enumerate(rows) if r["ts"][11:13] == "19"]
+eng = sum(1 for i, r in h18i if i+1 < len(rows) and rows[i+1]["ts"][11:13] == "19"
+          and r["h"] >= rows[i+1]["h"] and r["l"] <= rows[i+1]["l"])
+eng19 = sum(1 for i, r in h19i if i+1 < len(rows) and rows[i+1]["ts"][11:13] == "20"
+            and r["h"] >= rows[i+1]["h"] and r["l"] <= rows[i+1]["l"])
+print(f"      18:00 bar engulfs the next 19:00 bar: {eng}/{len(h18i)}"
+      f"   control, 19:00 engulfs 20:00: {eng19}/{len(h19i)}")
+print("      Consistent with the 18:00 bar carrying price action from a longer interval than one hour")
+print("      (the 17:00-18:00 halt window), which would also explain a missing volume field. NOT PROVEN")
+print("      here - it needs the source series, which this lane may not read.")
+
 print("\n" + "=" * 108)
 print(f"TRIAL COUNT DECLARED: {N_TRIALS} hour cells swept, free_t {FREE_T:.4f}. The rule-5 and 18:00")
 print("tests are two of those 22, not extra trials. The paired/pooled/clustered SE variants and the")

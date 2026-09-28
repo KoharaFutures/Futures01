@@ -6009,3 +6009,33 @@ Stop 15.80 away, TP1 10.20 away. N155's exclusion unchanged.
 No new call, and nothing in either symbol has changed materially in the last four minutes. 1 open (excluded),
 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. **MNQ RTH opens 09:30 — seven
 minutes — and that is CALL-0005's expiry bar.**
+
+## N169 — 09:28: MNQ's 1m and 15m are now unanimous in OPPOSITE directions, two minutes from CALL-0005's expiry
+
+MNQ: **1m BEARISH 0-3 unanimous** while **15m BULLISH 3-0 unanimous** — both frames unanimous, pointing opposite
+ways, simultaneously. That has not happened on either symbol tonight. 5m has come off its own unanimity to BULL
+2-0, 60m BEAR 0-1, 4h CONFLICTED, DAILY BULL 3-0 unanimous. `reversal()` still called, `held 60`,
+`agreeing_frames [5, 1440, 10080]`, trend BULL (30708.50 > EMA20 30651.16, rising), structure BULL, location
+79.3% of [30535.00, 30753.75].
+
+Per rule 2 and per the running count of fast-frame oscillations (N54, N78, N115), **the unanimous 1m is worth
+nothing here** — it is unanimous for a bar or two at a time and has been in both directions repeatedly tonight.
+The 15m being unanimous the other way is the reading with weight, and the two co-existing is a description of a
+pullback inside an uptrend rather than a conflict that means anything.
+
+**CALL-0005's limit is 94.62 above the newest 5m low of 30690.50, with its 09:30 expiry bar two minutes away.**
+The gap has closed from 130.87 to 94.62 over the pullback — the closest it has been since 08:24 — and it is still
+roughly 2x ATR from filling with one bar left. Per N86 the resolver will write the outcome on the `09:45` bar,
+in hand around **10:01**, not at 09:30.
+
+MGC: 5m `09:15` bar `h 4182.20 l 4176.50 c 4178.10`, a new low for this leg. 1m BEAR 1-2, 5m BEAR 0-2, **15m BEAR
+0-3 unanimous**, 60m BEAR 0-3 unanimous, 4h BEAR 0-2, trend BEAR (4179.60 < EMA20 4187.51, falling), structure
+BEAR, location **11.2%** of [4172.60, 4234.90]. Reversal fails on the one unsatisfiable condition (N166).
+
+**The excluded position**: CALL-0002 SHORT 4186.40 against MGC 4178.10 = **+8.30 points / +$83.00** unrealised,
+and **TP1 at 4170.40 is now 7.70 away** — the closest it has come. If MGC prints 4170.40 the resolver will close
+it for +1.6R / +$160 and write that into `state.json`. **N155's exclusion applies to that number in advance, as it
+has at every reading from +$38 through $0 to +$95 and now +$83.**
+
+No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+**MNQ RTH opens in two minutes.**

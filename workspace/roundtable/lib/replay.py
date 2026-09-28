@@ -101,6 +101,68 @@ def cycle_deadline_crossed(entry_ts: str, bar_ts: str) -> bool:
     return b >= dl
 
 
+
+# ---------------------------------------------------------------- callouts
+# The account owner asked for the replay's record to be the SAME shape as the
+# live desk's, per CALLOUT.md's PAPER MODE section.  The harness writes it, not
+# the agent: `entry_price` is the fill the harness computed and `outcome` is
+# filled in only when the trade actually resolved, so neither can be asserted.
+def _basis() -> str:
+    import subprocess
+    try:
+        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO,
+                              capture_output=True, text=True, timeout=10).stdout.strip()
+    except Exception:
+        return "unknown"
+
+
+def _as_of(st: dict) -> str:
+    """The historical 'now' - the newest bar the agent can see."""
+    f = home(st["id"]) / "visible.jsonl"
+    last = None
+    with f.open() as fh:
+        for line in fh:
+            if line.strip():
+                last = line
+    return json.loads(last)["ts"] if last else "none"
+
+
+def callout(st: dict, **rec) -> str:
+    # D48, third instance, and this one was mine: keying the id on the cursor
+    # alone collided whenever two callouts were emitted without advancing a bar
+    # (a NO_TRADE then an order), and resolve_callout then patched BOTH records
+    # with one trade's outcome.  "_id=None is not the guard - a fresh id can
+    # still be a colliding id.  The guard is an arm-id uniqueness ASSERTION at
+    # emission."  So: a monotonic sequence, and the assertion.
+    st["callout_seq"] = st.get("callout_seq", 0) + 1
+    cid = f"{st['id']}-{st['callout_seq']:05d}-b{st['cursor']:06d}"
+    f = home(st["id"]) / "callouts.jsonl"
+    if f.exists():
+        existing = {json.loads(l)["callout_id"] for l in f.open() if l.strip()}
+        assert cid not in existing, f"callout id collision at emission: {cid}"
+    row = {"callout_id": cid, "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+           "symbol": st["symbol"], "timeframe": st["tf"],
+           "basis": _basis(), "as_of": _as_of(st),
+           "bar_index": st["cursor"] - 1, "visible_bars": st["cursor"],
+           "mode": "PAPER", "outcome": None}
+    row.update(rec)
+    with f.open("a") as fh:
+        fh.write(json.dumps(row) + "\n")
+    save(st)
+    return cid
+
+
+def resolve_callout(st: dict, cid: str, outcome: dict) -> None:
+    f = home(st["id"]) / "callouts.jsonl"
+    if not f.exists():
+        return
+    rows = [json.loads(l) for l in f.open() if l.strip()]
+    for r in rows:
+        if r.get("callout_id") == cid:
+            r["outcome"] = outcome
+    f.write_text("".join(json.dumps(r) + "\n" for r in rows))
+
+
 # ---------------------------------------------------------------- state
 def spec(symbol: str) -> dict:
     sys.path.insert(0, str(REPO))
@@ -213,6 +275,9 @@ def _open(st: dict, key: str, bar: dict, order: dict) -> None:
         st["position"]["contracts"] if st.get("position") else 1, 0.0, "matched")
     if key == "position" and n == 0:
         journal(st, "REFUSED", side=order["side"], reason=note, bar_ts=bar["ts"])
+        callout(st, side=None, confidence="REFUSED_BY_RISK", why=order.get("why", ""),
+                entry_price=None, initial_stop=order["stop"], target=order.get("target"),
+                contracts=0, risk_dollars=0.0, rr=None, reason=note)
         print(f"REFUSED  {note}")
         st["pending"] = None
         # A placebo with no real arm beside it is not a control, it is a second
@@ -227,6 +292,14 @@ def _open(st: dict, key: str, bar: dict, order: dict) -> None:
                "risk_dollars": risk_pts * sp["point_value"] * n,
                "why": order.get("why", "")}
     if key == "position":
+        allowed, mult = permitted_risk(st["equity"], max(0.0, st["peak"] - st["equity"]))
+        tgt = order.get("target")
+        rr = (abs(tgt - entry) / risk_pts) if (tgt and risk_pts) else None
+        st[key]["callout_id"] = callout(
+            st, side=order["side"], entry_price=entry, initial_stop=stop, target=tgt,
+            contracts=n, risk_dollars=round(st[key]["risk_dollars"], 2),
+            ladder_mult=mult, rr=round(rr, 3) if rr else None,
+            confidence="DISCRETIONARY", why=order.get("why", ""))
         journal(st, "ENTRY", **st[key], sizing=note)
         print(f"FILLED {order['side']} {n} {st['symbol']} @ {entry}  stop {stop}  "
               f"risk ${st[key]['risk_dollars']:,.2f}  ({note})")
@@ -251,6 +324,11 @@ def _close(st: dict, key: str, bar: dict, px: float, reason: str) -> None:
                 r=round(r, 4), entry_ts=pos["entry_ts"], exit_ts=bar["ts"],
                 equity=round(st["equity"], 2),
                 drawdown=round(max(0.0, st["peak"] - st["equity"]), 2))
+        if pos.get("callout_id"):
+            resolve_callout(st, pos["callout_id"],
+                            {"exit_price": px, "reason": reason, "net": round(net, 2),
+                             "r": round(r, 4), "exit_ts": bar["ts"],
+                             "equity_after": round(st["equity"], 2)})
         print(f"CLOSED {pos['side']} @ {px}  {reason}  net ${net:,.2f}  {r:+.3f}R  "
               f"equity ${st['equity']:,.2f}")
     else:
@@ -323,6 +401,19 @@ def cmd_order(a) -> None:
     save(st)
     print(f"ORDER queued: {a.side} stop {a.stop} target {a.target}. "
           f"Fills at the OPEN of bar {st['cursor']} when you call next. A placebo is queued beside it.")
+
+
+def cmd_notrade(a) -> None:
+    """Record a stand-down. A record containing only the trades you liked is a
+    record of your memory, not of your process - CALLOUT.md is explicit that
+    NO TRADE is journalled too."""
+    st = load(a.id)
+    cid = callout(st, side=None, confidence="NO_TRADE", why=a.why,
+                  entry_price=None, initial_stop=None, target=None,
+                  contracts=0, risk_dollars=0.0, rr=None)
+    journal(st, "NO_TRADE", why=a.why)
+    save(st)
+    print(f"NO TRADE recorded ({cid}) at bar {st['cursor']-1}, as-of {_as_of(st)}")
 
 
 def cmd_flat(a) -> None:
@@ -407,7 +498,7 @@ def cmd_score(a) -> None:
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("init", "next", "order", "flat", "status", "journal", "score"):
+    for name in ("init", "next", "order", "notrade", "flat", "status", "journal", "score"):
         s = sub.add_parser(name)
         s.add_argument("--id", default="R1")
         if name == "init":
@@ -422,14 +513,15 @@ def main(argv: list[str]) -> int:
             s.add_argument("--stop", type=float, required=True)
             s.add_argument("--target", type=float, default=None)
             s.add_argument("--why", default="")
-        if name == "flat":
+        if name in ("flat", "notrade"):
             s.add_argument("--why", default="")
         if name == "journal":
             s.add_argument("--tail", type=int, default=20)
         if name == "score":
             s.add_argument("--trials", type=int, default=1)
     a = ap.parse_args(argv)
-    return {"init": cmd_init, "next": cmd_next, "order": cmd_order, "flat": cmd_flat,
+    return {"init": cmd_init, "next": cmd_next, "order": cmd_order,
+            "notrade": cmd_notrade, "flat": cmd_flat,
             "status": cmd_status, "journal": cmd_journal, "score": cmd_score}[a.cmd](a) or 0
 
 

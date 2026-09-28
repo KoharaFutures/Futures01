@@ -68,6 +68,46 @@ python3 workspace/roundtable/lib/replay.py score  --id R1 --trials <how many dis
   usable buffer is $5,000 × (1 − 0.20) = $4,000, so $2,800 is consumed = 0.700 exactly, where the
   ladder steps ×0.50 → ×0.30, giving 0.06 × $1,200 × 0.30 = **$21.60**
 
+## Your record is the live desk's record — and the harness writes it, not you
+
+The account owner asked for this desk to record exactly as the live callout desk does. So
+`workspace/paper/REPLAY/<id>/callouts.jsonl` carries the **`CALLOUT.md` PAPER MODE schema**, and the
+harness writes every field:
+
+| field | who sets it |
+|---|---|
+| `entry_price` | **the harness**, from the fill it computed at the next bar's open. You cannot assert a fill |
+| `outcome` | **the harness**, and only once the trade actually resolved. `null` until then |
+| `as_of` | **the harness** — the timestamp of the newest bar you can see. This is your historical "now" |
+| `basis` | **the harness** — the branch sha at the moment of the callout |
+| `contracts`, `risk_dollars`, `ladder_mult`, `rr` | **the harness**, from the ladder |
+| `why`, `side`, `initial_stop`, `target` | **you**, on the command line |
+
+That split is deliberate: the three things an agent could flatter itself with — the fill, the
+outcome, and whether a trade happened at all — are not yours to write.
+
+**Record a stand-down explicitly:**
+
+```
+python3 workspace/roundtable/lib/replay.py notrade --id R1 --why "<why you are standing aside>"
+```
+
+**Do this whenever you look at a bar and decline it.** A record containing only the trades you liked
+is a record of your memory, not of your process, and the placebo comparison is meaningless without
+the denominator. A refusal by the risk ladder is journalled for you automatically, as
+`confidence: REFUSED_BY_RISK`.
+
+The four confidence values you will see: `DISCRETIONARY` (a structured read — almost always the
+honest answer here), `NO_TRADE`, `REFUSED_BY_RISK`, and `MEASURED`, which nothing currently qualifies
+for.
+
+**A note on ids, because this harness reproduced a defect from its own register.** `callout_id` was
+first keyed on the bar cursor alone, and collided whenever two callouts were emitted without
+advancing a bar — a `notrade` then an `order` — so resolving the trade's outcome patched the
+stand-down record too. That is `D48`'s family: *a fresh id can still be a colliding id, and the guard
+is a uniqueness assertion at emission.* It now has one. If that assertion ever fires, stop and report
+it rather than working around it.
+
 ## Why 60 minutes and not daily
 
 The account owner's rule is a 22-hour cycle. **1440m cannot carry it** — every daily bar is interior

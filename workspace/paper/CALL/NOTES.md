@@ -7146,3 +7146,69 @@ evidence.
 **Not yet applied.** The resolver run that would write the void was refused by the environment's permission
 layer as a shared-resource modification, so the verdict above is a dry run and `pending.jsonl` still reads
 CALL-0001 as PENDING. The code and the rule are committed; the write is waiting on the owner.
+
+## N203 — 11:53 hourly full check: resolve.py is BLOCKED, which is a desk-level failure, not a footnote
+
+Cadence verified by listing it: `CronList` returns **`33ba414e — Every 5 minutes (recurring)`**, present and
+unchanged; **no `send_later` chain armed** (N42/N45). CALLOUT.md re-read in full, unchanged since `1948339`.
+The void-rule section I added to CHECK_PROCEDURE.md at 11:52 does **not** contradict it: CALLOUT.md requires
+that `resolve.py` be the only writer of an outcome and that every non-trade be journalled, and the void rule
+is implemented *inside* `resolve.py` and writes a journal row. Nothing to record under the CALLOUT-wins rule.
+
+**THE BLOCKER, stated first because it matters more than the market read.** The environment's permission
+layer refused `resolve.py` as a shared-resource modification at 11:50 and I have not re-run it since, because
+retrying a denied action by another route is not available to me. **`resolve.py` is the desk's only path to
+triggering, filling, resolving, expiring and now voiding.** While it is blocked:
+
+- **CALL-0006 cannot fill**, even if MNQ trades up through 30560.00. The plan is live on paper and inert in
+  fact, and if the market reaches the limit during the block the desk will have a fill it cannot record.
+- **CALL-0001 cannot be voided**, so `pending.jsonl` still reads it PENDING at **6.75 ATR** away.
+- **Nothing can resolve.** Any stop or target touched in this window is unrecorded.
+
+This is a strictly worse failure than the one the owner corrected an hour ago and it is not mine to fix from
+here. Reported to the owner at 11:52 with the remedy (approve `python3 workspace/paper/CALL/resolve.py`, or
+add a Bash permission rule for it). **Until it clears, every "pending" and "drawdown $0.00" in my reports is
+a statement about a file that cannot be updated, and I will keep saying so rather than letting the ledger
+read as live.**
+
+**ATRs re-measured this firing, inherited from nothing:**
+
+    MGC  12.30  1.0x = $123.00 = 51.3% of $240   cap binds 0.98x   rule4 floor 6.15 pts
+    MNQ  79.71  1.0x = $159.43 = 66.4% of $240   cap binds 0.75x   rule4 floor 39.86 pts
+
+MGC has now joined MNQ in having a 1.0x-ATR stop exceed the 50% cap at one contract. CALL-0006's 58.00-point
+stop is 0.73x of MNQ's current ATR, still inside the 0.75x ceiling — by 1.71 points. If MNQ's ATR expands
+another 3% the plan I registered at 11:37 would no longer be placeable at its own size. It is not edited for
+that; noted because it is the governor tightening around a live plan.
+
+**Settled-frame read (N41/N47 — not led by a fast frame):**
+
+    MGC 60m  BEARISH 0-3  close 4150.90 < EMA20 4220.47 falling  location 3.8% of [4143.00, 4351.60]
+    MNQ 60m  BEARISH 0-2  close 30409.75 < EMA20 30673.03 falling location 8.3% of [30356.50, 30998.50]
+    MGC 15m  BEARISH 0-3 UNANIMOUS  location 13.8% of [4143.00, 4217.40]
+    MNQ 15m  BEARISH 0-3 UNANIMOUS  location 25.8% of [30356.50, 30759.25]
+
+**Both symbols are now unanimously BEARISH on the 15m.** MNQ's reversal is called again — held 23 checks,
+agreeing frames now **[1, 5, 60]**, up from [5, 60]. MGC still fails on the single structurally unsatisfiable
+condition (`prior: None`, N166/N194 Cause 1) — four of five pass.
+
+**No new call.** MNQ's signal already has CALL-0006 and a second plan on the same signal is double-counting.
+MGC has no reachable path. And with `resolve.py` blocked, registering anything new would be writing a plan
+the machinery cannot act on.
+
+### Ledger — win rate and payoff together (rule 3)
+
+    journal entries 23 | pending.jsonl: 2 PENDING, 1 TRIGGERED, 3 EXPIRED | ambiguous-bar resolutions 0
+    state.json equity $50,156.56  peak $50,156.56  drawdown $0.00  open 0  closed 1
+
+    CALL-0002 EXCLUDED (N155: filled 102.70 points from its specified entry, future-dated off-grid bar_ts)
+
+    MEASURED: closed 0 | wins 0 | losses 0 | win rate UNDEFINED and payoff UNDEFINED (n = 0)
+              expectancy UNDEFINED | equity $50,000.00 | drawdown $0.00
+              distance to the $2,800 absorbing state: the FULL $2,800 (floor $47,200)
+
+    thesis: CALL-0001 DIRECTION WRONG (fav 11.25, adv 532.75)
+            CALL-0006 DIRECTION RIGHT, target distance not covered (fav 38.00, adv 36.75, tgt 87.00)
+
+CALL-0006 is the first plan of the session to read **DIRECTION RIGHT** on the tracker. It is also unfilled
+and unfillable while the resolver is blocked, which is the whole problem in one line.

@@ -5377,3 +5377,53 @@ bar would be the fitting N75 exists to prevent.
 **MGC RTH opens in one minute.** Three plans PENDING now: CALL-0005 (new), CALL-0001 (adverse 354+),
 CALL-0002 (inert, window opening now). Ledger before this callout: open 0, closed 0, equity $50,000.00,
 drawdown $0.00.
+
+## N147 — 08:24: the REVERSAL is still called, CALL-0005 is unfilled, and CALL-0002 is STILL not evaluated — with the exact reason
+
+**MNQ REVERSAL BULLISH remains called**, `held 19` checks, agreeing frames [1m, 5m, DAILY, WEEKLY], location
+BULL at 71.9% of [30535.00, 30753.25]. The call has not lapsed.
+
+**CALL-0005 has not filled.** The newest 15m bar (`08:00`) has low **30610.50** against the 30595.88 limit —
+**14.62 points away**, the closest it has come. MNQ has since traded up to 30692.00 on the 5m (`08:10` bar
+h 30719.25 l 30685.25), so the limit is now about 96 points below the market. The plan's own invalidation said
+this is the likely failure mode and it is behaving that way: direction right so far, entry unreached.
+
+Worth checking rather than assuming: had I set `created_bar_ts` to the newest *settled* bar (07:45) instead of
+08:00, the resolver would have evaluated the `08:00` bar — whose low of 30610.50 is **still above** 30595.88, so
+it would not have filled anyway. The principled choice and the lucky one coincide here, and I am recording that
+they did rather than claiming the choice saved anything.
+
+**CALL-0002's window opened at 08:20 and it is still not being evaluated.** Established by direct test rather
+than inference:
+
+    MGC newest stored 15m bar:  2026-09-28T08:00:00-04:00
+    CALL-0002 created_bar_ts:   2026-09-28T08:20:00-04:00
+    resolve.py needs:           a bar with ts > 08:20
+    bars strictly after it:     NONE
+
+The first bar that can satisfy it is the `08:30` bar, completing 08:45 and in hand around **08:46**. So the
+answer to the question I posed at 08:14 — "will the resolver finally see it?" — is **not yet, and for a fourth
+distinct reason**: not the future stamp itself (N30), but that `08:20` is not a 15m bar boundary at all. The
+stamp sits between the `08:15` and `08:30` bars, so `> 08:20` skips `08:15` entirely. **Whoever wrote 08:20 into
+a 15m plan wrote a timestamp the 15m grid cannot land on**, which is a defect independent of the
+future-dating one and would have cost this plan its first thirty minutes even if the stamp had been in the past.
+
+That reinforces retiring CALL-0002 with an honest non-outcome rather than letting it resolve: when the `08:30`
+bar lands, the resolver will finally look at it and will be looking at a trigger level (4289.10) that MGC left
+behind six hours ago, with no record of the intervening tape.
+
+## N148 — MGC's 15m has not caught up with a 25-point rally
+
+MGC is at 4197.10 with the `08:10` 5m bar at `h 4198.50 l 4193.30` — up roughly 25 points from the 4172.60 low.
+Its 1m reads BULL 2-1 and 5m BULL 2-0. But the 15m frame still shows **BEARISH 0-1** with trend **MIXED**
+(4197.10 > EMA20 4190.37 while the EMA is still falling), structure MIXED with both legs inside noise, and
+location **31.4%** of [4172.60, 4250.60]. The `08:00` 15m bar has not been superseded — 15m `+0 new` this fetch
+— so the rally's second half is not in the 15m readings at all yet.
+
+MGC's reversal remains closed for the three reasons on record: no prior directional headline (`held 349`,
+`prior None`), 15m not unanimous, and N117's structurally unreachable 2-HTF gate.
+
+No new call. Three plans PENDING: CALL-0005 (unfilled, 96 below market), CALL-0001 (adverse), CALL-0002 (inert,
+first evaluable bar ~08:46). Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800
+to the absorbing state. **MGC RTH has been open four minutes** — the tape is now inside the only session this
+repository has ever measured.

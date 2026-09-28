@@ -437,3 +437,57 @@ argument, not a result.
 counter that gets carried: **gate refusals: 1, of which would-have-won: 1.** If that column keeps
 reading this way over a meaningful number of setups, the gate is costing more than it protects and
 the RTH restriction should be re-argued from the tally — not from tonight.
+
+## N13 — no new call tonight, and the reason is that the setup is late, not that nothing is happening
+
+**basis: ce6b0aa, 2026-09-27 22:03 ET.** The owner asked the desk to keep calling. This is the
+record of a call **declined**, because a record that only contains the trades I liked is a record
+of my memory, not my process.
+
+**What the tape is doing.** MGC is at 4245.20, **−76.00 points from Friday's close** ($760 a
+contract), bearish on all five frames it may carry a bias on, three of them unanimous. That is a
+strong, clean downtrend.
+
+**Why I am not shorting it.** RSI14 is **9.4** and price is **−1.74 sigma** from its 20-bar mean.
+MEAN_REVERSION — one of the six families MGC's profile actually generates, unlike BREAKOUT or
+LIQUIDITY — reads **AGAINST**, and it is right to: entering a short 76 points into a move, at an
+RSI under 10, is paying for the part of the trend that has already happened. The five agreeing
+families do not fix that, because **rule 1 says agreement is not confidence**, and three of the
+five (BREAKOUT, LIQUIDITY, MOMENTUM) were never generated for MGC at all.
+
+**Why I am not trading MNQ either.** Its frames are in open conflict: 1m/5m/15m unanimously
+BEARISH against 4h/DAILY unanimously BULLISH. Under rule 1 that is a reason **not** to trade, not
+a weaker reason to pick a side.
+
+**`CALL-0002` is stranded and will almost certainly expire `NO_FILL`.** Its 4289.10 stop-entry sits
+**43.90 points above** the market and can only fill inside Monday 08:20–13:30 ET. That is the RTH
+gate's cost, already recorded in N12, now fully realised. I am **not** editing it (N8) and not
+replacing it with a chase.
+
+**What would produce a call.** A retest short — a bounce back into the broken 4289.10 shelf during
+Monday's RTH, shorted at resistance with the trend rather than 76 points into it. That is a
+TREND-family setup, and TREND **is** one of MGC's six generated families, so it is better grounded
+than `CALL-0002` was. It needs a limit entry, which `resolve.py` does not yet support — it only
+does stop-entries. **I am not building that speculatively at 22:00 on a Sunday**; it gets built
+when a bounce actually forms, at a full check, on liquid bars.
+
+## N14 — the reversal detector was defining "reversal" in a way that could almost never fire
+
+**basis: ce6b0aa.** Found by watching it decline a call it should have been able to consider.
+
+MNQ's 15m went `BULLISH → CONFLICTED → BEARISH`. The detector reported *"prior headline was
+CONFLICTED, so this is a resolution, not a reversal"* — because it compared against the
+**immediately prior differing** headline, which was the neutral state in the middle.
+
+That is wrong, and structurally so: **on this tape a sign change almost always passes through
+CONFLICTED on its way across**, so requiring the prior headline to be directional-and-adjacent
+would have made nearly every genuine reversal unreportable. A reversal is a change of **sign**, and
+CONFLICTED has no sign. Fixed: `prior` now skips CONFLICTED and finds the last **directional**
+headline.
+
+**It still declines, and now for an honest reason.** `bias_history.jsonl` only began at 21:14 ET,
+and MNQ's recorded 15m sequence is ten CONFLICTED readings followed by two BEARISH — **the earlier
+BULLISH state was never recorded**, so there is genuinely nothing on file to reverse *from*. The
+detector is currently limited by its own history depth, not by its logic, and it will start doing
+real work once a few hours of directional readings exist. Worth stating plainly rather than
+letting a "no call" look like a considered verdict when it is partly an empty file.

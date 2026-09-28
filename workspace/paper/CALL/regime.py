@@ -149,12 +149,15 @@ def reversal(symbol: str, tfs: list[dict]) -> dict:
             break
     if held < 2:
         fails.append(f"held only {held} consecutive check(s), needs 2")
-    # changed sign versus the last DIFFERENT headline
-    prior = next((h for h in reversed(hist) if h != head), None)
+    # Changed SIGN versus the last DIRECTIONAL headline. CONFLICTED has no sign, so a
+    # BULLISH -> CONFLICTED -> BEARISH sequence is a real reversal with a neutral state in
+    # the middle, not a "resolution". Treating the intervening CONFLICTED as the thing
+    # being reversed from would make every reversal unreportable, since a sign change on
+    # this tape almost always passes through CONFLICTED on its way across.
+    prior = next((h for h in reversed(hist)
+                  if h in ("BULLISH", "BEARISH") and h != head), None)
     if prior is None:
-        fails.append("no prior differing headline to reverse from")
-    elif prior == "CONFLICTED":
-        fails.append("prior headline was CONFLICTED, so this is a resolution, not a reversal")
+        fails.append("no prior directional headline to reverse from")
     # another timeframe agrees
     others = [t for t in tfs if t["frame"] != 15 and t["headline"] == head
               and t["headline"] not in ("NOT ELIGIBLE", "NO DATA")]

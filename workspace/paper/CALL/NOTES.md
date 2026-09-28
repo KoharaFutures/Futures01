@@ -6930,3 +6930,103 @@ FADE-1 buys it.
 same t > 3.0, and FADE-1 must also beat its own placebo by z > +2.0 on MCL specifically, the independent
 contract. **My expectation, stated now: MGC/MNQ will look good because they are the data that generated the
 hypothesis, and MES/MCL are the question.** If MCL does not replicate, FADE-1 is dead and I will say so.
+
+# N198 — RESULT: FADE-1 is DEAD, and win rate/payoff cancelled it exactly as rule 3 predicts
+
+Corrected before reading: the first run had **MCL's point value wrong** ($1/pt instead of $100/pt), so a
+fixed $1.50 commission swamped a ~$50 risk and every MCL cell read -3.3R with a 0% win rate. That was my
+spec error, not a result; fixed to pv 100.0 and re-run. The rule itself was not touched.
+
+    sym   frame     n     E[R]       t   win%  payoff  placeboE[R]  z vs placebo   status
+    MCL      15   112   0.1477   1.245   48.2    1.36      -0.1469         +2.70   THE TEST
+    MCL      60   538  -0.0091  -0.170   42.0    1.36      -0.0888         +1.46   THE TEST
+    MES      15   137  -0.0492  -0.466   40.9    1.33      -0.0678         +0.18   THE TEST
+    MES      60   519  -0.0145  -0.268   41.0    1.40      -0.0688         +1.21   THE TEST
+    MGC      15   113   0.0147   0.126   41.6    1.44      -0.1143         +1.21   contaminated
+    MGC      60   430  -0.0480  -0.816   38.8    1.45      -0.0544         +0.13   contaminated
+    MNQ      15   124   0.0487   0.437   42.7    1.45      -0.0176         +0.63   contaminated
+    MNQ      60   485   0.0530   0.943   42.7    1.47      -0.0583         +2.03   contaminated
+
+**Largest t on the two untouched symbols is +1.245, against a declared threshold of 3.0. FADE-1 fails.**
+The secondary condition also fails: I required z > +2.0 on MCL, the independent contract, and MCL's 60m cell
+— which carries 4.8x the trades of its 15m cell — gives z +1.46 with a negative t. **FADE-1 is dead and I
+am not retuning it.** As predicted in N197, the contaminated MGC/MNQ cells look mildly positive and the
+untouched ones do not; that is the signature of a hypothesis living only in the data that generated it.
+
+## The mechanism, and it is rule 3 verbatim
+
+    CONT-1  win 26-32%   payoff 1.44-1.47   E[R] -0.23 to -0.36
+    FADE-1  win 41-48%   payoff 1.33-1.47   E[R]  -0.05 to +0.15
+
+Inverting the entry raised the win rate by 10-16 points and lowered the payoff, and expectancy landed at
+**zero**. BRIEF.md rule 3 — "win rate and payoff cancel" — is normally quoted as a reporting discipline.
+Here it is the *result*: the information in CONT-1 is real (it is 2.6-4.7 placebo-SDs from random) and it is
+**entirely absorbed by the win-rate/payoff trade-off the moment you flip the sign.** Removing a losing edge
+does not hand you a winning one. It hands you zero, minus costs.
+
+# N199 — THE SOLUTION, and the honest limit on what it can promise
+
+## What the `swings()` fix alone would have done today — measured, not asserted
+
+Proposed change: compare the newest pivot against the **running extreme of all prior pivots** in the window,
+instead of against the single preceding pivot. Recomputed over today's decline, 09:30-11:00:
+
+    MGC    bar     as shipped              with the fix
+           09:30   BEARISH 0-3 UNANIMOUS   BEARISH 0-2            <- removes a false unanimity
+           09:45   BEARISH 0-2             BEARISH 0-2
+           10:00   BEARISH 0-2             BEARISH 0-3 UNANIMOUS
+           10:15   BEARISH 0-2             BEARISH 0-3 UNANIMOUS
+           10:30   BEARISH 0-2             BEARISH 0-3 UNANIMOUS
+           10:45   BEARISH 0-2             BEARISH 0-3 UNANIMOUS
+           11:00   BEARISH 0-2             BEARISH 0-3 UNANIMOUS
+
+    MNQ    unchanged at every bar of the decline — the fix does nothing here
+
+**On MGC the fix converts five consecutive bars of the decline into unanimous BEARISH and removes the one
+spurious unanimity that printed before it. On MNQ it changes nothing.** A real fix, and a partial one.
+
+## But the fix alone still would not have produced a trade, and this is the chain that matters
+
+1. `swings()` strips unanimity during trends  ->  fixed above, MGC only.
+2. **Even unanimous, `reversal()` fails on condition 4**: MGC's headline was BEARISH at every bar all day,
+   so `prior is None` and the gate is unsatisfiable regardless of how the components read. **The structure
+   fix does not unblock MGC. Both defects have to go.**
+3. The obvious thing to put in the hole — a continuation breakout entry — is **measurably worse than random**
+   (CONT-1: z -2.61 to -4.72 across four cells, -$25,235 on MGC 60m alone).
+4. Its inverse is a **null** (FADE-1: largest t +1.245 on untouched symbols).
+
+**So: there is a real structural hole, and there is no validated entry to put in it.** Anything I install
+today that claims an edge would be invented, not measured. What follows is what can be justified.
+
+## The three changes, ranked by how much evidence each one needs
+
+**(A) A PROHIBITION — install now, evidence is sufficient.** *Do not enter on a break of a short-term
+extreme in the direction of an established displacement.* This is CONT-1 read backwards as a veto rather
+than as a permission, and **a prohibition needs a far lower evidential bar than a permission**: if it is
+wrong it costs foregone trades, while a wrong permission costs money. At z -2.61 to -4.72 versus placebo in
+4 of 4 cells, this is one of the larger effects measured anywhere in this repository, and it is the shape of
+entry the tape was inviting all morning. It goes in CHECK_PROCEDURE.md.
+
+**(B) TWO CORRECTNESS FIXES — specify now, install under pre-registration, NOT today.** The `swings()`
+running-extreme comparison (measured above), and a `reversal()` that is not the only directional path.
+Neither is an edge claim; both are defects. **I am deliberately not editing the live gate in the middle of
+the session whose failure motivated the edit** — that is the exact pattern (N8, and the six refusals logged
+today) that makes a result inadmissible. They are written up, with the measurement attached, for the parent
+session to apply between sessions and for the desk to run forward from a clean start.
+
+**(C) THE PROCEDURAL FIX, which is the one that actually answers the owner's question.** Today the desk had
+**one** plan alive during RTH — CALL-0005, a LONG, dead at 09:30 — and then nothing at all for two hours
+while MNQ fell 402 points. The reason no short existed is not that a short was rejected. **It is that no
+short was ever written.** So: *maintain a pre-registered plan on BOTH sides at all times during RTH*, each
+sized at or below the 50% cap, each with its level set from structure written down in advance and its
+expiry on the session, and let `resolve.py` fill whichever one price reaches. That is not an edge claim and
+it does not need one — it removes the failure mode in which the desk is structurally unable to be
+positioned, which is what Cause 1 actually was.
+
+## The honest limit
+
+None of this promises today's move would have been caught at a profit. CONT-1 says the intuitive way of
+catching it loses money. What (A)-(C) fix is the thing that is indefensible regardless of edge: **a desk
+that watched a 3x-ATR move with no mechanism capable of returning YES, and that is still at n = 0 after a
+full session.** Outcomes are the missing input. Getting to n > 0 safely, under the governors, is worth more
+right now than any directional call.

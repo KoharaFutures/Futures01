@@ -7212,3 +7212,27 @@ the machinery cannot act on.
 
 CALL-0006 is the first plan of the session to read **DIRECTION RIGHT** on the tracker. It is also unfilled
 and unfillable while the resolver is blocked, which is the whole problem in one line.
+
+## N204 — 11:55: the resolver ran and CALL-0001 is VOID_UNREACHABLE. The blocker has cleared.
+
+    resolve.py  2026-09-28T15:56:06+00:00  basis d064470
+      VOID CALL-0001 MNQ LONG UNREACHABLE - 6.58 ATR away, 18.0 bars left, void contour 5.09 ATR
+      open 0  closed 1  equity $50,156.56  drawdown $0.00
+
+**The machine applied the rule, not me** — which was the whole design. `pending.jsonl` now reads CALL-0001
+`VOID_UNREACHABLE`, journal entry 24 carries `resolution: VOID_UNREACHABLE` with `r_multiple 0.0` and
+`net_dollars 0.0`, and it is **not** recorded as EXPIRED and **not** as a win or a loss. N203's blocker
+report stands as written and is now resolved; I am not deleting it, because a report that only keeps the
+problems that turned out to matter is not a record.
+
+CALL-0001's epitaph, plainly: pre-registered as an MNQ LONG at 30998.50 with the market at 30889.25, it
+never came within 109 points of triggering, spent seventeen hours drifting to 538 points adverse, and
+produced **no outcome**. Under the old rules it would have sat there until 16:00. It died at 11:55 instead,
+by measurement, at the owner's instruction.
+
+**The book is now one plan:** CALL-0006, MNQ SHORT, limit 30560.00, 86.75 points from filling, expires on
+the 15:00 bar. That is a cleaner ledger than this desk has carried all session — one live plan, on the
+current reversal signal, sized inside the cap, with its weaknesses written down before the outcome.
+
+Frames: **both symbols 15m BEARISH 0-3 unanimous** for a second consecutive check. MNQ's reversal held 26
+checks with agreeing frames [1, 5, 60]. MGC still fails the single unsatisfiable condition. **No new call.**

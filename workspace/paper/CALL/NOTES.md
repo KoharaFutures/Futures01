@@ -6426,3 +6426,30 @@ Also confirmed from the other side: MNQ's 15m went 2-0 at 10:09 on the close cro
 EMA20, and at 10:14 it is back to 1-0 with the close 2.34 points *below* it. I called that crossing "inside
 the noise" when it happened; it lasted one check. Recorded because a prediction that cheap is still a
 prediction, and it was right.
+
+## N184 — 10:18: the CALL-0005 counterfactual has gone RED, and both symbols broke down together
+
+The `10:00` 15m bar landed and both symbols fell hard:
+
+    MGC  4190.40 -> 4175.60   -14.80 points in two 5m bars   location 11.2% of [4168.30, 4233.20]
+    MNQ  30656.25 -> 30572.25 -84.00 points in three 5m bars location 16.6% of [30535.00, 30759.25]
+    MNQ 5m 10:05  l 30565.00  -- below CALL-0005's 30595.88 limit by 30.88
+
+**The counterfactual I reported at +0.68R is now -0.42R.** Entry 30595.88, current 30572.25, 23.63 points
+adverse, -$47.26 on one contract; stop 30540.00 is 32.25 points below and intact. I stated that hypothetical
+at 10:00 while it flattered the plan and I am stating it now that it does not, at the same cadence and with
+the same arithmetic. **The near-miss has so far saved money, not cost it** — which is the whole reason N179
+refused to treat "one bar longer would have filled it" as evidence the window was too short. Nineteen minutes
+of price action inverted the sign of that hypothetical. It will keep moving and I will keep not counting it.
+
+Frame state: MGC BEARISH on all five eligible frames for a second consecutive check (1m now 0-3 unanimous).
+MNQ's 15m flipped BULLISH -> BEARISH 1-2, so MNQ is BEARISH on 1m, 5m, 15m and 60m with only the ineligible-
+for-this-purpose DAILY/WEEKLY BULLISH against it and the 4h CONFLICTED. Neither reversal test fires: MGC on
+the structural block (N166), MNQ on 15m not unanimous **and** held only 1 check.
+
+**No call, and the reason is the same one that has held all morning.** This is a breakdown in progress, not a
+level reached that was written down in advance. Shorting into it is chasing an extended move — MGC has
+travelled 1.35x its 15m ATR in ten minutes — and the desk has no pre-committed continuation method to act on
+a breakdown, because building one while watching it break down is the N8 laundering refused five times
+already. Both symbols sitting near the bottom of their 40-bar range with every fast frame agreeing is the
+configuration rule 2 prices at z = -4.09.

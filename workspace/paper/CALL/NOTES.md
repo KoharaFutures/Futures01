@@ -715,3 +715,74 @@ have reported it as live without saying that. What is actually durable is the
 hourly Routine `trig_01NZGwNRd8mftXdxyLvuVpdD` (next 00:52 ET), which has
 survived every turn. The honest statement to the owner is: checks happen when
 he prompts, plus hourly on the Routine.
+
+## N18 — the vendor served a response three hours stale, the delta design absorbed it without loss, and N16's open question is answered
+
+00:04 ET. `fetch.py` reported something I have not seen before:
+
+```
+MGC 5m newest 2026-09-27T21:05:00-04:00  lag=179.2m  new=0 revised=2
+MNQ 5m newest 2026-09-27T20:55:00-04:00  lag=189.2m  new=0 revised=2
+```
+
+The newest real bar went **backwards by nearly three hours**. The 23:58 check
+had 23:45 with lag 13.6m; six minutes later the vendor's response topped out
+at 21:05. This is not a stub-bar problem — it is a truncated response window.
+
+**Nothing was lost, and the reason is the delta design.** Checked directly:
+
+```
+stored('MGC',5)  886 keys, newest 2026-09-27T23:45:00-04:00
+  23:25  o 4228.60 h 4230.30 l 4227.40 c 4228.90 v  945
+  23:30  o 4228.90 h 4231.30 l 4224.20 c 4225.60 v 2094
+  ...
+  23:45  o 4226.20 h 4227.40 l 4224.10 c 4225.60 v  658
+```
+
+All present, all with real volume, no stubs. The 00:04 delta file contains
+exactly two lines — a 09-23 placeholder and the 21:05 bar — because the
+response **did not contain** the 22:00-23:45 timestamps at all, so there was
+nothing to overwrite them with. A full-series snapshot would have written a
+series ending at 21:05, and "latest fetch wins per timestamp" would then have
+been fed a file whose *absence* of later bars is indistinguishable from
+nothing-to-say. The delta records only what the response actually asserted.
+
+That is a property I did not design for and should record honestly: the
+delta change was justified on disk cost (105 bytes against 88,161, an ~840x
+reduction) and on being better evidence of what changed. **Robustness to a
+truncated vendor window was an accident of that design, not a reason for
+it.** It is still the property that saved 21 bars of tonight's move.
+
+**What this means for the read.** Every number in this check is stamped
+**23:45**, which is 19 minutes old, because that is genuinely the newest bar
+this desk holds. `chart.py` and `regime.py` read the merged store, so their
+output is valid — but it is not 00:04 data and I am not going to describe it
+as current. Counting this as **one degraded fetch**, not a failure: it
+returned data and the store is intact. Two more consecutive and the stop
+condition applies.
+
+### N16's open question is answered: volume backfills
+
+At 23:10 I flagged the 23:00 MGC bar as `v==0 AND h!=l` — a shape the N5 stub
+guard (`v==0 AND h==l`) does not catch — and said I would watch whether volume
+backfilled rather than change the guard on one observation. It backfilled:
+
+```
+23:10 fetch   23:00  o 4230.10 h 4231.00 l 4228.20 c 4229.00 v    0
+00:04 store   23:00  o 4230.10 h 4234.60 l 4228.20 c 4232.50 v 1899
+```
+
+So `v==0 AND h!=l` is **the forming bar**, where this vendor publishes price
+before volume — not interpolation, and not a stale-price stub. The guard is
+correct as written and needs no change. Two consequences worth keeping:
+
+1. The close on such a bar is provisional and the high is incomplete — 4231.00
+   became 4234.60, a 3.60 extension upward. `resolve.py` resolves stops and
+   targets against exactly those highs and lows, so **a trigger or stop inside
+   that range would have been missed on the first read and seen on the
+   second.** Quoting the last bar with real volume, as N16 did, was the right
+   call and should be the standing habit rather than a one-off.
+2. Restraint was right. Had I "fixed" the guard at 23:10 to reject
+   `v==0 AND h!=l`, I would have taught it to throw away every forming bar —
+   which is the one bar a live desk most needs — on the basis of a single
+   observation I had not yet explained.

@@ -2529,3 +2529,49 @@ looking, as here. The cheap version is to write the armed trigger id and its fir
 a file each firing, and have the next firing compare its own arrival time against it — a
 gap larger than ~7 minutes is a dropped link and should be reported in the reply rather
 than left silent. Deferred to a full check; recorded here so it is not lost.
+
+## N43 — N41 paid off within six minutes: the 5m flip I held back on was gone by the next check
+
+At 04:25 MNQ's 5m frame read BULLISH 2-0 (up from BEAR 0-1) and its 15m location had risen
+12.6% → 19.1%. Per N41 I held it back as provisional rather than leading with it, because it
+rested on the 04:15 close, inside the revision window.
+
+At 04:31 the 04:20 bar closed MNQ at 30608.75, **25.25 points below** the 04:25 reading, and
+`regime.py` now returns MNQ 5m **CONFLICTED 1-1** with 1m BEARISH 0-1. Location fell 19.1% →
+11.5%. The flip did not merely fail to extend; it was erased in one bar. This is the first
+time tonight the provisional-bar rule has been tested against what actually happened, and it
+held: leading with that flip would have been a directional statement with a six-minute
+shelf life.
+
+Recorded because the rule's value is otherwise invisible — a rule that stops you saying
+something leaves no trace when it works.
+
+## N44 — MGC is now unanimous bearish on every eligible frame, and that is an argument AGAINST the trade
+
+MGC at 04:31: 1m BEAR 0-3 unanimous, 5m BEAR 0-3 unanimous, 15m BEAR 0-3 unanimous, 60m BEAR
+0-3 unanimous, 4h BEAR 0-2. Six minutes earlier 1m was CONFLICTED 0-0 and 5m was 0-2. New low
+4182.00, and location 1.8% of the 40-bar range [4182.00, 4303.50].
+
+The intuitive reading is that this is the cleanest short of the night. The desk's own evidence
+says the opposite, twice over:
+
+1. **BRIEF.md rule 2: MTF alignment measures z = −4.09.** Alignment is not neutral here, it is
+   measurably *negative*. Total agreement across frames is the specific configuration this
+   repository found loses money. Taking a short *because* everything agrees is trading the
+   sign backwards.
+2. **Location 1.8% of range.** Whatever the frames say, entering short at the extreme low of
+   the observed range is chasing an extended move, which the procedure forbids outright.
+
+And a third, structural point: all five agreeing frames are built from the same underlying
+tape over overlapping windows. Five frames agreeing is not five pieces of evidence — it is
+closer to one piece of evidence counted five times. That is also why rule 1 caps confluence
+at two signals plus one filter, and why *more* agreement scores *worse*.
+
+So: NO NEW CALL, and the reason is not absence of signal but the presence of the wrong kind.
+Recording this because a declined setup with a loud-looking chart is exactly the decision that
+looks like cowardice in hindsight if the reasoning is not written down before the outcome.
+
+ATRs re-measured this firing (they are not inherited): MGC ATR14(15m) 8.84 → a 1.0x stop costs
+$88.36, 36.8% of the $240 permitted; MNQ 44.12 → $88.25, 36.8%. Identical to one decimal by
+coincidence, and both now within touching distance of the 50% cap at 1.4x ATR. Both symbols
+remain sizeable; MNQ's ATR has widened again (38.04 → 44.12 since 03:52).

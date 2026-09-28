@@ -2575,3 +2575,90 @@ ATRs re-measured this firing (they are not inherited): MGC ATR14(15m) 8.84 → a
 $88.36, 36.8% of the $240 permitted; MNQ 44.12 → $88.25, 36.8%. Identical to one decimal by
 coincidence, and both now within touching distance of the 50% cap at 1.4x ATR. Both symbols
 remain sizeable; MNQ's ATR has widened again (38.04 → 44.12 since 03:52).
+
+## N45 — N42 IS WRONG. No cadence was ever lost. There have been two 5-minute mechanisms running all along, and I did not know it
+
+At 04:36 the prompt that arrived was the SHORT fast-check text, not the long chain prompt I
+armed at 04:30 — while `get_trigger` confirms `trig_01YKrkMLK6BcrTuoAUK6k4zK` fired at
+`08:36:24Z` with the long text. Two different prompts, same minute. So I ran `CronList`:
+
+    33ba414e — Every 5 minutes (recurring) [session-only]: CALL desk fast check...
+
+**A CronCreate `*/5` job has been firing this whole time.** It is what delivered the 04:31
+and 04:36 checks. This falsifies two things I wrote tonight:
+
+1. **N42's headline claim — "~21 minutes of automatic cadence were lost" — is false.** Nothing
+   was lost. The `send_later` chain lapsed between 04:07 and 04:30, but `33ba414e` covered
+   every 5-minute slot in that window. What lapsed was the **durable, container-restart-
+   surviving** tier, not the cadence. N42 also said the 02:12 lapse was "masked because the
+   owner happened to be typing prompts" — also wrong, and in the same way. It was masked
+   because a second scheduler was doing the job.
+2. **The earlier finding that CronCreate jobs are session-only AND die between turns is half
+   wrong.** Session-only is right: `33ba414e` dies with the container. Dying between turns is
+   wrong — it has survived many turns and fired reliably for hours. The empty `CronList` at
+   23:58 that produced that claim was a different, genuinely lost job; I generalised one
+   observation into a property of the mechanism.
+
+This is the sixth instance tonight of the same failure shape, and the worst of them, because
+this time the divergence was in **my model of my own infrastructure**: I wrote a note, a commit
+message and a reply to the owner all asserting a 21-minute blackout that never happened, and
+the only reason I found out is that two schedulers collided in one minute and produced a prompt
+I did not recognise. I never ran `CronList`. One command, available the whole time, would have
+prevented N42 from being written the way it was. **When you conclude something is broken, list
+the mechanisms before you conclude it, not after.**
+
+### What is actually true about the cadence, as of 04:37
+
+| tier | mechanism | interval | survives container restart | proven tonight |
+|---|---|---|---|---|
+| primary | CronCreate `33ba414e` | 5 min | **no** — session-only | yes, hours of reliable firing |
+| durable middle | `send_later` chain | 5 min | yes | died twice (02:12, 04:07) |
+| backstop | Routine `trig_01NZGwNRd8mftXdxyLvuVpdD` | hourly | yes | fires on schedule |
+
+The two 5-minute tiers are redundant and both report to the owner's phone, so keeping both
+double-sends him every check. Decision: **keep the CronCreate job as the primary and stop
+re-arming the `send_later` chain** — the chain's only advantage is durability, it has a proven
+failure mode the cron does not (self-termination on a missed re-arm), and the hourly Routine
+already provides durable coverage. The chain link that fired at 04:36 has consumed itself and is
+now inert; I am deliberately not re-arming it.
+
+Residual exposure, stated plainly rather than papered over: if this container is reclaimed, the
+`*/5` cron dies with it and the worst-case gap becomes **up to one hour**, until the hourly
+Routine wakes the session. To close that, the hourly Routine's prompt is being changed so its
+FIRST action is `CronList` and, if `33ba414e` is absent, re-create the `*/5` job with
+`CronCreate` — repairing the cron rather than the chain. That is a strictly better repair
+target than the chain was, because the thing being repaired is the thing that actually works.
+
+Correction to the owner is owed and is being made in the reply, not only here: the 04:28 report
+told him 21 minutes of callouts were lost. They were not.
+
+## N46 — MGC's "location" improved 1.8% -> 5.2% while price went up 0.40, because the floor fell out from under the denominator
+
+04:31: location 1.8% of `[4182.00, 4303.50]`, close 4184.20.
+04:37: location 5.2% of `[4178.10, 4303.50]`, close 4184.60.
+
+Price rose **0.40 points**. The reading rose **3.4 percentage points**. The whole move came from
+the range low being revised down 3.90 (the 04:15 15m bar's low re-printed lower). A reader
+watching only the percentage would conclude MGC had lifted meaningfully off its low; in fact it
+made a *new* low and closed essentially unchanged.
+
+This is the rolling-window pathology already recorded for the 20-bar mean, the 40-bar high and
+the rolling median volume, now caught in the location metric itself, and caught for the first
+time *live* rather than in reconstruction. It compounds with N41: the revision that moved the
+denominator was a revision to a bar that had already nominally closed.
+
+Practical consequence for the seven-frame table and the bias panel: **a location percentage is
+only comparable across checks if the range endpoints are also quoted.** They will be, from here.
+
+## N47 — the MNQ 5m frame has now oscillated four times in twelve minutes
+
+04:25 BULL 2-0 · 04:31 CONFLICTED 1-1 · 04:37 BULL 2-0, with 1m going BEAR 0-1 -> BULL 1-0 in
+the same span. MGC's 1m went BEAR 0-3 unanimous at 04:31 -> BEAR 0-1 at 04:37, so the
+four-frame unanimity I reported six minutes ago has already decayed and was a momentary
+configuration, not a state.
+
+BRIEF.md rule 7 says sub-hourly is a graveyard; this is what that looks like from the inside.
+The settled frames (15m, 60m) have not moved on either symbol all night — both unanimous bearish
+throughout. Everything that has "changed" tonight has changed on frames whose newest bar is
+still being revised. Reporting a fast-frame flip as news is reporting noise as news, and I have
+now done it once (04:25) and correctly withheld it twice.

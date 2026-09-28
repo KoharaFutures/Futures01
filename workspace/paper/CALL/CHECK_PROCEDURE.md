@@ -671,3 +671,40 @@ how long the gap was. A silent gap is the failure mode; a reported gap is recove
   pushes an hour saying "nothing happened" trains him to ignore the one that matters, and
   the tool's own guidance is that an unnecessary notification is annoying in a way that
   accumulates. Quiet checks go to the transcript only.
+
+## Verify the cadence by listing it, never by remembering it
+
+There are three tiers keeping callouts reaching the owner's phone, and at 04:37 on 2026-09-28 I
+discovered I had been wrong about all of them at once (N45). The rule that came out of it:
+
+**Before asserting anything about whether the cadence is running, run `CronList`.** One command.
+It was available the whole time N42 was being written, and it would have prevented a note, a
+commit message and a reply to the owner all claiming a 21-minute blackout that never happened.
+
+| tier | mechanism | interval | survives container restart |
+|---|---|---|---|
+| primary | CronCreate recurring job (`33ba414e`) | 5 min | **no** — session-only |
+| backstop | Routine `trig_01NZGwNRd8mftXdxyLvuVpdD` | hourly | yes |
+| fallback | `send_later` chain | 5 min | yes, but self-terminates on a missed re-arm |
+
+- The CronCreate job is the primary. It is session-only but it has fired reliably for hours.
+  Session-only does NOT mean it dies between turns — that was an over-generalisation from one
+  empty `CronList` at 23:58, which was a different, genuinely lost job.
+- **Do not run two 5-minute mechanisms at once.** Both report to the owner's phone, so the
+  redundancy costs him a duplicate message every five minutes. If `CronList` shows the `*/5`
+  job present, change nothing.
+- The `send_later` chain is now the fallback, not the primary. Arm it only if `CronCreate` is
+  unavailable, and say that is what you did. It died twice (02:12, 04:07) because the re-arm is
+  the last action of a turn, which makes it the first casualty of a turn ending early.
+- The hourly Routine repairs the **cron**, not the chain. Its first action is `CronList`.
+- Residual exposure, which is real and should be stated rather than hidden: if the container is
+  reclaimed, the `*/5` cron dies with it and the worst-case gap is up to one hour, until the
+  hourly Routine wakes the session and re-creates it.
+
+## Quote the range endpoints with every location percentage
+
+A location reading is a fraction whose denominator is a trailing window, and that window
+migrates. On 2026-09-28 MGC's location went 1.8% -> 5.2% across six minutes while price rose
+0.40 points, entirely because the range low re-printed 3.90 lower (N46). A bare percentage is
+therefore not comparable between two checks. Always write it as `5.2% of [4178.10, 4303.50]`,
+so a reader can see which end moved.

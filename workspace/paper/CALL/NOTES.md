@@ -6485,3 +6485,25 @@ twenty-three minutes.**
 Frames: MGC BEARISH on all five eligible for a third consecutive check; MNQ BEARISH on 1m/5m/15m/60m with 4h
 CONFLICTED. Neither reversal fires. No call — MNQ has fallen 124.00 points from 30656.25 at 10:09, about 2.3x
 its 15m ATR in fourteen minutes, and chasing that is exactly what the owner's constraint forbids.
+
+## N186 — 10:28: MNQ's session low revised 30521.00 -> 30506.75, and all three frames now agree on it
+
+The 15m `10:00` bar read a low of 30506.75 while the 5m bars inside it read 30593.50 / 30562.75 / 30521.00 —
+a 15m low below every constituent 5m low, which would be a real cross-frame inconsistency. **It is not one:**
+the 5m `10:10` bar had revised from `l 30521.00` to `l 30506.75` in this same fetch, and the 1m minimum over
+10:00-10:15 is 30506.75 too. All three frames agree. I checked rather than asserting, because the check is
+cheap and N46/N49/N60/N87 are all instances of describing a mechanism from its output.
+
+**Amendment to N185:** I quoted the session low as 30521.00 and the CALL-0005 counterfactual stop as breached
+by 19.00 points. It is **30506.75** and **33.25 points**. The conclusion is unchanged (-1R either way, and it
+was already closed at the stop), but the number I published was superseded within five minutes, which is the
+fourth time this morning a figure I quoted from the newest bar moved under me. The 15m `10:00` bar completed
+at 10:15 and its revision window per N89 closes around 10:27-10:29, i.e. now.
+
+Frames unchanged in character: MGC BEARISH on all five eligible (1m back to 0-3 unanimous), location **4.8% of
+[4168.30, 4233.20]**; MNQ BEARISH on 1m/5m/15m/60m, 4h CONFLICTED, location **5.8% of [30506.75, 30759.25]**.
+Neither reversal test fires.
+
+MNQ bounced 63.25 points off the low inside the `10:15` 5m bar (l 30520.50, c 30569.75). **That is not a
+signal and I am not calling it one** — a single 5m bar closing off its low is precisely the sub-hourly noise
+rule 7 calls a graveyard, and the desk has no pre-registered level down here. **No call.**

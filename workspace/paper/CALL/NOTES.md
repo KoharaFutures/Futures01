@@ -3709,3 +3709,76 @@ both symbols. Locations MGC 7.7% of [4172.60, 4299.20], MNQ 16.0% of [30535.00, 
 No call. The two moments worth waiting for are 05:58 and the `06:00` bar, and neither has arrived. Kept
 short deliberately — a check two minutes after a full check has nothing in it, and padding it would be
 the same failure as manufacturing a callout.
+
+## N86 — I have been telling the owner CALL-0004 expires "~06:13". It is ~06:31-06:35, and the cause is the strict `>` I already knew about
+
+`resolve.py:179` is `expired = bool(expiry) and all_bars[-1]["ts"] > expiry`. **Strict.** CALL-0004's
+`expires_bar_ts` is `2026-09-28T06:00:00-04:00`, so the bar stamped `06:00` does **not** expire it —
+`06:00 > 06:00` is false. It needs the **`06:15`** bar.
+
+Measured when a 15m bar actually becomes available, from `feed_lag.jsonl` first-sightings:
+
+| 15m bar | completes | first seen | delay after completion |
+|---|---|---|---|
+| 04:30 | 04:45 | 04:46:15 | +1.2m |
+| 04:45 | 05:00 | 05:02:03 | +2.0m |
+| 05:00 | 05:15 | 05:16:19 | +1.3m |
+| 05:15 | 05:30 | 05:30:36 | +0.6m |
+| 05:30 | 05:45 | 05:49:35 | +4.6m |
+| 05:45 | 06:00 | 06:00:29 | +0.5m |
+
+So a 15m bar arrives 0.5-4.6 minutes after it completes. The `06:15` bar completes at **06:30** and will
+therefore be in hand about **06:31-06:35**. That is when the expiry gets written, and it is roughly
+**31-35 minutes** after the nominal 06:00, not 13.
+
+N32 recorded "~13 min behind the wall clock" and I have repeated 06:13 to the owner across several checks
+without re-deriving it. The correct general form for a bar-based expiry under a strict `>`:
+
+    expiry lands at   expires_bar_ts + 2 x bar_length + publish_delay
+
+because you need the bar *after* the stamped one. For a 15m plan that is +30m plus a couple of minutes.
+N32's ~13 min is roughly `bar_length + publish_delay` — the figure you get if you assume the stamped
+expiry bar itself triggers the expiry, which the strict comparison specifically prevents. I knew the
+comparison was strict; I had written it down. I still quoted a number derived from the non-strict version
+six times.
+
+## N87 — and N60's claim that the 15m frame serves a FORMING bar is wrong. No frame here does
+
+The same table settles a second thing. If the 15m frame published a forming bar, the `05:30` bar would
+have appeared shortly after 05:30. It appeared at **05:49:35**, four and a half minutes after it
+*completed* at 05:45. Every row shows the same: the delay is measured from completion, never from the
+stamp, and a bar is never in hand while its window is open.
+
+So **N60's distinction between "15m publishes a forming bar" and "60m does not" is false.** Both publish
+only completed bars and then revise the newest one for a while. The `new=1` / `rev=2` sawtooth I read as
+"forming bar being revised" is a *completed* bar being revised.
+
+The substance survives and gets simpler, which is why this is worth correcting rather than quietly
+dropping: **every frame publishes completed bars only, and revises the newest for some minutes after
+publication.** N41's provisional-bar rule is unchanged and now has one mechanism instead of two. The
+`T + 28` settle threshold I have been using for 15m is coincidentally about right — completion at T+15,
+publication by T+20, revisions tailing off after — but it was justified by a wrong story, and what I have
+been calling "the forming bar" all night is in fact the most recently *completed* bar, still moving.
+Terminology corrected from here: **newest bar**, not forming bar.
+
+Both corrections have the same shape as N45 and N60 themselves: a mechanism I had already documented
+correctly, then reasoned about from memory instead of from the line of code or the measurement.
+
+## N88 — 06:00 state: fourth settled pair, both up; 60m advanced on schedule again; N63 holds a fifth time
+
+- **Fourth settled pair.** MGC `05:15` 4178.40 -> `05:30` **4182.40** (+4.00). MNQ 30587.25 -> **30593.50**
+  (+6.25). Both up. Settled tally since `04:15`, five bars each: MGC **+5.50**, MNQ **−29.25**.
+- **60m advanced at 06:00**, `+1 new, 0 revised` on both, the new bar `05:00` being MGC
+  `o 4176.50 h 4187.60 l 4172.60 c 4186.90` — it carries both the session low and the bounce. Fifth time
+  the 60m frame has done exactly what N60 said it would.
+- **N63 holds a fifth time.** The 240m frame revised one bar: `2026-07-30T04:00`, the oldest edge of the
+  60-day lookback window. Same bar, same edge, same reason.
+- Both symbols' fast frames are now bullish (1m unanimous 3-0 on both, MGC 5m 2-1, MNQ 5m 2-0) while
+  **15m and 60m stay unanimous bearish on both**, unmoved all session. MGC location 11.7% of
+  [4172.60, **4295.20**] — the 40-bar high fell again, 4299.20 -> 4295.20, as another old bar rolled out
+  (N53, fourth sighting). MNQ 18.3% of [30535.00, 30900.50].
+
+No call. The reversal test is false on both symbols. MGC has now retraced 14.30 points off its low, which
+is 1.55x ATR, and its 15m structure is still lower highs and lower lows. The pre-committed plan remains
+VOID on the risk cap; **CALL-0004's expiry is now expected at ~06:31-06:35** per N86, and I will report the
+resolver's own line when it appears.

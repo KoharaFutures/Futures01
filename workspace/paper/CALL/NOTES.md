@@ -7461,3 +7461,66 @@ which is the only kind of entry this desk is allowed to take.
 
 Ledger unchanged. **Measured n = 1, 0 wins, 1 loss, win rate 0.0% with payoff UNDEFINED, expectancy -1.021R,
 measured equity $49,881.56, drawdown $118.44, $2,681.56 to the absorbing state.** MGC RTH ends in 42 minutes.
+
+# N211 — 12:52 hourly full check: MNQ's ATR has nearly closed the desk out by size
+
+Cadence verified by listing: `CronList` returns **`33ba414e — Every 5 minutes (recurring)`**, present,
+unchanged, **no `send_later` chain armed**. CALLOUT.md re-read in full, unchanged since `1948339`; the two
+sections I added to CHECK_PROCEDURE.md today (the breakout prohibition, the unreachable-void rule) do not
+contradict it — both are vetoes implemented inside `resolve.py` or as refusals, and CALLOUT.md's own
+requirements (resolve.py writes outcomes; every non-trade is journalled) are preserved. Nothing to record
+under the CALLOUT-wins rule. Merged sibling REPLAY-lane commits cleanly; basis `d3e1855`.
+
+**ATRs re-measured this firing, inherited from nothing — and this is the headline:**
+
+    MGC  13.09  1.0x = $130.93 = 54.6% of $240   cap binds 0.92x   rule4 floor 0.5x = 6.55 pts
+                placeable stop band:  6.55 - 12.00 points
+    MNQ  97.54  1.0x = $195.07 = 81.3% of $240   cap binds 0.62x   rule4 floor 0.5x = 48.77 pts
+                placeable stop band: 48.77 - 60.00 points
+
+**MNQ's 15m ATR has tripled on the session** — 31.10 overnight, 44.25 at 09:54, 79.71 at 12:19, **97.54
+now** — and the two governors are converging on it from both sides. Rule 4 forbids a stop tighter than 48.77
+points; the 50% cap forbids one wider than 60.00. **That leaves an 11.23-point window, 11.5% of an ATR, in
+which a one-contract MNQ plan is placeable at all.** At an ATR of 120 the two constraints cross and MNQ
+becomes unplaceable at this account size without breaching one of them — and the correct response then is no
+plan, not a breach. CALL-0006's 58.00-point stop, written at 11:37 when ATR was 82.14, would today sit at
+0.59x ATR: still legal, but by 2.00 points rather than by the 1.71 it had an hour ago.
+
+Noting this is not hindsight about CALL-0006. It is the forward constraint on the next MNQ plan, and it may
+be the reason there isn't one.
+
+**Fresh read, settled frames first (N41/N47):**
+
+    MGC 60m  BEARISH 0-3  close 4156.50 < EMA20 4214.24 falling  location 6.5% of [4143.00, 4351.60]
+    MNQ 60m  BEARISH 0-2  close 30522.25 < EMA20 30657.90 falling location 25.8% of [30356.50, 30998.50]
+    MGC 15m  BEARISH 1-2  close 4166.10 < EMA20 4168.58 falling  location 34.9% of [4143.00, 4209.20]
+    MNQ 15m  CONFLICTED 0-0  close 30595.25 > EMA20 30570.76 falling location 59.3% of [30356.50, 30759.25]
+
+**Both 15m headlines have given back the bullish readings of four minutes ago** — MGC BULLISH 1-0 -> BEARISH
+1-2, MNQ BULLISH 2-0 -> CONFLICTED 0-0 — and MNQ's 15m EMA20, which I reported as having turned UP at 12:48,
+**is falling again at 12:52.** That reading lasted one check. I am correcting it here rather than letting it
+stand: the EMA20 turn was real in the data I held and did not survive the next bar's revision, which is the
+sixth time today a state I reported has reversed within one or two checks.
+
+**No callout.** Neither reversal test fires on either symbol — both fail unanimity and both fail the
+two-consecutive-check requirement. There is no level written down in advance. The book is empty and staying
+empty, because the alternative is manufacturing a callout to justify the wake-up.
+
+### Ledger — win rate and payoff together (rule 3)
+
+    journal 25 entries | pending.jsonl: 3 EXPIRED, 2 TRIGGERED, 1 VOID_UNREACHABLE, 0 PENDING
+    ambiguous-bar resolutions: 0
+
+    state.json  equity $50,038.12  peak $50,156.56  drawdown $118.44  realized $38.12  open 0  closed 2
+                CALL-0002  WIN  TARGET TP1  +1.566R   <- EXCLUDED FROM MEASUREMENT (N155)
+                CALL-0006  LOSS STOP        -1.021R   <- the only countable trade
+
+    MEASURED RECORD, n = 1:
+      closed 1 | wins 0 | losses 1
+      win rate 0.0%  WITH  payoff UNDEFINED - no winner exists to form the ratio, and rule 3 forbids
+        quoting either alone. At n = 1 neither number is a rate; they are one trade.
+      expectancy -1.021R at n = 1
+      measured equity $49,881.56   measured drawdown $118.44
+      distance to the $2,800 absorbing state: $2,681.56   (95.8% of the buffer intact)
+
+No PENDING plans, so no cards to re-render this firing. A quiet check is a successful check.

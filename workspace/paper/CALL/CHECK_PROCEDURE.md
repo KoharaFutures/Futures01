@@ -590,3 +590,38 @@ real zone and flips to EST on its own when the clocks change.
 
 This is the response header only. Bar timestamps stay in the ISO offset form the vendor
 returns (`2026-09-28T00:15:00-04:00`) — those are data and must not be reformatted.
+
+## Show every live call's card on every response
+
+Standing requirement from the account owner, 2026-09-28: **every response shows the
+card for every plan currently `PENDING`, not only the one just created.** A card is no
+longer reserved for a decision — the owner wants the live book visible at a glance each
+time the desk reports.
+
+**Re-render, never re-send the old file.** Get the id list from `pending.jsonl` at the
+time of the check rather than from memory, because plans trigger and expire between
+firings:
+
+```
+IDS=$(python3 -c "
+import json
+print(' '.join(json.loads(l)['call_id']
+      for l in open('workspace/paper/CALL/pending.jsonl').read().splitlines()
+      if l.strip() and json.loads(l).get('status') == 'PENDING'))")
+python3 workspace/paper/CALL/card_png.py $IDS --scale 3
+```
+
+Then send the rendered files. `--scale 3` is the owner's 3x size, rendered natively at
+7500x3000 (2.50:1) — it is not an upscale of a smaller image.
+
+**Why re-render rather than re-send.** The card carries the TIMEFRAMES column and the
+confluence panel, and both are read from the bars at render time. A card left on disk
+from when the plan was written shows the seven-frame picture *as it was then*. Re-sending
+it would put a stale bias table in front of the owner under a current timestamp, which is
+the same class of error as quoting a price this desk did not fetch this turn. The
+Entry/TP/SL numbers are pre-registered and must NOT move (N8) — re-rendering does not
+touch them, it only refreshes the context panels around them.
+
+**A plan that has left `PENDING` gets no card.** Once it fills, resolves or expires it
+belongs in the ledger, not in the live book. Do not keep showing a card for a trade that
+is over.

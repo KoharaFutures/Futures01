@@ -6664,3 +6664,39 @@ left on it. **Do not manufacture a callout to justify the wake-up.**
 Four plans have now closed without producing a countable outcome: CALL-0003 and CALL-0004 expired
 untriggered, CALL-0005 expired untriggered (N179), CALL-0002 filled defectively and is excluded. **The desk's
 measurement programme is at n = 0 after a full session**, which is the honest headline of this check.
+
+## N191 — 11:01: the 60m refreshed for the first time since 09:00, and MNQ's 60m LOST unanimity as price fell
+
+The `10:00` 60m bar published (`+1 new` on 60m for both symbols, the first since this session's 09:00 bar).
+On the settled frame:
+
+    MGC 60m  BEARISH 0-3  close 4149.10 < EMA20 4220.30 falling
+             structure BEAR (highs 4332.30->4203.80 lower, lows 4224.10->4172.60 lower)
+             location BEAR 1.4% of [4146.30, 4351.60]
+    MNQ 60m  BEARISH 0-2 NOT UNANIMOUS  close 30401.75 < EMA20 30672.26 falling
+             structure MIXED (highs 30705.50->30759.25 HIGHER, lows 30780.00->30535.00 lower)
+             location BEAR 7.0% of [30356.50, 30998.50]
+
+**MNQ's 60m was 0-3 unanimous at the 10:53 full check and is 0-2 now — it lost unanimity while price fell
+another 249 points.** The cause is not price: the new `10:00` 60m bar made 30759.25 a confirmed swing high
+(a pivot needs a bar on each side, N121), which replaced 30900.50 in the last-two comparison and turned
+`swing highs 30900.50 -> 30705.50 (lower)` into `30705.50 -> 30759.25 (HIGHER)`. **A bearish component
+flipped to MIXED because a new HIGH entered the comparison, on a bar whose close was the lowest of the
+session.**
+
+That is N102 on the 60m frame: `swings()` compares the **last two** pivots, not price against the highest
+prior pivot, so a lower-than-the-old-high pivot still reads HIGHER if the pivot before it was lower still.
+I identified this mechanism on the 15m at N102 and it has now produced a headline change on the settled
+frame. It also means MNQ's structure component is MIXED on 15m **and** 60m for the same reason, so the
+"not unanimous" that blocks its reversal test is coming from a comparison artefact rather than from a
+genuine mixed structure.
+
+**That does not make the reversal call available.** The test is the test, and a component I think is
+misbehaving is not a component I may override — that is exactly the discretionary re-derivation the
+procedure forbids. The right response is the one already deferred to the parent session: `chart.py`'s
+structure component compares the last two pivots and should be evaluated against the running extreme, with
+a random-level control (N22). Logged, not acted on.
+
+MGC: 1m, 5m, 60m all 0-3 unanimous BEARISH, 15m 0-2, 4h 0-2, location **3.3% of [4146.30, 4230.80]** on the
+15m. **No call** — eleventh consecutive check with the same reason, and the 10:53 ATR measurement (cap
+binding at 0.94x MGC / 0.83x MNQ) still stands as the governor's own instruction not to size into this.

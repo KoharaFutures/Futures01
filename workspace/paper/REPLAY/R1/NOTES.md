@@ -1583,3 +1583,60 @@ existed. A fabricated attribution influenced a real decline. That is the finding
 **Corrections list, amended.** The B-round entry "imported a price from the future" is **wrong** and is
 replaced by "transplanted bar 1443's shelf onto the bar-1340 trade". The count of B's prose errors stands;
 their *character* is narrower than I wrote — sloppy attribution and arithmetic, not look-ahead.
+
+### E5 — costs. The finding that reframes every null in this record
+
+**I verified the arithmetic independently from the tape before building on it.** My numbers and E5's agree
+to within ~7% and agree exactly on structure:
+
+| | 1R (points) | 1 tick | commission | entry tick + commission |
+|---|---|---|---|---|
+| low-vol quartile | 7.73 | 0.0323R | 0.0696R | **0.1019R** |
+| median (ATR 10.43) | 10.43 | 0.0240R | 0.0516R | **0.0756R** |
+| high-vol quartile | 14.30 | 0.0175R | 0.0376R | **0.0551R** |
+
+**The round-turn commission is $2.69 = 0.538 points = 2.15 ticks — more than twice the slippage tick — and
+I have never once counted it in an R figure in this entire record.** Every expectancy I have quoted,
+including both winning trades, is gross of it.
+
+**E5's headline, which I accept:**
+
+- Gross edge required merely to break even: **0.081R per trade** (0.107R with an exit tick).
+- Measured gross expectancy: **+0.0225R.**
+- **Net all-in: −0.0587R.**
+
+> **The supported sentence is "any structure at 60m is smaller than the cost of trading it."** The cost
+> (0.081R) sits above the **entire** 95% block CI on gross, [−0.033, +0.076].
+>
+> **The unsupported sentence is "this tape has no structure."** That same CI contains zero. Separating
+> +0.02R from 0 would need ~**430 sessions**, and this tape has **72**. So "no structure" is not what I have
+> shown — it is what I lack the sample to test.
+
+That distinction is the most useful thing produced tonight. Every null in this record — the stand-down
+counterfactual, the levels study, thesis 5 — has been reported as "indistinguishable from control". **The
+right reading is narrower: indistinguishable at a sample size that could not have resolved an effect of the
+size costs would require anyway.**
+
+**A correction to my own burst-8 conclusion.** I wrote that a compressed, grinding tape was "hostile to
+everything I hold" and treated it as a market-regime fact. **E5 shows gross expectancy is flat across ATR
+quartiles while net fans by 0.074R** — and my own table above reproduces it: the same fixed dollar cost is
+**0.1019R when 1R is 7.73 points and 0.0551R when 1R is 14.30.** The regime was not hostile. **My costs were
+a bigger fraction of R in it.** That is a cost story wearing a market story's clothes, which is exactly the
+confusion this repository exists to catch.
+
+**A correction to agent A, from E5.** A's stop-width gradient is **only ~52% cost** — 35% of it is the
+commission A omitted, and **48% survives at zero cost.** So my A/C reconciliation, that rule 4's floor marks
+where a cost gradient crosses zero, is about half right: roughly half the gradient is cost and half is
+something else that remains unexplained.
+
+**Search-width bookkeeping, stated so it is not miscounted.** E5 reports **3,318 trials** — that is a
+*sample size* (both directions at 1,659 eligible bars), **not a search width.** It is one hypothesis
+evaluated many times, so it does not enter `free_t`. Conflating evaluations with distinct ideas would
+inflate the threshold wrongly in the opposite direction from the error B caught. The desk's search width
+stays at 20 pending the remaining agents.
+
+**What this implies for what the desk should do, stated as implication rather than instruction.** If costs
+are ~0.08R per trade at this geometry and any structure is smaller, then **MES 60m with 1-ATR stops is
+structurally unprofitable regardless of the read**, and the levers that actually move the arithmetic are
+bigger R per trade (wider stops, higher-volatility regimes, a longer timeframe) rather than better
+selection. That is a conclusion about instrument choice, and it belongs to the account owner.

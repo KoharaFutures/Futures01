@@ -217,3 +217,58 @@ for k in ("A", "B", "C", "D"):
     ck = [e["break_r"] for e in controls[k] if e["break_r"] is not None]
     print(f"  {LBL[k]:<46} bounce {mean(rb)-mean(cb):+.3f}R z {zc(rb,cb):+.2f}   "
           f"break {mean(rk)-mean(ck):+.3f}R z {zc(rk,ck):+.2f}")
+
+# ---------------------------------------------------------------------------
+# ROBUSTNESS: variant D's bounce arm jumped to z +3.32. Before reporting that as
+# a moved z, check it is not itself a composition artefact - the exact error this
+# audit exists to catch. Two checks: (1) seed stability, (2) support/resistance
+# mix, since "trade the bounce" is LONG at support and SHORT at resistance and
+# this tape drifts up.
+print("\n" + "="*84)
+print("ROBUSTNESS OF VARIANT D (the only z that moved into significance)")
+print("="*84)
+def sidemix(ev):
+    n = len(ev); return sum(1 for e in ev if e["side"] > 0) / n if n else 0
+print(f"  support share (side=+1, bounce arm = LONG):  real {sidemix(real):.1%}   "
+      + "   ".join(f"{k} {sidemix(v):.1%}" for k, v in controls.items()))
+for k in ("A", "D"):
+    ev = controls[k]
+    for s, nm in ((1, "support"), (-1, "resistance")):
+        sub = [e["bounce_r"] for e in ev if e["side"] == s and e["bounce_r"] is not None]
+        rsub = [e["bounce_r"] for e in real if e["side"] == s and e["bounce_r"] is not None]
+        print(f"    {k} {nm:<11} control {mean(sub):+.3f}R (n={len(sub):>3})   "
+              f"real {mean(rsub):+.3f}R (n={len(rsub):>3})   diff {mean(rsub)-mean(sub):+.3f}R "
+              f"z {zc(rsub,sub):+.2f}")
+print("\n  side-MATCHED difference (average of the within-side differences, weighted")
+print("  by the REAL side mix) - removes any support/resistance composition effect:")
+for k in ("A", "B", "C", "D"):
+    ev = controls[k]; num = 0.0; ok = True
+    for s in (1, -1):
+        w = sum(1 for e in real if e["side"] == s) / len(real)
+        sub = [e["bounce_r"] for e in ev if e["side"] == s and e["bounce_r"] is not None]
+        rsub = [e["bounce_r"] for e in real if e["side"] == s and e["bounce_r"] is not None]
+        if len(sub) < 2: ok = False; break
+        num += w * (mean(rsub) - mean(sub))
+    print(f"    {k}  side-matched bounce diff {num:+.3f}R" if ok else f"    {k}  n/a")
+
+print("\n  SEED STABILITY of variant D's bounce arm (10 seeds):")
+zs, ds = [], []
+for s in range(101, 111):
+    ev = study("D", seed=s)
+    cb = [e["bounce_r"] for e in ev if e["bounce_r"] is not None]
+    zs.append(zc(rb, cb)); ds.append(mean(rb) - mean(cb))
+print(f"    diff mean {mean(ds):+.3f}R  range {min(ds):+.3f}..{max(ds):+.3f}")
+print(f"    z    mean {mean(zs):+.2f}   range {min(zs):+.2f}..{max(zs):+.2f}   sd {sd(zs):.2f}")
+print("\n  and variant A's bounce arm over the same 10 seeds, for scale:")
+zsA = []
+for s in range(101, 111):
+    ev = study("A", seed=s)
+    cb = [e["bounce_r"] for e in ev if e["bounce_r"] is not None]
+    zsA.append(zc(rb, cb))
+print(f"    z    mean {mean(zsA):+.2f}   range {min(zsA):+.2f}..{max(zsA):+.2f}   sd {sd(zsA):.2f}")
+
+print("\n  DECOMPOSITION - which single change to the control moves the bounce arm?")
+for k, nm in (("A", "published"), ("B", "+count-match"), ("C", "+touch-match"), ("D", "+both+decontam")):
+    cb = [e["bounce_r"] for e in controls[k] if e["bounce_r"] is not None]
+    print(f"    {nm:<18} control bounce mean {mean(cb):+.3f}R (n={len(cb):>3})  "
+          f"vs real {mean(rb):+.3f}R")

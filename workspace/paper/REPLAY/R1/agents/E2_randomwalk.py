@@ -93,6 +93,31 @@ def acf(x, maxlag):
     return np.array([np.dot(x[lag:], x[:-lag]) / denom for lag in range(1, maxlag + 1)])
 
 
+def acf_robust_se(x, maxlag):
+    """Heteroskedasticity-robust standard error of each sample autocorrelation.
+
+    The textbook +-1.96/sqrt(n) band assumes iid. Under conditional
+    heteroskedasticity - which this series has in abundance (excess kurtosis
+    ~21, strong |r| autocorrelation) - the sampling variance of rho_j is
+    inflated by delta_j = n*sum(e_t^2 e_{t-j}^2)/(sum e_t^2)^2, the same
+    quantity Lo-MacKinlay use for the robust VR. delta_j -> 1 under iid and is
+    >1 when big moves cluster, so the honest band is WIDER than 1.96/sqrt(n).
+
+    Using the naive band on a fat-tailed clustered series manufactures
+    significant lags out of nothing. Both are reported so the difference is
+    visible rather than assumed.
+    """
+    e = x - x.mean()
+    e2 = e ** 2
+    s2 = np.sum(e2)
+    n = len(x)
+    out = []
+    for j in range(1, maxlag + 1):
+        delta_j = n * np.sum(e2[j:] * e2[:-j]) / (s2 ** 2)
+        out.append(math.sqrt(delta_j / n))
+    return np.array(out)
+
+
 def ljung_box(r, maxlag):
     """Ljung-Box Q and its chi2(maxlag) p-value - the joint test across lags,
     which is the right way to ask 'any linear structure at all' once."""
@@ -325,41 +350,53 @@ def main():
     # headline single draws
     gauss_one = rng.normal(mu, sd, n)
     perm_one = rng.permutation(r)
+    wild_one = r * rng.choice([-1.0, 1.0], n)
     obs_g1 = battery(gauss_one)
     obs_p1 = battery(perm_one)
+    obs_w1 = battery(wild_one)
 
     keys = [k for k in obs if isinstance(obs[k], float) or isinstance(obs[k], int)]
     dist_g = {k: [] for k in keys}
     dist_p = {k: [] for k in keys}
+    dist_w = {k: [] for k in keys}
     rng2 = np.random.default_rng(SEED + 1)
     for _ in range(REPS):
         bg = battery(rng2.normal(mu, sd, n))
         bp = battery(rng2.permutation(r))
+        bw = battery(r * rng2.choice([-1.0, 1.0], n))
         for k in keys:
             dist_g[k].append(bg[k])
             dist_p[k].append(bp[k])
+            dist_w[k].append(bw[k])
 
     # ---------------- 1. ACF
     print("\n" + "=" * 78)
     print("1. AUTOCORRELATION, lags 1-24")
     print("=" * 78)
-    print("   'sig' = |rho| exceeds the +-1.96/sqrt(n) band. 'Gnull 95%' is the")
-    print(f"   2.5-97.5 pct of the same statistic over {REPS} Gaussian RW draws.")
-    print(f"\n{'lag':>4} {'rho(r)':>9} {'sig':>4} {'Gnull 95%':>20} "
-          f"{'rho(|r|)':>10} {'sig':>4}")
-    n_sig_r = n_sig_a = 0
+    rse = acf_robust_se(r, MAXLAG)
+    print("   'n' = |rho| clears the NAIVE +-1.96/sqrt(n) iid band.")
+    print("   'R' = |rho| clears the heteroskedasticity-ROBUST band 1.96*se_j,")
+    print("         which is the one to believe on a series with kurtosis 21.")
+    print(f"\n{'lag':>4} {'rho(r)':>9} {'n':>2} {'robust band':>13} {'R':>2} "
+          f"{'delta_j':>8} {'rho(|r|)':>10} {'n':>2}")
+    n_sig_r = n_sig_a = n_sig_rob = 0
     for i in range(1, MAXLAG + 1):
         rr, ra = obs[f"acf{i}"], obs[f"aacf{i}"]
-        lo, _, hi = band(dist_g[f"acf{i}"])
+        rb = 1.96 * rse[i - 1]
         s1 = "*" if abs(rr) > band_95 else ""
+        sR = "*" if abs(rr) > rb else ""
         s2 = "*" if abs(ra) > band_95 else ""
         n_sig_r += bool(s1)
         n_sig_a += bool(s2)
-        print(f"{i:>4} {rr:>+9.4f} {s1:>4} [{lo:>+8.4f},{hi:>+8.4f}] "
-              f"{ra:>+10.4f} {s2:>4}")
-    print(f"\nreturn-ACF lags outside band: {n_sig_r}/24  "
+        n_sig_rob += bool(sR)
+        print(f"{i:>4} {rr:>+9.4f} {s1:>2} {'+-'+format(rb,'.4f'):>13} {sR:>2} "
+              f"{(rse[i-1]**2*n):>8.2f} {ra:>+10.4f} {s2:>2}")
+    print(f"\nreturn-ACF lags outside NAIVE band : {n_sig_r}/24  "
           f"(expected under null at alpha=.05: 1.2)")
-    print(f"abs-ACF    lags outside band: {n_sig_a}/24")
+    print(f"return-ACF lags outside ROBUST band: {n_sig_rob}/24  <-- the honest count")
+    print(f"abs-ACF    lags outside naive band : {n_sig_a}/24")
+    print(f"mean delta_j = {np.mean(rse**2*n):.2f}  (1.0 under iid; >1 means the")
+    print(f"  naive band is too narrow by a factor of {math.sqrt(np.mean(rse**2*n)):.2f})")
     print(f"max |rho(r)| over 24 lags = {obs['acf_maxabs']:.4f}   "
           f"Gaussian-null 95% max = {band(dist_g['acf_maxabs'])[2]:.4f}  "
           f"emp p = {pct_rank(obs['acf_maxabs'], dist_g['acf_maxabs']):.3f}")

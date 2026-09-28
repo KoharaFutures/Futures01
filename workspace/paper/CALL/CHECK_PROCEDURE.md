@@ -320,6 +320,26 @@ those are the three numbers a reader acts on, so those are the three that are bi
 mechanics strip below, then thesis, weakness, confidence. Do not stack calls into one tall image;
 a 728x2463 strip is a scroll, not a card, and it buries the number the reader wanted.
 
+**Laser palette on the PNG, shipped indices in the terminal (owner's request 2026-09-27).**
+`alerts.py` is NOT ours and `CALLOUT.md` forbids editing it, so the ANSI card still renders index
+27 / 208 / 250 exactly. The PNG uses brighter variants of the **same hues** — LONG `#00B4FF`, SHORT
+`#FFA014` — plus red `#FF2846` for the SL panel and its label. Image and terminal therefore agree on
+which colour means which direction and differ only in intensity. **Never introduce a hue that means
+something the terminal palette does not**; red is used only for the stop, never for a direction,
+because orange already means SHORT.
+
+**TP1/TP2/TP3: show three, execute one, and say which.** The card reads `display_targets`. Only
+**TP1 is executable** at this account size — a three-tier scale-out needs three contracts, which is
+**$300 on MGC and $360 on MNQ against a $240 permitted budget** at zero drawdown (N6). TP2 and TP3
+render dimmed and labelled `NEEDS 3 LOTS`, and the card carries the note in full. A card showing
+three equal-looking targets on a one-contract account would be advertising two orders that cannot
+be placed.
+
+**`display_targets` is display only.** `resolve.py` acts on `tp_r_multiples`, which `card_png.py`
+never reads and nothing about this change modifies. Adding targets to the *executable* plan after
+watching price move would void its pre-registration (N8) — the extra levels are presentation, and
+the plan on disk is the one that was registered.
+
 **The gradient stops are derived, not chosen.** Both ends are blends of the shipped xterm index —
 lighter toward white at top-left, darker toward black at bottom-right — so the card cannot drift
 off-palette. The popout panels are a translucent dark wash rather than a solid fill, which keeps

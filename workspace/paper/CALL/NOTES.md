@@ -6864,3 +6864,69 @@ not clear 3.0, because nothing in this repository ever has.
 rule that fails its threshold but exists, is pre-registered, and is sized under the governors is still
 strictly better than an unsatisfiable gate, because it produces *outcomes* — and the desk is at n = 0 after
 a full session, which is the deeper problem than being flat today.
+
+# N196 — RESULT: CONT-1 FAILS, and it fails worse than a coin flip
+
+Run once, as pre-registered, on `data/archive/` (ends 2026-09-25; today's bars never loaded).
+Costs $1.50 round-turn commission plus one tick of slippage at entry and at exit.
+
+    sym   frame     n     E[R]      sd       t   win%  payoff      net $      L/S
+    MGC      15   121  -0.3640   1.107  -3.617   26.4    1.44   -4642.28   71/50
+    MGC      60   444  -0.2757   1.143  -5.082   29.7    1.45  -25235.52  260/184
+    MNQ      15   125  -0.3595   1.107  -3.632   26.4    1.45   -4801.81   66/59
+    MNQ      60   498  -0.2257   1.163  -4.331   31.5    1.47  -21693.91  283/215
+
+**All four cells lose. Largest t is -3.617, so CONT-1 fails the declared t > 3.0 threshold**, and it fails
+it on the wrong side — this is not "unproven", it is measurably harmful. Rule 3 satisfied: win rate 26-32%
+with payoff 1.44-1.47 quoted together, and at a 1.5R target the break-even win rate is 40%, which is why
+the payoff being fine does not save it.
+
+## The placebo control, which is the part that matters
+
+CALLOUT.md's standard is that random entries through the same exits rank alongside real strategies, so a
+negative number means nothing until it is compared with one. 40 independent random draws per cell, each
+matched to CONT-1's own trade count, identical exits, session filter and costs:
+
+    sym   frame  CONT-1 E[R]  CONT-1 t  placebo E[R]  placebo sd   CONT-1 vs placebo
+    MGC      15      -0.3640    -3.617       -0.1041      0.0997        z = -2.61
+    MGC      60      -0.2757    -5.082       -0.0545      0.0469        z = -4.72
+    MNQ      15      -0.3595    -3.632       -0.0176      0.1051        z = -3.25
+    MNQ      60      -0.2257    -4.331       -0.0625      0.0550        z = -2.97
+
+Random entry loses only -0.02 to -0.10 R — roughly the cost drag. **CONT-1 loses two to seven times that,
+and sits 2.61 to 4.72 placebo-SDs below random in every cell.** So the entry rule is not noise: it carries
+real information and points the wrong way. Buying the breakout of a 3-bar extreme in the direction of an
+established displacement is systematically worse than a coin flip on both symbols and both frames.
+
+## What this does to the post-mortem
+
+N194 Cause 1 said the desk had no mechanism able to say YES on a continuation day. That stands. But the
+obvious mechanism — the one I would have reached for had I built it this morning, and the one the shape of
+today's tape invites — **would have lost $25,235 on MGC 60m over two years.** Being flat today was the
+right outcome reached for an incomplete reason. The gap in the machinery is real; the patch I was about to
+write for it was worse than the gap.
+
+That is the single most useful thing this post-mortem produced, and it would not have existed if I had
+built a continuation rule mid-move as the day seemed to demand.
+
+# N197 — PRE-REGISTRATION: FADE-1, and why a cross-SYMBOL test is the only honest one
+
+The inverse hypothesis is obvious and it is also the textbook post-hoc fit: I may not flip a rule on the
+data that showed me it loses. MGC and MNQ are now contaminated for this question — I have seen the whole
+2024-2026 archive on them.
+
+**So FADE-1 is pre-registered on symbols this desk has never touched: MES and MCL.** Their archives are
+untouched by any test I have run. MES is the same index complex as MNQ so it is a weak replication; MCL is
+one of only two genuinely independent contracts per CALLOUT.md, so it is the real test.
+
+**FADE-1 is CONT-1 with exactly one character changed: the position side at the trigger is inverted.**
+Every other parameter is frozen at CONT-1's values — same displacement 0.5 ATR, same 5-bar slope, same
+3-bar trigger extreme, same 4-bar arming, same 1.0 ATR stop, same 1.5R target, same session windows, same
+costs. Nothing is retuned. When displacement and slope say SHORT and price breaks *below* the 3-bar low,
+FADE-1 buys it.
+
+**Declared in advance:** 4 cells (MES/MCL x 15m/60m). MGC and MNQ will also be printed and are
+**contaminated — they are reported for completeness and carry no evidential weight.** The threshold is the
+same t > 3.0, and FADE-1 must also beat its own placebo by z > +2.0 on MCL specifically, the independent
+contract. **My expectation, stated now: MGC/MNQ will look good because they are the data that generated the
+hypothesis, and MES/MCL are the question.** If MCL does not replicate, FADE-1 is dead and I will say so.

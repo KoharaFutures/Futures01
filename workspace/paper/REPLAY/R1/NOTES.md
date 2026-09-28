@@ -1766,3 +1766,58 @@ while agents were still writing. It captured partial files and mis-attributed au
 Harmless here because each agent's finished file landed later and I recorded nothing from a partial read —
 but the convention is wrong. **A desk that spawns concurrent writers should commit paths it owns, not the
 whole lane.**
+
+### E9 — the controls audit. One control is sound; the other manufactured a null, and it was mine.
+
+I said this agent could overturn the most. It did — **but not where I feared.**
+
+**The all-bars control in `missed.py` is FAIR, and the headline stand-down null survives.** My specific
+worry — that my stand-downs cluster at thin overnight hours while the control does not, making every z a
+composition artefact — **is absent**: 33% vs 39% overnight. Composition shifts the control by ≤0.06R against
+differences of 0.08–0.29R, and **matched z's move by ≤0.3** (always-LONG +1.08 → +1.34). The central finding
+of this record — that my stand-downs are indistinguishable from arbitrary bars — **stands under a fair,
+matched control.**
+
+**The levels control in `levels.py` is UNFAIR and manufactured a null. It is my code and I verified every
+defect:**
+
+| defect | verified |
+|---|---|
+| **fabricated touch counts** — line 136, `rng.choice([2, 2, 3, 4])` | real distribution has **45 levels at 5+ touches**; control has **none above 4**, and zero 1-touch |
+| **tested at higher volatility** | ATR at test: real **11.64**, control **15.22** — **ratio 1.308** |
+| landed on real levels | 21–47% of random lines coincide with genuine levels |
+| wrong density | 12 per bar vs 9.78 real |
+
+**The ATR mismatch is the one I should have caught myself**, because E5 had already shown that cost as a
+fraction of R is driven by ATR (0.1019R at low vol vs 0.0551R at high). **Testing my control in 31%
+higher-volatility conditions systematically flattered it**, which is exactly how a null gets manufactured.
+
+**What changes, stated so it cannot be read as a discovery:**
+
+- The published bounce-trade comparison **z +0.08 → +2.52** under a side-, ATR- and regime-matched control
+  (10-seed mean; range +1.57 … +3.20). The break arm goes **+1.17 → −0.82**.
+- **This is not an edge and I will not report it as one.** E9's own numbers: real levels earn **+0.043R**;
+  the fair control earns **−0.294R**. **The separation comes from the control being worse, not the levels
+  being good.** And +0.043R sits **below E5's 0.081R cost hurdle** — detected levels remain **net
+  unprofitable to trade**. The seed range also dips to +1.57, under `free_t` 2.45 at search width 20.
+- **RETRACTED: "a fresh untested swing extreme breaks more often than it holds."** I called this "the one
+  finding worth keeping". Under a fair control it **halves and reverses sign in z**: −8.8pp / z 1.76 →
+  −3.9pp / **z −0.73**. It does not survive. Gone.
+- **ALL touch-count claims are suspended.** A control whose touch counts were fabricated was never a
+  control for a touch-count claim. Every 2/3/4/5/6+ comparison in the levels section is withdrawn pending
+  a rerun against `agents/E9_levels_fair.py`.
+
+**`levels.py`'s control is deprecated as of now.** I am not rushing a fix mid-window; the correct
+replacement exists in E9's file and the affected claims are marked withdrawn above rather than silently
+repaired.
+
+**Two smaller findings kept.** Parity is fair (all |SMD| ≤ 0.04; 23-bar sessions are odd, so parity does not
+alias hour-of-day) — **but my stand-downs split 29/13 on parity, binomial z +2.47**, so sample and control
+are effectively running different coins. Cosmetic while everything is null; not cosmetic once any drift
+appears. And E9's framing of what the counterfactual answers is sharper than mine: **"declines vs arbitrary
+bars", with n=2 on the take side and 43 documented stand-downs out of ~1,685 bars.** That is a narrower
+claim than "did my judgement add value", and I have occasionally written the broader one.
+
+**The lesson, which is the same one three times tonight.** A's defects, E3's reclassification and now E9's
+control audit all land in the same place: **the code is where my errors are cheapest to find and the prose
+is where they hide.** Every one of these was invisible until someone was told to go looking specifically.

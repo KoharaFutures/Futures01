@@ -2438,3 +2438,57 @@ to the $2,800 absorbing state     $2,800.00
 stop; CALL-0004 DIRECTION RIGHT at 64.10 favourable against a 19.04 target with 0.30 adverse.
 No call — `reversal()` declines on both, MGC on its structural HTF veto and MNQ on the 15m/60m
 lower frames agreeing with the downtrend rather than against it.
+
+## N41 — a nominally-closed bar was still being revised eight minutes later, and it turned my "lifting off the lows" into a new low
+
+04:07 AM EDT. Two minutes ago I reported "both symbols lifting off their lows", MGC location
+2.7% -> 5.1%. The same 03:55 bar, re-fetched:
+
+```
+04:05 read   03:55  h 4193.10  l 4187.50  c 4190.60
+04:07 read   03:55  h 4193.10  l 4182.70  c 4183.90
+```
+
+The low moved **4.80 points lower** and the close **6.70 lower**, on a bar that nominally closed
+at 04:00 — five minutes before I read it and eight before this re-read. MGC's location went
+5.1% -> **0.8%** and its 40-bar low reset to 4182.70. "Lifting off the lows" became "printed a
+new low", from the same bar, without any new bar arriving.
+
+### Why this is not just the known revision behaviour
+
+`fetch.py`'s freshness test already keys on **new timestamp OR changed OHLCV** precisely because
+the newest bar gets revised, and `CHECK_PROCEDURE.md` records that a timestamp-only test would
+have silently dropped revisions. So revisions themselves are expected and handled.
+
+What I had not internalised is the **window**: I have been treating a bar whose nominal period
+has ended as settled, and reading its close as a fact. It is not. At 13 minutes of feed lag the
+vendor is still adjusting a bar eight minutes after its period closed, and the adjustment here
+was larger than MGC's entire 5m ATR of ~4.9. So there is no clean boundary at which a bar
+becomes final — only a decreasing probability of change.
+
+### The practical rule, which N16 half-found and I then dropped
+
+N16 established "quote the last bar with real volume" after the `v==0, h!=l` forming-bar
+discovery, and called it a standing habit. That habit protects against an *unvolumed* bar. It
+does not protect against this: the 03:55 bar had real volume both times and was still revised.
+
+The stronger rule: **the newest one or two bars are provisional regardless of volume or nominal
+close, and any statement about direction built only on them is provisional too.** Concretely,
+the sentence "both symbols lifting off their lows" should have been "the newest bar currently
+shows a bounce; it is inside the revision window." That is not hedging for its own sake — the
+difference between those two sentences is the difference between what I said and what was true
+two minutes later.
+
+This is also why the structural frames matter more than I have been crediting: the 15m and 60m
+readings did not move at all through this, and they were right. My 04:05 report led with the
+1m/location change, which was the part that evaporated.
+
+### State
+
+MGC **4183.90**, a new low at 4182.70, location 0.8% of range. MNQ 30604.25 at 10.1%, its own
+bounce also partly given back. MNQ's 1m fell from unanimous BULLISH 3-0 to a thin 1-0 and MGC's
+1m is back to bearish — both fast-frame flips inside two minutes, which is N9 again.
+
+Nothing triggered, nothing resolved. `reversal()` declines on both. CALL-0004's favourable
+excursion is 65.60 against a 19.04 target with 0.30 adverse, 104.00 from its trigger, expiring
+06:00 ET.

@@ -346,3 +346,46 @@ being retro-fitted now.
 **Also this check: MNQ's headline went CONFLICTED (1-1)** — its location component crossed to BULL
 at 61.5% of range. First non-bearish headline of the evening, and a third instance of N9's finding
 that these readings do not sit still.
+
+## N11 — multi-family confluence, built to surface DISAGREEMENT, and it immediately found four families against CALL-0001
+
+**basis: 5808aa1, 2026-09-27 20:40 ET.** The account owner asked for other strategies used as
+confluence. Built as `confluence.py`, but **not** as a confluence score, because a score would
+invert two of the programme's eight settled findings:
+
+- **Rule 1**: going from 2 signals to 4 cuts trade count 35% with no expectancy gain. **More
+  confluence is a worse trade**, not a safer one.
+- **Rule 2**: *requiring* multi-timeframe alignment measured detectably **worse** than requiring
+  none, z = −4.09.
+
+So counting agreeing families and calling the total "confidence" would be reading both results
+backwards. What a multi-family read is genuinely good for is the opposite: **naming the families
+that contradict the setup**, and naming the ones never tested on that symbol. Every verdict is
+computed from the bars; a family this desk cannot evaluate from OHLCV says `N/A` with a reason
+rather than quietly counting as agreement.
+
+**It paid immediately, and the finding is unflattering to my own call.**
+
+| | CALL-0001 MNQ LONG | CALL-0002 MGC SHORT |
+|---|---|---|
+| AGREE | MEAN_REVERSION*, MULTI_TIMEFRAME | TREND, BREAKOUT*, LIQUIDITY*, MULTI_TIMEFRAME |
+| **AGAINST** | **TREND, MOMENTUM, BREAKOUT, LIQUIDITY** | **MOMENTUM*, MEAN_REVERSION** |
+
+`*` = never generated for that symbol, so its verdict rests on no evidence at all.
+
+**On `CALL-0001`, four of the six evaluable families oppose the trade**, and all four are families
+MNQ's profile *does* generate. Its two supporters are MEAN_REVERSION — which was never tested on
+MNQ and is only "agreeing" in the weak sense that price is not extended — and MULTI_TIMEFRAME,
+which rule 2 explicitly says is not a virtue. **Discount both and the long has zero support and
+four named opponents.** That is a materially worse picture than the card showed an hour ago, and it
+did not come from a new opinion; it came from asking the other twelve families.
+
+**On `CALL-0002`, restrict to families actually tested on MGC and the score is 1–1**: TREND agrees,
+MEAN_REVERSION disagrees (−1.53 sigma, extended — it would fade this exact break), with
+MULTI_TIMEFRAME rule-2-discounted. Two of its four supporters, BREAKOUT and LIQUIDITY, were never
+generated for MGC. And **MOMENTUM is against on both symbols for the same reason**: relative volume
+0.43× and 0.57× of median. Neither break has participation.
+
+**Both plans stay unmodified.** This is information about pre-registered hypotheses, not licence to
+edit them (N8). What it does change is what the cards say: the opposition is now on their face, in
+red, rather than living in a single confident STRATEGY line.

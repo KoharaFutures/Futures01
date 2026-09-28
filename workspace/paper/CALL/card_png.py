@@ -271,7 +271,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     weak = trim(plan.get("invalidation", ""), 116, 3)
 
     W = 1760
-    H = 1130 + (len(why) + len(weak)) * 26 + 230   # strategy header + basis block
+    H = 1130 + (len(why) + len(weak)) * 26 + 470   # + confluence panel   # strategy header + basis block
     img = backdrop(W, H, side).convert("RGBA")
     # content is composed at interior size, then mounted in the bezel below
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -364,6 +364,34 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     # ---- reasoning
     by = sy + 78
     d.line([PAD, by - 14, W - PAD, by - 14], fill=(*las, 70), width=1)
+    # ---- confluence: computed, and framed as DISAGREEMENT rather than a score
+    try:
+        import importlib.util as _iu
+        _cs = _iu.spec_from_file_location("_cf", HERE / "confluence.py")
+        _cf = _iu.module_from_spec(_cs)
+        _cs.loader.exec_module(_cf)
+        crows = _cf.evaluate(plan["symbol"], plan["side"], plan["trigger_price"])
+    except Exception:
+        crows = []
+    if crows:
+        d.text((PAD, by), "CONFLUENCE ACROSS THE 13 FAMILIES — agreement is NOT confidence "
+                          "(rule 1: more confluence measured WORSE)", font=fkl, fill=(*las, 150))
+        by += 26
+        for r in crows:
+            if r["verdict"] == "N/A":
+                continue
+            col = (*las, 240) if r["verdict"] == "AGREE" else (*RED, 235)
+            d.text((PAD, by), f"{r['verdict']:8s}", font=fkv, fill=col)
+            d.text((PAD + 116, by + 2), r["family"], font=fbody, fill=(*WHITE, 238))
+            tag = "" if r["tested"] else "  ·  NEVER TESTED ON THIS SYMBOL"
+            d.text((PAD + 116 + 230, by + 2), r["why"][:74] + tag, font=fmeta,
+                   fill=(*WHITE, 150) if r["tested"] else (*RED, 185))
+            by += 28
+        na = ", ".join(r["family"] for r in crows if r["verdict"] == "N/A")
+        d.text((PAD, by), f"N/A (not evaluable from OHLCV here): {na}", font=fmeta,
+               fill=(*WHITE, 130))
+        by += 34
+
     sb = plan.get("strategy_basis", "")
     if sb:
         d.text((PAD, by), "STRATEGY BASIS", font=fkl, fill=(*las, 150))

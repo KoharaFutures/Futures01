@@ -378,8 +378,49 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
                    fill=(*WHITE, 205) if ok else (*WHITE, 135))
         cy += ph + gap
 
+    # ---- timeframe column, immediately right of the price ladder
+    try:
+        import importlib.util as _iu2
+        _rs2 = _iu2.spec_from_file_location("_rg", HERE / "regime.py")
+        _rg = _iu2.module_from_spec(_rs2)
+        _rs2.loader.exec_module(_rg)
+        tfs = _rg.timeframe_bias(plan["symbol"])
+        rev = _rg.reversal(plan["symbol"], tfs)
+    except Exception:
+        tfs, rev = [], {"called": False, "reasons": []}
+
+    tx, tw2 = PAD + cw + sc(40), sc(360)
+    if tfs:
+        d.text((tx, sc(276)), "TIMEFRAMES", font=fkl, fill=(*las, 150))
+        ty = sc(300)
+        HUE = {"BULLISH": LASER["LONG"], "BEARISH": LASER["SHORT"]}
+        for t in tfs:
+            hue = HUE.get(t["headline"], (170, 172, 178))
+            panel(d, (tx, ty, tx + tw2, ty + sc(102)), hue,
+                  dim=t["headline"] == "CONFLICTED")
+            if t["headline"] in HUE:
+                panel(gd, (tx, ty, tx + tw2, ty + sc(102)), hue)
+            d.text((tx + sc(18), ty + sc(12)), f"{t['frame']}m", font=flab,
+                   fill=(*WHITE, 210))
+            d.text((tx + sc(18), ty + sc(38)), t["headline"], font=fkv, fill=hue)
+            tail = f"{t['bull']}-{t['bear']}" + ("  unanimous" if t["unanimous"] else "")
+            d.text((tx + sc(18), ty + sc(70)), tail, font=fsub, fill=(*WHITE, 190))
+            ty += sc(102) + sc(9)
+        # the reversal verdict, and rule 2's caveat, sit under the column
+        if rev.get("called"):
+            d.text((tx, ty + sc(6)), f"REVERSAL CALLED → {rev['headline']}", font=flab,
+                   fill=HUE.get(rev["headline"], WHITE))
+            d.text((tx, ty + sc(30)), f"was {rev.get('prior')}, held {rev.get('held')} checks",
+                   font=fsub, fill=(*WHITE, 190))
+        else:
+            d.text((tx, ty + sc(6)), "NO REVERSAL CALL", font=flab, fill=(*WHITE, 175))
+            for i, ln in enumerate(textwrap.wrap("; ".join(rev.get("reasons", []))[:150], 42)[:3]):
+                d.text((tx, ty + sc(30) + i * sc(17)), ln, font=fsub, fill=(*WHITE, 135))
+        d.text((tx, ty + sc(92)), "agreement across frames is NOT", font=fsub, fill=(*las, 150))
+        d.text((tx, ty + sc(109)), "confirmation — rule 2, z = −4.09", font=fsub, fill=(*las, 150))
+
     # ---- right column: confluence, then the reasoning
-    rx = PAD + cw + sc(46)
+    rx = tx + tw2 + sc(40)
     rw = int((W - rx - PAD) / sc(10))   # CHARACTERS, not pixels
     by = sc(300)
     crows = []

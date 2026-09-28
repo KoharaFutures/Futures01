@@ -390,6 +390,38 @@ alongside `PAPER — UNVALIDATED`, so the colour states the direction and the te
 Do not downgrade a directional plan to grey merely because it has not triggered — grey means
 **NO TRADE**, and using it for a live short would say the opposite of what is meant.
 
+## Per-timeframe bias, and when a reversal may be CALLED
+
+```
+python3 workspace/paper/CALL/regime.py MGC MNQ
+```
+
+Run it every check. It records each frame's headline to `bias_history.jsonl` — **persistence
+cannot be judged without that file**, so the recording is not optional.
+
+**A headline flip is NOT a reversal.** On the 2026-09-27 reopen, MNQ's 15m headline flipped
+**seven times in three hours** on ~90 points of net movement, and MGC's structure component
+reverted twice inside ten minutes — once because the swing *pair* being compared slid out of the
+window, not because price moved (N9). A desk calling a reversal on each flip would have called
+seven and been wrong at least six times.
+
+`reversal()` therefore requires **all four** of:
+
+1. the 15m headline has **changed sign** versus the last differing headline;
+2. it is **unanimous** (3-0 or 0-3) — a 1-0 majority is one component crossing a threshold;
+3. it has **held two consecutive checks**;
+4. **at least one other timeframe agrees** with the new sign.
+
+When they all hold, say so plainly and render the direction through `alerts.alert` so it carries
+its colour. When they do not, the card and the report say **NO REVERSAL CALL** and name the
+conditions that failed — a refused call with its reasons is information; a silent one is not.
+
+**Condition 4 is a guard, not a confirmation.** `BRIEF.md` rule 2 measured *requiring* alignment
+as detectably **worse** than requiring none, z = −4.09. A second frame agreeing only rules out a
+single-frame artefact; it does not raise confidence, and the card prints that caveat under the
+column. Nothing here reads a daily frame, because `D50` aliases every request ≥ 1440 into a
+lagged copy of the same series.
+
 ## The one-line report
 
 When nothing changed, the whole report is one line, in this shape:

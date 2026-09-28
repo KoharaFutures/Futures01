@@ -4911,3 +4911,84 @@ MGC frames: 1m BEAR 0-3 unanimous, 5m BEAR 0-1, 15m BEAR 0-2, 60m BEAR 0-3 unani
 No call this check — MNQ's reversal has not fired and buying it extended is forbidden; MGC has nothing. Two
 plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens 08:20
 ET, 35 minutes out; MNQ RTH 09:30.
+
+## N132 — THE REVERSAL CALL ON MNQ WILL SATISFY ITSELF IN ~75 MINUTES IF MNQ DOES NOT MOVE. The last condition is waiting on the clock, not the market
+
+At 07:49 `reversal('MNQ')` fails **one** condition. The persistence requirement is now met — `held: 3` — and
+the full return is:
+
+    called False   headline BULLISH   held 3   prior BEARISH   agreeing_frames [1, 5, 240, 1440, 10080]
+    fails: ['15m is 2-1, not unanimous']
+
+The 15m components are **trend BULL, structure BULL, location BEAR**. So the single blocker is **location**,
+and `chart.py`'s rule is `BULL if pos > 60`. On the settled 40-bar window:
+
+    window 09-27T21:30 .. 09-28T07:15   hh 30823.50   ll 30535.00   close 30642.00   pos 37.1%
+    location turns BULL at close > 30708.10   ->  needs +66.10 points
+    OR at this close, location turns BULL if the range high falls to 30713.33
+
+**And the range high is guaranteed to fall, because the six highest bars in the window are the six OLDEST
+bars in it:**
+
+| bar (oldest first) | high | window high after it rolls off |
+|---|---|---|
+| 09-27T21:30 | **30823.50** | 30789.50 |
+| 09-27T21:45 | 30789.50 | 30760.00 |
+| 09-27T22:00 | 30760.00 | 30753.25 |
+| 09-27T22:15 | 30753.25 | 30728.75 |
+| 09-27T22:30 | 30728.75 | **30705.75** |
+| 09-27T22:45 | 30705.75 | lower still |
+
+30705.75 is **below** the 30713.33 needed. So **five 15m bars — about 75 minutes — of the window simply
+sliding turns MNQ's location component BULL at an unchanged price**, which makes the 15m unanimous, which
+satisfies the last condition, which fires a **REVERSAL BULLISH call on MNQ without MNQ having moved at all.**
+
+**This makes the framing I gave the owner four minutes ago misleading and I am correcting it: "one condition
+away" implied the market had to do something. It does not. The condition is waiting on the clock.**
+
+### Why this is the most useful thing the desk has found tonight
+
+It is a **mechanism** for BRIEF.md rule 2, which measures multi-timeframe / unanimity alignment at
+**z = −4.09** — detectably *worse* than requiring no alignment. Here is one concrete reason why: a unanimity
+requirement that includes a **trailing-window location component** can be completed by the window sliding
+rather than by price moving. Some fraction of every such signal therefore carries **no information about the
+market at all**, and those signals are indistinguishable at the output from the ones that do. Requiring more
+agreement does not filter noise; it adds a channel through which pure arithmetic can manufacture agreement.
+That is the same pathology as N46/N53's location drift and N127's `climax_x` artefact, but this one reaches
+all the way to a trade decision.
+
+### Pre-commitment, written before the call can fire
+
+**If `reversal()` fires BULLISH on MNQ, I will decompose the location component before reporting it as a
+signal**, and state which of the two happened:
+
+- **price rose above the 60% threshold** -> the call is about the market. Then, and only then, N130's
+  pre-committed pullback plan applies: BUY LIMIT at the 50% retracement of the settled up-leg, stop below the
+  anchoring swing low, 1 contract, void above $120.
+- **the threshold fell to price** because the window slid -> **the call is arithmetic, I will say so
+  explicitly, and I will not trade it.** I will still report the REVERSAL headline, because the standing rule
+  says to when the test returns true, but it will be reported with the decomposition attached so it cannot be
+  mistaken for evidence.
+
+The test is cheap and exact: compare `hh` at the firing check against `hh` now (30823.50), and compare the
+close against 30708.10. If `hh` has fallen and the close has not risen past the then-current 60% level by a
+margin, it is the window.
+
+Deferred to the parent session, as `chart.py` is mine to read and not to edit: **the location component
+should be computed against a fixed anchor** — a session high/low, or a window pinned at a timestamp — **not a
+trailing 40-bar max**. This is the fourth independent sighting of the rolling-window problem (N46, N53, N80,
+this) and the first where it can change a callout.
+
+## N133 — 07:49 state
+
+Fetch returned `new=0, revised=1` on both 5m frames with the lag stretched to **14.8m** — the feed restated
+rather than advanced, so there is no new bar this check. MGC's `07:35` 5m close revised 4184.20 -> **4181.40**
+and its low to 4180.60; MNQ's 30636.00 -> 30636.50.
+
+Newest settled 15m `07:15` on both (MGC 4188.10, MNQ 30642.00); `07:30` settles at **07:58**. MGC: trend BEAR
+(4181.40 < EMA20 4190.39, falling), structure **MIXED** with both legs inside noise (N131), location 11.2% of
+[4172.60, 4251.10], 15m BEAR 0-2, 60m BEAR 0-3 unanimous. MNQ: trend **BULL** (30636.50 > EMA20 30607.49,
+rising), structure BULL, location 39.9%, 1m and 5m both **BULL 3-0 unanimous**, 60m BEAR 0-3 unanimous.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
+opens 08:20 ET, 31 minutes out; MNQ RTH 09:30.

@@ -1358,3 +1358,99 @@ importing a price from the future.** The code and the machine record survived; t
 **The concrete change: any figure in a future burst note must be traceable to a callout field or a bar in
 the tape, and where it is a derivation I state the inputs.** The counterfactual registers reproduced
 digit-for-digit precisely because they are code. The prose failed precisely because it was prose.
+
+---
+
+## Consolidation of the three agents — back to 1 AGENT at 17:30 ET [PRE_OPEN]
+
+Each agent's findings are recorded above. This section is only what I could not get from them
+individually: **where they agree, where they contradict each other or me, and what is still open.**
+
+### Where they independently agree
+
+1. **Nothing here has an edge, reached by three different routes.** A: the stand-down null holds at all 36
+   cell × arm combinations, max |z| 1.33. C: the mechanised pattern earns ≈0. My own `levels.py`: detected
+   levels bounce 53.7% against a 55.0% random-line control. Three separate instruments, one answer.
+2. **My code survived; my narration did not.** A audited the code and found two *latent* defects that moved
+   no published figure. B audited the prose and found 27 errors that **all leaned my way**. The registers
+   reproduce digit-for-digit because they are code.
+3. **Rule 3 reproduces everywhere.** A's grid: control win rate spans 26.7–41.3% while mean R stays inside
+   −0.106R…+0.094R. My `levels.py`: support bounces 59.4% vs resistance 47.9%, yet the bounce *trade* is
+   −0.084R at support and +0.213R at resistance — the exact inverse.
+
+### Contradiction 1 — A vs C on the 0.5 ATR floor. **I settled this with code.**
+
+A reported rule 4 as a smooth cost gradient with **no knee at 0.5 ATR**. But C **applied** the 0.5 floor as
+a hard filter, discarding 296 of 812 raw signals on it. If A is right, C's whole population rests on an
+arbitrary cut. Measured:
+
+| population | n | mean | win |
+|---|---|---|---|
+| C's kept (stop ≥ 0.5 ATR) | 442 | **+0.023R** | 38% |
+| rejected on the floor alone | 265 | **−0.174R** | 28% |
+| difference | | **+0.196R, z +1.90** | |
+| union, no floor applied | 707 | −0.051R | 34% |
+
+**Both are right, and the synthesis is the useful part.** A is correct that there is no sharp knee — inside
+the sub-floor region the buckets run −0.106 / −0.294 / −0.172 / −0.095R across 0.0–0.5 ATR, noisy rather
+than graded. But **the floor is still doing real work**: everything below it averages −0.174R, everything
+above +0.023R. A continuous cost gradient can still cross zero somewhere, and on this tape it crosses near
+0.5 ATR. So the floor is **an empirically well-placed cut, not a physical threshold.**
+
+At z +1.90 against `free_t` 2.45 (20 trials) this is **not a result**. But it does mean keeping rule 4 was
+right *in expectation* — which retrospectively justifies my bar-1502 refusal even though that specific
+trade would have won, and it is a cleaner defence of that decision than the one I gave at the time.
+
+### Contradiction 2 — C against itself, still open
+
+C reported **91 firings at −0.113R, 1 per 18 bars**; C's own script prints **442 tradeable and resolvable
+at 1 per 3.7 bars**, on which I measure **+0.023R**. The 91 appears in C's output as SHORT 34 + LONG 57
+under a heading reading 442. **I could not reconcile them and I am not going to pick the flattering one.**
+Both means are ≈0, which is the robust part; the discrepancy is logged as open. It is a reminder that a
+subagent's headline and its own artefact can disagree, and that the artefact is the thing to read.
+
+### Contradiction 3 — C vs `SERIES_AUDIT.md`, and C wins
+
+The audit calls the 3.7% zero-volume rate benign — "the thin overnight hour" — on the strength of MGC daily
+where such bars are also **rangeless**. On MES 60m **none of the 60 are rangeless** and **56 sit in the
+18:00 ET hour, 79% of it**. Verified independently. A missing volume field, not an absence of trades, and
+it lands on the first bar of the owner's own 18:00→16:00 cycle.
+
+### Contradiction 4 — B vs me, and B wins on every count
+
+Thesis count **8 → ~20** (`free_t` 2.04 → 2.45). Ledger **+3.549R/6 → +7.08R/12**. Bar 1059 **−1R →
++0.24R**, which kills my "six avoided losses". And the bar-1340 trade was **not** at a "three-touch
+5985.75–5987.5 shelf" — 5987.5 does not exist in the tape until 52 bars later. All retracted above.
+
+### What I am adopting from the agents, concretely
+
+- **C's merge detector replaces mine as the primary screen** — widest corridor untouched by any OHLC and
+  straddled by every bar, needing no tuned fraction, and it rejects both of `roll_flags()`'s historical
+  false positives without my jump test.
+- **`missed.py` fixes** (dead `STOP_ATR`, list-position control parity) are in and verified.
+- **Thesis count 20** for every future `score` call.
+- **`LEAN:` token** on every future `notrade` so the intended-direction arm becomes buildable.
+- **Rule 4 stays**, now defended by measurement rather than by citation.
+
+### The honest summary of this closed-market window
+
+**Three agents attacked three of my claims. One survived, two did not.** The stand-down null is real and
+geometry-independent. My two wins cannot be attributed to a pattern, and one of them was off-process. My
+prose was systematically flattering, once by importing a price from the future. **The most valuable output
+of the whole run so far is a set of corrections to my own record**, which is what the brief said to expect.
+
+### Resumed solo, bars 1635→1685. Cursor **1685/11287**, equity **$50,688.86**, 2 closed trades.
+
+1 callout, no trade — and it is the first stand-down under the post-audit standard, so it is worth naming
+what it tested. **Thesis 5 is on probation.** The setup was present (6153.75, a fresh single-touch extreme
+0.79 ATR overhead, which my own study says breaks 54.3% of the time) and I declined it, because that rate
+difference is z ≈ 1.76 against a corrected `free_t` of **2.45** at 20 trials — a non-result. Acting on it
+would be the narration-over-code failure B caught 27 times.
+
+**What I owe before the next thesis-5 entry: the predicate written to a file, pre-registered and
+falsifiable — not a sentence in a `why` field.** First `notrade` carrying the new `LEAN:` token.
+
+Counterfactual this burst (n=42): always-long +0.253R vs control +0.239R (**z +1.08**), always-short
++0.060R (z +0.38), coin-flip +0.149R (z +0.73). **Nothing above |z| 2.** The long arm continues to creep
+(+0.36 → +0.99 → +1.08) as the tape trends; the control's own long arm moves with it, which is what drift
+looks like.

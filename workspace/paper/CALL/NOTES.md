@@ -5772,3 +5772,53 @@ unchanged.
 No new call. 1 open, 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
 **MNQ RTH opens 09:30 — 35 minutes — and that is also CALL-0005's expiry bar**, which per N86's strict `>` will
 actually resolve on the `09:45` bar in hand around 10:01.
+
+## N159 — MNQ's 60m has left unanimity for the FIRST TIME ALL SESSION. The slow frame has finally moved
+
+The 60m frame advanced at 09:00 (`+1 new` on both symbols, the `08:00` bar), and **MNQ's 60m now reads BEARISH
+0-1, not 0-3 unanimous.**
+
+This matters more than any fast-frame change tonight. **The 60m frames have been unanimous bearish on BOTH
+symbols continuously from the first check of the session** — I have written "60m BEAR 0-3 unanimous" in every
+single report for roughly nine hours, and it has been the one reading that never moved. It has now moved on MNQ.
+
+MGC's 60m remains **BEARISH 0-3 unanimous**, so the divergence that has been building on the 15m frame has now
+reached the 60m: MNQ's slow frame is losing its bearish grip while MGC's has not.
+
+For MNQ this also removes the last frame disagreeing with its reversal. Its stack now reads: 1m BULL 3-0
+unanimous, 5m BULL 3-0 unanimous, 15m BULL 3-0 unanimous, 60m BEAR **0-1**, 4h CONFLICTED, DAILY BULL 3-0
+unanimous, WEEKLY BULL 2-1. **Three consecutive unanimous bullish frames with the 60m no longer unanimous
+against them.** REVERSAL still called, `held 42`.
+
+Per rule 2 that increase in agreement is worth **negative**, not positive, and I am not treating it as
+confirmation. It is recorded because the fact that the 60m moved at all, after nine hours of not moving, is the
+single most informative thing to happen to the slow frames tonight.
+
+## N160 — thirteenth settled pair: the symbols moved in opposite directions, decisively
+
+| symbol | settled `08:15` | settled `08:30` | change |
+|---|---|---|---|
+| MGC | 4186.40 | **4177.40** | **−9.00** |
+| MNQ | 30694.75 | **30727.50** | **+32.75** |
+
+Both on new settled bars, so both are price. Settled tally since `04:15`: MGC 4176.90 -> **4177.40**, net
+**+0.50** across five and three-quarter hours; MNQ 30622.75 -> **30727.50**, net **+104.75**.
+
+**MGC has gone precisely nowhere in nearly six hours** — half a point — while making two complete round trips
+inside a 31-point band. MNQ has added 104.75. That is the session in two numbers.
+
+MGC: swing lows have stepped down again `4178.70 -> 4175.00`, structure MIXED, trend BEAR (4178.70 < EMA20
+4187.68, falling), location **9.6%** of [4172.60, **4236.20**], 5m now **BEARISH 0-3 unanimous**. Its reversal
+stays closed on all three counts.
+
+MNQ: location **93.3%** of [30535.00, **30743.50**] — a new range high — structure BULL with both legs
+established.
+
+**CALL-0005's limit is 127.12 below the market.** Unchanged in substance: it will expire unfilled.
+
+**The excluded position**: CALL-0002 SHORT at 4186.40 against MGC 4178.70 = **+7.70 points / +$77.00**
+unrealised, TP1 8.30 away. N155's exclusion unchanged.
+
+No new call. 1 open, 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state. **MNQ RTH
+opens 09:30, 30 minutes out**, which is CALL-0005's expiry bar — resolving on the `09:45` bar around 10:01 per
+N86.

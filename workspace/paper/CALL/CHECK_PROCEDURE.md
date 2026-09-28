@@ -944,3 +944,9 @@ else earns an out-of-window message.
 
 This does not weaken the in-window rule. Inside 18:00 → 15:30 every check still emits a card, and
 the card still goes last.
+
+**And spend nothing on it.** Owner, 16:37: *"There is no need to keep checking 2 minutes because
+the window is closed. you are just wasting tokens at this point. just use a schedule."* An
+out-of-window firing gets **no tool calls** — not even a clock read. The window is known from this
+file; it does not need re-measuring every two minutes. Read the firing, recognise the hours, emit
+nothing, stop. The schedule is the three cron jobs above; they are what reopens the desk at 18:00.

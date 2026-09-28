@@ -4992,3 +4992,74 @@ rising), structure BULL, location 39.9%, 1m and 5m both **BULL 3-0 unanimous**, 
 
 No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
 opens 08:20 ET, 31 minutes out; MNQ RTH 09:30.
+
+## N134 — hourly full check, 07:53 ET. MGC's ATR has contracted twice in a row; the N132 tracker has not moved
+
+Cadence verified by listing per N45: `CronList` shows `33ba414e` present. No `send_later` chain armed.
+CALLOUT.md, BRIEF.md and SERIES_AUDIT.md unchanged since `1948339` (09-27 19:37) — no new disagreement with
+CHECK_PROCEDURE.md to record.
+
+**ATRs re-measured from settled bars, inherited from nothing:**
+
+| symbol | ATR14(15m) | session path | 1.0x stop | % of $240 | 50% cap binds at |
+|---|---|---|---|---|---|
+| MGC | **8.20** | 8.01 -> 9.34 -> 9.21 -> 8.33 -> **8.20** | $82.00 | 34.2% | **1.46x ATR** |
+| MNQ | **45.43** | 38.04 -> 49.68 -> 45.41 -> **45.43** | $90.86 | 37.9% | **1.32x ATR** |
+
+MGC has now contracted twice consecutively and is back near its session-opening 8.01. MNQ is flat. MGC's cap
+headroom is the widest it has been all session at 1.46x ATR — and MGC is also the symbol with nothing to
+trade, which is the same inverse relationship recorded at N113.
+
+**Fresh directional read.** Newest settled 15m `07:15` on both; `07:30` settles at **07:58**.
+
+- **MGC — inert.** trend BEAR (4182.60 < EMA20 4190.50, falling), structure **MIXED** with **both legs inside
+  noise** (higher high 1.40 vs a 6.20 floor, lower low 3.70 vs 6.80 — N131), location **12.7%** of
+  [4172.60, 4251.10]. 1m BEAR 0-1, 5m CONFLICTED 1-1, 15m BEAR 0-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2,
+  daily/weekly NOT ELIGIBLE. Seventh consecutive check near its own mean. Its reversal gate is structurally
+  unreachable (N117).
+- **MNQ — one condition from a REVERSAL BULLISH call.** trend **BULL** (30630.00 > EMA20 30606.87, rising),
+  structure **BULL**, location **BEAR at 37.3%**. 15m BULLISH 2-1, 1m BULL 1-0, 5m BULL 3-0 unanimous, 60m BEAR
+  0-3 unanimous, 4h/DAILY/WEEKLY bull. `reversal()` fails only `"15m is 2-1, not unanimous"`.
+
+**N132 tracker — unchanged, because the settled window has not advanced:**
+
+    settled window 09-27T21:30..09-28T07:15   hh 30823.50  ll 30535.00  close 30642.00  pos 37.1%
+    location turns BULL at close > 30708.10   (+66.10 from here)
+    OR if hh falls to 30713.33                (a further 110.17; next to roll off: 30823.50, 30789.50, 30760.00, 30753.25)
+
+So no progress either way in the four minutes since N132. The tracker is doing its job: it distinguishes
+"MNQ rose" from "the window slid" **before** the call fires, and the pre-commitment in N132 stands.
+
+### The ledger, in full
+
+| quantity | value |
+|---|---|
+| journal entries | **18** (unchanged since 06:43) |
+| callouts with a resolved outcome | **2** |
+| **closed trades** | **0** |
+| wins / losses | 0 / 0 |
+| **win rate** | **undefined — no closed trade** |
+| **payoff** | **undefined** |
+| expectancy in R | **undefined**, n = 0 |
+| the resolutions | CALL-0003 `NO_FILL` **0.0R**; CALL-0004 `EXPIRED_UNTRIGGERED` **0.0R** |
+| NO TRADE entries | **11**, of which **2** `declined_despite_qualifying` |
+| realized P&L | $0.00 |
+| equity / peak | **$50,000.00 / $50,000.00** |
+| drawdown | **$0.00** |
+| distance to the $2,800 absorbing state | **$2,800.00**, the full width |
+| ambiguous bars | 0 |
+
+Rule 3 stated rather than assumed: no win rate because there is no closed trade, and a rate without its payoff
+is forbidden regardless.
+
+Two plans PENDING: **CALL-0001** MNQ LONG, adverse **354.25** against a 96.00 target distance, trigger 109.25
+away, expires on the 16:00 bar. **CALL-0002** MGC SHORT, inert — `created_bar_ts` is in the future (N30), never
+evaluated, window opens 08:20, to be retired with an honest non-outcome.
+
+Per-frame coverage: 1m through 07:43, 5m 07:40, 15m 07:30, 60m 06:00 (next 08:00), 4h 00:00 (next 08:00),
+daily Friday 09-25.
+
+**No callout.** MNQ's reversal has not fired and buying it at 37.3% of range with sigma above +1.7 would be the
+chase the procedure forbids; the pullback plan is pre-committed (N130) and waits on a limit below the market.
+MGC has no displacement and an unreachable gate. **MGC RTH opens 08:20 ET, 27 minutes out** — CALL-0002's
+window and the first moment tonight anything enters a measured session. MNQ RTH 09:30.

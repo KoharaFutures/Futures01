@@ -7696,3 +7696,61 @@ today's MNQ ATR is untouched by this change. The gain is that a bar is seen with
 instead of ~5.
 
 Both symbols remain **STOOD DOWN** under N214 and the book is empty for that measured reason.
+
+# N216 — 13:53 hourly full check: quiet, both symbols stood down, and the hourly Routine re-pointed at the real cadence
+
+Cadence verified by listing: `CronList` returns **`a0d7e2a3 — Every 2 minutes (recurring)`**, present and
+carrying the fast-check prompt. Nothing else armed, no `send_later` chain.
+
+**The hourly Routine's own prompt was stale and I fixed it.** It still instructed me to verify a FIVE-minute
+job `33ba414e` — a job the owner replaced at 13:04 and which had already died in the worker restart. A
+backstop whose first instruction names a dead job is a backstop that teaches the wrong thing on every
+firing, and it would have had me "resurrect" the wrong cadence the next time the container is reclaimed.
+Updated via `update_trigger` (same trigger `trig_01NZGwNRd8mftXdxyLvuVpdD`, run history preserved, not
+deleted and recreated) to name the 2-minute job, to carry the N214 volatility stand-down, to require the
+MEASURED record be stated separately from `state.json`, and to cross-check any cadence gap against
+`fetch.py`'s `+N new` 1m count rather than the clock — which is how today's 44-minute gap was actually
+confirmed.
+
+CALLOUT.md re-read in full, unchanged since `1948339`. No contradiction with CHECK_PROCEDURE.md.
+
+**ATRs re-measured, inherited from nothing:**
+
+    MGC  12.44  1.0x = $124.43 = 51.8% of $240   cap binds 0.96x   | line 10 -> STOOD DOWN
+    MNQ  88.20  1.0x = $176.39 = 73.5% of $240   cap binds 0.68x   | line 58 -> STOOD DOWN
+
+MNQ has come off its 97.54 peak but is still 30.20 points of ATR above the line. MGC 2.44 above.
+
+**Settled frames first (N41/N47):**
+
+    MGC 60m  BEARISH 0-3  close 4162.30 < EMA20 4209.54 falling  location 9.3% of [4143.00, 4351.60]
+    MNQ 60m  BEARISH 0-2  close 30602.50 < EMA20 30652.82 falling location 38.3% of [30356.50, 30998.50]
+    MGC 15m  CONFLICTED 0-0  location 44.6% of [4143.00, 4203.80]
+    MNQ 15m  BULLISH 2-0     location 66.0% of [30356.50, 30759.25]
+
+**Both 60m frames are still BEARISH** — the rally that took MNQ 365 points off its low has not turned the
+settled hourly frame on either symbol, and MGC's 60m is unanimous. The disagreement sits exactly where it
+has all afternoon: fast frames up, 60m down.
+
+**No callout.** Neither reversal fires, both symbols are stood down on volatility, and the book is empty for
+that measured reason. `thesis.py` prints an empty table — nothing to track, which is the first time that has
+been true since the session began.
+
+### Ledger — win rate and payoff together (rule 3)
+
+    journal 25 | pending.jsonl: 3 EXPIRED, 2 TRIGGERED, 1 VOID_UNREACHABLE, 0 PENDING
+    ambiguous-bar resolutions: 0
+
+    state.json  equity $50,038.12  peak $50,156.56  drawdown $118.44  open 0  closed 2
+                CALL-0002  WIN  TARGET TP1  +1.566R  <- EXCLUDED FROM MEASUREMENT (N155)
+                CALL-0006  LOSS STOP        -1.021R  <- the only countable trade
+
+    MEASURED, n = 1:
+      closed 1 | wins 0 | losses 1
+      win rate 0.0% WITH payoff UNDEFINED — no winner exists to form the ratio; at n = 1 neither
+        is a rate, they are one trade
+      expectancy -1.021R
+      measured equity $49,881.56   measured drawdown $118.44
+      distance to the $2,800 absorbing state: $2,681.56 (95.8% of the buffer intact)
+
+No PENDING plans, so no cards to re-render. A quiet check is a successful check.

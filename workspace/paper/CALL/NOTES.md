@@ -5903,3 +5903,31 @@ than producing anything directional. Stating it now so that if it happens next c
 `09:45` bar around 10:01 per N86.
 
 No new call. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+
+## N165 — MNQ's first real pullback since the reversal fired, and its 1m has dropped OUT of the agreeing set
+
+MNQ 5m `09:00` bar: `h 30740.25 l 30699.00 c 30703.00` — a **37.25-point pullback** off the high and the first
+material one since the reversal was called at 08:19. Its **1m has turned BEARISH 1-2**, and `reversal()`'s
+`agreeing_frames` has consequently shrunk from `[1, 5, 1440, 10080]` to **`[5, 1440, 10080]`** — three frames
+instead of four. **The call still holds** (`held 51`): condition 5 requires *at least one* other timeframe to
+agree, and 5m, DAILY and WEEKLY still do. 15m remains BULL 3-0 unanimous, trend BULL (rising EMA20), structure
+BULL with both legs established, location 93.4% of [30535.00, 30753.75].
+
+Worth stating what this does and does not do to CALL-0005: the limit at 30595.88 is now **103.12 below** the
+market rather than 126.62. It is marginally less far away. **It is still not reachable** — 103 points in the
+sixteen minutes to its 09:30 expiry would be roughly 2.2x MNQ's 47.20 ATR in one bar, and the pullback so far is
+0.79x. The N151 prediction stands unchanged.
+
+MGC has turned back down: 5m `09:00` bar `h 4187.00 l 4177.30 c 4181.90`, with **1m and 5m both BEARISH 0-3
+unanimous** again. Its 15m stays BEAR 0-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2, location 21.9% of
+[4172.60, 4236.20]. The trend component did **not** flip — 4186.50 against EMA20 4188.43, still 1.93 below it, so
+N164's flagged near-miss remains a near-miss.
+
+**The excluded position**: CALL-0002 SHORT 4186.40 against MGC 4181.90 = **+4.50 points / +$45.00** unrealised.
+Third different figure in fifteen minutes (+$95, $0, +$45), and this one is on a real bar (`new=1`), unlike the
+09:04 reading. N155's exclusion unchanged at every one of those numbers.
+
+No new call. MGC is fully bearish again with its reversal closed on all three counts; MNQ is pulling back inside
+a called reversal with its plan unreachable, and buying a 37-point dip at 93.4% of range is the chase the
+procedure forbids. 1 open (excluded), 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing
+state. **MNQ RTH opens 09:30 — 16 minutes — which is CALL-0005's expiry bar**, resolving on `09:45` around 10:01.

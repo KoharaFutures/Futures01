@@ -5748,3 +5748,27 @@ Per-frame coverage: 1m 08:42, 5m 08:40, 15m 08:30, 60m 07:00 (next 09:00), 4h 04
 here is the chase the procedure forbids. MGC is fully bearish at 6.2% of range with its reversal path closed on
 all three counts (N117, `prior None`, unanimity) and no pre-committed method that fires. **MNQ RTH opens 09:30 —
 38 minutes — which is also CALL-0005's expiry bar.**
+
+## N158 — 08:55: MNQ at 95.8% of range, CALL-0005's limit now 130.87 out of reach
+
+MNQ 5m `08:45` bar `h 30739.50 l 30726.75 c 30734.50` — **location 95.8%** of [30535.00, 30736.00], effectively
+at the top of its own 40-bar range and making new highs. REVERSAL BULLISH still called, `held 39`; 5m and 15m
+both BULL 3-0 unanimous; trend BULL (30727.50 > EMA20 30635.58, rising); structure BULL with both legs
+established (N157). 60m still BEARISH 0-3 unanimous, 4h CONFLICTED.
+
+**CALL-0005's 30595.88 limit is now 130.87 below the market.** It came within 14.62 points at 08:24 and has done
+nothing but recede since. N151's mechanism — the anchoring leg superseded before the retracement arrives — has
+played out exactly as written, and the prediction that it resolves `EXPIRED_UNTRIGGERED` / NO_FILL / 0.0R on the
+09:30 bar is now near-certain rather than likely. **That will make three from three by the same cause.** The
+plan stands as written; I am not touching it.
+
+**MGC unchanged and fully bearish**: 1m 0-3 unanimous, 5m 0-2, 15m 0-2, 60m 0-3 unanimous, 4h 0-2, trend BEAR
+(4177.40 < EMA20 4188.57, falling), location **6.9%** of [4172.60, 4242.00]. Reversal closed on all three counts.
+
+**The excluded position**: CALL-0002 SHORT at 4186.40, MGC 4179.10 -> **+7.30 points / +$73.00** unrealised, TP1
+8.70 away, stop 17.30 away. It has come off its +9.50 peak. Reported for completeness; the N155 exclusion is
+unchanged.
+
+No new call. 1 open, 2 pending; equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+**MNQ RTH opens 09:30 — 35 minutes — and that is also CALL-0005's expiry bar**, which per N86's strict `>` will
+actually resolve on the `09:45` bar in hand around 10:01.

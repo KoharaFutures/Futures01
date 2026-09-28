@@ -491,3 +491,66 @@ BULLISH state was never recorded**, so there is genuinely nothing on file to rev
 detector is currently limited by its own history depth, not by its logic, and it will start doing
 real work once a few hours of directional readings exist. Worth stating plainly rather than
 letting a "no call" look like a considered verdict when it is partly an empty file.
+
+## N15 — the reversal detector fired for the first time, and I am declining to trade it, because the trigger it handed me is lower than it was an hour ago
+
+At 22:55 ET `reversal_setup("MNQ")` returned `qualifies: true` — the first
+time it has ever done so since N14 rebuilt it. The structure is real:
+
+```
+sigma       -2.12          extended, past the 1.5 threshold
+htf_support 4h, DAILY, WEEKLY    three frames bullish, needs two
+trigger     30735.25       reclaim of the 40-bar swing high
+climax_x    0.59           NO capitulation volume - a drift, not a flush
+last        30701.75
+```
+
+The obvious move is to register it. I am not going to, and the reason is
+worth writing down because it will recur every single time this detector
+fires during a trend.
+
+**The trigger is computed from the 40-bar swing high, and that high decays
+as price falls.** CALL-0003 was pre-registered at 22:15-ish with a reclaim
+trigger of **30767.25**. Forty minutes later the same detector, on the same
+logic, offers **30735.25** — 32 points lower. Nothing improved. Price fell,
+the window slid, and the level the detector calls "the reclaim" slid with
+it. If I write a new plan at 30735.25 I have not found a better entry; I
+have moved the goalposts 32 points toward the ball and then congratulated
+myself on the shorter kick. That is precisely what N8's pre-registration
+discipline exists to forbid, and it is more seductive here than in the
+obvious case, because the number came out of a function rather than out of
+my own wishful thinking. A mechanical source does not launder it.
+
+**Second reason, independent of the first: correlation.** CALL-0001 (>30998.50,
+$120) and CALL-0003 (>30767.25, $104) are both MNQ LONG stop-entries. A
+third at 30735.25 would make three plans that all fill on one upward move.
+Any rally big enough to trigger the top one has already triggered the other
+two, so the combined position is $344 of risk against a $240 permitted
+budget at $0 drawdown — the whole allowance, on one direction, on one
+thesis, discovered by accident rather than chosen.
+
+**Third, the detector itself is telling me what is missing.** `climax_x` is
+0.59: volume on the low is *below* average. The setup passes on structure
+and location and fails on participation. A drift into support is the version
+of this pattern that keeps drifting.
+
+So CALL-0003 **is** the reversal call. It was written before this leg
+extended, it is not RTH-gated, and it needs 65.5 points of reclaim before
+02:00 ET or it expires NO_FILL at 0.0R. That expiry is the honest outcome
+and I will take it rather than rescue it with a cheaper trigger.
+
+### A separate and more uncomfortable observation about CALL-0004
+
+MGC printed **4237.80** at 22:45. CALL-0004's **TP3 is 4240.00**. The entire
+move that plan was designed to capture — all three targets, the full 4.0R —
+has now happened, and the plan captured none of it, because it is a SELL
+LIMIT at 4287.60 that required a 50% retracement *first*. Price never
+retraced; it just went.
+
+This is the exact mirror of N10/N12, where a stop entry was too reactive and
+got filled at the worst price. A limit entry solves being late by refusing
+to participate at all. Both failures are real, they point in opposite
+directions, and the plain reading is that neither trigger style is the
+problem — the problem is that this desk has no measured edge telling it
+*which* to use in *which* regime, so it is guessing, and each guess fails
+in its own characteristic way. Registering more plans does not fix that.

@@ -881,3 +881,48 @@ not something added afterwards if there is time.
 
 **On the card.** When a stand-down is binding, the card carries what it has foreclosed so far.
 The owner should be able to see the price of the desk's caution without asking for it.
+
+---
+
+## THE CADENCE HAS A WINDOW. IT IS NOT ALL DAY.
+
+**Set by the account owner 2026-09-28 at 16:16 ET:** *"Lets do this you are only to run every 2
+minutes of when the futures opens to 30 minutes before close."*
+
+**The window is 18:00 ET → 15:30 ET.** The futures open is 18:00 ET (CALLOUT.md's session rule:
+18:00 → 16:00, nothing held across 16:00–18:00). Thirty minutes before the close is **15:30**.
+Outside that window the desk does not check.
+
+Three session cron jobs carry it, and together they are the whole cadence:
+
+| job | cron | covers |
+|---|---|---|
+| `4d5d148b` | `*/2 18-23 * * 0-4` | Sunday–Thursday evening, from the 18:00 open to midnight |
+| `94de14ed` | `*/2 0-14 * * 1-5` | Monday–Friday overnight and day, midnight to 14:58 |
+| `af67dea9` | `0-28/2 15 * * 1-5` | Monday–Friday 15:00–15:28, the last window of the day |
+
+Nothing fires between **15:30 and 18:00**, and nothing fires from Friday 15:30 to Sunday 18:00.
+
+**Why the day splits into three jobs and not one.** A single `*/2 * * * *` cannot express a window
+that wraps past midnight, and the owner's window does — it opens at 18:00 and closes at 15:30 the
+*next* day. The three jobs are one mechanism in three pieces, not three mechanisms; they never
+overlap, so they cannot double-send (N42/N45). Verify all three at every hourly.
+
+**The last firing of the day is 15:28**, and it is not an ordinary check. It says in one line that
+the cadence now stops until 18:00, states the closing book, and sends its card. Falling silent at
+15:30 without saying the window has closed would read exactly like the cron dying — which has
+already happened once today, at ~12:55, and cost 44 minutes.
+
+**A PENDING plan alive at 15:30 is unwatched until 18:00.** Say so on that last card. The desk
+cannot see a trigger, a fill or a stop during the gap, and `resolve.py` will only learn what
+happened when the cadence resumes.
+
+**Rule 5 covers most of the final window.** No intraday entry 15:00–16:00 (z −4.43, median
+−0.617R, replicated), so the 15:00–15:28 job will almost always be reporting status rather than
+calling. That is expected and is not a reason to skip it — the owner reads cards, and an empty
+book is a decision that still has to reach him.
+
+**The hourly backstop now checks the clock first.** Outside the window it does not run a full
+check and does not send a card: it lists the cron jobs, repairs any that died, and reports in one
+or two lines. The repair mechanism has to keep running even when the desk does not, because the
+jobs are session-only and die with the worker.

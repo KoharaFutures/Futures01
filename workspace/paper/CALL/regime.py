@@ -262,3 +262,56 @@ def reversal_setup(symbol: str, tfs: list[dict] | None = None) -> dict:
             "climax_note": ("flush" if climax >= 1.5 else
                             "NO capitulation volume — a drift, not a flush"),
             "last": last, "reasons": fails}
+
+
+# ---------------------------------------------------------------- horizon class
+
+def classify(plan: dict) -> dict:
+    """SCALP or SWING, decided by arithmetic rather than by feel.
+
+    Two inputs, because either alone misclassifies: a plan can have a tight target on a
+    three-day window (patient, not fast) or a wide target inside one session (fast, not
+    patient). So both the TARGET REACH in ATRs of its own trigger frame, and the WINDOW
+    LENGTH, have to agree before a plan is called a swing.
+
+        SCALP  target < 2.0x ATR(trigger frame)  AND  window < 12 hours
+        SWING  either one exceeds its bound
+
+    THE CAVEAT EACH LABEL CARRIES, which is not decoration:
+
+      SCALP - `BRIEF.md` rule 7: "sub-hourly is a graveyard", and at 5 minutes only 11-16%
+      of generated strategies make money. A scalp here is also floored by this vendor: the
+      measured median feed lag is 12.9 minutes, so no scalp shorter than about 30 minutes
+      can be acted on at all.
+
+      SWING - the account's session rule is 18:00 ET -> 16:00 ET with nothing held across
+      16:00-18:00, and `EF2-01` measured that this does NOT unlock overnight entries at the
+      generated default; what it unlocks is holding an RTH entry past its contract's RTH
+      close. A swing that assumes a continuous multi-day hold is assuming something this
+      account does not do.
+    """
+    import importlib.util as _i
+    _s = _i.spec_from_file_location("_r", HERE / "resolve.py")
+    _r = _i.module_from_spec(_s)
+    _s.loader.exec_module(_r)
+    from datetime import datetime
+
+    frame = plan.get("bar_minutes", 15)
+    bars = _r.load_bars(plan["symbol"], frame)
+    trs = [max(bars[i]["h"] - bars[i]["l"], abs(bars[i]["h"] - bars[i - 1]["c"]),
+               abs(bars[i]["l"] - bars[i - 1]["c"])) for i in range(1, len(bars))]
+    atr = sum(trs[-14:]) / 14 if trs else 1.0
+    r0 = (plan.get("tp_r_multiples") or [{"r": 1.6}])[0]["r"]
+    reach_atr = (plan["stop_points"] * r0) / atr if atr else 0.0
+    hours = ((datetime.fromisoformat(plan["expires_bar_ts"])
+              - datetime.fromisoformat(plan["created_bar_ts"])).total_seconds() / 3600.0)
+
+    swing = reach_atr >= 2.0 or hours >= 12.0
+    return {"horizon": "SWING" if swing else "SCALP",
+            "reach_atr": round(reach_atr, 2), "window_hours": round(hours, 1),
+            "trigger_frame": frame,
+            "caveat": ("session rule is 18:00->16:00 ET with nothing held across 16:00-18:00; "
+                       "EF2-01 measured that it does NOT unlock overnight entries"
+                       if swing else
+                       "rule 7: sub-hourly is a graveyard — 11-16% of 5m strategies make "
+                       "money; and median feed lag 12.9 min floors any scalp at ~30 min")}

@@ -278,6 +278,9 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     def trim(text, width, maxl):
         import re
+        # `trim.truncated` accumulates across sections so the card can say once, at the
+        # bottom, that something was shortened - rather than spending a line saying it
+        # four times and pushing the body off the card.
         sents = re.split(r"(?<=[.!?]) +", (text or "").strip())
         kept = []
         for s in sents:
@@ -288,7 +291,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
             return textwrap.wrap(text or "", width)[:maxl]
         o = textwrap.wrap(" ".join(kept), width)
         if len(kept) < len(sents):
-            o.append("(full thesis in pending.jsonl)")
+            trim.truncated = True          # noted once in the footer, not per section
         return o
 
     W, H = sc(2500), sc(1000)              # 2.5 : 1 at any scale
@@ -306,8 +309,21 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     symw = d.textlength(plan["symbol"], font=fsym)
     glyph = "\u25b2" if side == "LONG" else "\u25bc"
     dtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
-    d.text((PAD + symw + sc(40), sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 255))
-    gd.text((PAD + symw + sc(40), sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 185))
+    dx = PAD + symw + sc(40)
+    d.text((dx, sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 255))
+    gd.text((dx, sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 185))
+    # SCALP / SWING badge, on the same baseline as the direction
+    hz = plan.get("horizon")
+    if hz:
+        bx = dx + int(d.textlength(dtxt, font=fdir)) + sc(38)
+        bw, bh = sc(150), sc(42)
+        by0 = sc(52) + sc(42)
+        d.rounded_rectangle([bx, by0, bx + bw, by0 + bh], radius=sc(8),
+                            fill=(0, 0, 0, 140), outline=(*las, 230), width=sc(2))
+        tw3 = d.textlength(hz, font=flab)
+        d.text((bx + (bw - tw3) / 2, by0 + sc(10)), hz, font=flab, fill=(*WHITE, 245))
+        gd.rounded_rectangle([bx, by0, bx + bw, by0 + bh], radius=sc(8),
+                             outline=(*las, 200), width=sc(3))
 
     yy = sc(58)
     for m in (f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
@@ -482,9 +498,10 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         by += sc(30)
 
     for hdr, txt, col, lines in (
-            ("STRATEGY BASIS", plan.get("strategy_basis", ""), (*las, 150), 3),
+            ("HORIZON", plan.get("horizon_basis", ""), (*las, 150), 2),
+            ("STRATEGY BASIS", plan.get("strategy_basis", ""), (*las, 150), 2),
             ("TARGETS", plan.get("display_targets_note", ""), (*las, 150), 2),
-            ("WHY", plan.get("why_short") or plan["why"], (*las, 150), 4),
+            ("WHY", plan.get("why_short") or plan["why"], (*las, 150), 3),
             ("THE WEAKNESS, STATED NOT HEDGED", plan.get("invalidation", ""), (*RED, 190), 2)):
         if not txt:
             continue
@@ -494,9 +511,13 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
             d.text((rx, by), ln, font=fbody, fill=(*WHITE, 232))
             by += sc(22)
         by += sc(9)
-    d.text((rx, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
-                     f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
-           font=fmeta, fill=(*las, 195))
+    tail_note = ("  ·  sections shortened to fit — full text in pending.jsonl"
+                 if getattr(trim, "truncated", False) else "")
+    conf = (f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a measured "
+            f"edge. Largest t anywhere 3.923 vs a required 5.46.{tail_note}")
+    while d.textlength(conf, font=fmeta) > (W - PAD - rx) and len(conf) > 12:
+        conf = conf[:-2] + "\u2026"
+    d.text((rx, by), conf, font=fmeta, fill=(*las, 195))
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(sc(7))))
     card = Image.alpha_composite(img, ov).convert("RGB")

@@ -164,14 +164,30 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
         side = plan["side"]
         trig = plan["trigger_price"]
 
+        limit = plan.get("trigger_type", "").startswith("LIMIT")
         for bar in bars:
-            touched = bar["h"] > trig if side == "LONG" else bar["l"] < trig
+            if limit:
+                # A LIMIT waits for price to come TO it: a sell limit sits ABOVE the market
+                # and fills when the bar trades up into it; a buy limit sits BELOW.
+                touched = bar["h"] >= trig if side == "SHORT" else bar["l"] <= trig
+            else:
+                touched = bar["h"] > trig if side == "LONG" else bar["l"] < trig
             if not touched:
                 continue
-            # Rule 2: a stop entry fills at the trigger or worse.
-            raw = max(trig, bar["o"]) if side == "LONG" else min(trig, bar["o"])
+            if limit:
+                # A limit fills at its price or BETTER - the opposite of a stop. If the bar
+                # opened beyond the limit the fill is that better open. Modelling a limit
+                # like a stop would charge slippage that a resting order does not pay, and
+                # modelling it as always-better would be the flattering error; this takes
+                # the bar's open only when the open is genuinely through the level.
+                raw = max(trig, bar["o"]) if side == "SHORT" else min(trig, bar["o"])
+                slip = 0.0
+            else:
+                # Rule 2: a stop entry fills at the trigger or worse.
+                raw = max(trig, bar["o"]) if side == "LONG" else min(trig, bar["o"])
             spec = CONTRACTS[sym]
-            slip = spec.tick_size * (1 if side == "LONG" else -1)
+            if not limit:
+                slip = spec.tick_size * (1 if side == "LONG" else -1)
             entry = round_to_tick(sym, raw + slip)
             risk_pts = plan["stop_points"]
             stop = round_to_tick(sym, entry - risk_pts if side == "LONG" else entry + risk_pts)
@@ -192,9 +208,14 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
                 "tps": tps,
                 "risk_dollars": round(risk_pts * spec.point_value * plan["contracts"], 2),
                 "realized": 0.0, "triggered_at_utc": now_iso, "basis_at_trigger": basis,
-                "entry_fill_note": ("gapped through the trigger; filled at the bar open"
-                                    if (bar["o"] > trig if side == "LONG" else bar["o"] < trig)
-                                    else "filled at the trigger plus one tick of slippage"),
+                "entry_fill_note": (
+                    ("limit filled at the bar open, better than the limit price"
+                     if (bar["o"] > trig if side == "SHORT" else bar["o"] < trig)
+                     else "resting limit filled at its price, no slippage charged")
+                    if limit else
+                    ("gapped through the trigger; filled at the bar open"
+                     if (bar["o"] > trig if side == "LONG" else bar["o"] < trig)
+                     else "filled at the trigger plus one tick of slippage")),
             }
             state["open"].append(pos)
             plan["status"] = "TRIGGERED"

@@ -442,6 +442,53 @@ single-frame artefact; it does not raise confidence, and the card prints that ca
 column. Nothing here reads a daily frame, because `D50` aliases every request ≥ 1440 into a
 lagged copy of the same series.
 
+## Forward levels, not reclaim levels
+
+```
+python3 workspace/paper/CALL/project.py MGC MNQ
+```
+
+**The defect this fixed.** Every trigger this desk wrote before 2026-09-27 22:30 — MGC 4289.10,
+MNQ 30767.25 — was a level price had **already traded**: a prior low, a prior swing high. Those
+are *reclaim* levels. They are reactive by construction, they can only be placed behind the
+market, and a desk that quotes only them is always describing where price has been.
+
+`project.py` computes levels price has **not** reached: Fibonacci retracements of the live leg,
+session VWAP and its bands, all bounded by an **ATR reach envelope** — a level outside what the
+horizon can travel to is not a level, however pretty the arithmetic.
+
+**Say which family each level came from, and whether that family was ever generated for that
+symbol.** The two symbols differ sharply and it decides which one to trust:
+
+| | FIBONACCI | VWAP |
+|---|---|---|
+| **MGC** | **generated** — one of its six families | excluded |
+| **MNQ** | **EXCLUDED**, and `profiles.py` says why: *"retracement depth needs a stable leg, and MNQ's legs are the shortest-lived — tested on MGC instead"* | excluded |
+
+So a fib level on MNQ is untested **and explicitly doubted by its own author**. Carry rule 8's
+standing warning with all of them: this repository measured FVG and order-block fill rates as
+reproducible by **random zones**, and no fib level here has been tested against a random-level
+control either.
+
+## SCALP or SWING — decided by arithmetic, labelled on the card
+
+`regime.classify()` sets it, and both inputs must agree before a plan is called a swing, because
+either alone misclassifies:
+
+```
+SCALP   target < 2.0x ATR(trigger frame)  AND  window < 12 hours
+SWING   either bound exceeded
+```
+
+The label carries a caveat that is not decoration:
+
+- **SCALP** — rule 7: *sub-hourly is a graveyard*, 11–16% of 5m strategies make money. And the
+  measured **12.9-minute median feed lag floors any scalp at ~30 minutes**; shorter cannot be
+  acted on at all.
+- **SWING** — the session rule is 18:00→16:00 ET with nothing held across 16:00–18:00, and
+  `EF2-01` measured that this does **not** unlock overnight entries. A swing assuming a
+  continuous multi-day hold assumes something this account does not do.
+
 ## Calling a REVERSAL: the market turning, not the indicator flipping
 
 ```

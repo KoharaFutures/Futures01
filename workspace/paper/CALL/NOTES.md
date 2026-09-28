@@ -2492,3 +2492,40 @@ bounce also partly given back. MNQ's 1m fell from unanimous BULLISH 3-0 to a thi
 Nothing triggered, nothing resolved. `reversal()` declines on both. CALL-0004's favourable
 excursion is 65.60 against a 19.04 target with 0.30 adverse, 104.00 from its trigger, expiring
 06:00 ET.
+
+## N42 — the chain died a second time, and this time nothing masked it except a compaction
+
+At 04:28 ET `list_triggers` showed **no pending one-shot** named "CALL desk fast check
+(chained)". The most recent link, `trig_01MF8acW2HhFULoQ8DJE7pTC`, fired at
+`2026-09-28T08:07:46Z` (04:07 ET) and was the last one. So the automatic 5-minute cadence
+stopped at 04:07 and did not resume: **~21 minutes lost**, 04:07 → 04:28. The hourly
+backstop `trig_01NZGwNRd8mftXdxyLvuVpdD` did not cover the gap either — it last fired at
+07:52Z (03:52 ET) and is not due again until 08:52Z (04:52 ET).
+
+What is different from the first death (N33, 02:12 ET, 43 minutes): that one ended without
+re-arming and the owner happened to be typing prompts, so cadence appeared to continue.
+This one was not masked by the owner at all — the turn that resumed the work was a
+continuation of a long turn, and I had been *treating that turn as a chain firing* in my
+own working notes when the chain had in fact already terminated. The record that says
+"this firing came from the chain" and the scheduler's record of what was armed had
+diverged. That is the same failure shape as N30/N35/N39/N40 — **state that executes
+diverging from state that describes** — now appearing in the cadence mechanism itself,
+which makes five instances tonight.
+
+The root cause of both deaths is identical and is structural, not forgetfulness: the
+re-arm is instructed as the LAST action of the turn, so it is the action most exposed to a
+turn ending early — running long, being compacted, or hitting a tool limit. A last action
+is the least reliable place to put the only thing keeping the cadence alive.
+
+Fix applied at 04:30: re-armed as `trig_01YKrkMLK6BcrTuoAUK6k4zK`, firing 08:36Z
+(04:36 ET). The chain prompt was updated in place (not merely noted) to record both deaths
+and to add: *arm it EARLY in the turn if the turn is long — a firing that runs out of room
+before re-arming kills the cadence just as dead as forgetting.* Also added N41's
+provisional-bar rule to the prompt, which it had not yet carried.
+
+What is still unfixed: the chain has no self-check. Nothing inside a firing verifies that
+the *previous* link actually fired on schedule, so a gap is only ever discovered by
+looking, as here. The cheap version is to write the armed trigger id and its fire time to
+a file each firing, and have the next firing compare its own arrival time against it — a
+gap larger than ~7 minutes is a dropped link and should be reported in the reply rather
+than left silent. Deferred to a full check; recorded here so it is not lost.

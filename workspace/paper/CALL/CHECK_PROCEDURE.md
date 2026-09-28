@@ -310,8 +310,16 @@ print(alert(Priority.NO_TRADE, headline, body))# GREY background   (48;5;250)
 the owner reads this on:
 
 ```
-python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002
+python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002            # 2500x1000
+python3 workspace/paper/CALL/card_png.py CALL-0001 CALL-0002 --scale 3  # 7500x3000
 ```
+
+**`--scale` re-renders natively; it is not an upscale.** Every geometry value goes through
+`sc()` and every font is built at the scaled size, so glyph edges stay crisp. Resampling the 1x
+PNG would soften exactly the thing the card exists to show — the price numbers. Character counts
+for `textwrap` are deliberately NOT scaled: they are columns of text, not pixels, and scaling one
+of them by accident would reflow the copy differently at each size. A 1x render after the change
+is byte-for-byte what it was before, which is the check that the refactor was neutral.
 
 **One card per symbol, 1700x~1000.** Each call writes its own `card_{SYMBOL}_{call_id}.png`:
 symbol top-left at 104px, direction beneath it, the whole card a diagonal gradient in the direction

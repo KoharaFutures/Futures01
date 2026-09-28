@@ -35,6 +35,16 @@ HERE = pathlib.Path(__file__).resolve().parent
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 MONO_B = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
 
+SCALE = 1          # set by --scale; every geometry value is multiplied by it
+
+
+def sc(n) -> int:
+    """Scale a geometry value. Kept as a function rather than inline arithmetic so that
+    NOTHING is scaled by accident - character counts for textwrap must stay unscaled, and
+    a bare multiply scattered through the layout would eventually catch one of them."""
+    return max(1, int(round(n * SCALE)))
+
+
 LASER = {"LONG": (0, 180, 255), "SHORT": (255, 160, 20), None: (190, 190, 190)}
 DEEP = {"LONG": (4, 10, 26), "SHORT": (26, 12, 2), None: (14, 14, 16)}
 RED = (255, 40, 70)
@@ -111,18 +121,18 @@ def backdrop(W, H, side):
     px = img.load()
     for y in range(H):
         fy = y / H
-        for x in range(0, W, 3):
+        for x in range(0, W, sc(3)):
             fx = x / W
             t = 1.0 - abs(fx - 0.34) * 1.15 - abs(fy - 0.30) * 0.85
             t = max(0.0, min(1.0, t))
             c = blend(deep, blend(deep, las, 0.24), t)
-            for k in range(3):
+            for k in range(sc(3)):
                 if x + k < W:
                     px[x + k, y] = c
     return img
 
 
-def hud_frame(d, box, colour, gd=None, thick=34, img=None):
+def hud_frame(d, box, colour, gd=None, thick=None, img=None):
     """The outer rail: near-black gloss panel with a blown-out light seam cut into it.
 
     Modelled on the reference the owner gave - a dark car body where the panels are almost
@@ -143,6 +153,7 @@ def hud_frame(d, box, colour, gd=None, thick=34, img=None):
     """
     x0, y0, x1, y1 = box
     gd = d if gd is None else gd
+    thick = sc(34) if thick is None else thick
     seam = int(thick * 0.46)
 
     # --- panel: a dark gloss profile across the rail's thickness
@@ -161,12 +172,12 @@ def hud_frame(d, box, colour, gd=None, thick=34, img=None):
         W, H = img.size
         spec = Image.new("L", (W, H), 0)
         sd = ImageDraw.Draw(spec)
-        for k in range(0, W + H, 6):
+        for k in range(0, W + H, sc(6)):
             f = k / (W + H)
             a = int(205 * max(0.0, 1.0 - abs(f - 0.30) * 3.0)
                     + 130 * max(0.0, 1.0 - abs(f - 0.74) * 4.4))
             if a > 0:
-                sd.line([k, 0, k - H, H], fill=a, width=7)
+                sd.line([k, 0, k - H, H], fill=a, width=sc(7))
         mask = Image.new("L", (W, H), 0)
         md = ImageDraw.Draw(mask)
         md.rectangle([x0, y0, x1, y1], outline=255, width=thick)
@@ -182,22 +193,23 @@ def hud_frame(d, box, colour, gd=None, thick=34, img=None):
 
     # --- the light seam: colour falloff, then a white core that overexposes
     sb = [x0 + seam, y0 + seam, x1 - seam, y1 - seam]
-    d.rectangle(sb, outline=(2, 3, 4, 255), width=11)
-    d.rectangle(sb, outline=(*colour, 200), width=7)
-    d.rectangle(sb, outline=(*blend(colour, (255, 255, 255), 0.55), 255), width=4)
+    d.rectangle(sb, outline=(2, 3, 4, 255), width=sc(11))
+    d.rectangle(sb, outline=(*colour, 200), width=sc(7))
+    d.rectangle(sb, outline=(*blend(colour, (255, 255, 255), 0.55), 255), width=sc(4))
     d.rectangle(sb, outline=(255, 255, 255, 255), width=2)
-    gd.rectangle(sb, outline=(*colour, 255), width=14)
+    gd.rectangle(sb, outline=(*colour, 255), width=sc(14))
 
     # --- a second, dimmer strip nearer the inner edge, as on the reference
     ib = [x0 + thick - 4, y0 + thick - 4, x1 - thick + 4, y1 - thick + 4]
     d.rectangle(ib, outline=(*colour, 120), width=2)
-    gd.rectangle(ib, outline=(*colour, 150), width=4)
+    gd.rectangle(ib, outline=(*colour, 150), width=sc(4))
 def panel(d, box, colour, dim=False):
     x0, y0, x1, y1 = box
-    cut = 16
+    cut = sc(16)
     pts = [(x0 + cut, y0), (x1, y0), (x1, y1 - cut), (x1 - cut, y1), (x0, y1), (x0, y0 + cut)]
     d.polygon(pts, fill=(0, 0, 0, 132))
-    d.line(pts + [pts[0]], fill=(*colour, 110 if dim else 255), width=2 if dim else 3)
+    d.line(pts + [pts[0]], fill=(*colour, 110 if dim else 255),
+           width=sc(2) if dim else sc(3))
 
 
 def mech(p):
@@ -253,16 +265,16 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     las = LASER[side]
     spec, fill, stop, tgts, risk = mech(plan)
 
-    fsym = ImageFont.truetype(MONO_B, 92)
-    fdir = ImageFont.truetype(MONO_B, 34)
-    fnum = ImageFont.truetype(MONO_B, 46)
-    flab = ImageFont.truetype(MONO_B, 19)
-    fsub = ImageFont.truetype(MONO, 15)
-    fkv = ImageFont.truetype(MONO_B, 22)
-    fkl = ImageFont.truetype(MONO_B, 15)
-    fbody = ImageFont.truetype(MONO, 17)
-    fmeta = ImageFont.truetype(MONO, 16)
-    fstrat = ImageFont.truetype(MONO_B, 21)
+    fsym = ImageFont.truetype(MONO_B, sc(92))
+    fdir = ImageFont.truetype(MONO_B, sc(34))
+    fnum = ImageFont.truetype(MONO_B, sc(46))
+    flab = ImageFont.truetype(MONO_B, sc(19))
+    fsub = ImageFont.truetype(MONO, sc(15))
+    fkv = ImageFont.truetype(MONO_B, sc(22))
+    fkl = ImageFont.truetype(MONO_B, sc(15))
+    fbody = ImageFont.truetype(MONO, sc(17))
+    fmeta = ImageFont.truetype(MONO, sc(16))
+    fstrat = ImageFont.truetype(MONO_B, sc(21))
 
     def trim(text, width, maxl):
         import re
@@ -279,8 +291,8 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
             o.append("(full thesis in pending.jsonl)")
         return o
 
-    W, H = 2500, 1000                      # 2.5 : 1
-    PAD = 78
+    W, H = sc(2500), sc(1000)              # 2.5 : 1 at any scale
+    PAD = sc(78)
     img = backdrop(W, H, side).convert("RGBA")
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow)
@@ -289,36 +301,36 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     hud_frame(d, (0, 0, W - 1, H - 1), las, gd=gd, img=ov)
 
     # ---- header: symbol and direction on one baseline
-    gd.text((PAD, 52), plan["symbol"], font=fsym, fill=(*las, 210))
-    d.text((PAD, 52), plan["symbol"], font=fsym, fill=WHITE)
+    gd.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=(*las, 210))
+    d.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=WHITE)
     symw = d.textlength(plan["symbol"], font=fsym)
     glyph = "\u25b2" if side == "LONG" else "\u25bc"
     dtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
-    d.text((PAD + symw + 40, 52 + 44), dtxt, font=fdir, fill=(*las, 255))
-    gd.text((PAD + symw + 40, 52 + 44), dtxt, font=fdir, fill=(*las, 185))
+    d.text((PAD + symw + sc(40), sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 255))
+    gd.text((PAD + symw + sc(40), sc(52) + sc(44)), dtxt, font=fdir, fill=(*las, 185))
 
-    yy = 58
+    yy = sc(58)
     for m in (f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
               f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"):
         d.text((W - PAD - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
-        yy += 26
+        yy += sc(26)
     pu = "PAPER — UNVALIDATED"
-    d.text((W - PAD - d.textlength(pu, font=flab), yy + 2), pu, font=flab, fill=WHITE)
+    d.text((W - PAD - d.textlength(pu, font=flab), yy + sc(2)), pu, font=flab, fill=WHITE)
 
-    d.text((PAD + 4, 160), "STRATEGY", font=fkl, fill=(*las, 150))
-    d.text((PAD + 4, 182), plan.get("strategy", ""), font=fstrat, fill=(*WHITE, 236))
+    d.text((PAD + sc(4), sc(160)), "STRATEGY", font=fkl, fill=(*las, 150))
+    d.text((PAD + sc(4), sc(182)), plan.get("strategy", ""), font=fstrat, fill=(*WHITE, 236))
 
     # ---- mechanics strip
-    sy = 224
-    x = PAD + 4
+    sy = sc(224)
+    x = PAD + sc(4)
     for lab, val in (("R:R", f"{tgts[0][1]}"), ("SIZE", f"{plan['contracts']} contract"),
                      ("RISK", f"${risk:,.0f} of $240"),
                      ("LADDER", f"x{plan.get('ladder_mult', 1.0):.2f}"),
                      ("WINDOW", f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
                                 f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")):
         d.text((x, sy), lab, font=fkl, fill=(*las, 145))
-        d.text((x, sy + 20), val, font=fkv, fill=WHITE)
-        x += int(d.textlength(val, font=fkv)) + 54
+        d.text((x, sy + sc(20)), val, font=fkv, fill=WHITE)
+        x += int(d.textlength(val, font=fkv)) + sc(54)
 
     # ---- left column: the price ladder, in the order price would meet it
     try:
@@ -345,31 +357,31 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     if side == "SHORT":
         rows = [rows[0], rows[1]] + rows[2:]
 
-    cw, ph, gap = 600, 122, 9
-    cy = 300
+    cw, ph, gap = sc(600), sc(122), sc(9)
+    cy = sc(300)
     for lab, px_, col, sub, ok in rows:
         panel(d, (PAD, cy, PAD + cw, cy + ph), col, dim=not ok)
         if ok:
             panel(gd, (PAD, cy, PAD + cw, cy + ph), col)
-        d.text((PAD + 22, cy + 12), lab, font=flab,
+        d.text((PAD + sc(22), cy + sc(12)), lab, font=flab,
                fill=(*col, 255) if ok else (*col, 150))
-        d.text((PAD + 22, cy + 36), f"{px_:g}", font=fnum,
+        d.text((PAD + sc(22), cy + sc(36)), f"{px_:g}", font=fnum,
                fill=col if lab == "SL" else (WHITE if ok else (*WHITE, 160)))
         if ok:
-            gd.text((PAD + 22, cy + 36), f"{px_:g}", font=fnum, fill=(*col, 140))
+            gd.text((PAD + sc(22), cy + sc(36)), f"{px_:g}", font=fnum, fill=(*col, 140))
         # Keep the level reason on EVERY target. The owner asked why the TPs are where
         # they are, and "not executable" is a separate fact from "sits on no level" -
         # dropping the first to show the second answers a question nobody asked.
         tag = sub if ok else f"{sub}  ·  NEEDS 3 LOTS"
         for i, ln in enumerate(textwrap.wrap(tag, 68)[:2]):
-            d.text((PAD + 22, cy + 88 + i * 17), ln, font=fsub,
+            d.text((PAD + sc(22), cy + sc(88) + i * sc(17)), ln, font=fsub,
                    fill=(*WHITE, 205) if ok else (*WHITE, 135))
         cy += ph + gap
 
     # ---- right column: confluence, then the reasoning
-    rx = PAD + cw + 46
-    rw = (W - rx - PAD) // 10
-    by = 300
+    rx = PAD + cw + sc(46)
+    rw = int((W - rx - PAD) / sc(10))   # CHARACTERS, not pixels
+    by = sc(300)
     crows = []
     if _cf is not None:
         try:
@@ -380,21 +392,21 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         d.text((rx, by), "CONFLUENCE ACROSS THE 13 FAMILIES — agreement is NOT confidence "
                          "(rule 1: more confluence measured WORSE; rule 2: alignment is not a virtue)",
                font=fkl, fill=(*las, 150))
-        by += 22
+        by += sc(22)
         for r in crows:
             if r["verdict"] == "N/A":
                 continue
             col = (*las, 240) if r["verdict"] == "AGREE" else (*RED, 235)
             d.text((rx, by), f"{r['verdict']:8s}", font=fkv, fill=col)
-            d.text((rx + 104, by + 2), f"{r['family']:17s}", font=fbody, fill=(*WHITE, 238))
+            d.text((rx + sc(104), by + sc(2)), f"{r['family']:17s}", font=fbody, fill=(*WHITE, 238))
             tail = r["why"] if r["tested"] else r["why"] + "   [NEVER TESTED ON THIS SYMBOL]"
-            d.text((rx + 104 + 200, by + 3), tail[:118], font=fmeta,
+            d.text((rx + sc(104) + sc(200), by + sc(3)), tail[:118], font=fmeta,
                    fill=(*WHITE, 150) if r["tested"] else (*RED, 190))
-            by += 25
+            by += sc(25)
         na = ", ".join(r["family"] for r in crows if r["verdict"] == "N/A")
         d.text((rx, by), f"N/A (not evaluable from OHLCV here): {na}", font=fmeta,
                fill=(*WHITE, 125))
-        by += 30
+        by += sc(30)
 
     for hdr, txt, col, lines in (
             ("STRATEGY BASIS", plan.get("strategy_basis", ""), (*las, 150), 3),
@@ -404,16 +416,16 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
         if not txt:
             continue
         d.text((rx, by), hdr, font=fkl, fill=col)
-        by += 21
+        by += sc(21)
         for ln in trim(txt, rw, lines):
             d.text((rx, by), ln, font=fbody, fill=(*WHITE, 232))
-            by += 22
-        by += 9
+            by += sc(22)
+        by += sc(9)
     d.text((rx, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
                      f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
            font=fmeta, fill=(*las, 195))
 
-    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(7)))
+    img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(sc(7))))
     card = Image.alpha_composite(img, ov).convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
     card.save(out)
@@ -425,9 +437,13 @@ def main() -> int:
     sys.path.insert(0, str(HERE.parents[2]))
     ap = argparse.ArgumentParser()
     ap.add_argument("call_ids", nargs="*")
+    ap.add_argument("--scale", type=float, default=1.0,
+                    help="render natively at this multiple - NOT an upscale")
     ap.add_argument("--blank", action="store_true",
                     help="render the empty shell only - frame and rail, no content")
     a = ap.parse_args()
+    global SCALE
+    SCALE = a.scale
     if a.blank:
         for side in ("LONG", "SHORT"):
             out = HERE / f"card_blank_{side}.png"

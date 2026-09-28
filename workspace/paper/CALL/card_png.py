@@ -119,60 +119,40 @@ def backdrop(W, H, side):
     return img
 
 
-def lit_bar(d, gd, x0, y0, length, las, thick=15, horiz=True):
-    """A dark-metal strut with a lit channel cut down its centre.
+def hud_frame(d, box, colour, gd=None, thick=30):
+    """The inner border: a CONTINUOUS closed rail of dark metal with a lit channel
+    running its entire perimeter. No corner brackets, no midpoint gaps - the light goes
+    all the way round and meets itself.
 
-    This is the inner border. Metal first - a tone ramp across the bar's short axis, a
-    bright catch on the lit edge and shadow on the other - then a recessed groove, then
-    the laser inside the groove. Light running THROUGH metal, not drawn on top of it.
+    Built as concentric rectangle outlines rather than four bars, because bars have to be
+    mitred at the corners and any error there shows as a notch. A ring of nested outlines
+    corners itself for free, and stepping the tone across the ring is what makes it read
+    as a machined edge: bright catch on the outer lip, shadow on the inner.
     """
-    for i in range(thick):
-        t = i / max(1, thick - 1)
-        v = int(100 - 66 * t)
-        if horiz:
-            d.line([x0, y0 + i, x0 + length, y0 + i], fill=(v, v + 1, v + 5, 255))
-        else:
-            d.line([x0 + i, y0, x0 + i, y0 + length], fill=(v, v + 1, v + 5, 255))
-    if horiz:
-        d.line([x0, y0, x0 + length, y0], fill=(182, 189, 202, 185), width=1)
-        d.line([x0, y0 + thick - 1, x0 + length, y0 + thick - 1], fill=(9, 10, 12, 225), width=1)
-        cy = y0 + thick // 2
-        d.line([x0 + 4, cy, x0 + length - 4, cy], fill=(7, 8, 10, 255), width=max(3, thick // 3))
-        d.line([x0 + 6, cy, x0 + length - 6, cy], fill=(*las, 255), width=2)
-        gd.line([x0 + 6, cy, x0 + length - 6, cy], fill=(*las, 255), width=6)
-    else:
-        d.line([x0, y0, x0, y0 + length], fill=(182, 189, 202, 185), width=1)
-        d.line([x0 + thick - 1, y0, x0 + thick - 1, y0 + length], fill=(9, 10, 12, 225), width=1)
-        cx = x0 + thick // 2
-        d.line([cx, y0 + 4, cx, y0 + length - 4], fill=(7, 8, 10, 255), width=max(3, thick // 3))
-        d.line([cx, y0 + 6, cx, y0 + length - 6], fill=(*las, 255), width=2)
-        gd.line([cx, y0 + 6, cx, y0 + length - 6], fill=(*las, 255), width=6)
-
-
-def hud_frame(d, box, colour, gd=None, arm=170):
-    """The inner border: corner struts of dark metal with light running through them,
-    plus thinner lit rails along each edge with a deliberate gap at the midpoint."""
     x0, y0, x1, y1 = box
     gd = d if gd is None else gd
-    T, R = 15, 7
-    midx, midy = (x0 + x1) // 2, (y0 + y1) // 2
-    # corners
-    for (cx, cy, dx, dy) in ((x0, y0, 1, 1), (x1, y0, -1, 1), (x0, y1, 1, -1), (x1, y1, -1, -1)):
-        bx = cx if dx > 0 else cx - arm
-        by = cy if dy > 0 else cy - T
-        lit_bar(d, gd, bx, by, arm, colour, T, True)
-        vx = cx if dx > 0 else cx - T
-        vy = cy if dy > 0 else cy - arm
-        lit_bar(d, gd, vx, vy, arm, colour, T, False)
-    # edge rails with a midpoint gap
-    lit_bar(d, gd, x0 + arm + 16, y0 + 4, midx - 96 - (x0 + arm + 16), colour, R, True)
-    lit_bar(d, gd, midx + 96, y0 + 4, (x1 - arm - 16) - (midx + 96), colour, R, True)
-    lit_bar(d, gd, x0 + arm + 16, y1 - T + 4, midx - 96 - (x0 + arm + 16), colour, R, True)
-    lit_bar(d, gd, midx + 96, y1 - T + 4, (x1 - arm - 16) - (midx + 96), colour, R, True)
-    lit_bar(d, gd, x0 + 4, y0 + arm + 16, midy - 86 - (y0 + arm + 16), colour, R, False)
-    lit_bar(d, gd, x0 + 4, midy + 86, (y1 - arm - 16) - (midy + 86), colour, R, False)
-    lit_bar(d, gd, x1 - T + 4, y0 + arm + 16, midy - 86 - (y0 + arm + 16), colour, R, False)
-    lit_bar(d, gd, x1 - T + 4, midy + 86, (y1 - arm - 16) - (midy + 86), colour, R, False)
+    m = thick // 2
+    for i in range(thick):
+        # Two shoulders falling away from a groove in the middle: bright at the outer lip,
+        # dark into the channel, rising again to a dimmer inner lip. That double ramp is
+        # what makes a band read as a MACHINED RAIL rather than a painted stripe.
+        if i < m:
+            t = i / max(1, m - 1)
+            v = int(132 - 104 * t)
+        else:
+            t = (i - m) / max(1, thick - m - 1)
+            v = int(26 + 62 * t)
+        d.rectangle([x0 + i, y0 + i, x1 - i, y1 - i], outline=(v, v + 1, v + 6, 255), width=1)
+    d.rectangle([x0, y0, x1, y1], outline=(206, 213, 226, 210), width=2)
+    d.rectangle([x0 + 3, y0 + 3, x1 - 3, y1 - 3], outline=(150, 157, 170, 120), width=1)
+    d.rectangle([x0 + thick - 1, y0 + thick - 1, x1 - thick + 1, y1 - thick + 1],
+                outline=(96, 101, 112, 200), width=2)
+    d.rectangle([x0 + thick + 1, y0 + thick + 1, x1 - thick - 1, y1 - thick - 1],
+                outline=(6, 7, 9, 240), width=2)
+    # the channel cut into the rail, and the laser running in it
+    d.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(5, 6, 8, 255), width=9)
+    d.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(*colour, 255), width=3)
+    gd.rectangle([x0 + m, y0 + m, x1 - m, y1 - m], outline=(*colour, 255), width=10)
 def panel(d, box, colour, dim=False):
     x0, y0, x1, y1 = box
     cut = 16
@@ -231,7 +211,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     weak = trim(plan.get("invalidation", ""), 116, 3)
 
     W = 1760
-    H = 1130 + (len(why) + len(weak)) * 26 + 150   # strategy header + basis block
+    H = 1130 + (len(why) + len(weak)) * 26 + 230   # strategy header + basis block
     img = backdrop(W, H, side).convert("RGBA")
     # content is composed at interior size, then mounted in the bezel below
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -240,38 +220,39 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     d = ImageDraw.Draw(ov)
 
     M = 54
+    PAD = M + 64      # content gutter: clears the 30px rail plus breathing room
     frame = (M, M, W - M, H - M)
     hud_frame(d, frame, las, gd=gd)
 
     # header: symbol and direction on ONE baseline, strategy beneath
-    gd.text((86, 84), plan["symbol"], font=fsym, fill=(*las, 210))
-    d.text((86, 84), plan["symbol"], font=fsym, fill=WHITE)
+    gd.text((PAD + 4, 112), plan["symbol"], font=fsym, fill=(*las, 210))
+    d.text((PAD + 4, 112), plan["symbol"], font=fsym, fill=WHITE)
     symw = d.textlength(plan["symbol"], font=fsym)
     glyph = "\u25b2" if side == "LONG" else "\u25bc"
     dirtxt = f"{glyph}  {'BUY / LONG' if side == 'LONG' else 'SELL / SHORT'}"
-    dx, dy = 86 + symw + 46, 84 + 50          # optically centred on the symbol's cap height
+    dx, dy = PAD + 4 + symw + 46, 112 + 50          # optically centred on the symbol's cap height
     d.text((dx, dy), dirtxt, font=fdir, fill=(*las, 255))
     gd.text((dx, dy), dirtxt, font=fdir, fill=(*las, 185))
     strat = plan.get("strategy", "")
     if strat:
-        d.text((92, 212), "STRATEGY", font=fkl, fill=(*las, 150))
-        d.text((92, 236), strat, font=fsub2, fill=(*WHITE, 234))
+        d.text((PAD + 10, 242), "STRATEGY", font=fkl, fill=(*las, 150))
+        d.text((PAD + 10, 266), strat, font=fsub2, fill=(*WHITE, 234))
 
     meta = [f"{plan['call_id']}   PRE-REGISTERED, NOT FILLED",
             f"basis {plan.get('basis','?')}    as-of {plan.get('as_of_at_creation','?')[:16]}"]
-    yy = 92
+    yy = 116
     for m in meta:
-        d.text((W - 86 - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
+        d.text((W - PAD - 4 - d.textlength(m, font=fmeta), yy), m, font=fmeta, fill=(*las, 185))
         yy += 30
     pu = "PAPER — UNVALIDATED"
-    d.text((W - 86 - d.textlength(pu, font=flab), yy + 4), pu, font=flab, fill=WHITE)
+    d.text((W - PAD - 4 - d.textlength(pu, font=flab), yy + 4), pu, font=flab, fill=WHITE)
 
     # ---- row 1: ENTRY (laser) | SL (RED)
-    y0, ph = 320, 176
-    gapx, inner = 30, W - 2 * (M + 32)
+    y0, ph = 360, 176
+    gapx, inner = 30, W - 2 * (PAD)
     ew = int(inner * 0.60)
     sw = inner - ew - gapx
-    ex = M + 32
+    ex = PAD
     sx = ex + ew + gapx
 
     panel(d, (ex, y0, ex + ew, y0 + ph), las)
@@ -295,7 +276,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     ty, th = y0 + ph + 30, 158
     tw = (inner - 2 * gapx) // 3
     for i, (lab, r, px_, ok) in enumerate(tgts[:3]):
-        x = M + 32 + i * (tw + gapx)
+        x = PAD + i * (tw + gapx)
         panel(d, (x, ty, x + tw, ty + th), las, dim=not ok)
         if ok:
             panel(gd, (x, ty, x + tw, ty + th), las)
@@ -314,7 +295,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
           ("RISK", f"${risk:,.0f} of $240"), ("LADDER", f"x{plan.get('ladder_mult',1.0):.2f}"),
           ("WINDOW", f"{plan['created_bar_ts'][5:16].replace('T',' ')} → "
                      f"{plan['expires_bar_ts'][5:16].replace('T',' ')} ET")]
-    x = M + 32
+    x = PAD
     for lab, val in kv:
         d.text((x, sy), lab, font=fkl, fill=(*las, 150))
         d.text((x, sy + 22), val, font=fkv, fill=WHITE)
@@ -322,35 +303,35 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     # ---- reasoning
     by = sy + 78
-    d.line([M + 32, by - 14, W - M - 32, by - 14], fill=(*las, 70), width=1)
+    d.line([PAD, by - 14, W - PAD, by - 14], fill=(*las, 70), width=1)
     sb = plan.get("strategy_basis", "")
     if sb:
-        d.text((M + 32, by), "STRATEGY BASIS", font=fkl, fill=(*las, 150))
+        d.text((PAD, by), "STRATEGY BASIS", font=fkl, fill=(*las, 150))
         by += 24
         for ln in textwrap.wrap(sb, 116)[:4]:
-            d.text((M + 32, by), ln, font=fbody, fill=(*WHITE, 212))
+            d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 212))
             by += 26
         by += 14
-    d.text((M + 32, by), "TARGETS", font=fkl, fill=(*las, 150))
+    d.text((PAD, by), "TARGETS", font=fkl, fill=(*las, 150))
     by += 24
     for ln in textwrap.wrap(plan.get("display_targets_note", ""), 116)[:3]:
-        d.text((M + 32, by), ln, font=fbody, fill=(*WHITE, 205))
+        d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 205))
         by += 26
     by += 12
-    d.text((M + 32, by), "WHY", font=fkl, fill=(*las, 150))
+    d.text((PAD, by), "WHY", font=fkl, fill=(*las, 150))
     by += 24
     for ln in why:
-        d.text((M + 32, by), ln, font=fbody, fill=(*WHITE, 235))
+        d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 235))
         by += 26
     if weak:
         by += 12
-        d.text((M + 32, by), "THE WEAKNESS, STATED NOT HEDGED", font=fkl, fill=(*RED, 190))
+        d.text((PAD, by), "THE WEAKNESS, STATED NOT HEDGED", font=fkl, fill=(*RED, 190))
         by += 24
         for ln in weak:
-            d.text((M + 32, by), ln, font=fbody, fill=(*WHITE, 235))
+            d.text((PAD, by), ln, font=fbody, fill=(*WHITE, 235))
             by += 26
     by += 14
-    d.text((M + 32, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
+    d.text((PAD, by), f"CONFIDENCE  {plan['confidence']} — a structured chart read, NOT a "
                          f"measured edge. Largest t anywhere 3.923 vs a required 5.46.",
            font=fmeta, fill=(*las, 195))
 

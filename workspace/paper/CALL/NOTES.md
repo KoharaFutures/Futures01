@@ -6402,3 +6402,27 @@ straight at N179's own counterfactual — I computed a hypothetical entry and a 
 bar that had not finished revising. The counterfactual stop room I quoted as "52.25 points left" was actually
 42.25. **A counterfactual built on a provisional bar is doubly untrustworthy**, which is the best argument yet
 for not building them at all.
+
+## N183 — 10:14: MGC is BEARISH on all five eligible frames, and rule 2 says that is not a reason to trade
+
+    MGC   1m BEAR 0-1 | 5m BEAR 0-1 | 15m BEAR 0-2 | 60m BEAR 0-3 unanimous | 4h BEAR 0-2
+          DAILY / WEEKLY NOT ELIGIBLE (roll audit)
+
+**Every eligible frame agrees, for the first time this session on either symbol.** Five minutes ago the 1m
+and 5m were BULLISH 2-0 and 2-1; MGC gave back 9.50 points on the `10:00` 5m bar (4190.00 -> 4180.90) and the
+fast frames flipped with it.
+
+This is exactly the configuration that feels like a signal and measures negative. **BRIEF.md rule 2: MTF
+alignment z = -4.09** — alignment is not merely unproven here, it is measured *worse* than its absence, and
+rule 1 caps confluence at two signals and one filter. Full five-frame agreement is past that ceiling in the
+direction the repository's own evidence says costs money. It is also the second time tonight I have watched a
+frame set swing wholesale in one 5m bar (N54/N78/N115 on the 1m), which is the mechanism: the fast frames are
+not independent confirmations, they are the same price re-counted.
+
+`reversal()` still declines on the structural block (N166: `prior: None`, no prior directional headline to
+reverse from — MGC cannot produce one while DAILY and WEEKLY are ineligible). **No call.**
+
+Also confirmed from the other side: MNQ's 15m went 2-0 at 10:09 on the close crossing 2.41 points above the
+EMA20, and at 10:14 it is back to 1-0 with the close 2.34 points *below* it. I called that crossing "inside
+the noise" when it happened; it lasted one check. Recorded because a prediction that cheap is still a
+prediction, and it was right.

@@ -472,7 +472,12 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     fsym = ImageFont.truetype(MONO_B, sc(92))
     fdir = ImageFont.truetype(MONO_B, sc(52))   # owner asked for BUY/LONG larger
-    fbadge = ImageFont.truetype(MONO_B, sc(27))  # SCALP/SWING + live status, enlarged
+    fbadge = ImageFont.truetype(MONO_B, sc(54))  # SCALP/SWING + live status, 2x again
+                                                 # at the owner's request. The box grows
+                                                 # with it and is re-centred in the 92px
+                                                 # symbol band so STRATEGY below does not
+                                                 # have to move: sc(88) tall at sc(58)
+                                                 # ends at sc(146), clear of sc(160).
     fnum = ImageFont.truetype(MONO_B, sc(46))
     flab = ImageFont.truetype(MONO_B, sc(19))
     fsub = ImageFont.truetype(MONO, sc(15))
@@ -542,8 +547,8 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     # SCALP / SWING and the live status, same baseline, both enlarged
     bx = dx + int(d.textlength(dtxt, font=fdir)) + sc(40)
-    bh2 = sc(56)
-    by2 = sc(52) + sc(24)
+    bh2 = sc(88)
+    by2 = sc(58)
     hz = plan.get("horizon")
     if hz:
         bw2 = int(d.textlength(hz, font=fbadge)) + sc(44)
@@ -551,7 +556,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
                             fill=(0, 0, 0, 140), outline=(*las, 230), width=sc(2))
         gd.rounded_rectangle([bx, by2, bx + bw2, by2 + bh2], radius=sc(9),
                              outline=(*las, 200), width=sc(3))
-        d.text((bx + sc(22), by2 + sc(13)), hz, font=fbadge, fill=(*WHITE, 248))
+        d.text((bx + sc(22), by2 + sc(10)), hz, font=fbadge, fill=(*WHITE, 248))
         bx += bw2 + sc(20)
 
     stxt, scol = live_status(plan)
@@ -560,7 +565,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
                         fill=(0, 0, 0, 150), outline=(*scol, 235), width=sc(2))
     gd.rounded_rectangle([bx, by2, bx + bw3, by2 + bh2], radius=sc(9),
                          outline=(*scol, 205), width=sc(3))
-    d.text((bx + sc(22), by2 + sc(13)), stxt, font=fbadge, fill=(*scol, 250))
+    d.text((bx + sc(22), by2 + sc(10)), stxt, font=fbadge, fill=(*scol, 250))
 
     yy = sc(58)
     for m in (f"{plan['call_id']}   {stxt}",

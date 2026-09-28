@@ -1233,3 +1233,113 @@ agreement is better, and it is rule 1 — measured in this repository — that t
 signals plus one filter is the ceiling and past it more agreement is worse. So
 CALL-0002 and CALL-0004 are each docked for having four families agree. Anyone
 reading the card will think that is a bug. It is the finding.
+
+## N25 — full check: the journal audit found two real defects in my own record-keeping, and one false alarm I raised myself
+
+00:55 AM EDT, hourly full check. `CALLOUT.md` unchanged since `1948339`, no
+contradiction with `CHECK_PROCEDURE.md`, nothing to reconcile. Feed healthy,
+newest 5m bar 00:45, lag 10.3m. Nothing triggered, nothing resolved, zero closed
+trades, drawdown $0.
+
+The full check is the one that audits the record rather than the market, and this
+time the record was wrong.
+
+### False alarm, mine, corrected before acting on it
+
+My first pass matched journal entries to plans on `symbol` + `side` + timestamp
+and reported **CALL-0001 unjournalled**. That was wrong. CALL-0001 *is* in the
+journal — inside `CALL-NT-0002`, a NO TRADE entry carrying
+`pre_registered_instead: CALL-0001`. My matcher missed it because that entry has
+`side: null`. Recording this because I nearly reported a missing callout to the
+owner, and the cause was my audit query, not the journal. **An audit that can
+produce a false positive on the desk's own compliance is worse than no audit**, and
+the fix is that a compliance check must match on `call_id`, never on a reconstructed
+key.
+
+### Defect 1, real: R-8's mandatory fields were null on every pre-registration
+
+`CALLOUT.md` makes `entry_price`, `initial_stop` and `symbol` mandatory under board
+rule **R-8**, with the reason stated: "without those three, account sizing later is
+a re-run rather than a read."
+
+```
+CALL-0002-PREREG  entry_price None  initial_stop None
+CALL-0003-PREREG  entry_price None  initial_stop None
+CALL-0004-PREREG  entry_price None  initial_stop None
+```
+
+The numbers were not lost — they are in each entry's `why` prose. But prose is not a
+field, so a later sizing pass would have to parse English, which is exactly the
+"re-run rather than a read" R-8 exists to forbid. Three of four pre-registrations
+breached a mandatory board rule and I did not notice for three hours.
+
+Fixed by **appending four `-AMEND-R8` records, not by rewriting the originals.** Two
+reasons. The original entry with `entry_price: null` is the only evidence this desk
+got it wrong, and editing it would delete the proof. And the desk already works
+append-only everywhere it matters — deltas rather than snapshots, `resolve.py` as the
+sole writer of outcomes — so mutating a journal line would be the one place history
+gets rewritten. Nothing in the amendments is an outcome: the trigger and stop are the
+pre-registered numbers, fixed at creation, unchanged (N8), and every plan is still
+unfilled. CALL-0001 got an amendment too, closing the separate inconsistency that it
+is the only plan without its own `-PREREG` line.
+
+### Defect 2, real: NO TRADE decisions were reasoned, committed, and never journalled
+
+`CALLOUT.md`: "`NO TRADE` gets journalled too, with `side: null` and the reason. A
+record that only contains the trades you liked is a record of your memory, not of
+your process."
+
+Two of tonight's most consequential decisions were never journalled — only written
+to `NOTES.md`:
+
+- **N16**, declining both sides at 4235 (23:10 ET);
+- **N15**, declining MNQ's first-ever qualifying reversal setup (22:55 ET).
+
+Both are now in `journal.jsonl` as `CALL-NT-LATE-*`, with `late_entry: true`, the
+real decision time in `decided_at_et`, and `late_entry_reason` saying plainly that
+they were missed. **The `ts` is now, not then.** Backdating it would have made the
+journal assert something false about when it was written, which is the precise
+failure the journal exists to prevent — and it would have been a worse offence than
+the omission it was covering.
+
+The uncomfortable part: the omission was not random. Both missing entries are
+*declines*. Every directional pre-registration got journalled the moment it was
+made; the two hardest no-calls did not. That is the exact asymmetry CALLOUT.md names
+— a record skewed toward the trades I found interesting — and it appeared in this
+desk's own journal within four hours of the rule being read aloud.
+
+### Ledger
+
+```
+journal records          11   (7 directional, 4 NO TRADE, 4 amendments)
+pre-registered PENDING    4
+open positions            0
+closed trades             0
+win rate                 N/A - zero closed trades
+expectancy               N/A      ambiguous bars 0
+equity            $50,000.00      drawdown $0.00
+to the $2,600 operational floor    $2,600.00
+to the $2,800 absorbing state      $2,800.00
+ladder fraction   0.000 of the $4,000 usable buffer
+```
+
+Win rate is **N/A, not 0%**. With zero closed trades there is nothing to divide, and
+rule 3 forbids quoting either win rate or payoff without the other — on an empty
+denominator both are undefined rather than bad.
+
+### Fresh read, and the 60m frame says something the 15m does not
+
+```
+MGC 60m BEARISH 0-3 unanimous   close 4230.10 < EMA20 4298.19   2.3% of [4227.30, 4351.60]
+MNQ 60m BEARISH 0-2 NOT UNANIM  close 30680.25 < EMA20 30813.86  location MIXED 49.3%
+```
+
+MNQ's 60m **location is 49.3% of its 40-bar range** — dead centre of
+[30370.75, 30998.50]. On the 15m it reads 15.9% and looks like a symbol pinned at its
+lows. Both are true of their own windows, and the 60m one is the wider fact: MNQ is
+mid-range on the hour and only extended on the quarter-hour. That is worth more than
+either headline, and it is an argument against the MNQ long *and* the MNQ short.
+
+Both `reversal_setup` calls still fail on extension — MGC -0.96, MNQ -1.01, decaying
+further as N22 predicted. No call. Four plans stand unchanged; CALL-0003 expires at
+02:00 ET, 84.75 points out of reach.

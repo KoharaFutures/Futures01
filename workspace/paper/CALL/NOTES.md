@@ -2242,3 +2242,64 @@ CALL-0003's 30767.25, monotone; CALL-0003 expired NO_FILL with a 263-point adver
 sigma re-extended because price accelerated (N22), so −1.83 reports selling speed rather than
 an imminent turn; MNQ's 15m and 60m are both unanimous bearish; and rule 2 puts the MTF
 alignment behind `htf_support` at z = −4.09.
+
+## N38 — first vendor rate-limit of the session, and it leaves no trace in the log that exists to catch exactly this
+
+03:42 AM EDT. `fetch.py` printed a line it has not printed once tonight:
+
+```
+Crumb fetch rate-limited (HTTP 429), continuing without crumb
+```
+
+The fetch still succeeded — newest 5m bar 03:30 at 12.8m lag, +1 new / 2 revised on both
+symbols, MGC printing a new low at 4188.30. So this is a warning, not a failure, and it does
+not count toward the three-consecutive-failures stop condition.
+
+### The part worth keeping: I nearly reported a wrong number about it
+
+My first instinct was to check how often this had happened, and `grep -c "429"
+feed_lag.jsonl` returned **78**. That looked like a rate-limit history. It is not — the matches
+are MGC *prices*:
+
+```
+{"ts": "...", "symbol": "MGC", "frame": 5, ..., "newest_real_close": 4296.7998046875}
+{"ts": "...", "symbol": "MGC", "frame": 5, ..., "newest_real_close": 4294.89990234375}
+```
+
+A grep for an HTTP status code against a file full of four-digit gold prices. Checked before
+reporting it, which is the only reason "78 rate limits tonight" did not go into the record —
+and it is the second time in three hours that a careless query nearly put a false number in
+front of the owner (N25's false CALL-0001 alarm was the first). Both were my own audit
+queries, not the data. **The pattern is that I reach for `grep` when I should reach for a
+parser**, and on a desk whose entire value is not misstating numbers that is the query style
+to drop.
+
+Searching properly: `feed_lag.jsonl` contains **zero** records with any rate-limit or error
+field. Tonight's 429 is the first, and it is recorded nowhere.
+
+### The gap, specified
+
+`feed_lag.jsonl` logs `lag_minutes`, `stubs_dropped`, `newest_real_bar` and
+`newest_real_close` — everything about what the vendor *returned*, and nothing about how it
+*behaved*. So a feed that is degrading — rate limits, retries, partial responses, the
+truncated window from N18/N19 — leaves no trace except a line on stdout that exists only in
+whichever turn happened to print it. N19's per-frame staleness and N18's three-hour regression
+were both caught by reading that stdout by eye. That is not a mechanism.
+
+Fix: `fetch.py` should append a `vendor_events` record per fetch — HTTP status anomalies,
+retry count, whether a crumb was obtained, and per-frame `new`/`revised` counts — so the
+question "was the feed healthy between 02:00 and 04:00?" has a file to answer it instead of a
+transcript.
+
+**Not patching `fetch.py` now.** Its own docstring says it is "the one step the entire record
+rests on", the 429 was non-fatal, and nothing about tonight is urgent enough to justify
+touching the data path mid-loop for an observability improvement. This is a smaller and safer
+change than the N22 detector work and it still waits for a full check. Recording the
+observation here is what stops it being lost, which was the actual risk.
+
+### Worth noting about cadence
+
+The 429 arrived at a point where the effective fetch rate has been higher than 5 minutes,
+because the chained firings and the owner's manual prompts have overlapped — several checks
+tonight ran 2-3 minutes apart. If 429s recur, that overlap is the first thing to look at, not
+the vendor.

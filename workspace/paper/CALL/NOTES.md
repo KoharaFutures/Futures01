@@ -3379,3 +3379,51 @@ No call. Reversal test false on both, both at range extremes, MGC's retracement 
 for ~35 more minutes. CALL-0004 resolves on the 06:00 ET bar and, at 39.30 points from its trigger with
 MGC 107 points below it, will resolve `EXPIRED_UNTRIGGERED` / NO_FILL at 0.0R — reported from the
 resolver when it happens, not from the clock (N32).
+
+## N74 — N70's test was RIGHT: the break settled. And the thing that happened next is exactly the pattern rule 8 says not to trade
+
+The `05:00` 15m bar settled at 05:28 and resolves the question N69 through N72 were circling:
+
+| symbol | settled `05:00` | |
+|---|---|---|
+| MNQ | o 30578.50 h 30606.50 **l 30536.25** c 30543.25 | delta **−36.00** |
+| MGC | o 4176.50 h 4179.80 **l 4172.60** c 4176.40 | delta **−0.30** |
+
+**MNQ's settled low is 30536.25, which is 34.75 below the 30571.00 double bottom. The break is real on
+settled data.** N70's test said "deeper than the observed maximum, safe to treat as real" and it was
+correct — the first time one of tonight's constructions made a falsifiable call in advance and the data
+confirmed it. MGC's settled close moved **−0.30**, i.e. flat, exactly as the same test's "1.70 deep
+against a 6.80 maximum, not a break" implied.
+
+One precision point that matters, because two numbers in my own output disagree. `chart.py`'s structure
+line still reads MNQ swing lows `30571.00 -> 30571.00`. That is not a contradiction: a *swing low* needs
+bars on both sides to confirm a pivot, and the `05:00` low is too recent to have them. The **raw settled
+low** has broken the level; the **swing-low detector** has not yet registered it. Those are different
+statements and I have been printing both in the same table all night without distinguishing them.
+
+### And then price went straight back up through the level
+
+MNQ's forming `05:15` bar: low **30535.00**, close **30582.00** — it made a marginal new low and then
+recovered **47 points**, closing back **above** the 30571.00 level it had just broken. Location jumped
+1.9% -> **12.9%**, and this one is a genuine move rather than N53 denominator drift: the range low fell
+only 1.25 while the close rose ~39.
+
+Break the low, immediately reclaim it. That is a stop sweep, and it is precisely the sequence
+**CALLOUT.md rule 8** addresses: *"the ICT sweep -> shift -> retrace sequence is real, common, and adds
+nothing over its parts."* Real and common is exactly what I am looking at. **Adds nothing over its
+parts** is why it is not a trade. The most tempting thing on the screen tonight is the thing this
+repository specifically measured and found empty, and I would be taking it on the strength of having
+watched it happen rather than on the strength of anything tested.
+
+So: **no long, no reversal call.** `regime.py`'s reversal test returns false on both symbols. Both 1m
+frames have turned bullish (MGC 2-1, MNQ 1-0), which after tonight's six 1m state changes carries no
+weight. MNQ's stack is now 1m/4h/daily/weekly bullish against 5m/15m/60m bearish — maximum internal
+disagreement, which is a no-trade configuration on its face.
+
+MGC: settled swing lows have stepped down `4174.30 -> 4172.60`, so its lower-low structure is now
+confirmed by the detector rather than pending. Location 3.9% of [4172.60, 4299.20].
+
+CALL-0004 resolves on the 06:00 ET bar, ~30 minutes out. That is the moment the MGC retracement short
+stops being blocked by N52, and MGC will by then have a confirmed lower high at 4185.20 and a confirmed
+lower low at 4172.60 to compute a retracement from — which is a better geometry than it had when I
+declined at 04:46.

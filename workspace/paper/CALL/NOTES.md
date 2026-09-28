@@ -7524,3 +7524,82 @@ empty, because the alternative is manufacturing a callout to justify the wake-up
       distance to the $2,800 absorbing state: $2,681.56   (95.8% of the buffer intact)
 
 No PENDING plans, so no cards to re-render this firing. A quiet check is a successful check.
+
+# N212 — POST-MORTEM 2: the 12:16 MNQ bounce. I did not miss it. I sold into its first minute.
+
+Owner, 12:56: *"you missed the bounce around 12:27 for mnq, figure out why you missed it."* The framing is
+generous and the record is worse than it. **The desk was SHORT into that move, not flat.**
+
+## The tape, to the minute
+
+    12:00-12:15  COMPRESSION   range 30497.75-30537.25 = 39.50 points = 0.48x ATR, mean volume 3,051/min
+    12:16        IMPULSE       o 30519.50  h 30580.50  c 30572.75   volume 23,325 = 7.6x the pre-break mean
+    12:17                      h 30591.50                            volume 14,105 = 4.6x
+    12:20                      h 30617.25                            volume 13,593 = 4.5x
+    12:26                      h 30717.00                            volume 19,699 = 6.5x
+    12:27        HIGH          h 30722.00                            volume 15,746 = 5.2x
+
+    CALL-0006  limit 30560.00  first touched 12:16 - the FIRST MINUTE of the impulse
+               stop  30618.00  first touched 12:20-12:21
+               fill-to-stop elapsed: FOUR TO FIVE MINUTES
+
+## Failure 1: the move was faster than the desk can observe. This one is structural and not a judgement error.
+
+    the 12:16 impulse minute sits inside the 12:15 15m bar, which completes at 12:30
+    measured feed lag today: 10.1 - 14.9 minutes
+    that bar therefore reached me at ~12:33
+    I first saw it on the 12:33 check, with price at 30621.00 and the 30722.00 high already in at 12:27
+
+**The entire move, 12:16 to 12:27, is eleven minutes. My observation cycle is a 15-minute bar plus a
+~12-minute publication lag — call it 15 to 27 minutes from event to sight.** The desk is physically
+incapable of reacting to a move of this duration. Not slow at it: incapable. Nothing in the framework, no
+fix to `swings()` and no new entry rule, changes that arithmetic.
+
+And it is not a freak: on today's 08:00-13:00 session the top 10 minutes out of 285 (3.5% of the clock)
+carry **15.4% of all 1m movement on MNQ** and 13.6% on MGC, and the two largest minutes on BOTH symbols are
+the same two - **12:16 and 12:26** - which means a common driver moved gold and the index complex together
+and neither symbol gave the other any warning.
+
+## Failure 2: I was positioned against it, and that is the second time today
+
+This is the part that is mine. At 11:37 `reversal()` returned BEARISH on MNQ with the 15m **unanimous 0-3,
+held 21 checks**, and I registered CALL-0006 short on it. The low of the day was **already in at 10:45**,
+fifty-two minutes earlier. The signal fired near the bottom and pointed down.
+
+That rhymes exactly with N194 Cause 2, which found MNQ's 15m **unanimously BULLISH for the six consecutive
+bars ending at the 09:30 high of the day**. So today the 15m unanimity signal has fired twice, in opposite
+directions, and **both times it marked a turn against the direction it indicated.**
+
+Two anecdotes are two anecdotes. Rule 2 already puts MTF alignment at z = -4.09 but that is a *different*
+statistic - alignment ACROSS frames as a filter, not unanimity WITHIN one frame as a signal. The second has
+never been measured here. **So measure it.**
+
+# N213 — PRE-REGISTRATION: does 15m unanimity mark turns? Specified BEFORE the test is run.
+
+Committed before running anything, so the result cannot be fitted to it.
+
+**Hypothesis.** The onset of a unanimous `bias()` headline (3-0 BULLISH or 0-3 BEARISH) is followed by price
+moving AGAINST the signalled direction, more than an unconditional baseline would.
+
+**Data.** `data/archive/{MGC,MNQ}_{15m,60m}.jsonl`, which end **2026-09-25** — out of sample with respect to
+today. Today's bars are not loaded.
+
+**Definition.** At each bar, run the shipped `bias()` on the trailing 40 bars. An ONSET is a bar whose
+headline is unanimous and whose previous bar was NOT unanimous in the same direction, so each episode counts
+once and a long unanimous run is not counted forty times.
+
+**Measure.** Signed forward return in the SIGNALLED direction: `+1 * (close[t+T] - close[t]) / ATR[t]` for a
+bullish onset, `-1 * (...)` for a bearish one, at T = 4, 8 and 16 bars. Reported in ATR units so the two
+symbols and two frames are comparable. Compared against the unconditional signed-by-coin-flip baseline over
+the same bars.
+
+**Pre-declared thresholds.** 4 cells (2 symbols x 2 frames) x 3 horizons. I will call the contrarian effect
+REAL only if the mean signed forward return is **negative with |t| > 3.0** in a cell, and I will publish
+every cell including the ones that contradict me. **My expectation, stated now: I expect a weak negative or
+nothing.** Two instances on one day is exactly the sample size that produces a story, and the honest prior
+after CONT-1 and FADE-1 both failed is that this fails too.
+
+**What it changes if it holds.** Not permission to fade unanimity — that would be FADE-1's mistake again.
+It would mean `reversal()` condition 2 is **actively harmful** and the gate should stop requiring unanimity,
+which is a change to a veto rather than a new entry. What it changes if it fails: I stop telling the story
+about unanimity marking tops, in this file and in my reports.

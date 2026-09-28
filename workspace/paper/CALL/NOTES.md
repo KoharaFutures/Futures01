@@ -7260,3 +7260,35 @@ before-measurement**: four changes in 23 minutes on 2.25 points of price.
 CALL-0006 remains **0.84 ATR** from filling against a void contour of 4.16 at ~12 bars remaining, so it is
 nowhere near retirement and the new rule correctly leaves it alone. MGC is 15m and 60m BEARISH 0-3 unanimous
 and still fails only the unsatisfiable condition. **No new call.**
+
+## N206 — 12:29: MNQ traded 31.50 points THROUGH CALL-0006's limit, and the fill has not registered yet
+
+    5m  12:15  o 30515.75  h 30591.50  l 30511.25  c 30559.00
+    CALL-0006 SELL LIMIT 30560.00  ->  the 5m high is 31.50 points THROUGH it
+
+`resolve.py` ran and reported **no trigger**, which is correct and not a fault. The plan carries
+`bar_minutes: 15` and the newest published 15m bar is **12:00** (h 30537.25, which is 22.75 short of the
+limit). The `12:15` 15m bar covers 12:15-12:30, completes at 12:30 and publishes around 12:35 with the
+~12-minute feed lag. **Until that bar exists, the resolver has no 15m bar containing the touch.**
+
+**Stating the expectation before it resolves, per N32 and N176.** On the evidence in hand I expect
+CALL-0006 to register as TRIGGERED when the `12:15` 15m bar publishes, at an entry of **30560.00** — the
+limit price, with no slippage, because a sell limit fills at its price or better and the bar's open of
+30515.75 is *below* the limit rather than through it, so `raw = max(trig, open)` takes the limit itself.
+**I am not asserting it has filled.** The resolver is the only thing permitted to write that, it has not,
+and a 15m bar that has not published can still print anything — including a high that revises.
+
+Two things this makes concrete, both already on the record rather than discovered now:
+
+1. **This is the N179 timing geometry in reverse.** CALL-0005 died because its window closed one bar before
+   price arrived; CALL-0006 is alive and price has arrived **two hours and thirty-one minutes** before its
+   15:00 expiry. Same mechanism, opposite side of the boundary — which is exactly why N179 refused to treat
+   the CALL-0005 miss as evidence the window was too short.
+2. **The frame choice, not the level, is what is delaying the record.** The touch is visible on the 5m and
+   the 1m now. A 15m plan cannot act on it until the 15m says so. That is the correct conservatism given
+   N41/N47 on provisional bars, and it costs up to fifteen minutes of latency on every fill. Logged as a
+   design cost, not a defect, and NOT changed mid-plan.
+
+Frames at the moment of the touch: MNQ 1m BULLISH 2-0, 5m BULLISH 1-0, but **15m still BEARISH 0-2 and 60m
+BEARISH 0-2** — the pullback the plan was written to sell has not yet turned the settled frames. MGC
+unchanged in character, location **9.6% of [4143.00, 4212.10]**. **No new call.**

@@ -4032,3 +4032,60 @@ on a 2.50-point higher high that N95 established is 13% of its noise floor — u
 structural turn. 15m and 60m unanimous bearish on MGC; MNQ 15m 0-2, 60m unanimous.
 
 No call. Reversal test false on both, and `regime.py` names the missing condition on MNQ.
+
+## N99 — the settled high held, and it makes me correct my own framing: 4185.20 was never the decisive level. 4193.10 is
+
+The `06:00` bar settled at 06:28. MGC: `o 4188.30 h 4191.40 l 4185.80 c 4187.50`, delta **−0.80**. **The high
+held at 4191.40 through the entire revision window** — unchanged across four consecutive fetches — so the
+6.20-point excess over the 4185.20 lower high is a settled fact, not a restatement waiting to happen.
+
+Two things to say precisely, because at 06:24 I pre-committed to a reading and one half of it needs
+narrowing:
+
+1. **On the distribution:** 6.20 is **equal to** MGC's largest non-session-open 15m high revision, not
+   greater than it. N89's bands say "deeper than the observed maximum is safe to act on"; equal is the
+   boundary, not beyond. What actually settles it is not the distribution at all — the bar has **settled**,
+   so the revision window is spent and the question stops being "could this revise away" and becomes "did
+   it." It did not. I said at 06:24 that surviving the window "makes it a break rather than noise," and that
+   conclusion holds, but for the settling reason and not the distributional one. Worth separating, because
+   quoting 6.20 ≥ 6.20 as if it cleared a threshold would be arithmetic dressed as evidence.
+
+2. **On what it means — and here I was framing the wrong level.** I have spent three checks treating
+   4185.20 as the level that decides N75's condition 1. It is not. **4191.40 < 4193.10.** The confirmed
+   swing-high sequence is `4193.10 -> 4185.20`, and even if 4191.40 eventually confirms as a pivot, the
+   sequence becomes `4193.10 -> 4191.40`, which is *still a lower high*. Condition 1 requires a lower high
+   and a lower low; exceeding an **intermediate** pivot does not break a lower-high sequence while price
+   stays under the **prior** one. **The only level that breaks condition 1 is 4193.10**, and MGC has not
+   touched it — the settled high is 1.70 below it.
+
+   `chart.py` has been right about this the whole time: it never stopped printing
+   `swing highs 4193.10 -> 4185.20 (lower)`. I read its output as lagging the truth when it was reporting
+   the truth and I was measuring against the wrong reference. What the 4191.40 high *does* do is drain
+   4185.20 of significance as a pivot — the down-leg from it has been fully retraced — which changes the
+   geometry a retracement would be measured from, not the direction test.
+
+So: **condition 1 still holds, and it is no longer pending.** Lower low 4172.60 intact, lower high intact
+from 4193.10. The watch level is 4193.10 and nothing else.
+
+## N100 — settled tally: MNQ is doing all the moving. MGC has now spent 2h15m going nowhere
+
+Sixth settled pair. MGC `05:45` 4188.30 -> `06:00` **4187.50**, −0.80. MNQ 30592.00 -> **30567.75**, **−24.25**.
+
+| symbol | settled 04:15 | settled 06:00 | net over 1h45m of settled bars |
+|---|---|---|---|
+| MGC | 4176.90 | **4187.50** | **+10.60** |
+| MNQ | 30622.75 | **30567.75** | **−55.00** |
+
+Against MGC's `04:00` settled close of 4188.90 it is **−1.40** — still a complete round trip, N93's point
+holding a second settled bar later. MNQ has made a new session low on settled data in the `06:00` bar
+(l 30547.75) and is now 55 points below where it sat at 04:15, with **1m and 5m both unanimous bearish**
+again and its 15m at 0-2.
+
+MNQ's `06:00` bar spans 59.25 points against a 49.68 ATR — a 1.19x-ATR bar. The range expansion recorded in
+N84 is still running.
+
+MGC locations 12.5% of [4172.60, 4291.90]; MNQ 9.0% of [30535.00, 30900.50].
+
+No call. Reversal test false on both and `regime.py` names MNQ's missing condition. CALL-0004 has **still**
+not expired: newest 15m is `06:00`, it needs a bar stamped after `06:00`, and the `06:15` bar completes at
+06:30 — two minutes from this check — so it should appear ~06:31-06:35 exactly as N86 derived.

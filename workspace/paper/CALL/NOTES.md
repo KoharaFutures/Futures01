@@ -4007,3 +4007,28 @@ another old bar rolled out of the trailing window (N53, fifth sighting). Locatio
 [4172.60, 4291.90].
 
 MGC 1m BULL unanimous 3-0, 5m BULL 2-0; 15m and 60m unanimous bearish, unchanged all session. No call.
+
+## N98 — 06:24: nothing settled, nothing resolved, two things pending four and ten minutes out
+
+Short by design. Newest settled 15m is `05:45` on both symbols (MGC c 4188.30, MNQ c 30592.00). The `06:00`
+bar settles at **06:28** and CALL-0004 needs the `06:15` bar, expected **~06:31-06:35** (N86/N96). Neither
+has arrived, so there is no new settled fact this check and the two decisions I flagged are still pending.
+
+The `06:00` bar's MGC high is unchanged at **4191.40** across three consecutive fetches, so the 6.20-point
+excess over the 4185.20 lower high is holding at exactly MGC's measured maximum non-session-open high
+revision. At 06:28 that resolves one of two ways and I am stating both in advance: if the settled high is
+still 4191.40 then a level exceeded by exactly the noise maximum has survived the entire revision window,
+which per N89's bands makes it a break rather than noise; if it revises down even 0.01 it does not. The
+swing-high **detector** will still not have changed either way, because 4193.10 remains the higher pivot and
+4191.40 needs bars after it to become a swing at all.
+
+Prices, labelled: MGC unsettled 4187.00 (5m `06:10` h 4190.60 l 4185.80), MNQ unsettled 30566.25 (5m `06:10`
+h 30583.50 l 30547.75). MNQ has kept sliding — its `06:00` 15m bar now spans h 30607.00 to l 30547.75, a
+59.25-point range on a 49.68 ATR, and its 1m frame is back to **unanimous bearish 0-3** from unanimous
+bullish 3-0 ten minutes ago. MGC 1m CONFLICTED 1-1, 5m BULL 2-0.
+
+Locations MGC 12.1% of [4172.60, 4291.90], MNQ 8.5% of [30535.00, 30900.50]. MNQ structure still reads MIXED
+on a 2.50-point higher high that N95 established is 13% of its noise floor — unchanged, and still not a
+structural turn. 15m and 60m unanimous bearish on MGC; MNQ 15m 0-2, 60m unanimous.
+
+No call. Reversal test false on both, and `regime.py` names the missing condition on MNQ.

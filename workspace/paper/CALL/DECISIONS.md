@@ -54,6 +54,7 @@ the second is how a veto flatters itself and quoting only the first is how a tra
 | 13 | 14:57 | **Card background → diagonal with a radial hotspot in the top-right corner** (owner) | — | still grey, still cannot read as a direction; ink is now **sampled from the rendered background across each text run**, because with the light in one corner a y-only rule mis-colours every right-hand column and a single-point sample loses any string that starts dark and ends in the glow | — |
 | 12 | 14:52 | **Status card → silver gradient** (owner) | — | stays inside CALLOUT.md's grey NO TRADE family, so it still cannot be read as a direction; first render failed contrast in the mid-band and was fixed before sending | — |
 | 14 | 15:17 | **Stand-down held on both symbols** — MGC ATR14 10.44 > 10, MNQ 68.98 > 58; rule 5 also binds to 16:00 | foreclosed since 13:00 ≤ **MGC $181 (1.51R) / MNQ $186 (1.55R)** — full favourable excursion, not a profit I would have taken | **$0 marginal** — no unanimous 15m bar printed since 13:00, so no setup I would have entered was refused | — |
+| 15 | 15:52 | **Held the stand-down through the whole 15:00-16:00 window** — rule 5 plus MGC ATR 10.17>10 and MNQ 69.77>58, across 30 consecutive 2-min checks | foreclosed ≤ **MGC $110 (0.92R) / MNQ $196 (1.63R)** on the short side; both symbols fell all hour and I took none of it | **$0 marginal** — structure stayed MIXED on both 15m frames for the entire window, so the gate never opened and the vetoes refused nothing the desk would have taken | — |
 
 ### What the tally actually says
 

@@ -7926,3 +7926,100 @@ unable to fire for the whole window, so the veto has had nothing to veto. What t
 has actually cost so far is the *option* to write a discretionary plan outside the gate — which
 is worth exactly as much as my discretion is, and the measured answer to that today is
 -$118.44 on one trade and a 3x-ATR trend declined on a test that could not be satisfied.
+
+---
+
+# N220 — 15:52 hourly full check: the cleanest one-way tape of the day, and the gate stayed shut all of it
+
+`basis db733a0`. Cadence job `5be2e70b` present at `*/2`, nothing re-armed, no second mechanism.
+Newest real bar 5m `15:40` on both, lag 12.8m, `new=0 revised=1` — the fetch that opened this check
+saw no new bar.
+
+## What the hour actually did
+
+Between 15:00 and 15:52 both symbols fell without a meaningful bounce. MGC 4172.30 → 4161.30 low,
+MNQ 30639.00 → 30541.25 low. By 15:50 **every eligible intraday frame on both symbols read bearish**,
+with 1m, 5m and MGC's 60m unanimous. That is the most one-sided the tape has been since the morning
+trend that produced N194.
+
+The desk took none of it, and the reason is a single component:
+
+    MGC 15m  0-2   trend BEAR, location BEAR, structure MIXED
+    MNQ 15m  0-1   trend BEAR, location MIXED, structure MIXED
+
+**`structure` stayed MIXED on both frames for the entire window**, because `swings()` compares the
+last two pivots and both symbols carry an unrepaired higher swing high — MGC 4172.90→4175.50,
+MNQ 30645.75→30650.75 — against their lower lows. A frame with one component dissenting is not
+unanimous, so `reversal()` returned false at every one of the ~26 checks in the window.
+
+## Why this is the system working and not the system failing
+
+Three separate prohibitions pointed the same way, and it is worth writing down that they agreed:
+
+1. **The gate.** No 15m unanimity on either symbol, at any check, in the whole hour.
+2. **Rule 5.** No intraday entry 15:00–16:00, z −4.43, median −0.617R, replicated.
+3. **N196, the breakout prohibition.** The trade the tape was advertising was *selling a break of
+   the short-term low in the direction of an established displacement* — measured at z −2.61 to
+   −4.72 versus random in 4 of 4 cells. It binds hardest exactly when the move looks most obvious.
+
+The uncomfortable part is that the move was real and the desk was flat for all of it. That is the
+shape of a correct refusal: it feels identical to a missed trade while it is happening, and the only
+thing that distinguishes them is whether the rule that refused was measured. All three of these were.
+
+## Two flips died on revisions this hour, and both would have been losses
+
+- **15:30** — MGC's 1m went 2-0 bull and 5m 1-0 bull with the close on its EMA20. By 15:32 the same
+  unclosed bar had restated down and the readings were 1-1 and 0-1. Nothing happened in the market.
+- **15:36** — MNQ's 15m flipped BULLISH 2-0 with the close back above its EMA20. By 15:38 the
+  restatement put it back below and the headline reverted to CONFLICTED. It never reached the
+  second consecutive check the detector requires.
+
+Both were bull flips into what turned out to be the low of a sustained decline. **The two-check
+requirement and N140 each independently prevented a long into a selloff.** This is the first day
+either has been observed catching the same error twice within twenty minutes.
+
+## Ledger, and the measured record stated separately
+
+Book (`state.json`): equity **$50,038.12**, peak $50,156.56, drawdown **$118.44**, realized +$38.12.
+0 open, 2 closed. Plans: 3 EXPIRED, 2 TRIGGERED, 1 VOID_UNREACHABLE.
+
+**Measured record, CALL-0002 EXCLUDED per N155:** n=1, 0 wins, 1 loss, **win rate 0% with payoff
+0.00** (no win to size against), expectancy **−1.021R**, total −1.021R, 0 ambiguous bars. One trade
+is not a record; quoting the win rate without the payoff beside it would be rule-3 malpractice in
+either direction.
+
+Distance to the $2,800 absorbing state: **$2,681.56**.
+
+## The decision cost, per N218
+
+15:00–16:00 window, both symbols stood down for the whole of it:
+
+- **Foreclosed** ≤ MGC $110 (0.92R) / MNQ $196 (1.63R) on the short side — the full favourable
+  excursion from the 15:00 open to the session low, one contract, not a profit I would have taken.
+- **Marginal $0.** No unanimous 15m bar printed in the window on either symbol, so the vetoes
+  refused nothing the gate would have passed. The stand-down and rule 5 cost the desk the *option*
+  to override its own gate discretionarily, and nothing else.
+
+Logged as row 15 in `DECISIONS.md`.
+
+## ATRs, re-measured this check, nothing inherited
+
+    MGC ATR14(15m)  10.17  vs line 10   STOOD DOWN  (+0.17)
+    MNQ ATR14(15m)  69.77  vs line 58   STOOD DOWN  (+11.77)
+
+MGC touched 10.09 at 15:46 — the closest it has come to clearing — and widened again as the decline
+extended. MNQ has not been below 67 all afternoon.
+
+## Carried forward, unchanged
+
+Still deferred to the parent session, still deliberately not installed mid-session: the `swings()`
+running-extreme fix (N102), a `reversal()` path that is not the only gate, resolving stops against
+1m bars to halve the blind spot, `chart.py`'s location anchor, and refusing future-dated or
+off-grid `created_bar_ts` at write time.
+
+**The `swings()` item is now the load-bearing one.** Today it is the single component that held the
+gate shut through a clean trend in both directions — the morning rally and this afternoon's
+decline. That does not make it wrong; a running-extreme comparison might have opened the gate on
+the same bar that a lower-high comparison refused, and there is no evidence yet which is better.
+But it is no longer a cosmetic defect, and the parent should test it against the archive before
+another session inherits it.

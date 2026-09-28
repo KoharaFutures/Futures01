@@ -563,3 +563,30 @@ End the loop and say so if any of these holds — do not keep spinning:
 - the drawdown reaches **$2,600**, the operational floor, at which point the next loss can put the
   account in the $2,800 absorbing state and the desk should stop and report rather than size again;
 - three consecutive checks fail to fetch — report the failure rather than looping on a broken feed.
+
+## Lead every response with the time, big and bold, in Eastern
+
+Standing requirement from the account owner, 2026-09-28: **every response opens with
+the Eastern time as a large bold heading**, before the one-line report, the bias panel
+or anything else. Shape:
+
+```
+# **12:30 AM EDT**
+```
+
+Get it from the machine, never from memory or arithmetic on a previous turn:
+
+```
+TZ=America/New_York date "+%-I:%M %p %Z"
+```
+
+**Print the abbreviation `date` returns, not a fixed "EST".** The owner asked for EST
+and means Eastern; between the second Sunday in March and the first Sunday in November
+that zone is on daylight time and the correct abbreviation is **EDT**. Writing "EST" in
+September would put a one-hour error into the record on a desk whose entire discipline
+is refusing to misstate a time — the RTH gates, the expiry windows, the 12.9-minute feed
+lag and every `expires_bar_ts` are all Eastern wall-clock. So the heading tracks the
+real zone and flips to EST on its own when the clocks change.
+
+This is the response header only. Bar timestamps stay in the ISO offset form the vendor
+returns (`2026-09-28T00:15:00-04:00`) — those are data and must not be reformatted.

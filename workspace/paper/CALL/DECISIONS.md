@@ -53,6 +53,7 @@ the second is how a veto flatters itself and quoting only the first is how a tra
 | 11 | 14:48 | **DECISIONS.md created** — refusals priced (N218) | — | made visible that the morning's "extended move" refusals cost **$902/$805 per contract** while the stand-down I quote hourly has cost **$0 marginal** | — |
 | 13 | 14:57 | **Card background → diagonal with a radial hotspot in the top-right corner** (owner) | — | still grey, still cannot read as a direction; ink is now **sampled from the rendered background across each text run**, because with the light in one corner a y-only rule mis-colours every right-hand column and a single-point sample loses any string that starts dark and ends in the glow | — |
 | 12 | 14:52 | **Status card → silver gradient** (owner) | — | stays inside CALLOUT.md's grey NO TRADE family, so it still cannot be read as a direction; first render failed contrast in the mid-band and was fixed before sending | — |
+| 14 | 15:17 | **Stand-down held on both symbols** — MGC ATR14 10.44 > 10, MNQ 68.98 > 58; rule 5 also binds to 16:00 | foreclosed since 13:00 ≤ **MGC $181 (1.51R) / MNQ $186 (1.55R)** — full favourable excursion, not a profit I would have taken | **$0 marginal** — no unanimous 15m bar printed since 13:00, so no setup I would have entered was refused | — |
 
 ### What the tally actually says
 

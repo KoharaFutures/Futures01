@@ -1127,3 +1127,33 @@ rather than judgement, since the control's own long arm is flat at −0.009R whi
 
 **Stopped at:** cursor **1635/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
 8 theses.
+
+---
+
+## Burst 12 — MODE SWITCH: 3 AGENTS (futures closed). No bars advanced.
+
+`mode.py` at 17:00 ET Mon returns `3 AGENT(S) [CLOSED_HALT] daily maintenance halt, 17:00-18:00 ET`.
+basis `60d5c97`. **Cursor held at 1635** — one cursor cannot be traded in parallel, so a closed market is
+for research, not trading. Equity unchanged $50,688.86.
+
+Three agents launched concurrently, each with the reading whitelist stated explicitly in its brief
+(`visible.jsonl` plus this desk's own files; never `data/archive/`, `csv/`, the harness source or
+`state.json`) and each told not to run the harness or advance a cursor.
+
+Each is pointed at a claim of mine and asked to try to break it, not to confirm it:
+
+- **A → `agents/A_geometry.md`.** The headline null — "my stand-downs cost nothing measurable" — rests on
+  **one** geometry (1.0 ATR stop, 2R target). A sweeps 4 stops × 3 targets = 12 cells × 3 honest direction
+  arms, and is told that an isolated significant cell among 36 tests needs `free_t = sqrt(2·ln 36) ≈ 2.68`,
+  not 2. If the null is a single-geometry artefact I want to know from someone who was looking for that.
+- **B → `agents/B_audit.md`.** The adversary on my own prose. Re-derives the shadow tally independently,
+  checks every `why` field's quoted prices against the tape, checks the two trades' arithmetic, and
+  **re-counts the theses** — I claim 8, and search width understated is the error that matters most here
+  because every deflation threshold is computed from it.
+- **C → `agents/C_substrate.md`.** Independent hunt for a second roll merge using its *own* method rather
+  than my twice-tuned `roll_flags()`, plus regime classification, plus the question I most want answered:
+  **how often was my one live pattern available across the tape, and how did it do the other times?** Two
+  wins mean little if the pattern is common and mostly unprofitable.
+
+Consolidation is scheduled for the 17:30 ET return to 1 agent, with the instruction to name
+contradictions rather than smooth them.

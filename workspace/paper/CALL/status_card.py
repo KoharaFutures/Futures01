@@ -72,43 +72,63 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     side = None                                  # NO TRADE -> grey, always
     W, H = C.sc(1760), C.sc(704)                 # 2.5:1, same family as the plan card
 
-    # SILVER GRADIENT, at the owner's request 2026-09-28 14:51. It stays inside CALLOUT.md's
-    # grey NO TRADE family - silver IS grey - so the card still cannot be mistaken for a
-    # direction in peripheral vision, which is the whole point of the colour rule. Light
-    # silver at the top, dark silver at the bottom.
-    TOP, BOT = (214, 218, 223), (26, 29, 34)
-    img = Image.new("RGB", (W, H))
-    g = ImageDraw.Draw(img)
-    for yy in range(H):
-        t = yy / (H - 1)
-        g.line([(0, yy), (W, yy)],
-               fill=tuple(int(round(TOP[i] + (BOT[i] - TOP[i]) * t)) for i in range(3)))
+    # SILVER, DIAGONAL, WITH A RADIAL HOTSPOT AT THE TOP-RIGHT CORNER. Owner's request,
+    # 2026-09-28 14:56. Still inside CALLOUT.md's grey NO TRADE family - silver IS grey - so
+    # the card cannot be read as a direction in peripheral vision, which is the only thing the
+    # colour rule actually protects.
+    #
+    # Built small and upscaled. A radial falloff computed per-pixel at 5280x2112 is ~11M
+    # Python-level operations; computed at 1/32 scale and resized with LANCZOS it is identical
+    # to the eye, because a smooth gradient is exactly the signal an interpolating resize
+    # reconstructs without artefact.
+    import numpy as np
+    LIGHT = np.array([222, 226, 232], dtype=np.float32)   # silver, at the hotspot
+    DARK = np.array([22, 25, 30], dtype=np.float32)       # dark silver, everywhere else
+    sw, sh = 220, 88
+    yy, xx = np.mgrid[0:sh, 0:sw].astype(np.float32)
+    cx, cy = sw * 0.985, sh * 0.02                         # the corner itself, not near it
+    r = np.hypot((xx - cx) / (sw * 0.52), (yy - cy) / (sh * 0.95))
+    glow = np.clip(1.0 - r, 0.0, 1.0) ** 1.9               # smooth, tight falloff
+    # a faint diagonal wash underneath so the card reads as lit from that corner rather than
+    # as a dark rectangle with a lamp stuck on it
+    diag = np.clip(((xx / sw) - (yy / sh) + 1.0) / 2.0, 0.0, 1.0) * 0.16
+    t = np.clip(glow + diag, 0.0, 1.0)[..., None]
+    small = (DARK + (LIGHT - DARK) * t).astype(np.uint8)
+    img = Image.fromarray(small, "RGB").resize((W, H), Image.LANCZOS)
     dr = ImageDraw.Draw(img)
 
-    def lum(y: int) -> float:
-        t = min(max(y / (H - 1), 0.0), 1.0)
-        r, gg, b = (TOP[i] + (BOT[i] - TOP[i]) * t for i in range(3))
-        return 0.2126 * r + 0.7152 * gg + 0.0722 * b
+    px = img.load()
 
-    CROSS = 150      # not 128: at the midpoint ink and ground have equal value and the
-                     # band goes unreadable - which is exactly what the first render did
+    def lum_at(x: int, y: int, span: int = 0) -> float:
+        """Brightest background under the text. With the light in one corner a y-only rule
+        (what the vertical version used) is wrong for every right-hand column, and a
+        single-point sample is wrong for any string that STARTS on dark and ENDS in the
+        glow - which is exactly the STOOD DOWN flag. Take the max across the run."""
+        yi = min(max(int(y), 0), H - 1)
+        best = 0.0
+        steps = 6 if span else 1
+        for k in range(steps):
+            xi = min(max(int(x + (span * k) / max(steps - 1, 1)), 0), W - 1)
+            r_, g_, b_ = px[xi, yi]
+            best = max(best, 0.2126 * r_ + 0.7152 * g_ + 0.0722 * b_)
+        return best
 
-    def ink(y: int):
-        """Body text: near-black on the light half, near-white on the dark half."""
-        return (18, 20, 24) if lum(y) > CROSS else (238, 246, 255)
+    CROSS = 140
 
-    def dim(y: int):
-        return (92, 96, 102) if lum(y) > CROSS else (170, 172, 178)
+    def ink(y, x=C.sc(44), span=0):
+        return (16, 18, 22) if lum_at(x, y + C.sc(12), span) > CROSS else (238, 246, 255)
 
-    def accent(y: int):
-        """The grey 'laser'. Must stay readable at both ends of the ramp."""
-        return (86, 90, 98) if lum(y) > CROSS else (196, 198, 204)
+    def dim(y, x=C.sc(44), span=0):
+        return (74, 78, 84) if lum_at(x, y + C.sc(10), span) > CROSS else (168, 170, 176)
 
-    def danger(y: int):
-        return (176, 18, 44) if lum(y) > CROSS else C.RED
+    def accent(y, x=C.sc(44), span=0):
+        return (70, 74, 82) if lum_at(x, y + C.sc(10), span) > CROSS else (194, 196, 202)
 
-    def money(y: int):
-        return (150, 92, 0) if lum(y) > CROSS else (255, 190, 90)
+    def danger(y, x=C.sc(44), span=0):
+        return (150, 8, 32) if lum_at(x, y + C.sc(10), span) > CROSS else C.RED
+
+    def money(y, x=C.sc(44)):
+        return (140, 84, 0) if lum_at(x, y + C.sc(10)) > CROSS else (255, 190, 90)
 
     las = accent(0)
     f_big = ImageFont.truetype(C.MONO_B, C.sc(58))
@@ -117,7 +137,7 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     f_sm = ImageFont.truetype(C.MONO, C.sc(19))
     f_tiny = ImageFont.truetype(C.MONO, C.sc(16))
 
-    dr.rectangle([0, 0, W - 1, H - 1], outline=(120, 124, 130), width=C.sc(3))
+    dr.rectangle([0, 0, W - 1, H - 1], outline=(96, 100, 108), width=C.sc(3))
     now = datetime.now(ZoneInfo("America/New_York"))
     dr.text((C.sc(44), C.sc(34)), now.strftime("%-I:%M %p ET"), font=f_big, fill=ink(C.sc(34)))
     dr.text((C.sc(44), C.sc(112)), "NO TRADE — DESK STATUS", font=f_hd, fill=accent(C.sc(112)))
@@ -125,13 +145,13 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     y = C.sc(178)
     for r in d["rows"]:
         tag = "STOOD DOWN" if r["stood"] else "CLEAR"
-        col = danger(y) if r["stood"] else accent(y)
+        col = danger(y, C.sc(1230), C.sc(220)) if r["stood"] else accent(y, C.sc(1230), C.sc(220))
         dr.text((C.sc(44), y), f"{r['sym']}", font=f_row, fill=ink(y))
-        dr.text((C.sc(150), y), f"{r['px']:>10.2f}", font=f_row, fill=ink(y))
+        dr.text((C.sc(150), y), f"{r['px']:>10.2f}", font=f_row, fill=ink(y, C.sc(150)))
         dr.text((C.sc(330), y), f"15m {r['head']:<10} {r['tally']}"
-                                f"{'  UNANIMOUS' if r['unan'] else ''}", font=f_row, fill=accent(y))
-        dr.text((C.sc(830), y), f"ATR {r['atr']:>7.2f}", font=f_row, fill=ink(y))
-        dr.text((C.sc(1030), y), f"line {r['line']:>5.0f}", font=f_row, fill=accent(y))
+                                f"{'  UNANIMOUS' if r['unan'] else ''}", font=f_row, fill=accent(y, C.sc(330), C.sc(420)))
+        dr.text((C.sc(830), y), f"ATR {r['atr']:>7.2f}", font=f_row, fill=ink(y, C.sc(830), C.sc(190)))
+        dr.text((C.sc(1030), y), f"line {r['line']:>5.0f}", font=f_row, fill=accent(y, C.sc(1030), C.sc(160)))
         dr.text((C.sc(1230), y), tag, font=f_row, fill=col)
         y += C.sc(46)
 
@@ -168,7 +188,7 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
     x0, colw = C.sc(150), C.sc(200)
     dr.text((C.sc(44), y), "FRAMES", font=f_tiny, fill=accent(y))
     for i, (_, lbl) in enumerate(frames):
-        dr.text((x0 + i * colw, y), lbl, font=f_tiny, fill=accent(y))
+        dr.text((x0 + i * colw, y), lbl, font=f_tiny, fill=accent(y, x0 + i * colw))
     y += C.sc(28)
     for sym in ("MGC", "MNQ"):
         dr.text((C.sc(44), y), sym, font=f_sm, fill=ink(y))
@@ -177,7 +197,7 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
                 # CALLOUT.md §4: MGC daily is unusable unadjusted in BOTH stores - intraday
                 # sum -2.0079 against a boundary-gap sum of +2.9584, p<0.0001. Printing a
                 # headline for it would put a number on the card that the brief forbids using.
-                dr.text((x0 + i * colw, y), "NOT ELIG", font=f_sm, fill=dim(y))
+                dr.text((x0 + i * colw, y), "NOT ELIG", font=f_sm, fill=dim(y, x0 + i * colw))
                 continue
             try:
                 bb = load(sym, mins)
@@ -187,11 +207,11 @@ def render(out: pathlib.Path, reason: str) -> pathlib.Path:
                     hd = {"BULLISH": "BULL", "BEARISH": "BEAR"}.get(bi2["headline"], "CONF")
                     cell = f"{hd} {bi2['bull']}-{bi2['bear']}"
                     col = (C.LASER["LONG"] if hd == "BULL"
-                           else C.LASER["SHORT"] if hd == "BEAR" else accent(y))
+                           else C.LASER["SHORT"] if hd == "BEAR" else accent(y, x0 + i * colw))
                 else:
-                    col = dim(y)
+                    col = dim(y, x0 + i * colw)
             except Exception:
-                cell, col = "n/a", dim(y)
+                cell, col = "n/a", dim(y, x0 + i * colw)
             dr.text((x0 + i * colw, y), cell, font=f_sm, fill=col)
         y += C.sc(34)
     dr.text((C.sc(44), y), "MGC DAILY/WEEKLY NOT ELIGIBLE - roll audit fails p<0.0001 (CALLOUT.md §4)",

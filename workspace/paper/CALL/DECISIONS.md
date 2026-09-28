@@ -51,6 +51,7 @@ the second is how a veto flatters itself and quoting only the first is how a tra
 | 9 | 14:31 | **status_card.py — a card every check** (N217) | — | reversed a **two-hour communication blackout** on the only channel the owner reads | — |
 | 10 | 14:42 | Card moved to the bottom of the response (owner) | — | — | — |
 | 11 | 14:48 | **DECISIONS.md created** — refusals priced (N218) | — | made visible that the morning's "extended move" refusals cost **$902/$805 per contract** while the stand-down I quote hourly has cost **$0 marginal** | — |
+| 13 | 14:57 | **Card background → diagonal with a radial hotspot in the top-right corner** (owner) | — | still grey, still cannot read as a direction; ink is now **sampled from the rendered background across each text run**, because with the light in one corner a y-only rule mis-colours every right-hand column and a single-point sample loses any string that starts dark and ends in the glow | — |
 | 12 | 14:52 | **Status card → silver gradient** (owner) | — | stays inside CALLOUT.md's grey NO TRADE family, so it still cannot be read as a direction; first render failed contrast in the mid-band and was fixed before sending | — |
 
 ### What the tally actually says

@@ -873,3 +873,84 @@ disagreement between timeframes — it is a disagreement between *times*. Any
 multi-timeframe reading taken right now is comparing 00:09 data against 23:30
 data and calling the difference structure. Not trading off it, and not
 reporting the split as though it meant something about the market.
+
+## N20 — the 5m endpoint recovered and left a permanent 15-minute hole behind it. The 1m frame is a superset and can repair it.
+
+00:13 ET. The truncated window healed after two checks:
+
+```
+MGC 5m newest 2026-09-28T00:00:00-04:00  lag=13.7m  new=1 revised=1
+MNQ 5m newest 2026-09-28T00:00:00-04:00  lag=13.7m  new=1 revised=1
+```
+
+Lag is back to 13.7 minutes, which is normal. But `new=1` is the tell, and it
+is not good news. The store held 23:45; the vendor resumed at 00:00. **It never
+served 23:50 or 23:55, and it has now moved past them.** Gap scan, both symbols:
+
+```
+GAP 15m  23:45 -> 00:00
+```
+
+So the 5m series has a permanent 15-minute hole in it. This is the cost of the
+truncation that N18 and N19 described, and it is a different cost from the one
+I was watching for: I checked that nothing already stored was *overwritten*,
+and it wasn't — but bars that were never delivered cannot be protected by a
+merge rule. **The delta design defends the past. It cannot manufacture a
+present the vendor declined to send.**
+
+### Checked the hole for a missed trigger rather than assuming it was empty
+
+The 1m frame stayed live throughout (N19), so the window is fully observable
+from it — 13 bars, 23:46 through 23:58, all with real volume:
+
+```
+MGC  reconstructed 23:46-23:58 envelope   high  4232.60   low  4224.10
+MNQ  reconstructed 23:46-23:58 envelope   high 30681.75   low 30645.25
+```
+
+Against the four pending triggers:
+
+```
+CALL-0002  MGC  4289.10   56.50 above the reconstructed high
+CALL-0004  MGC  4287.60   55.00 above
+CALL-0003  MNQ 30767.25   85.50 above
+CALL-0001  MNQ 30998.50  316.75 above
+```
+
+**Nothing was in the hole.** Verified from 1m, not inferred from the resolver's
+silence — the same standard N19 set, and the reason it was set. Tonight the
+hole is harmless. On a night when a trigger sat inside one, `resolve.py` would
+have reported a quiet market forever, and the trade would have been silently
+deleted rather than won or lost. That is the worst failure mode this desk has:
+not a wrong outcome, an absent one.
+
+### The repair, specified and deliberately not written now
+
+The 1m frame is a **superset** of the 5m frame — five 1m bars aggregate to one
+5m bar exactly (open of the first, max high, min low, close of the last, summed
+volume), and tonight all thirteen needed bars are present with real volume. So
+the fix is not a heuristic, it is arithmetic:
+
+- add a `backfill` step that, after each fetch, finds gaps in the 5m and 15m
+  series and reconstructs the missing bars **by aggregation from 1m** where the
+  1m coverage is complete;
+- mark every reconstructed bar with a provenance flag (`src: "agg1m"`), because
+  a bar this desk computed is not a bar the vendor asserted, and `NOTES.md` N5a
+  only worked because the raw snapshots were kept distinguishable;
+- refuse to reconstruct where 1m coverage is partial, and leave the gap visible
+  instead of filling it with something plausible.
+
+Not writing it at 00:13 with four plans pending. The rule I am following is the
+one from N17 and N19: code that touches the resolver's input while a live
+position could depend on it gets specified first and written at a full check.
+Writing it now would also mean the first thing it ever did was modify the
+series underneath a trade I am currently watching.
+
+### Standing note on the two frames
+
+`resolve.py` keys each plan to its own frame — three of the four live plans are
+15m, one is 5m. The 15m series is now the *most* exposed frame, because a
+15-minute vendor hole destroys exactly one 15m bar and that bar's high and low
+are the only thing a 15m plan is resolved against. The 1m frame, which is the
+one I have been treating as supplementary, is the only frame that has not lost
+a bar tonight.

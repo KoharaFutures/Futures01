@@ -4488,3 +4488,16 @@ entirely by bars leaving the window, which is 38.10 points of "range" that no pr
 
 Two plans PENDING. Ledger unchanged: open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH opens
 **08:20 ET**, 1h18m out.
+
+## N116 — 07:07: nothing settled, nothing changed, three lines
+
+Newest settled 15m is `06:30` on both symbols (MGC 4188.40, MNQ 30576.00); `06:45` settles at **07:13**.
+Newest real 5m `06:55` on both, lag 12.0m. Unsettled: MGC 4189.50, MNQ 30592.75.
+
+Every frame reads as it did at 07:02 except for one-notch fast-frame movement (MGC 5m 3-0 -> 2-0, MNQ 1m
+back to unanimous 3-0). Both structures BULL on the same sub-noise differences, both 15m at 1-2, both 60m
+unanimous bearish, both reversal tests false. Locations MGC 18.3% of [4172.60, 4265.40], MNQ 19.7% of
+[30535.00, 30825.25].
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC
+RTH opens 08:20 ET, 1h13m out.

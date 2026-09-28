@@ -7864,3 +7864,65 @@ it is the form every future change should take.
 - `status_card.py` — when a stand-down binds, the card carries an amber **STAND-DOWN COST** line
   with the foreclosed upper bound and the marginal cost side by side, so the price of the desk's
   caution is visible without anyone asking for it.
+
+# N219 — 14:53 hourly full check: quiet, both stood down, and the stand-down's marginal cost is still zero
+
+Cadence verified by listing: `CronList` returns **`5be2e70b — Every 2 minutes (recurring)`**,
+present, nothing else armed. CALLOUT.md re-read in full, unchanged since `1948339`; the four
+sections added to CHECK_PROCEDURE.md today (breakout prohibition, unreachable void, the
+card-every-check rule, the decision-costing rule) are all vetoes or delivery rules implemented
+inside my own lane and none contradicts it. Basis `f9c82ca`.
+
+**ATRs re-measured, inherited from nothing:**
+
+    MGC  10.53  1.0x = $105.29 = 43.9% of $240  cap binds 1.14x  | line 10 -> STOOD DOWN (0.53 to clear)
+    MNQ  72.00  1.0x = $144.00 = 60.0% of $240  cap binds 0.83x  | line 58 -> STOOD DOWN (14.00 to clear)
+
+MGC has spent the last hour oscillating between 10.36 and 10.54 — **half a point above its line
+and not crossing it.** Worth naming plainly: the stand-down has been a *near*-miss on MGC for
+nine consecutive checks, which is exactly the situation where a threshold starts to feel
+arbitrary and the temptation is to move it. **The line is 10 because the measurement put the
+25% contour there (N214), not because 10 is a round number, and it is not moving because MGC
+keeps sitting just above it.**
+
+**Settled frames first (N41/N47):**
+
+    MGC 60m  BEARISH 0-3  close 4167.30 < EMA20 4205.70 falling  location 11.6% of [4143.00, 4351.60]
+    MNQ 60m  BEARISH 0-2  close 30626.00 < EMA20 30651.95 falling location 42.0% of [30356.50, 30998.50]
+    MGC 15m  BULLISH 1-0  location 46.4% of [4143.00, 4203.80]
+    MNQ 15m  BULLISH 2-0  location 61.8% of [30356.50, 30759.25]
+
+**Both 60m frames remain BEARISH**, MGC's unanimously, against 15m frames that are bullish on
+both. That split has held all afternoon and neither side has resolved it.
+
+**No callout.** Neither reversal fires. `thesis.py` prints an empty table — nothing live to
+track for the second hourly check running.
+
+### Ledger — win rate and payoff together (rule 3)
+
+    journal 25 | pending.jsonl: 3 EXPIRED, 2 TRIGGERED, 1 VOID_UNREACHABLE, 0 PENDING
+    ambiguous-bar resolutions: 0
+
+    state.json  equity $50,038.12  peak $50,156.56  drawdown $118.44  open 0  closed 2
+                CALL-0002  WIN  +1.566R  <- EXCLUDED FROM MEASUREMENT (N155)
+                CALL-0006  LOSS -1.021R  <- the only countable trade
+
+    MEASURED, n = 1:
+      closed 1 | wins 0 | losses 1
+      win rate 0.0% WITH payoff UNDEFINED - no winner exists to form the ratio; at n = 1
+        neither is a rate, they are one trade
+      expectancy -1.021R
+      measured equity $49,881.56   measured drawdown $118.44
+      distance to the $2,800 absorbing state: $2,681.56 (95.8% of the buffer intact)
+
+### The decision cost, per N218 — this is now part of every full check
+
+    STAND-DOWN, 13:02 -> 14:53 (1h 51m)
+      foreclosed (upper bound)   MGC $214 = 1.78R    MNQ $263 = 2.19R
+      marginal                   $0 - still ZERO unanimous 15m bars on either symbol since 13:00
+
+**Marginal is still zero, and I am still not calling that a vindication.** The gate has been
+unable to fire for the whole window, so the veto has had nothing to veto. What the stand-down
+has actually cost so far is the *option* to write a discretionary plan outside the gate — which
+is worth exactly as much as my discretion is, and the measured answer to that today is
+-$118.44 on one trade and a 3x-ATR trend declined on a test that could not be satisfied.

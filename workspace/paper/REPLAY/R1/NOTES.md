@@ -111,3 +111,108 @@ long on MES 60m) and not worth a threshold test. I will run it at the first doub
 and report the z against the |z| = 4.5 leak line every time, including when it flatters me.
 
 **Stopped at:** cursor **40/11287**, flat, equity $50,000, drawdown $0, permitted $240 (×1.00).
+
+---
+
+## Burst 2 — bars 40→402. basis `2e7725d` (2026-09-28, autonomous firing)
+
+**Nothing to escalate.** No leak warning (score not due and not meaningful — zero closed trades), no
+absorbing state (drawdown $0), no callout-id assertion (9 callouts, 9 unique ids), series not ended.
+
+`REPLAY.md` changed since burst 1: `callouts.jsonl` now carries the `CALLOUT.md` PAPER MODE schema and
+the harness owns `entry_price`, `outcome`, `as_of`, `basis` and the whole ladder block. That split is
+right and it retires my burst-1 workaround — **`NO_TRADE.jsonl` is superseded** and I have left it in
+place as a historical artefact rather than deleting it. Because my cursor had not advanced, I was able
+to re-record burst 1's stand-down through the harness at its true `visible_bars` of 40
+(`R1-00001-b000040`), so the harness record is complete from bar 39 onward with no backfilled fiction.
+
+### Result: 362 bars, 9 stand-downs, 0 trades, equity $50,000 flat
+
+Roughly **354 bars passed over without a recorded candidate** — overnight chop at 2–10k volume,
+mid-range hours, and the 16:00 forbidden bars. The 9 recorded decisions are the bars where I actually
+weighed a setup.
+
+### What the tape did, 2024-10-08 → 2024-10-30
+
+- **10/08 → 10/14: a clean one-way uptrend.** 5725.25 → 5918.5, six consecutive higher cycle closes,
+  shallow overnight consolidations, expansion concentrated in the 09:00–10:00 ET bars.
+- **10/15: the character breaks.** 5918.5 → 5850.0 in one session.
+- **10/17 → 10/22: a range, 5865–5927.** 5927 rejected twice (bar 198 printed it and gave back 31
+  points on 182k), 5865 bought hard (bar 246 left a 21-point tail on 153k).
+- **10/23: the range resolves down.** 5890 → 5801 in five bars, with clean acceptance below 5865.
+- **10/24 → 10/30: basing, then compression.** 5801–5893, narrowing to 5837.5–5893.0 over the last
+  three sessions. Ends at 5882.25, near the upper edge.
+
+ATR(14) ran 9.2 → 13.7 across the burst; the 0.5-ATR floor of rule 4 therefore sat at 4.6–6.9 points
+and repeatedly disqualified the tight structural stops the overnight tape offered.
+
+### The two stand-downs that were right, and the reason they were right
+
+- **Bar 39 (burst 1's long).** Declined as an extended eighth bar into visible supply. **Bar 41's low
+  of 5774.5 would have taken out the 11-point stop** from that entry. Stopped out on the second bar.
+- **Bar 151 (the failed pre-condition).** At bar 139 I wrote, before seeing the bars, that I would buy
+  the 09:00 open only if the overnight held above the prior RTH close. It did not — lower high at
+  5916.25 vs 5918.5, drift to 5902.25, 3.75 points below the 5914.0 close. I honoured it. **Bar 153
+  then fell to 5877.75 and bar 158 to 5850.0.** A 68-point adverse move avoided by a 3.75-point
+  condition I had written down in advance. This is the single strongest argument in the record for
+  pre-stating the condition: the miss was small enough that I would certainly have talked my way past
+  it after the fact.
+
+### The two things I got wrong, both worth more than the stand-downs
+
+**1. My first pre-stated trigger was badly specified, fired, and would have lost.** At bar 251 I wrote
+"SHORT on a break below 5865 with stop above 5882." Bar 263 traded 5863.5 and bar 267 5861.0, so it
+fired; the 16.5-point stop would have been hit at bar 271's 5899.25. The defect is exactly what rule 8
+names: **I required a tick through the level, not acceptance below it.** A 1.5-point poke through a low
+that had just been bought on a 21-point tail is not a break. Revised on record at bar 276: a range-edge
+entry needs a full bar to **close** beyond the level and the next bar to **fail to reclaim** it, with
+the stop just beyond the extreme of those two bars rather than at a fixed distance.
+
+**2. The revised trigger then fired correctly and I advanced straight past it.** On 10/23 bar 291
+closed 5862.25 (below 5865) and bar 292 failed to reclaim, closing 5855.75 on a lower low of 5844.75 —
+textbook acceptance. The short was there at bar 293's open of 5856.00, stop just above the 5874.0
+two-bar extreme (19.5 points), and bar 294 traded 5815.75 with bar 295 reaching 5801.0. **That is
+about 2R and it would have been my first trade and a winner.** I did not decline it; I never saw it,
+because at bar 251 I had diagnosed this exact chunk-size flaw, written that I was narrowing to 25 bars,
+and then advanced 50 anyway.
+
+**The read was right and the operating discipline was not.** That is the more embarrassing failure and
+the one the record needs, because it is not a judgement error I can argue about — it is me not doing
+the thing I had just written down. Two turns in a row the pre-statement worked and the execution of my
+own cadence rule did not.
+
+### The methodological flaw I named at bar 251, stated plainly
+
+Nine stand-downs and zero trades is **partly a real read and partly an artefact of where I stop**. I
+was deciding at whatever bar a 50-bar chunk happened to land on. A randomly chosen bar is usually
+mid-structure, so that sampling is biased toward no-trade independently of anything about the market,
+and it is how I walked past the 10/23 short. This matters for the eventual placebo comparison: the
+placebo gets a decision at whatever bar I recorded one, so **a no-trade bias in my sampling does not
+flatter me, it just shrinks the denominator and wastes the exercise.**
+
+Binding from here: **25 bars per advance whenever a pre-stated trigger is live near a level**, 50 only
+when price is mid-structure with nothing pending. A trigger is live now, so the next firing opens at 25.
+
+### Pre-stated plan carried into the next firing (written before the bars, as it must be)
+
+The compression is 5837.5–5893.0 inside the defended 5801–5927 range.
+
+- **LONG** if a bar closes above 5893.0 and the next fails to reclaim below it. Stop just under the
+  lower of those two bars. First target 5927.
+- **SHORT** if a bar closes below 5837.5 and the next fails to reclaim. Stop just above the higher of
+  those two bars. First target 5801.
+
+Compression into a defended range is the one structure here where an acceptance break has a real level
+to lean on and a real target to pay for it, and it is the setup I most expect to actually take. If I
+stand aside on that too, the honest conclusion is that my criteria are unachievable rather than strict,
+and I will say so rather than keep collecting stand-downs.
+
+### Distinct theses tried so far: 3
+
+For the eventual `--trials` count, honestly enumerated: (1) trend-continuation long on an extended
+run, (2) RTH-open continuation long conditioned on the overnight holding the prior RTH close,
+(3) range-edge acceptance break, either direction. `score` deliberately not run — zero closed trades,
+so there is nothing to separate from the placebo, and the first run is due at bar 1,000.
+
+**Stopped at:** cursor **402/11287**, flat, equity $50,000, peak $50,000, drawdown $0, permitted $240
+(×1.00), 0 closed trades.

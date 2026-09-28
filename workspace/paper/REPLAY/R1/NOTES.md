@@ -861,3 +861,102 @@ price 5988.75. Both my short levels are dead. ATR14 ~19–20, so the floor is ~1
 
 **Stopped at:** cursor **1563/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0,
 permitted $240 (×1.00), 2 closed trades, 2 wins, 6 theses.
+
+---
+
+## Burst 9 — owner's two new instructions, and the answer to the first one is a negative result
+
+basis `153dbbc`. **No bars advanced this burst** (cursor stays 1563) — the account owner asked for two
+capabilities and both needed building before the next advance, so this burst is tooling and measurement.
+
+### Instruction 1: back-test everything I missed by taking no position
+
+Built `missed.py` in my lane. It reads **only** `visible.jsonl` and `callouts.jsonl`, simulates the trade
+I did **not** take at every stand-down in **both** directions under the engine's own rules (fill at the
+next bar's open plus a tick, stop wins a same-bar tie, flat at the 16:00 ET close), with a 1.0-ATR stop
+and a 2R target. It is retrospective over bars the cursor has already passed, so it cannot leak; any
+stand-down whose forward window is not yet fully visible is reported PENDING and skipped.
+
+**My first version was wrong and the error is instructive, so it is recorded rather than quietly fixed.**
+It scored each stand-down by the **best of both directions** and reported that I had left +1.174R on the
+table at 67% of my stand-downs. That number is an artefact: **picking the direction after seeing the
+outcome** makes a 2R target on a 1-ATR stop reachable almost anywhere. The control proves it — **56.5% of
+every bar in the tape** clears 1.5R when you get to choose the side afterwards.
+
+**Fixed: the direction must be fixed without hindsight.** Four arms, each against a control run at all
+1,521 eligible bars:
+
+| direction chosen by | my stand-downs (n=36) | control (n=1521) | difference | z |
+|---|---|---|---|---|
+| always LONG | +0.027R | −0.055R | +0.083R | **+0.36** |
+| always SHORT | +0.207R | +0.030R | +0.177R | **+0.75** |
+| coin flip (bar parity) | +0.153R | −0.018R | +0.171R | **+0.71** |
+| *best of both — hindsight* | *+1.174R* | *+0.928R* | *+0.246R* | *+1.19* |
+
+> **The answer: my stand-downs cost nothing measurable.** Every honest arm sits at |z| < 0.8. The bars I
+> declined were not detectably better than arbitrary bars. The "I missed 2R" impression was
+> direction-picking plus drift, and it survived only as long as I did not build the control.
+
+Two further results from the same run:
+
+- **7 of 36 stand-downs (19%) were bars where BOTH directions would have lost −1R.** Unambiguously
+  correct refusals: bars 40, 451, 556, 606, 714, 864, 1503.
+- **The control itself is worth reading.** At an arbitrary bar, always-long returns **−0.055R** and
+  always-short **+0.030R** on this geometry. Essentially zero — which is the programme's own central
+  finding arriving independently in my lane.
+
+### Instruction 1b: local reversals specifically — and this is the counterintuitive part
+
+The owner asked me to track easily-missed local reversals. `missed.py` tags any stand-down sitting **at or
+beside** a 7-bar pivot (within one bar, because standing one bar off the turn is the same miss).
+
+**16 of my 36 stand-downs sat at a pivot.** Trading *with* the turn at them:
+
+```
+my pivot stand-downs   mean +0.187R  (n=16)
+control, all pivots    mean +0.166R  (n=793)
+difference             +0.021R       z +0.06
+```
+
+**Indistinguishable.** Of my 16 pivot stand-downs, trading with the turn gave +2R five times, +1.65R and
++0.34R once each, and **−1R eight times.** So the local reversals I stood at were not opportunities on
+measurement — which is rule 8 (*FVG and order-block fill rates are reproduced by random zones*) arriving
+as a first-hand result rather than a citation.
+
+**The caveat that limits all of it, stated plainly: the pivot tag looks at bars f−3 … f+3, so it uses
+three bars of the future.** A pivot is only identifiable in hindsight. This measures *"was there a
+reversal there"*, never *"could I have known"*. The control's +0.166R at all pivots is therefore an
+**upper bound** on what any real-time reversal detector could capture, before the detector's own false
+positives are paid for — and my own roll detector needed two tuning rounds and a bug fix against one
+example, which is what building a real-time detector actually costs.
+
+### Instruction 2: flex between 1 and 3 agents on the market clock
+
+Built `mode.py`. CME equity index futures trade Sunday 18:00 ET → Friday 17:00 ET with a daily
+17:00–18:00 ET maintenance halt, so **3 agents** during the daily halt and all weekend, back to **1
+agent** from 17:30 ET (30 minutes before each reopen).
+
+**ASSUMPTION THE OWNER SHOULD CHECK:** I read "closed" as the *exchange* close (17:00 ET), not the RTH
+close (16:00 ET) and not the account's own 16:00 flat deadline. That makes the weekday 3-agent window
+just 17:00–17:30 ET; the real work happens Friday 17:00 → Sunday 17:30. **If the RTH session was meant,
+`CLOSE_H = 16` in `mode.py` is the single constant to change** and the daily window becomes 16:00–17:30.
+
+Verified against the live clock — at 16:26 ET Monday it returns `1 AGENT [OPEN]`, with transitions at
+17:00 → 3 and 17:30 → 1. Wake-ups scheduled for both.
+
+**What the 3 agents will do, and why not three traders:** the replay has **one cursor**, so three agents
+cannot trade it in parallel without corrupting the sequence. A closed market is for research, not
+trading, so each gets a distinct job and its own notes file under `workspace/paper/REPLAY/R1/agents/`,
+which I consolidate when the desk returns to 1:
+
+- **A — geometry sweep.** Re-run `missed.py` across stop/target grids so the null above is not a
+  single-geometry artefact.
+- **B — callout audit.** Check every row in `callouts.jsonl` for agreement between the stated thesis and
+  the actual geometry, and re-derive the shadow tally independently.
+- **C — substrate and regime sweep.** Run the envelope detector and a regime classification over all
+  1,563 visible bars; find any second merge, and characterise which regimes my one live pattern fired in.
+
+### Distinct theses tried: **6**, unchanged. Nothing traded, nothing armed.
+
+**Stopped at:** cursor **1563/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
+mode **1 AGENT (market open)**.

@@ -742,3 +742,51 @@ pre-registered, the same rule with the position inverted, on MES and MCL which t
 largest t **+1.245** against a declared 3.0, and MCL's larger 60m cell negative. Inverting raises the win
 rate 10–16 points and lowers the payoff, and expectancy lands at zero (rule 3, as a result rather than a
 reporting rule). **Do not fade it either. Just do not take that entry.**
+
+## A PENDING PLAN CAN NOW DIE OF DISTANCE, NOT ONLY OF THE CLOCK
+
+Added 2026-09-28 at the account owner's instruction: *"it feels like you are too set in your ways with your
+swing, even when it's currently so far from your entry — reevaluate when it starts going too far."*
+
+He was right and the record shows it. **CALL-0001 sat on the book for seventeen hours** as a LONG with its
+stop-entry 493.50 points — **6.28 ATR** — above a market that fell all day, reported "live" at every single
+check, blocking the book and guaranteed to produce no outcome. Until now the only way a pending plan could
+die was its expiry timestamp. **N8 forbids EDITING a plan after watching price. It does not require carrying
+a corpse.**
+
+### The threshold is measured, not chosen
+
+P(price touches a level D×ATR away within T bars), ~3,645 origins per symbol, `data/archive` 15m
+(ends 2026-09-25, out of sample):
+
+| D (ATR) | T=4 | T=8 | T=16 | T=32 |
+|---|---|---|---|---|
+| 0.5 | 67.0% | 77.3% | 84.3% | 89.5% |
+| 1.0 | 39.7% | 54.9% | 68.6% | 78.4% |
+| 2.0 | 12.7% | 25.7% | 43.0% | 59.8% |
+| 3.0 | 4.1% | 12.5% | 26.2% | 42.8% |
+| 4.0 | 1.9% | 6.2% | 15.7% | 30.7% |
+| 6.0 | 0.6% | 2.0% | 6.3% | 15.7% |
+
+MGC reproduces this to within one point in every cell, which is what you expect if it is a property of price
+travel rather than of either symbol. Travel scales as √time, so the **10% contour is `D = 1.2 × √T`** — checked
+against the table at T = 4, 8, 16 and 32 and landing between 9% and 12% each time.
+
+**THE RULE: void a pending plan when `distance_ATR > 1.2 × √(bars_remaining)`** — under roughly a 1-in-10
+chance of being *reached at all*, never mind won.
+
+### Why this is not an N8 edit, and how it is kept honest
+
+- **It can only ever REMOVE a plan.** It cannot move an entry, widen a stop, shift a target or change size,
+  so it cannot make any plan fill better or win more. The worst it can do is deny the desk an outcome.
+- **It lives in `resolve.py`, not in my hands** (`unreachable()`), so it is applied mechanically to every
+  plan on every run and I cannot aim it at the plans I have gone off.
+- **Voided plans get their own resolution, `VOID_UNREACHABLE`** — never EXPIRED, never a win or a loss. The
+  void RATE is therefore auditable: if this starts retiring plans that would have filled and paid, the
+  record will show it, and the rule goes.
+
+### What it does NOT license
+
+It is not permission to abandon a plan that is merely losing, uncomfortable, or contradicted by a fresh
+read. Distance and time are the only inputs. A plan inside the contour stays, whatever I have come to think
+of it since.

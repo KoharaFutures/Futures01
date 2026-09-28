@@ -36,6 +36,7 @@ THE FIVE HONESTY RULES, each of which is a measured constraint from this reposit
 from __future__ import annotations
 
 import json
+import math
 import pathlib
 import re
 import sys
@@ -151,6 +152,63 @@ def plan_thesis(plan: dict) -> str:
     return "(no thesis recorded under 'why' or 'why_short')"
 
 
+def unreachable(plan: dict, bars: list[dict], expiry: str | None) -> tuple[bool, dict]:
+    """Is this plan's trigger so far away, with so little window left, that it cannot fill?
+
+    THE OWNER'S CHANGE, 2026-09-28. Until now a pending plan could only die by the CLOCK. So
+    CALL-0001 sat on the book for seventeen hours as a LONG, 493.50 points (6.28 ATR) above a
+    market that fell all day, reported "live" at every check, blocking the book and guaranteed to
+    produce no outcome. The owner called that being set in my ways and he was right: N8 forbids
+    EDITING a plan after watching price, which is not the same as never retiring one.
+
+    THE THRESHOLD IS MEASURED, NOT CHOSEN. P(price touches a level D*ATR away within T bars),
+    over ~3,645 origins per symbol on `data/archive` 15m (ends 2026-09-25, out of sample):
+
+        D(ATR)    T=4     T=8    T=16    T=32
+          0.5   67.0%   77.3%   84.3%   89.5%
+          1.0   39.7%   54.9%   68.6%   78.4%
+          2.0   12.7%   25.7%   43.0%   59.8%
+          3.0    4.1%   12.5%   26.2%   42.8%
+          4.0    1.9%    6.2%   15.7%   30.7%
+          6.0    0.6%    2.0%    6.3%   15.7%
+
+    MGC reproduces it to within 1 point everywhere. Price travel scales as sqrt(time), so the
+    10% contour is `D = 1.2 * sqrt(T)` - checked against the table at every T above and landing
+    at 9-12% each time. That is the rule: **VOID when distance_ATR > 1.2 * sqrt(bars_remaining)**,
+    i.e. when the plan has under roughly a 1-in-10 chance of being REACHED at all.
+
+    WHY THIS IS NOT AN N8 EDIT. It can only ever REMOVE a plan. It cannot move an entry, widen a
+    stop, shift a target or change size, so it cannot make any plan fill better or win more; the
+    worst it can do is deny the desk an outcome. It is mechanical - trigger price, measured ATR and
+    the clock, no per-trade discretion - and it lives in the resolver precisely so that I cannot
+    apply it selectively to the plans I have gone off. Voided plans get their own resolution
+    `VOID_UNREACHABLE`, never EXPIRED and never a win or a loss, so the void RATE is itself
+    auditable: if this starts retiring plans that would have filled and paid, the record shows it.
+    """
+    if not bars or not expiry:
+        return False, {}
+    trs = [max(bars[i]["h"] - bars[i]["l"],
+               abs(bars[i]["h"] - bars[i - 1]["c"]),
+               abs(bars[i]["l"] - bars[i - 1]["c"])) for i in range(1, len(bars))]
+    if len(trs) < 14:
+        return False, {}
+    atr = sum(trs[-14:]) / 14.0
+    if atr <= 0:
+        return False, {}
+    px = bars[-1]["c"]
+    dist_atr = abs(plan["trigger_price"] - px) / atr
+    step = plan["bar_minutes"]
+    remaining = (datetime.fromisoformat(expiry) - datetime.fromisoformat(bars[-1]["ts"])) \
+        .total_seconds() / 60.0 / step
+    if remaining <= 0:
+        return False, {}                      # the clock will retire it; leave that path alone
+    limit_atr = 1.2 * math.sqrt(remaining)
+    facts = {"price": px, "atr": round(atr, 2), "distance_points": round(plan["trigger_price"] - px, 2),
+             "distance_atr": round(dist_atr, 2), "bars_remaining": round(remaining, 1),
+             "void_above_atr": round(limit_atr, 2)}
+    return dist_atr > limit_atr, facts
+
+
 def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
     """Turn pre-registered plans into open positions, on a real bar only."""
     log: list[str] = []
@@ -257,7 +315,37 @@ def check_triggers(state: dict, now_iso: str, basis: str) -> list[str]:
             # No bar in the window triggered it. If the window has closed, retire the plan
             # and journal the non-event: a setup that never triggered is a result, and a
             # record holding only the trades that fired is a record of what I remember.
-            if expired:
+            void, vf = unreachable(plan, all_bars, expiry)
+            if void and not expired:
+                plan["status"] = "VOID_UNREACHABLE"
+                plan["voided_at_utc"] = now_iso
+                plan["void_facts"] = vf
+                changed = True
+                append_journal({
+                    "ts": now_iso, "call_id": plan["call_id"], "symbol": sym, "side": None,
+                    "entry_price": None, "initial_stop": None, "target": None,
+                    "contracts": 0, "risk_dollars": 0.0,
+                    "ladder_mult": plan.get("ladder_mult"), "rr": None,
+                    "confidence": "NO TRADE",
+                    "why": (f"pre-registered {side} retired UNREACHABLE, not expired. Trigger "
+                            f"{trig} sits {vf['distance_points']:+.2f} points = {vf['distance_atr']:.2f} "
+                            f"ATR from {vf['price']:.2f} with {vf['bars_remaining']:.1f} bars left; "
+                            f"the measured 10% reach contour at that horizon is "
+                            f"{vf['void_above_atr']:.2f} ATR. Under a 1-in-10 chance of being "
+                            f"REACHED, never mind won. Original thesis: {plan_thesis(plan)[:160]}"),
+                    "basis": basis, "as_of": all_bars[-1]["ts"],
+                    "pre_registered_at": plan["created_utc"],
+                    "resolution": "VOID_UNREACHABLE",
+                    "void_facts": vf,
+                    "paper": "PAPER - UNVALIDATED",
+                    "outcome": {"result": "NO_FILL", "reason": "voided unreachable",
+                                "net_dollars": 0.0, "r_multiple": 0.0,
+                                "resolved_at_utc": now_iso},
+                })
+                log.append(f"VOID {plan['call_id']} {sym} {side} UNREACHABLE - "
+                           f"{vf['distance_atr']:.2f} ATR away, {vf['bars_remaining']:.1f} bars "
+                           f"left, void contour {vf['void_above_atr']:.2f} ATR")
+            elif expired:
                 plan["status"] = "EXPIRED"
                 plan["expired_at_utc"] = now_iso
                 changed = True

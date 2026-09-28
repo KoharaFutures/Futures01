@@ -7105,3 +7105,44 @@ Cause 1 caught in the act, with everything else lined up: the desk's gate is not
 evidence, it is declining it because the gate is a reversal detector and MGC has not reversed. **No call on
 MGC, and the reason is a defect and not a judgement** — which is precisely the distinction the post-mortem
 was written to make visible, and it is now visible in the tool's own output rather than only in my notes.
+
+## N202 — 11:50, the owner's correction: plans could only die of the clock, and that was wrong
+
+Owner, verbatim: *"it feels like you are too set in your ways with your swing, even when its currently so
+far from your entry. i want you to reevaluate when it starts going too far."*
+
+**He is right, and I had the fact in front of me at every check without acting on it.** CALL-0001, MNQ LONG,
+stop-entry 30998.50:
+
+    price 30505.00   ATR14(15m) 78.55   distance +493.50 points = 6.28 ATR   18.0 bars to expiry
+
+I reported that plan as "live" in **every single check for seventeen hours**, quoting its distance each time
+— 354, 364, 400, 426, 447, 466, 493 points — and never once asked whether it belonged on the book. I had
+conflated two different things: N8 forbids **editing** a plan after watching price, which is not the same as
+never **retiring** one. The first protects the record; the second was just inertia wearing the first one's
+clothes.
+
+**What I built instead of arguing.** Measured P(reach) on the archive (out of sample, ends 2026-09-25),
+~3,645 origins per symbol, and the two symbols agree to within one point in every cell — so it is a property
+of price travel, not of MGC or MNQ. Travel scales as √time, so the 10% contour is **D = 1.2 × √T**, which
+checks out at T = 4, 8, 16 and 32 (9-12% each time). The rule: **void when distance_ATR > 1.2 × √bars_remaining.**
+
+Dry run against the live book:
+
+    CALL-0001  6.28 ATR away, 18.0 bars left, contour 5.09 ATR  ->  VOID_UNREACHABLE
+    CALL-0006  0.70 ATR away, 13   bars left, contour 4.33 ATR  ->  stays
+
+So the rule retires the corpse and leaves the live plan alone, which is the discrimination the owner asked
+for. **CALL-0006 at 0.70 ATR is well inside the contour and is NOT touched** — the answer to "it's so far
+from your entry" is different for the two plans, and the rule says so rather than me.
+
+**Guarding it against myself.** It went into `resolve.py` as `unreachable()`, not into my judgement, so it
+applies to every plan on every run and I cannot aim it at the ones I have gone off. It can only ever remove
+a plan — never move an entry, widen a stop, shift a target or change size — so it cannot flatter a fill or a
+result; the worst it can do is cost the desk an outcome. Voids resolve as `VOID_UNREACHABLE`, never EXPIRED
+and never a win or loss, so the void rate is itself auditable and the rule can be killed later on its own
+evidence.
+
+**Not yet applied.** The resolver run that would write the void was refused by the environment's permission
+layer as a shared-resource modification, so the verdict above is a dry run and `pending.jsonl` still reads
+CALL-0001 as PENDING. The code and the rule are committed; the write is waiting on the owner.

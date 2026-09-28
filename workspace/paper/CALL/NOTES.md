@@ -3630,3 +3630,68 @@ partly because its range low moved to 30535.00 when the detector confirmed it, N
 
 Fast frames: MGC 1m BULL 2-0 with 5m BEAR 1-2; MNQ 1m **CONFLICTED 0-0** with 5m BEAR 0-2. 15m and 60m
 unanimous bearish on both, unchanged for the entire session. No call; reversal test false on both.
+
+## N84 — hourly full check, 05:53 ET. Both symbols bouncing on fast frames, 15m/60m unchanged, and MNQ's ATR has widened far enough to matter
+
+Cadence verified by listing, per N45: `CronList` shows `33ba414e` present. No `send_later` chain armed,
+deliberately, so the owner is not double-sent. CALLOUT.md unchanged since `1948339` (09-27 19:37) and
+BRIEF.md/SERIES_AUDIT.md unchanged since `15c7ee5`, so there is no new disagreement between CALLOUT.md and
+CHECK_PROCEDURE.md to record.
+
+**Direction, formed fresh.** Newest settled 15m `05:15` on both; `05:30` settles at 05:58. Forming `05:30`
+has MGC at 4182.80 and MNQ at 30588.50, both well off the session lows of 4172.60 and 30535.00. Both 1m
+frames are **BULLISH 3-0 unanimous**, MGC's 5m is CONFLICTED 1-1 and MNQ's has turned BULL 1-0. **15m and
+60m remain unanimous bearish on both and have not moved once all session.** MGC location 8.1% of
+[4172.60, 4299.20], up from 1.0% at the low; MNQ 14.6% of [30535.00, 30900.50].
+
+The read: a bounce that is real on the fast frames and has not yet touched the frames that have carried
+the night. Per N54/N78 a 1m unanimity is unanimity for one bar, and this is the eighth 1m state change
+tonight, so I am not treating it as a turn. MGC's settled structure is still lower highs and lower lows.
+
+**ATRs re-measured from settled bars, inherited from nothing:**
+
+| symbol | ATR14(15m) | 1.0x stop cost | % of $240 permitted | session path |
+|---|---|---|---|---|
+| MGC | **9.21** | $92.07 | 38.4% | 8.01 -> 8.84 -> 9.34 -> 9.11 -> 9.21 |
+| MNQ | **49.68** | $99.36 | **41.4%** | 38.04 -> 44.12 -> 44.68 -> 47.52 -> 49.68 |
+
+MNQ has widened **30.6%** across the session. A 1.0x-ATR stop now costs 41.4% of permitted and the 50%
+cap binds at **1.21x ATR**, against 1.3x two hours ago. This is the constraint tightening in real time,
+and it is the same point as N82: the account's problem tonight is stop distance, not signal.
+
+### The ledger, in full
+
+| quantity | value |
+|---|---|
+| journal entries | 14 |
+| callouts with a resolved outcome | **1** |
+| **closed trades** | **0** |
+| wins / losses | 0 / 0 |
+| **win rate** | **undefined — no closed trade** |
+| **payoff** | **undefined** |
+| expectancy in R | **undefined**, n = 0 |
+| the one resolution | CALL-0003, `NO_FILL`, expired untriggered, $0.00, **0.0R** |
+| NO TRADE entries | **7**, of which **2** carry `declined_despite_qualifying: true` |
+| realized P&L | $0.00 |
+| equity / peak | **$50,000.00 / $50,000.00** |
+| drawdown | **$0.00** |
+| distance to the $2,800 absorbing state | **$2,800.00**, the full width |
+| ambiguous bars encountered by resolve.py | 0 |
+
+Rule 3 stated rather than assumed: no win rate is quoted because there is no closed trade to compute one
+from, and a rate with no payoff beside it is forbidden regardless.
+
+Three plans PENDING. **CALL-0004** MGC SHORT expires on the **06:00 ET bar**, ~7 minutes out; bar-based, so
+per N32 the journal entry should land near 06:13 and I will report the resolver, not the clock. Its
+thesis tracking reads fav 75.70 / adv 0.30 against a 19.04 target distance — direction right, target
+distance covered four times over, trigger never approached. **CALL-0001** MNQ LONG is now 354.25 adverse,
+having widened from 318.25 an hour ago. **CALL-0002** remains inert, never evaluated (N30), to be retired
+with an honest non-outcome.
+
+Per-frame coverage for the table, per N60's correct framing: 1m through 05:43, 5m through 05:40, 15m
+through 05:30 forming, 60m through 05:00, 4h through 04:00 (next at 08:00), daily through Friday 09-25.
+
+**No callout.** The bounce is the rule 8 sweep continuation from N74, the reversal test is false on both
+symbols, and the only plan whose method was pre-committed is VOID on the risk cap by three independent
+recomputations (N77/N80/N82). MGC RTH opens **08:20 ET** — 2h27m out, CALL-0002's window and the first
+moment tonight anything enters a measured session. MNQ RTH 09:30.

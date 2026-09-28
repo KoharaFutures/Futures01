@@ -5063,3 +5063,61 @@ daily Friday 09-25.
 chase the procedure forbids; the pullback plan is pre-committed (N130) and waits on a limit below the market.
 MGC has no displacement and an unreachable gate. **MGC RTH opens 08:20 ET, 27 minutes out** — CALL-0002's
 window and the first moment tonight anything enters a measured session. MNQ RTH 09:30.
+
+## N135 — N132's tracker used the WRONG WINDOW. The decision runs on all bars, not settled bars. Corrected, and the answer is ~60 minutes
+
+N132 computed its tracker on the **settled** 40-bar window. But `regime.py` builds its 15m tally from
+`_ch.load(symbol, 15)` and takes the last 40 bars **as loaded** — all bars, including the unsettled newest one
+— and `chart.py` does the same. **So the window that decides whether the call fires is not the window I was
+tracking.** The two differ by one bar, which matters because the bar in question is the one carrying the
+window's high.
+
+Corrected tracker, on the window the decision actually uses:
+
+    ALL-BARS window 09-27T21:45..09-28T07:30    hh 30789.50  ll 30535.00  close 30643.75  pos 42.7%
+    location turns BULL at close > 30687.70     ->  needs +43.95 points
+    OR if hh falls to 30716.25                  ->  a drop of 73.25 from 30789.50
+
+    roll-off queue (oldest first)        resulting hh
+      09-27T21:45  h 30789.50      ->      30760.00
+      09-27T22:00  h 30760.00      ->      30753.25
+      09-27T22:15  h 30753.25      ->      30728.75
+      09-27T22:30  h 30728.75      ->      30705.75   <-- BULL at an unchanged close
+      09-27T22:45  h 30705.75      ->      30705.50
+
+So the corrected figures are **+43.95 points of price, or four 15m bars (~60 minutes) of pure window
+sliding** — against N132's settled-window estimate of +66.10 points or five bars (~75 minutes). The
+conclusion is unchanged in kind and the numbers are 33% closer than I reported. Both versions of the tracker
+work; only one of them predicts the thing being predicted.
+
+This is the same error class as N119 (a 5m high quoted against a 15m structure test) and N99 (measuring against
+the wrong reference level): **the measurement was right and it was taken on the wrong object.** Third instance
+tonight. The lesson that keeps not sticking in advance: before building a predictor of a mechanism's output,
+check which inputs that mechanism reads.
+
+## N136 — MNQ's location has moved BEAR -> MIXED, and this time it was PRICE, not the window. Decomposed as pre-committed
+
+MNQ 15m is now **BULLISH 2-0** — 2 bull, 0 bear, 1 mixed — because the location component has gone from BEAR
+to **MIXED at 42.7%**. `reversal()` still fails, on `"15m is 2-0, not unanimous"`: unanimity needs 3-0, so
+location must reach BULL above 60%, not merely leave BEAR.
+
+**N132's pre-commitment was to decompose location before treating any movement in it as a signal. Doing that
+now rather than waiting for the call:**
+
+    07:53   all-bars window [30535.00, 30789.50]   close 30630.00   pos 37.3%
+    07:55   all-bars window [30535.00, 30789.50]   close 30643.75   pos 42.7%
+
+**The window endpoints are identical at both checks.** The entire move from 37.3% to 42.7% is the close rising
+**+13.75 points**. Arithmetic: 95.00/254.50 = 37.3%, 108.75/254.50 = 42.7%. **So this step was price, not the
+window** — and I am saying so with the same specificity I promised to use if it had been the other way.
+
+That is the pre-commitment working in the direction that gives the market credit, which is worth as much as
+the version that withholds it. The window slide is still queued and still capable of finishing the job on its
+own; what happened in these two minutes was not that.
+
+MGC unchanged and inert: structure MIXED with both legs inside noise, location 14.0% of [4172.60, 4251.10],
+15m BEAR 0-2, no prior directional headline to reverse from. MNQ trend BULL (30643.75 > EMA20 30608.18,
+rising), structure BULL, 5m BULL 3-0 unanimous, 60m BEAR 0-3 unanimous.
+
+No call. Two plans PENDING; ledger unchanged at open 0, closed 0, equity $50,000.00, drawdown $0.00. MGC RTH
+opens 08:20 ET, 25 minutes out.

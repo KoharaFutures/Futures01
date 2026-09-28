@@ -2120,3 +2120,55 @@ equity          $50,000.00      drawdown  $0.00      realized  $0.00
 to the $2,600 operational floor   $2,600.00
 to the $2,800 absorbing state     $2,800.00
 ```
+
+## N36 — MNQ's flush finally arrived, and the extension test had already decayed. Across seven readings the two conditions have NEVER both cleared.
+
+03:04 AM EDT. MGC broke 4200 for the first time tonight, printing **4197.00**. MNQ's
+`climax_x` reached **1.99** and the detector labelled it **"flush"** — the capitulation
+volume that had been absent from every previous reading. And `qualifies` is now **false**,
+because sigma had decayed to −1.18.
+
+Every MNQ reading tonight, side by side:
+
+```
+time    sigma   climax   qualifies   detector's own note
+22:55   -2.12    0.59      YES       "a drift, not a flush"
+23:58   -1.55    0.97      YES       "a drift, not a flush"
+00:23   -1.27    0.54      no        sigma failed
+00:32   -1.02    0.56      no        sigma failed
+01:53   -1.01    0.62      no        sigma failed
+02:33   -1.87    1.17      YES       "a drift, not a flush"
+03:04   -1.18    1.99      no        "FLUSH" - and sigma failed
+```
+
+**Readings where both cleared: 0 of 7.** Sigma needs |1.5|; a "flush" label needs roughly
+1.5x median volume. Every time one was satisfied the other was not, and the pattern is not
+random — it is the same mechanism from three angles:
+
+- Sigma is extreme **while price is accelerating**, and volume builds *after* the move has
+  run (N22: the z-score measures acceleration, not displacement).
+- By the time participation spikes, price has slowed enough for the 20-bar mean to catch up,
+  which is exactly what relaxes sigma.
+
+So the two are **anti-correlated by construction**, and a detector that wants both at once is
+asking for a state its own inputs rarely produce together. Tonight: never.
+
+This matters because `climax` is *reported* rather than *required* — the setup can qualify
+without it. That design choice is what let it qualify three times on "a drift, not a flush",
+and each of those was a reading where the strongest confirming evidence was explicitly absent.
+Meanwhile the one reading where participation was unambiguous is the one the gate rejected.
+
+**I am not changing the detector now**, and the reason is unchanged from N34: this is the
+signal code, it is the thing I have declined to rewrite mid-move five times tonight, and
+tonight is the specific move. But this is the fourth distinct measurement pointing at the
+same defect (N17 sliding trigger, N22 sigma decay in both directions, N23 the self-switching-
+off, now N36 the anti-correlation), and it sharpens the N22 fix rather than adding a new one:
+anchoring displacement to a **fixed pivot** would let the extension reading survive the
+slowdown that produces the flush, which is the only way both conditions could ever hold at
+once. That is now specified from four independent directions and is the most overdue item on
+this desk.
+
+No call. MNQ fails on extension, MGC fails on the structural HTF veto (0 bullish higher
+frames, daily and weekly disqualified). MNQ's 1m has gone **BULLISH 3-0 unanimous** for the
+first time tonight, against a unanimous bearish 15m and 60m — one frame, and the frame with
+the shortest memory.

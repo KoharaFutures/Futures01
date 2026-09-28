@@ -1046,3 +1046,84 @@ statistic above is deflated against a trial count of 8+, not 1.
 
 **Stopped at:** cursor **1618/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
 8 theses, one level armed at 6045.50 with all four branches pre-computed.
+
+---
+
+## Burst 11 — the cadence failure finally gets code instead of a resolution
+
+basis `0e23ff5`. Bars 1618→1635 (17 advanced). Mode **1 AGENT** (16:47 ET Mon, market open).
+2 callouts, 0 trades, equity unchanged **$50,688.86**. Low bar count because the work was the fix.
+
+### Fifth missed trigger — and it happened INSIDE my own rule, which is the point
+
+The armed 6045.50 break fired exactly as pre-computed: bar 1618 closed 6046.5 above the level, bar 1619
+closed 6050.25 clearing my 6049.13 threshold. Entry at bar 1620's open of **6050.0** — only 0.87 points
+off the planned 6049.13, R:R 1.68, comfortably above the 1.5 void line from bar 1616. Stop 6041.87 was
+never threatened (lows 6049.0, 6055.5) and bar 1621 printed 6067.75, filling the 6063.64 target.
+**≈ +1.68R, missed.**
+
+**I missed it using n=10 — the very rule I wrote to prevent this — because the trigger fired on the
+second bar of the chunk.** A one-bar confirmation must be observed *on* the confirmation bar, so any
+n > 1 misses it with probability ≈ (n−1)/n. n≤10 was not a fix, it was a slower version of the same
+failure.
+
+Running tally of this one error: bars **414, 429, 607/612, 1515/1535/1538, 1619**. Five bursts of
+diagnosing it, writing down a smaller chunk size, and doing it again. **The honest conclusion is that a
+resolution is the wrong instrument for a failure of attention.**
+
+### So: `watch.py`
+
+A loop in my own lane that steps the harness **one bar at a time** and **halts** when an armed condition
+fires. It shells out to the CLI exactly as a hand-typed `next --n 1` would, evaluates the condition on
+the bar just revealed, and leaves the cursor there so `order` fills at the next open. It cannot see
+further ahead than doing it by hand — the fill bar is still unknown at the halt. Conditions are
+`close_above / close_below / touch_above / touch_below`. On halt it prints the re-checks that have caught
+me before: the 0.5-ATR floor, R:R at the *actual* fill, rule 5's window, bars left to the flat.
+
+**It worked: 1628 → 1634 one bar at a time, surfaced the 16:00 FORBIDDEN WINDOW bar in passing, and
+stopped exactly on the condition.** First time the cadence was held by a program rather than my intention.
+
+### Two bugs in it, both mine, and the second is the instructive one
+
+1. **The repo-root path was one directory short.** `R1/../../..` lands on `workspace/`, not the repo root,
+   so every harness call failed.
+2. **My output filter hid it.** I only surfaced lines containing `FILLED`, `CLOSED`, `REFUSED` or `Error`
+   — and Python's `can't open file … No such file or directory` contains none of those. So every step
+   failed invisibly and **the watcher cheerfully reported `>>> HALT`, claiming a condition met, on the bar
+   it had started from.**
+
+The second is the worse defect by a distance: **a silent failure that produces a plausible-looking
+positive result.** That is the exact shape `DEFECTS.md` keeps cataloguing (D38, D42, D44, D48, the
+`BarSeries.append` collapse) and the shape `BRIEF.md` warns manufactures false nulls. I caught it only
+because the halted bar's OHLC matched a bar I recognised from the previous listing.
+
+Fixed to abort loudly on a non-zero return code **or** if the tape did not grow by exactly one bar,
+because a step that does not advance is not a quiet event.
+
+### The scenario map in live use, and an honest empty half
+
+At the halt, price 6101.25 was making new highs and the map's **resistance side was empty** — correctly.
+That is the right report for blue sky, not a gap in the tool: there is no level above to lean a stop on,
+the nearest support is 6068.00 at **2.64 ATR** below, and a stop there would be 5.3× the floor needing a
+66-point target. Declined. Buying a new high on 7,783 volume at 19:00 ET is the bar-39 chase, declined
+five times now and right four of them.
+
+### Counterfactual, run this firing as the standing instruction requires
+
+| direction chosen by | my stand-downs (n=41) | control (n=1613) | diff | z |
+|---|---|---|---|---|
+| always LONG | +0.211R | −0.009R | +0.220R | **+0.99** |
+| always SHORT | +0.085R | −0.003R | +0.089R | **+0.41** |
+| coin flip | +0.177R | −0.011R | +0.189R | **+0.85** |
+| *best of both — hindsight* | *+1.221R* | *+0.940R* | *+0.281R* | *+1.49* |
+
+**Nothing above |z| 2, so nothing to report under the standing rule.** The always-LONG arm has crept from
+z +0.36 to +0.99 as the tape trended up — worth watching, and exactly what you would expect from drift
+rather than judgement, since the control's own long arm is flat at −0.009R while my sample is small.
+
+### Distinct theses: **8**, unchanged. Nothing armed.
+
+`watch.py` is a cadence tool, not an idea — no search width added.
+
+**Stopped at:** cursor **1635/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades,
+8 theses.

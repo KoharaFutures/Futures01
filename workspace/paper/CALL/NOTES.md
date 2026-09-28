@@ -4213,3 +4213,57 @@ $0.00, full $2,800 to the absorbing state.
 
 No call. Reversal test false on both and `regime.py` now names the missing condition on **both** symbols.
 The MGC plan stays void on the risk cap. MGC RTH opens 08:20 ET, 1h42m out.
+
+## N107 — condition 1 has failed, exactly as predicted, by 0.30 of a point
+
+The `06:15` bar settled at 06:43. Measured directly on the settled series:
+
+    06:00 bar high  4191.40
+    06:15 bar high  4191.10      <- 0.30 BELOW, so 4191.40 confirms as a pivot
+    settled swing highs: 03:45 4193.10 | 04:45 4185.20 | 06:00 4191.40
+    condition 1 high sequence: 4185.20 -> 4191.40 = HIGHER  ->  FAIL
+
+**N75 condition 1 now fails on the settled series.** The lower low `4174.30 -> 4172.60` is intact; the
+lower high is gone. MGC's settled structure is MIXED. Journalled as
+`CALL-NT-0005-AMEND-COND1-CONFIRMED`.
+
+This is the prediction from `CALL-NT-0005-AMEND-N99`, made at 06:33 with its mechanism stated, holding
+without amendment. Tenth machinery prediction tonight. **But the margin was 0.30 of a point** — the `06:15`
+high printed 4191.10 against 4191.40, and a 0.30-point revision in either direction would have reversed the
+outcome. Against a 6.20-point observed maximum high revision, 0.30 is nothing. **The call was right and
+not robust, and saying so is the difference between a record and a highlight reel.** I predicted the
+mechanism correctly; whether the pivot formed was close to a coin toss and I should not have implied
+otherwise at 06:38 by quoting "1.00 point of margin" from a value that then moved to 0.30.
+
+### Closing the sequence N52 opened
+
+The MGC retracement short now fails **condition 1 and condition 4**. It is fully dead and no plan was ever
+written. The whole arc, for the record:
+
+| time | step |
+|---|---|
+| 04:46 | worked the plan up, then refused it as CALL-0004 with the trigger moved — N8, N52 |
+| 05:35 | pre-committed the method while the entry price did not yet exist — N75 |
+| 05:40 | found the method under-specified (which leg?), closed the hole, predicted VOID — N77 |
+| 05:49, 05:44, 06:33 | re-derived VOID three more times as the window slid — N80, N82, N102 |
+| 06:33 | CALL-0004 expired; method executed; VOID on the risk cap at $144.77 vs $120 |
+| 06:43 | condition 1 also fails; plan doubly dead |
+
+The desk identified an MGC short thesis correctly, refused to re-issue it nearer the market, pre-committed a
+method before the price existed, and the method then refused the trade — on size first and on direction
+twenty minutes later. **That is the process working, and it produced no trade.** Both halves of that
+sentence are the finding.
+
+## N108 — 06:43 state
+
+Newest settled 15m is now `06:15` on both symbols. Newest real 5m `06:30` on both, lag 13.3m. MGC unsettled
+4188.70, MNQ 30577.00. Locations MGC 16.2% of [4172.60, 4284.70], MNQ 12.0% of [30535.00, 30874.75].
+
+Frames: MGC 1m BULL 2-0, 5m BULL 2-0, 15m BEAR 0-2, 60m BEAR 0-3 unanimous, 4h BEAR 0-2. MNQ 1m BULL 2-0,
+5m BEAR 0-1, 15m BEAR 1-2, 60m BEAR 0-3 unanimous, 4h/DAILY/WEEKLY bull. The **60m frames remain the only
+thing that has not moved all session** — unanimous bearish on both symbols from the first check to this one.
+
+Two plans PENDING: CALL-0001 (MNQ LONG, 354.25 adverse, expires 16:00 bar), CALL-0002 (inert, window opens
+08:20). Ledger: open 0, closed 0, equity $50,000.00, drawdown $0.00, full $2,800 to the absorbing state.
+
+No call. Reversal test false on both. MGC RTH opens 08:20 ET, 1h37m out.

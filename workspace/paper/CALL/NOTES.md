@@ -9681,3 +9681,45 @@ available.
 
 This entry exists so that if MNQ prints a new low overnight and this desk stays flat, the record already
 says why — decided at 23:58 with price at 30457.25, not reconstructed afterwards.
+
+# N255 — `fetch.py`'s headline reports the newest bar IN THIS PULL, not in the store, and tonight the vendor served a 5m series ending 95 minutes stale
+
+At 00:01 ET `fetch.py` printed:
+
+    MGC 5m newest 2026-09-28T22:15:00-04:00  c=4166.50  lag=106.4m  new=0 revised=0
+    MNQ 5m newest 2026-09-28T22:15:00-04:00  c=30536.25 lag=106.4m  new=0 revised=0
+
+The previous check, four minutes earlier, printed `23:50` with **lag 9.0m**. The newest bar went
+**backward by 95 minutes.** The vendor returned a truncated 5m series; no 5m snapshot was written for
+either symbol (5m is absent from the `snapshots written` line), while 240m and 1440m each gained **+1 new**
+bar in the same call. So the feed was neither down nor frozen — it served fresh slow frames and a stale
+fast one.
+
+**The store is fine and the headline is not.** `chart.load()` merges every snapshot by timestamp, so the
+desk's actual 5m series still ends at **23:50** and its 1m ends at **23:58**. Checked directly:
+
+| | headline this pull | merged store |
+|---|---|---|
+| MGC 5m | 22:15, c 4166.50 | 23:50, c 4166.60 |
+| MNQ 5m | 22:15, **c 30536.25** | 23:50, c 30457.25 |
+| MNQ 1m | — | **23:58, c 30437.25** |
+
+**Had I reported the headline as "newest real bar", I would have told the owner MNQ was at 30536.25 when
+its freshest print is 30437.25 — 99 points wrong, and wrong in the direction that flatters my own
+book.** At 30536.25 CALL-0010's 30550.00 sell limit looks 13.75 away and about to fill; the truth is
+112.75 away with price falling. That is precisely the error the standing rule against stating an unfetched
+level is written to prevent, and the trap here is that the number *was* fetched this turn — it was just
+fetched stale.
+
+**What I take from it, operationally:** the "newest real bar and lag" I am required to report every check
+must come from the **merged store**, cross-checked against the finest frame available, not from
+`fetch.py`'s summary line. A lag figure that jumps from 9.0m to 106.4m with `new=0 revised=0` is a vendor
+truncation, not a market event, and it is not one of the three consecutive fetch failures that would stop
+the desk — the call returned real bars, and the store advanced on four of its six frames.
+
+**And the freshest data is the news of this check.** MNQ 1m at **30437.25** is **7.25 points above the
+30430.00 low** the owner flagged. The pre-commitment I wrote at 23:58 (N254) is being tested four minutes
+after I wrote it, which is the best possible timing for it: the answer was fixed before the price
+arrived, and it does not change. `reversal_setup` sigma reads **−1.25** off the 23:50 5m close and is
+therefore itself understated against the 1m — but even at |1.5| nothing is registrable, because MNQ's
+rule-4 floor has risen to **26.10pt = $52.20** against **$22.00** of room.

@@ -104,3 +104,54 @@ print(f"\nroll-merge detector: {len(_f)} suspect run(s) in {len(rows)} visible b
 for a, b, mr, hs, ls, mg in _f:
     print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
           f"mean range {mr}  high-band {hs}  low-band {ls}  max-jump {mg}  << DO NOT TRADE")
+
+
+# --- gap-cluster merge detector (added after the March 2025 roll) ------------
+# The envelope test above CAUGHT the March 2025 merge but UNDER-BOUNDED it 5x:
+# it flagged 15 bars of a 75-bar merge (2517-2591, 2025-03-18 04:00 -> 03-21 09:00).
+# The flaw is structural: envelope constancy assumes the merged instrument is not
+# trending. In March the underlying moved ~60 points across the roll window, so the
+# high/low bands drift, the run breaks, and only the flattest stretches flag.
+#
+# The robust signature is the BOUNDARY GAP, because it is a DIFFERENCE and so is
+# immune to drift. Across the March merge |open[i] - close[i-1]| recurs at 52.00,
+# 52.25, 50.75, 51.50, 51.50, 50.00, 51.00, 50.25, 50.00, 49.50, 50.00, 49.50,
+# 50.25 - the Mar->Jun calendar spread, printing over and over. December's did the
+# same at ~74.5. A real market does not gap the same distance a dozen times.
+def gap_clusters(rows, min_gap=20.0, tol=0.15, min_hits=4, max_span=200,
+                 min_density=0.15):
+    """Runs where |open[i]-close[i-1]| repeatedly lands near one non-zero value.
+    Returns (start, end, n_hits, median_gap). Immune to trend, unlike the envelope
+    test, because it keys on a difference rather than a level.
+
+    FALSE POSITIVE ON THE FIRST VERSION, recorded because this is the third
+    detector on this desk to need a false-positive round: at min_gap=8.0 with no
+    density requirement it flagged bars 2139-2283 - four 9.5pt gaps spread over 145
+    bars, which are ordinary session boundaries. The principled fix is DENSITY: a
+    merge gaps at the spread on a large FRACTION of its boundaries (March 20/71 =
+    28%, December 5/7 = 71%) while coincidental gaps do not (4/145 = 2.8%). min_gap
+    is also raised to 20pt, since an index calendar spread is tens of points and a
+    session gap is not - but density is the fix that does not depend on the
+    instrument."""
+    gaps = [(i, abs(rows[i]["o"] - rows[i - 1]["c"])) for i in range(1, len(rows))]
+    big = [(i, g) for i, g in gaps if g >= min_gap]
+    out, used = [], set()
+    for k, (i, g) in enumerate(big):
+        if i in used:
+            continue
+        hits = [(j, h) for j, h in big[k:] if j - i <= max_span and abs(h - g) <= tol * g]
+        if len(hits) >= min_hits:
+            a, b = hits[0][0], hits[-1][0]
+            if (b - a + 1) <= 0 or len(hits) / (b - a + 1) < min_density:
+                continue
+            med = sorted(h for _, h in hits)[len(hits) // 2]
+            out.append((a, b, len(hits), round(med, 2)))
+            used.update(range(a, b + 1))
+    return out
+
+
+_g = gap_clusters(rows)
+print(f"\ngap-cluster detector: {len(_g)} run(s) — the drift-immune test")
+for a, b, n, med in _g:
+    print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
+          f"{n} gaps near {med}pt  << DO NOT TRADE (contract merge)")

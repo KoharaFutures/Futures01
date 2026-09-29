@@ -9644,3 +9644,40 @@ flag: the entry-bar branch should record *what it declined to check*, so the led
 
 **Until then I report the count as `0 flagged, 1 real`** and name CALL-0009 every time. Reporting a bare
 0 would be the flattering error the resolver's own comment was written to prevent.
+
+# N254 — a pre-commitment, written BEFORE the price exists: no version of an MNQ counter-trend long is registrable tonight, and rule 4 closes the end capacity does not
+
+MNQ is rolling over again. The 15m 23:30 bar closes 30485.00 but the live 5m is **30457.25**, its 1m has
+turned BEARISH 0-2 and its 5m BEARISH 1-2, so the agreeing set is back to **[1, 5, 60, 240]** — four
+frames — and `reversal_setup()` sigma has rebuilt from −0.63 to **−1.22**. If that continues it reaches
+|1.5| and the counter-trend detector will print **QUALIFIES, side LONG** on MNQ, exactly as it did at
+30430.00 four hours ago.
+
+**I am writing down now what I will do then, so the answer is not invented at the low.** Nothing. And the
+reason is arithmetic, not judgement:
+
+| version of the trade | stop | cost at $2/pt, 1 contract | blocked by |
+|---|---|---|---|
+| entry at the extreme, structural stop ~10pt through the low | 10.00 | **$20.00** | **rule 4** — floor is 0.5 × ATR14(15m) 50.95 = **25.47pt** |
+| entry at the extreme, rule-4-legal stop | 25.47 | **$50.95** | **capacity** — $22.00 of room with $98.00 committed |
+| entry on the reclaim, stop through the low | 78.00+ | **$166.50** (measured at 21:46) | capacity, and it is 78pt above its own invalidation |
+
+The cheap version is **illegal**; the legal version is **unaffordable**; the version the tool's own
+"trigger" language implies is both. At 21:46 I framed this as a capacity problem. That was half of it.
+Rule 4's 0.5-ATR floor closes the end capacity leaves open, and it closes it for a measured reason — stops
+tighter than that get taken out by this feed's noise, and my own ledger agrees: mean HEAT **1.10** across
+four trades, three of them stopped.
+
+**So the honest statement about MNQ at $2/pt on a $120 discretionary cap is that its counter-trend longs
+are not a judgement call at all — they are priced out whenever ATR14(15m) is near 50 and the book holds
+anything.** $50.95 of the $120 cap is 42% of the whole discretionary allowance for one micro contract at
+the minimum legal stop. That is the structural finding N247 reached for and did not quite state: the
+constraint is not this book, it is **$2/pt against a 50-point ATR**.
+
+What I will do instead if MNQ qualifies: report it, name the sigma and the level, and say it is unbuyable
+with the reason. What I will NOT do: void CALL-0010 to make room (N8 forbids editing a live plan to fund a
+trade I prefer later), size below the rule-4 floor, or call it a setup I "passed on" when it was never
+available.
+
+This entry exists so that if MNQ prints a new low overnight and this desk stays flat, the record already
+says why — decided at 23:58 with price at 30457.25, not reconstructed afterwards.

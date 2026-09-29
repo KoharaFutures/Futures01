@@ -25,7 +25,7 @@ COLLAPSE = {
 AREAS = [
     ("DATA_HUB", "The hub: start here"),
     ("futures_agents", "Core package (data, indicators, strategies, backtest, risk, agents)"),
-    ("workspace/paper/CALL", "CALL desk tools (desk paused 2026-09-29)"),
+    ("workspace/paper/CALL", "CALL desk v2 (live since 2026-09-29, script-driven)"),
     ("workspace/paper/REPLAY", "REPLAY desk (still running on its own branch)"),
     ("workspace/roundtable", "Research engines kept for re-use (edge programme, backtesters, replay harness)"),
     ("workspace", "Other research libraries kept for re-use"),

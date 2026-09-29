@@ -44,6 +44,16 @@ so the old UTC-cron bug and the 2026-11-01 daylight-saving change can't break it
 findings. The audit proposes a pre-registered template for plan construction. Run it in shadow
 against a placebo before it's allowed to create plans.
 
+### Round 2 (desk restarted 2026-09-29): the agent thinks only when it must
+
+| piece | what it removes from the agent |
+|---|---|
+| `desk_loop.sh` (runs `desk_check` every 2 min in the background) | All routine wake-ups. The agent is re-invoked **only** on exit 10 (needs_attention) |
+| `plan_builder.py` | Hand-writing plans. It builds entry/stop/target/expiry/size and runs 8 hard gates (stand-down, no late entries, no breakout chasing, stop floor, R:R ≥ 1.6 after costs, 50% book room, drawdown floor, one per symbol), plus measured context for levels near the entry and a stacked-level warning. The agent writes ≤3 lines and says yes or no |
+| Live rule signals in `desk_check` | Registered walk-forward rules (`DATA_HUB/tools/rules/`) run on live bars **with the exact same code that was backtested**. A signal becomes a gated draft plan. Refused drafts are shadow-logged to `rule_signals.jsonl` without waking anyone. Verified: replaying 2026-09-25 06:00 ET reproduces the backtest's MGC OQ1 signal (LVN 4,341.87 short) |
+| `DESK_BRIEF.md` | The 1,138-line procedure. A 1-page brief: start-up, a what-to-do table per trigger, the plan rules, and the research condensed for MGC/MNQ |
+| `AUTOMATE_NEXT.md` | Repeated judgment becomes a backlog item: rule file → walkforward → live shadow |
+
 ## The REPLAY desk, automated (`DATA_HUB/tools/walkforward.py`)
 
 - **Parity:** fed REPLAY R1's two real orders, it reproduces the harness to the tick: +1.8949R

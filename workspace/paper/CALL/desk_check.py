@@ -14,6 +14,7 @@ The only things that need judgment are a NEW directional read or plan, and prose
 `needs_attention` (exit code 10) when a pre-registered trigger fires, so an LLM, or the
 owner, is woken only then:
   PLAN_EVENT, EVENT_ON_PROVISIONAL_BAR, REVERSAL_CALLED, COUNTER_TREND_QUALIFIES,
+  RULE_SIGNAL_READY (a registered rule fired AND its drafted plan passed every desk gate),
   DATA_STALE, DRAWDOWN_FLOOR, BRIEF_CHANGED
 Quiet notes (no wake): STANDDOWN_CHANGE, HUB_LEVEL_TOUCH, WINDOW_CLOSE, HUB_STALE.
 
@@ -47,9 +48,18 @@ EVENTS = HERE / "desk_events.jsonl"
 SYMBOLS = ("MGC", "MNQ")
 STANDDOWN = {"MGC": 10.0, "MNQ": 58.0}              # ATR14(15m) lines, N214
 ARM_ATR, TOUCH_ATR = 1.0, 0.25                     # same ARM as bounce_levels.py
-BRIEFS = (ROOT / "CALLOUT.md", HERE / "CHECK_PROCEDURE.md", ROOT / "DATA_HUB" / "RULES_AND_PITFALLS.md")
+BRIEFS = (ROOT / "CALLOUT.md", HERE / "DESK_BRIEF.md", HERE / "CHECK_PROCEDURE.md",
+          ROOT / "DATA_HUB" / "RULES_AND_PITFALLS.md")
 FLOOR = 2600.0                                     # operational floor before the $2,800 absorbing state
 PROVISIONAL_MIN = 30                               # 15m bars revise for ~28 min (N41/N65/N89)
+
+
+def pb_defaults():
+    """plan_builder's CLI defaults as a Namespace (so a rule signal only overrides what it sets)."""
+    return argparse.Namespace(symbol=None, side=None, entry=None, stop=None, stop_beyond=None, stop_atr=1.0,
+                              tp_r=1.8, trigger_type=None, expiry_bars=8, strategy="", strategy_basis=None,
+                              entry_basis=None, invalidation=None, confidence="DISCRETIONARY", why="",
+                              from_signal=None, now=None, commit=False)
 
 
 def _mod(name):
@@ -143,6 +153,54 @@ def hub_levels(sym: str, close: float, atr: float, prev: dict) -> tuple[list, li
         rows.append({"level": name, "price": px, "dist_atr": round(dist, 2), "state": state, "hub_asof": asof})
     rows.sort(key=lambda r: r["dist_atr"])
     return rows[:12], touches
+
+
+def rule_signals(sym: str, prev_seen: dict) -> list[dict]:
+    """Run every REGISTERED walk-forward rule on this symbol's live bars, so the rule traded live is
+    byte-for-byte the rule that was backtested (DATA_HUB/tools/rules/, ledger-checked). Evaluated once
+    per NEW completed bar of the rule's timeframe. A signal becomes a draft plan via plan_builder."""
+    sys.path.insert(0, str(ROOT / "DATA_HUB" / "tools"))
+    try:
+        import walkforward as WF
+    except Exception:                                   # engine missing -> no signals, never a crash
+        return []
+    shas = {r["sha"] for r in WF.ledger_rows()}
+    resolve = _mod("resolve")
+    out = []
+    for path in sorted((ROOT / "DATA_HUB" / "tools" / "rules").glob("*.py")):
+        if WF.file_sha(path) not in shas:
+            continue                                    # unregistered or edited: not allowed to trade
+        rule = WF.load_rule(path)
+        tf = getattr(rule, "TF", 60)
+        bars = resolve.load_bars(sym, tf)
+        if len(bars) <= getattr(rule, "WARMUP", 0) + 2:
+            continue
+        key = f"{rule.NAME}:{sym}"
+        if prev_seen.get(key) == bars[-1]["ts"]:
+            continue
+        prev_seen[key] = bars[-1]["ts"]
+        ctx = WF.Ctx(bars, sym, tf)
+        i_last = len(bars) - 1
+        for i in range(rule.WARMUP, len(bars)):
+            if hasattr(rule, "observe"):
+                rule.observe(WF.View(bars, i), i, ctx)
+        order = rule.decide(WF.View(bars, i_last), i_last, ctx)
+        if not order:
+            continue
+        a = ctx.atr(i_last) or 0
+        fired = ctx.state.get("fired") or [(i_last, bars[-1]["c"])]
+        level = fired[-1][1]
+        sign = 1 if order["side"] == "LONG" else -1
+        stop = level - sign * order.get("stop_atr", 1.0) * a if order.get("stop") is None else order["stop"]
+        tgt_r = order.get("target_atr", order.get("target_r", 1.0)) / order.get("stop_atr", 1.0)
+        out.append({"rule": rule.NAME, "symbol": sym, "bar": bars[-1]["ts"], "side": order["side"],
+                    "level": round(level, 4), "why": order.get("why", ""),
+                    "plan_args": {"symbol": sym, "side": order["side"], "entry": level, "stop": stop,
+                                  "tp_r": tgt_r, "strategy": f"RULE {rule.NAME} (pre-registered, walk-forward tested)",
+                                  "confidence": f"RULE:{rule.NAME}",
+                                  "trigger_type": "LIMIT_ENTRY_SELL" if order["side"] == "SHORT" else "LIMIT_ENTRY_BUY",
+                                  "why": order.get("why", ""), "expiry_bars": 8}})
+    return out
 
 
 def main() -> int:
@@ -273,6 +331,35 @@ def main() -> int:
         for t in touches:
             notes.append(f"HUB_LEVEL_TOUCH {sym} {t['level']} {t['price']} (hub bar {t['hub_asof'][:16]})")
     st["hub_state"] = hist
+
+    # 12b. live signals from registered, walk-forward-tested rules -> draft plans (never auto-committed)
+    seen = dict(prev.get("rule_seen", {}))
+    sigs = []
+    for sym in SYMBOLS:
+        for sg in rule_signals(sym, seen):
+            draft = HERE / "drafts" / f"signal_{sg['rule']}_{sym}_{sg['bar'][:16].replace(':', '')}.json"
+            draft.parent.mkdir(exist_ok=True)
+            draft.write_text(json.dumps(sg, indent=1))
+            try:
+                pb = _mod("plan_builder")
+                ns = argparse.Namespace(**{**vars(pb_defaults()), **sg["plan_args"]})
+                plan = pb.build(ns)
+                sg["draft_verdict"] = plan["builder"]["verdict"]
+                sg["failed_gates"] = [g["gate"] + ": " + g["why"] for g in plan["builder"]["gates"] if not g["pass"]]
+            except Exception as exc:
+                sg["draft_verdict"] = f"builder error {exc}"[:200]
+            sg["draft_file"] = str(draft.relative_to(ROOT))
+            sigs.append(sg)
+            if not a.dry_run:
+                with (HERE / "rule_signals.jsonl").open("a") as fh:
+                    fh.write(json.dumps(sg, default=str) + "\n")
+            if sg.get("draft_verdict") == "READY":
+                triggers.append("RULE_SIGNAL_READY")
+            else:
+                notes.append(f"RULE_SIGNAL {sg['rule']} {sym} {sg['side']} @ {sg['level']} refused by desk gates "
+                             f"(shadow-logged): {'; '.join(sg.get('failed_gates', []))[:200]}")
+    st["rule_signals"] = sigs
+    st["rule_seen"] = seen
     try:
         asof = json.loads((ROOT / "DATA_HUB/levels/MNQ_bounce.json").read_text())[0]["current"]["asof"]
         if now_utc - datetime.fromisoformat(asof).astimezone(timezone.utc) > timedelta(hours=24):

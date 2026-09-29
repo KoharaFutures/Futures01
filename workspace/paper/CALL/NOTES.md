@@ -9154,3 +9154,36 @@ values, so this is not a fetch failure and the three-strikes stop condition is n
 progression 429 → ConnectionError with elevated revision counts is the shape of a feed degrading, and
 the revisions matter more than the warning: four revised 5m bars means four readings I reported earlier
 were provisional in a way N41/N47 anticipates.
+
+# N243 — correcting N242's capacity claim: an MGC long DOES fit, if the entry is a real pullback
+
+In N242 I wrote that a gold long and CALL-0010 "cannot both be carried at 1 contract each unless the
+stop is tighter than the structure justifies," on the arithmetic **$75 + $52 = $127 > $120**. That $75
+assumed an entry near the market. It is wrong as a general statement, and the error matters because it
+would have pre-justified declining a trade for the wrong reason.
+
+Room with CALL-0010's $52 pending is **$68.00**, which at MGC's $10/pt buys a **6.80-point** stop at 1
+contract. Against a stop at 4156.50 (below the 4157.90 higher low that defines the structure):
+
+| limit | risk | dollars | fits $68? |
+|---|---|---|---|
+| 4165.00 (at market) | 8.50 pt | $85.00 | **no** |
+| 4163.00 | 6.50 pt | $65.00 | yes |
+| 4161.50 | 5.00 pt | $50.00 | yes |
+| 4160.50 | 4.00 pt | $40.00 | yes |
+
+Rule 4's floor is 0.5 × ATR 8.25 = **4.12 points**, so everything from 4160.62 upward is legal. The
+constraint is therefore **not** "the stop must be too tight" — it is that the entry has to be a genuine
+pullback toward the rising EMA20 (4159.76) rather than a fill at the prevailing price. Which is what
+N196 requires anyway: displacement on the fast frames is up, so a buy-stop over the 4169.10 pivot is the
+prohibited trade and the entry has to be a limit *below* market regardless of capacity.
+
+So the two constraints point the same way rather than conflicting, and I should have noticed that when I
+wrote N242 instead of concluding the book was full. Corrected here, before the gate opened, rather than
+discovered while wanting the trade.
+
+**State of that gate: 0.06 points away.** MGC's 15m location reads **59.8% of [4143.90, 4181.00]**
+against the 60% boundary, with trend BULL and structure BULL both holding a sixth check. The 5m close is
+already **4168.10**, above the 4166.16 threshold. But the 15m frame is pinned at `22:15` for the sixth
+consecutive check (`+0 new`), so nothing is confirmed: this is the N231 case exactly, and a unanimity
+printed on a revision is not one I will register on. The `22:30` 15m bar is what decides it.

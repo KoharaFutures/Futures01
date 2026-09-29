@@ -9899,3 +9899,41 @@ I have consistently declined to call these fetch failures because the calls succ
 and I stand by that distinction — but the reason it was safe to stand by is that I bound myself to a
 measurable alternative. That alternative has now fired and the desk is standing down on MNQ. The
 distinction cost nothing because it was never the only safeguard.
+
+## N258 addendum, 00:21 — BLIND CLEARED on MNQ, and the unobserved window collapses to ONE MINUTE. CALL-0010 did not fill.
+
+MNQ's feed returned: 5m newest `00:10` at lag 11.3m with **+2 new**, 15m **+1 new**, 1m to `00:11` — **age
+10.6m**, inside the 20-minute line. MNQ is sighted again. The BLIND state held for exactly one check.
+
+**And the vendor's stale figure was as wrong as N255 warned.** Through the whole outage `fetch.py` reported
+MNQ's newest close as **30536.25**. Real data now puts it at **30437.75** — the truncated headline was 98.50
+points high.
+
+**Reconstructing the hole rather than assuming about it.** The recovery arrived with gaps, so I enumerated
+what is actually held:
+
+- 1m: continuous to `23:58`, then nothing until `00:09` — **ten 1m bars missing**
+- 5m: `23:50` present, `23:55` and `00:00` missing, `00:05` and `00:10` present
+- 15m: **`23:45` missing**; `00:00` present with high **30442.00**, low 30431.00
+
+The 15m `00:00` bar spans 00:00-00:15 and caps the high over that entire span at **30442.00**. The 1m runs
+to 23:58 (high 30445.75). So the genuinely unobserved slice is **23:59 alone — one minute.** For CALL-0010's
+30550.00 sell limit to have been touched, MNQ would have had to travel **+105 points and return** inside
+that single minute, entering it at 30432.75-30445.75 and leaving it at 30431.25-30442.00, with no trace in
+either neighbouring bar.
+
+**So CALL-0010 did not fill.** That is derived from bars, not assumed from silence — and it is the right way
+to close a blind episode: not "resolve.py says open 0, so nothing happened" (which N258 explicitly warned
+against) but "here are the bars that bound the window, and here is what they permit."
+
+**One correction to my own report of the last check.** I said I could not tell whether CALL-0010 had filled
+or stopped. That was true *at the time and with the data I then had* — but it was resolvable within two
+minutes by enumerating the surrounding bars, and I should have said "unresolved pending the next pull, and
+here is what would settle it" rather than leaving it open-ended. The blind rule governs what I may register;
+it does not excuse me from reconstructing what I can.
+
+**What MNQ looks like now that I can see it:** 15m BEARISH **0-3** with location **8.9%** of [30412.50,
+30695.25] — the bottom tenth — structure now lower highs **30537.75 → 30500.00**, and `reversal_setup` sigma
+at **−1.45**, *0.05 from the |1.5| extension line*. This is precisely the state N254 was written for at
+23:58, and the pre-commitment holds unchanged: MNQ's rule-4 floor is **25.31pt = $50.62** against **$22.00**
+of room. Not registrable. Reported, not passed on.

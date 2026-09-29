@@ -8873,3 +8873,74 @@ support is not. That asymmetry is the strongest argument for keeping `counter_tr
 **MGC, separately: its 15m has gone `CONFLICTED 0-0`** — all three components MIXED, structure flipped
 on a **higher** swing high (4158.70 → 4164.40). The symbol I was short ninety minutes ago now has no
 directional read at all, and `reversal()` refuses it on three grounds at once.
+
+# N237 — 21:52 hourly: one fill, one stop, two misses the owner found, and three tools fixed
+
+Hourly consolidation. Crons `5b6f90c7` / `697d7750` / `13cbeeca` all alive in UTC, no repair, no gap.
+CALLOUT.md md5 `b2abcd6c…` — **byte-identical to the 20:54 read**, so nothing in it has changed and no
+new disagreement with `CHECK_PROCEDURE.md` exists. Basis `ac84b42`, current with the branch head.
+
+## The hour in one paragraph
+
+Two plans registered, one filled and stopped for **−1.084R**, one still pending and unfilled. The owner
+caught two counter-trend longs the desk was structurally incapable of seeing. Three tools were wrong and
+are now fixed: `watch.py`'s location thresholds (N228), the absence of any long-side scan (N234), and my
+own citation of `reversal_setup()` against a continuation short (N226). Equity **$50,007.80**, drawdown
+**$148.76**, **$2,651.24** to the absorbing state.
+
+## Ledger — MEASURED, CALL-0002 EXCLUDED (N155), n=4
+
+**1 win, 3 losses. 25% win rate with a payoff of 1.35** (avg win +1.422R, avg loss −1.053R).
+Expectancy **−0.434R**, total **−1.736R**, **−$148.76**. **0 ambiguous bars.**
+
+| trade | $ | R | HEAT | MFE |
+|---|---|---|---|---|
+| CALL-0006 MNQ SHORT | −118.44 | −1.021 | 1.14 | +0.84R |
+| CALL-0007 MGC SHORT | +62.56 | +1.422 | 0.61 | +1.66R |
+| CALL-0008 MNQ LONG | −48.44 | −1.053 | 1.43 | +0.83R |
+| CALL-0009 MGC SHORT | −44.44 | −1.084 | 1.20 | **+2.24R** |
+
+Mean HEAT **1.10**, max 1.43. Sole winner 0.61, below the 0.70 concern line.
+
+## The one finding I would carry forward above all others
+
+**All three losers reached MFE above +0.8R. Mean loser MFE is +1.30R.** CALL-0009's was **+2.24R** —
+past its own TP1, on the entry bar, before reversing to the stop. The entries are finding movement; the
+exits return it. That is a different and more tractable problem than a bad entry signal, and it is why
+**a pre-registered test of a partial exit at +0.8R is now the top deferred item**, ahead of the
+tally-persistence repair. n=3 is not a licence to change the exit tonight, and doing so would be fitting
+the rule to the last trade.
+
+## Fresh directional read, both symbols, at 21:53
+
+**MGC** has inverted. Its 15m is **0-1** — trend MIXED with close 4162.70 *above* a still-falling EMA20
+4157.42, structure BEAR, location MIXED at **51.8% of [4143.00, 4181.00]**. Its 5m is **BULLISH 3-0
+unanimous** and 1m BULLISH 2-0. The 60m remains BEAR with location at **3.2% of [4143.00, 4351.60]** —
+the bottom of a 208-point range — but its structure is MIXED on a *higher* low. So gold is bouncing
+inside a broken 60m downtrend, and the counter-trend short now clears sigma (+1.72) while failing the
+HTF condition it can **never** satisfy, because MGC's daily and weekly are disqualified and only the 4h
+can vote. That is a permanent structural fact about this symbol and worth stating once plainly.
+
+**MNQ** still holds the bearish stack: 15m **0-3 unanimous** (trend BEAR by 46.48, structure BEAR on
+lows 30568.00 → **30430.00**, location BEAR at **39.5% of [30356.50, 30722.00]**), 5m 0-3 unanimous, 60m
+BEAR at **21.4% of [30356.50, 30998.50]**. Against it, the 1m is **BULLISH 3-0 unanimous** and DAILY is
+**3-0 unanimously bullish** on the only roll-clean long series here. Its counter-trend long sits at sigma
+**−1.47** — 0.03 short of qualifying, having oscillated −2.80 → −1.17 → −1.47 over twenty minutes.
+
+## What I did not do, and the reasons in order of honesty
+
+- **No third plan.** MNQ already carries CALL-0010; MGC's 15m cannot reach unanimity while structure
+  holds a higher high.
+- **No MNQ long.** It disqualified at 21:48 on its own sigma criterion and has not recovered. Before
+  that, capacity blocked it (N236): the reclaim entry sat 78 points above its 30430.00 invalidation,
+  costing $166.50 against $68 of room.
+- **No edit to CALL-0010**, whose thesis has fully paid — fav **63.75** against the 39.00 TP1 needed —
+  while its 30550.00 limit has never been touched. Two correct reads tonight, one filled at the worst
+  instant and one not at all. The common factor is entry construction, not direction.
+
+## Vetoes, re-measured this firing, nothing inherited
+
+MGC ATR14(15m) **7.59** vs the 10 stand-down — climbing all evening (5.95 → 7.59) but clear. MNQ
+**36.96** vs 58 — clear. **Neither symbol is stood down**, so the near-empty book is a consequence of
+shut gates and a disqualified counter-trend setup, not of the volatility veto. Stating that explicitly
+because an empty book has several possible causes and they are not interchangeable.

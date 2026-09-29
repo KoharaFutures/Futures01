@@ -9340,3 +9340,47 @@ session. MNQ **43.96** vs 58, up from 30.71. **Neither symbol is stood down**, s
 live by measurement rather than by omission. If MGC's ATR crosses 10 no new gold plan may be registered,
 and CALL-0011's 4.60-point stop would then sit at 0.46× ATR — below rule 4's floor. That does not
 retroactively invalidate a plan sized correctly at registration, but it is the number to watch.
+
+# N247 — the MNQ long's extension condition is now met with margin; capacity blocks it, and I am naming that rather than hiding behind volume
+
+At 23:24 `counter_trend()` reads **MNQ QUALIFIES, side LONG, sigma −2.04**, DAILY and WEEKLY support,
+reclaim trigger 30479.25, on a **fresh low of 30412.50** that re-based the 40-bar range to
+[30412.50, 30722.00]. That is the strongest extension reading since the original 30430.00 setup at
+sigma −2.80, and it clears the **−1.8** I named at 22:44 with real margin rather than by a hundredth.
+
+**Two of the three things blocking it have stopped blocking it.**
+
+1. **The extension condition is met.** −2.04 against my stated −1.8.
+2. **The conflict rule no longer binds.** The reclaim at 30479.25 sits **70.75** from CALL-0010's
+   30550.00 limit against an ATR14(15m) of **49.25** — comfortably more than one ATR, because MNQ's
+   ATR has risen while price fell away from the short's entry.
+
+**What blocks it is capacity, and the arithmetic is the same shape as N236.** Room is **$68.00** with
+CALL-0010's $52 pending, which at $2/pt buys a **34.00-point** stop. The structural invalidation is
+the new **30412.50** low:
+
+| stop | distance | risk at 1 contract | fits $68? |
+|---|---|---|---|
+| 30407.50 | 71.75 pt | **$143.50** | no |
+| 30400.00 | 79.25 pt | **$158.50** | no |
+
+Rule 4's floor is 0.5 × 49.25 = **24.62 points = $49.25**, so a legal stop exists inside the room —
+but a 34-point stop from 30479.25 sits at 30445.25, which is **33 points above the low the trade is
+built on**. Same defect as N236: passes the ATR test, wrong place.
+
+**On the volume condition, which I have now cited four times.** It still reads **0.77× — "a drift, not
+a flush."** But I should be straight about how much weight that can bear: tonight's volume prints on
+this symbol have ranged **0.14× to 2.46× within minutes**, tracking bar provisionality rather than
+participation (N41/N47). A metric that unstable is weak evidence, and the detector itself labels
+condition 4 *reported, not required*. So I am **not** resting this decline on volume. The decline rests
+on capacity, which is arithmetic and checkable.
+
+**What would make it takeable, stated so it is not decided by mood later:** CALL-0010 filling or
+expiring frees the full $120, which buys a 60-point stop — still 12 short of the 72 needed from
+30479.25, so even then the *entry* has to come down. The clean version is price retesting toward
+30412.50 so entry-to-stop compresses. That is the same conclusion as N236 and it has now been reached
+twice by the same route, which suggests the real finding is structural: **a reclaim-triggered
+counter-trend entry on MNQ is systematically too expensive for this account's cap when the flush is
+deep.** MGC's $10/pt makes the same setup affordable; MNQ's $2/pt does not, because the point distances
+scale faster than the point value shrinks. That belongs in the parent session's list as a sizing
+question, not a discipline question.

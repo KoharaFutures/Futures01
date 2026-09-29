@@ -2843,3 +2843,57 @@ because it was +2.08 three bursts ago and it was never a result either.
 Cursor **6050**, flat, nothing armed. The pre-registered **December 2025 roll window (6700–6950)** is about
 **650 bars ahead**; all three detectors are on the record for it and the range/volume screen has never been
 tested out of sample.
+
+---
+
+## Burst 24 — bars 6050 → 6450 (2025-10-24 → 2025-11-18). 0 trades. Equity $50,688.86.
+
+Solo (1 AGENT, OPEN, ET 14:44 Tue). Callout `R1-00058-b006450`, `LEAN:NONE`. Cursor **6450/11316**,
+flat, drawdown $0, 58 callouts. Prefix clean. Detectors unchanged, newest still bar 5397.
+**400 bars examined, 0 candidates.**
+
+### 1. The most tempting bar in the replay, named rather than dressed up
+
+**ATR14 reached 31.98 — the highest of the entire tape.** The tape fell **6900.5 → 6594.0 across four
+sessions, −306 points**; bar **6448** printed the low on **323,254** contracts and bar **6449** closed **78
+points off it** on 248,372. Capitulation-and-reversal shape, at the **cheapest friction anywhere on this
+tape**: a 1.0-ATR stop is 32 points = $160, so commission plus one tick is **0.0246R**.
+
+**Every ingredient a discretionary trader wants is present except a predicate.** And the two things that
+make this bar attractive are precisely the two I have measured and killed with my own hand:
+
+- **A fresh swing extreme** is the case burst 18 measured dead — real levels bounce **50.1%** against a fair
+  control's **54.5%**, and *both* trade arms pay better on random price lines.
+- **High ATR** is the case burst 23 measured dead — every honest arm negative in all four quartiles, and the
+  2R target **less** reachable as ATR rises (57.9% → 49.4%).
+
+**So the honest state of this desk is not caution. It is that it has run out of hypotheses.** Thesis 5
+retired; the key-level bounce thesis retired by measurement; the high-ATR hope closed last burst. **Taking
+this trade to put a third row in the ledger would be manufacturing data**, which is worse than a thin
+record. I would rather the record say I had nothing than say I acted because a candle looked like something.
+
+**Stating the counter-argument, because it is real:** with ~4,900 bars left and 2 trades, a record this thin
+carries almost no information about my discretion. That is a genuine cost. **It is not a reason to trade** —
+a trade taken to populate a ledger tests nothing, since its outcome would be uninterpretable either way. The
+fix for a thin record is a predicate that survives a control, not a fuller ledger.
+
+### 2. The long arm is now visibly oscillating around |z| 2 — report and reading
+
+Required report: at **n=55** the always-LONG arm is back above the line, all-bar **+2.06**. The sequence
+across the last five bursts is the content:
+
+```
+n=51  +2.09     n=52  +2.01     n=53  +1.92     n=54  +1.84     n=55  +2.06
+```
+
+**Up, down, down, down, up, on single-observation increments.** Paired local control across the same span:
++1.77 → +1.65 → +1.52 → +1.43 → **+1.59**, never once crossing. **A statistic that wanders across a
+threshold in both directions as n grows one at a time is a null sitting near a cut point**, and five bursts
+of watching it is better evidence than any single reading. The deflated bar is **3.387** (width 310).
+Always-SHORT is **−0.033R against its local control**.
+
+### 3. Where I stopped
+
+Cursor **6450**, flat, nothing armed, ~4,870 bars left. The pre-registered **December 2025 roll window
+(6700–6950)** is now **250 bars ahead** — close enough that the next burst walks into it. All three
+detectors are on the record; the range/volume screen has never been tested out of sample.

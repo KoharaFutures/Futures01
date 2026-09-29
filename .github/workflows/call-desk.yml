@@ -1,0 +1,61 @@
+# The CALL desk's mechanical check (workspace/paper/CALL/desk_check.py) with NO LLM.
+# It fetches bars, resolves plans (resolve.py stays the only writer of outcomes), applies the
+# volatility stand-down, tracks regime and hub levels, and opens or updates a GitHub issue ONLY
+# when a pre-registered trigger fires (plan triggered/closed/expired, reversal called, data stale,
+# drawdown floor, brief changed). GitHub's mobile app turns that into a phone notification.
+#
+# THE DESK IS PAUSED (owner, 2026-09-29), so only manual runs are enabled. To resume, uncomment
+# `schedule`. desk_check.py checks the ET trading window itself, so a UTC cron can't fire it
+# outside hours or break at the 2026-11-01 DST change.
+name: call-desk
+on:
+  # schedule:
+  #   - cron: "*/5 * * * 0-5"    # every 5 min (GitHub's minimum); the script exits 3 outside the window
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  issues: write
+concurrency: { group: call-desk, cancel-in-progress: false }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install yfinance pillow numpy
+      - name: restore live fetch deltas (revision history between runs)
+        uses: actions/cache@v4
+        with:
+          path: workspace/paper/CALL/live/*_fetched_2*.jsonl
+          key: call-live-${{ github.run_id }}
+          restore-keys: call-live-
+      - name: desk check
+        id: check
+        run: |
+          set +e
+          python3 workspace/paper/CALL/desk_check.py --render auto --scale 2
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - name: raise attention (issue) only on a pre-registered trigger
+        if: steps.check.outputs.code == '10'
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          body=$(python3 -c "import json;d=json.load(open('workspace/paper/CALL/desk_status.json'));print(d['one_line']+'\n\ntriggers: '+', '.join(d['triggers'])+'\n\nevents: '+json.dumps(d['events'],default=str)[:3000]+'\n\nnotes: '+'; '.join(d['notes']))")
+          num=$(gh issue list --label call-desk --state open --json number -q '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body "$body"
+          else gh label create call-desk --force >/dev/null 2>&1; gh issue create --label call-desk --title "CALL desk needs attention" --body "$body"; fi
+      - name: commit desk state (never force)
+        if: steps.check.outputs.code != '3'
+        run: |
+          git config user.name "call-desk bot"
+          git config user.email "call-desk@users.noreply.github.com"
+          cd workspace/paper/CALL
+          git add state.json pending.jsonl journal.jsonl LEDGER.md desk_status.json desk_events.jsonl bias_history.jsonl feed_lag.jsonl 2>/dev/null   # cards stay out of git (0.5 MB each)
+          git diff --cached --quiet && exit 0
+          git commit -m "call-desk: $(python3 -c "import json;print(json.load(open('desk_status.json'))['one_line'])")"
+          for i in 1 2 3 4; do
+            git pull --no-rebase --no-edit origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2**i))
+          done
+          exit 1

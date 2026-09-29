@@ -28,7 +28,7 @@ from datetime import datetime, timezone
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
-DATA = HERE / "data"
+DATA = HERE / "live"   # base layer: symlinks to data/archive (0000-archive); fetch deltas land beside them, gitignored
 LAG = HERE / "feed_lag.jsonl"
 
 from futures_agents.data.yahoo import YahooFeed  # noqa: E402

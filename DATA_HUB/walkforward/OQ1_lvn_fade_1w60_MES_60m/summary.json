@@ -1,0 +1,141 @@
+{
+ "rule": "OQ1_lvn_fade_1w60",
+ "rule_sha": "ea7a506a2b99",
+ "symbol": "MES",
+ "tf": 60,
+ "bars": 11316,
+ "data_sha": "5f0e55bc560d",
+ "score": {
+  "real": {
+   "n": 35,
+   "mean_r": 0.1801,
+   "sd": 0.9397,
+   "t": 1.134,
+   "win_rate": 0.6,
+   "payoff": 0.995,
+   "first_half": 0.0161,
+   "second_half": 0.335
+  },
+  "placebo_P1": {
+   "mean_r": -0.1242,
+   "sd": 0.9474,
+   "draws": 1000
+  },
+  "z_vs_placebo": 1.915,
+  "empirical_p": 0.027
+ },
+ "level_placebo": {
+  "runs": {
+   "0": {
+    "n": 22,
+    "mean_r": 0.0523,
+    "sd": 0.9809,
+    "t": 0.25,
+    "win_rate": 0.545,
+    "payoff": 0.933,
+    "first_half": -0.0587,
+    "second_half": 0.1633
+   },
+   "1": {
+    "n": 35,
+    "mean_r": 0.0446,
+    "sd": 1.0086,
+    "t": 0.262,
+    "win_rate": 0.543,
+    "payoff": 0.921,
+    "first_half": -0.1034,
+    "second_half": 0.1844
+   },
+   "2": {
+    "n": 35,
+    "mean_r": -0.2671,
+    "sd": 0.978,
+    "t": -1.616,
+    "win_rate": 0.4,
+    "payoff": 0.862,
+    "first_half": -0.4549,
+    "second_half": -0.0897
+   },
+   "3": {
+    "n": 21,
+    "mean_r": -0.0459,
+    "sd": 0.9917,
+    "t": -0.212,
+    "win_rate": 0.524,
+    "payoff": 0.825,
+    "first_half": 0.1408,
+    "second_half": -0.2156
+   },
+   "4": {
+    "n": 28,
+    "mean_r": -0.1142,
+    "sd": 0.9838,
+    "t": -0.614,
+    "win_rate": 0.464,
+    "payoff": 0.907,
+    "first_half": -0.1987,
+    "second_half": -0.0296
+   },
+   "5": {
+    "n": 28,
+    "mean_r": -0.2361,
+    "sd": 0.9651,
+    "t": -1.294,
+    "win_rate": 0.429,
+    "payoff": 0.806,
+    "first_half": -0.2545,
+    "second_half": -0.2177
+   },
+   "6": {
+    "n": 35,
+    "mean_r": -0.196,
+    "sd": 0.9578,
+    "t": -1.211,
+    "win_rate": 0.429,
+    "payoff": 0.87,
+    "first_half": -0.0432,
+    "second_half": -0.3404
+   },
+   "7": {
+    "n": 28,
+    "mean_r": -0.0409,
+    "sd": 0.9718,
+    "t": -0.222,
+    "win_rate": 0.536,
+    "payoff": 0.793,
+    "first_half": -0.1459,
+    "second_half": 0.0642
+   },
+   "8": {
+    "n": 32,
+    "mean_r": 0.0603,
+    "sd": 0.9939,
+    "t": 0.343,
+    "win_rate": 0.562,
+    "payoff": 0.881,
+    "first_half": -0.0446,
+    "second_half": 0.1652
+   },
+   "9": {
+    "n": 27,
+    "mean_r": -0.0036,
+    "sd": 1.0193,
+    "t": -0.018,
+    "win_rate": 0.519,
+    "payoff": 0.922,
+    "first_half": 0.1853,
+    "second_half": -0.179
+   }
+  },
+  "mean": -0.0747,
+  "beats": 10
+ },
+ "luck_bar": 1.794,
+ "family_trials": 5,
+ "verdict": "positive but under the luck bar 1.794 (t 1.134, z 1.915): not an edge",
+ "equity": 51148.2,
+ "max_dd": 623.34,
+ "absorbed": null,
+ "refused": 0,
+ "skipped": 12
+}

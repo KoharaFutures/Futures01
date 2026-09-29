@@ -1,0 +1,72 @@
+path	decision	reason	summary
+CALLOUT.md	KEEP	canonical live-desk brief (paper mode, card schema, journal schema); note stale branch name claude/intelligent-feynman-ongyjw and pre-N214 content	Operating brief for CALL desk: Yahoo data caveats, retracted per-symbol table, rules 1-8, absorbing state $2,800, session 18:00-16:00, PAPER MODE card/journal schema
+REPLAY.md	KEEP	active replay desk brief	Operating brief for REPLAY desk: visible.jsonl-only rule, harness commands, placebo |z|>4.5 = leak, 60m rationale, harness-written callout fields
+workspace/paper/CALL/CHECK_PROCEDURE.md	KEEP	canonical check procedure; rules still valid (sizing ladder, vol stand-down, breakout prohibition, unreachable void, cadence/cron UTC)	1,138-line standing procedure: Steps 0-7, fast check, reversal gate conditions, forward levels, stand-down table, card/cron/HEAT/WATCH rules
+workspace/paper/CALL/CONSOLIDATION.md	KEEP	only cross-desk verdict + agenda before CALL resumes (§5); §1 numbers stale	CALL vs REPLAY comparison, 4 nulls on direction, costs per contract, unexecutable 50% partial, volume/touch-count retractions, session inventory
+workspace/paper/CALL/FINDINGS_INDEX.md	KEEP	generated index of N1-N261 (N262-N264 missing; rebuild with index_notes.py)	Thematic index of CALL NOTES findings by N-number
+workspace/paper/CALL/LEDGER.md	KEEP	canonical generated ledger (resolve.py), regenerate after CALL-0010 resolves	Account ($49,958.36, DD $198.20), 6 closed trades, 2W/4L, -0.207R, CALL-0010 pending
+workspace/paper/CALL/state.json	KEEP	canonical account state read/written by resolve.py	Equity 49958.36, peak 50156.56, DD 198.20, realized -41.64, 6 closed positions with fills/exits/R
+workspace/paper/CALL/pending.jsonl	KEEP	canonical plan register (resolve.py input); CALL-0010 PENDING stale	11 pre-registered plans CALL-0001..0011 with trigger/stop/TP/basis/status
+workspace/paper/CALL/journal.jsonl	KEEP	canonical callout journal (CALLOUT.md schema)	32 rows: NO-TRADE rows, prereg/amend rows, fills and resolved outcomes for CALL-0001..0011
+workspace/paper/CALL/NOTES.md	ARCHIVE	session notes (10,325 lines); durable content extracted to DATA_HUB/_sweep/agent3_desks.md and FINDINGS_INDEX.md; keep as N-number source	Chronological findings N1-N264 of the live CALL desk 2026-09-27..29
+workspace/paper/CALL/DECISIONS.md	ARCHIVE	session decision log; lessons extracted	39 priced decisions (foreclosed/marginal/realized) incl. cron UTC bug, stand-down costs, owner stop
+workspace/paper/CALL/BASIS	KEEP	runtime input read by resolve.py/card.py/status_card.py (value 285962f is stale)	one-line basis sha 285962f
+workspace/paper/CALL/bias_history.jsonl	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	1,578 rows of per-frame headlines per check 2026-09-28..29
+workspace/paper/CALL/feed_lag.jsonl	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	5,488 rows symbol/frame/newest bar/lag_minutes
+workspace/paper/CALL/standdown_cost.txt	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	'BOTH ATRs CLEAR - the vetoes are off...'
+workspace/paper/CALL/cont1_results.json	KEEP	evidence behind the breakout-continuation prohibition	CONT-1 results 4 cells MGC/MNQ 15m/60m: E -0.23..-0.36R, t -3.6..-5.1
+workspace/paper/CALL/card_*.png	ARCHIVE	rendered card images (13 PNGs), regenerable by card_png.py/status_card.py	Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT
+workspace/paper/CALL/data/	ARCHIVE	raw fetch fragments: 2,960 delta snapshots (16MB) + fetch_manifest.json; deltas are the only copy of revisions, so archive whole dir, never prune	MGC/MNQ 1m(446 files each), 5m(474/470), 15m(414/411), 60m(101/100), 240m(46), 1440m(3); fetched 2026-09-27T18:15Z..2026-09-29T04:57Z; merged coverage 1m 09-20..09-29 00:47 ET, 15m 09-22..09-29 00:30, 60m 08-30..09-28 22:00
+workspace/paper/CALL/fetch.py	KEEP	reusable Yahoo fetcher with stub rejection + delta snapshots	python3 fetch.py -> data/ deltas + feed_lag.jsonl (MGC/MNQ hard-coded)
+workspace/paper/CALL/chart.py	KEEP	reusable delta loader + ema/swings/bias library	python3 chart.py MGC MNQ --frame 15 --bars 44
+workspace/paper/CALL/regime.py	KEEP	reusable multi-frame bias/reversal tools (known defects N194/N248/N252)	python3 regime.py MGC MNQ; reversal_setup(); classify()
+workspace/paper/CALL/resolve.py	KEEP	reusable honest paper resolver (costs, entry-bar stop rule, unreachable void)	python3 resolve.py -> state.json, journal outcomes, LEDGER.md
+workspace/paper/CALL/heat.py	KEEP	reusable MAE/MFE/HEAT	python3 heat.py
+workspace/paper/CALL/thesis.py	KEEP	reusable NO_FILL diagnosis	python3 thesis.py
+workspace/paper/CALL/project.py	KEEP	reusable forward-level projector (fib, session VWAP, ATR reach)	python3 project.py MGC MNQ
+workspace/paper/CALL/watch.py	KEEP	reusable gate-distance/capacity/counter-trend display	python3 watch.py
+workspace/paper/CALL/card.py	KEEP	reusable ANSI cards from record	python3 card.py [--only ID]
+workspace/paper/CALL/card_png.py	KEEP	reusable PNG card renderer (cosmetic)	python3 card_png.py [ids] [--scale] [--blank]
+workspace/paper/CALL/status_card.py	KEEP	reusable status PNG (cosmetic)	python3 status_card.py 3.0 --auto
+workspace/paper/CALL/index_notes.py	KEEP	rebuilds FINDINGS_INDEX.md	python3 index_notes.py
+workspace/paper/CALL/cont1.py	KEEP	pre-registered CONT-1 test backing an installed prohibition	reads data/archive MGC/MNQ 15m/60m, writes cont1_results.json
+workspace/paper/CALL/vol1.py	ARCHIVE	one-off VOL-1 test (null, N221)	pivot-bar volume vs forward direction, 200-draw placebo
+workspace/paper/CALL/confluence.py	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	evaluate plan vs 13 strategy families + levels()
+workspace/paper/REPLAY/R1/SUMMARY.md	KEEP	active replay desk; one-page result	R1 result at bar 3400: 2 wins +$688.86, placebo z +1.021, random walk, costs 0.081R hurdle, retractions
+workspace/paper/REPLAY/R1/NOTES.md	KEEP	active replay desk (journal being appended)	Bursts 1-17 journal, 9-agent round, corrections, levels study
+workspace/paper/REPLAY/R1/state.json	KEEP	active replay desk (harness state)	cursor 3400/11287, equity 50688.86, MES spec cost 2.69
+workspace/paper/REPLAY/R1/callouts.jsonl	KEEP	active replay desk (harness-written record)	51 callouts: 2 SHORT trades (+1.895R, +1.854R) + 49 NO_TRADE with why
+workspace/paper/REPLAY/R1/journal.jsonl	KEEP	active replay desk (harness journal)	57 rows NO_TRADE/order events with cursor
+workspace/paper/REPLAY/R1/visible.jsonl	KEEP	active replay desk (harness-written visible tape)	3,400 MES 60m bars 2024-10-06 19:00 -> 2025-05-12 11:00 ET
+workspace/paper/REPLAY/R1/missed.jsonl	KEEP	active replay desk (rewritten by missed.py)	48 stand-down counterfactual rows best_r/mfe_r/long_r/short_r
+workspace/paper/REPLAY/R1/NO_TRADE.jsonl	ARCHIVE	dead: burst-1 hand-written stand-down, superseded by harness callout R1-00001	1 NO TRADE row at bar 40 (2024-10-08 11:00)
+workspace/paper/REPLAY/R1/view.py	KEEP	active replay desk tool	compact tape view, roll flags, gap clusters
+workspace/paper/REPLAY/R1/watch.py	KEEP	active replay desk tool	step harness bar-by-bar, halt on armed condition
+workspace/paper/REPLAY/R1/levels.py	KEEP	active replay desk tool (control deprecated -> E9_levels_fair.py)	walk-forward S/R levels and bounce/break study
+workspace/paper/REPLAY/R1/scenario.py	KEEP	active replay desk tool	nearest levels with hold/break/neither/gapped branches
+workspace/paper/REPLAY/R1/missed.py	KEEP	active replay desk tool	stand-down counterfactual vs all-bar control
+workspace/paper/REPLAY/R1/mode.py	KEEP	active replay desk tool	1 vs 3 agent mode by CME clock
+workspace/paper/REPLAY/R1/agents/C_merge.py	KEEP	active replay desk; adopted primary roll-merge screen	straddled forbidden corridor detector
+workspace/paper/REPLAY/R1/agents/E9_levels_fair.py	KEEP	active replay desk; designated fair level control	touch/count/ATR-matched decontaminated random-line control
+workspace/paper/REPLAY/R1/agents/E2_randomwalk.py	KEEP	reusable random-walk battery	VR/ACF/Ljung-Box/runs/Hurst on closes
+workspace/paper/REPLAY/R1/agents/E5_costs.py	KEEP	reusable cost-vs-R calculator	cost as fraction of R by ATR quartile
+workspace/paper/REPLAY/R1/agents/C_regime.py	KEEP	active replay desk; thesis-5 signal generator reused by E8/D	regime classification + mechanised thesis 5 (Tier A 444 / Tier B 91)
+workspace/paper/REPLAY/R1/agents/A_grid.py	KEEP	active replay desk; reproducer for agent A (one-off)	geometry sweep of stand-down null, 36 cells
+workspace/paper/REPLAY/R1/agents/C_shape.py	KEEP	active replay desk; reproducer (one-off)	bar-shape/volume substrate audit (18:00 zero volume)
+workspace/paper/REPLAY/R1/agents/D_discretion.py	KEEP	active replay desk; reproducer (one-off)	do discretion filters separate thesis 5? z<=+0.63
+workspace/paper/REPLAY/R1/agents/E4_session.py	KEEP	active replay desk; reproducer (one-off)	prices the 16:00 flat: 0.0032R/trade
+workspace/paper/REPLAY/R1/agents/E6_hours.py	KEEP	active replay desk; reproducer (one-off)	rules 5/6 on R1 tape; 18:00 bar z +4.30
+workspace/paper/REPLAY/R1/agents/E9_controls.py	KEEP	active replay desk; reproducer (one-off)	audit of missed.py control (fair) and levels control (unfair)
+workspace/paper/REPLAY/R1/agents/A_geometry.md	KEEP	active replay desk; cited finding report	0/36 geometry cells |z|>=2; rule 4 is a smooth gradient
+workspace/paper/REPLAY/R1/agents/B_audit.md	KEEP	active replay desk; cited finding report	27 prose errors in NOTES vs machine record
+workspace/paper/REPLAY/R1/agents/C_substrate.md	KEEP	active replay desk; cited finding report	roll merge bars 1146-1158, 18:00 zero volume, regime of the 2 trades
+workspace/paper/REPLAY/R1/agents/E1_reconcile.md	KEEP	active replay desk; cited finding report	442-vs-91 resolved: Tier A +0.025R z +0.59; Tier B contaminated
+workspace/paper/REPLAY/R1/agents/E2_randomwalk.md	KEEP	active replay desk; cited finding report	MES 60m random walk; vol predictable R2 0.112
+workspace/paper/REPLAY/R1/agents/E3_leak.md	KEEP	active replay desk; cited finding report	0 look-ahead breaches across 678 price mentions
+workspace/paper/REPLAY/R1/agents/E4_session.md	KEEP	active replay desk; cited finding report	16:00 flat costs 0.0032R, CI [0.016 saved, 0.022 spent]
+workspace/paper/REPLAY/R1/agents/E5_costs.md	KEEP	active replay desk; cited finding report	$2.69 RT = 2.15 ticks; hurdle 0.081R vs gross +0.0225R
+workspace/paper/REPLAY/R1/agents/E5_raw.txt	ARCHIVE	dead raw output mirror of E5_costs.py (regenerable)	E5 raw printout
+workspace/paper/REPLAY/R1/agents/E6_hours.md	KEEP	active replay desk; cited finding report	rule 6 holds 0/22; rule 5 census z +0.10; 18:00 bar
+workspace/paper/REPLAY/R1/agents/E7_codereview.md	KEEP	active replay desk; cited finding report	34 code findings (5 critical); no look-ahead in code
+workspace/paper/REPLAY/R1/agents/E8_predicate.md	KEEP	active replay desk; cited finding report	thesis-5 predicate search 105 cuts, FW p 0.86, OOS flip -> retired
+workspace/paper/REPLAY/R1/agents/E9_controls.md	KEEP	active replay desk; cited finding report	levels control unfair; bounce arm z +2.52 but +0.043R < cost; fresh-extreme claim retracted

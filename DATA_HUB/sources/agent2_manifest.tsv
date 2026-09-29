@@ -1,0 +1,170 @@
+path	decision	reason	summary
+futures_agents/	KEEP	core package	Engine, features, strategies (combinator 13 TEMPLATES, library 79 conditions, profiles, registry, coverage), scanners (breach.py key-level classifier, render.py with hard-coded 99X1 MEASURED 43.0% vs 42.6%); scanners/measure.py referenced but missing
+tests/	KEEP	core test suite	590+ tests incl. test_breach_scanner.py and test_symbol_profiles.py (asserts profile fields the generator ignores)
+data/archive/	KEEP	raw data source (append-only, tracked)	29 jsonl bar archives; MGC_1440m bars 0-383 are a different instrument (splice 2012-04-25) and MGC daily fails roll audit; MCL_1440m is 1 bar
+csv/raw/	KEEP	raw data source (read-only, chattr +i)	48 CSVs, 11 symbols (MES MNQ MGC MCL ES NQ MZC MZS MZW QQQ SPY) 1m-1d; grains splice contract months (D40); QQQ/SPY intraday volume 58-59% zero
+README.md	KEEP	canonical top-level doc	Project overview, 13 agents, commands, layout; 'Honest status' section is stale (says synthetic-only data)
+docs/AGENT_CONTRACT.md	KEEP	canonical doc	Integration contract for agent modules (interfaces, bus, ownership)
+docs/DESK_UI.md	KEEP	canonical doc	Risk console (loopback HTTP UI) design and config-folder contract
+docs/YAHOO_FEED.md	KEEP	canonical doc	futures_agents/data/yahoo.py usage; auto_adjust=False, no roll handling
+desk/	KEEP	active config	desk-config.json risk config for $50k account (5k max DD, min_reward_risk 1.6, min_backtest_trades 40, min_expectancy 0.08R) + README
+scripts/fetch_github_data.py	KEEP	reusable tool	Pulls Oanda CFD 1m bars (NAS100/SPX500/XAU) from GitHub into data/*_1m.csv - the 352-session deep ORB archive (gitignored, absent in checkout)
+scripts/fetch_yahoo.py	KEEP	reusable tool	Yahoo full-size continuous front-month bars into data/{SYM}_{m}m.csv; no roll adjustment
+packaging/	KEEP	build tooling	PyInstaller spec + desk_entry.py for the frozen risk console
+scan_reports/README.md	KEEP	canonical report	Report conventions (7 mandatory statements), audit status 64 STANDS/33 WEAKENED/6 INVALID of 104 claims, index
+scan_reports/2026-09-23_MGC-MES-NQ_deep-scan.md	KEEP	canonical report	39 cells, 554k screened, 0 of 2,452 clear 4.36; MES best, MGC no positive group; corr(win,exp) +0.745; nesting correction
+scan_reports/2026-09-24_MGC-MCL_ranking-persistence-and-chronology.md	KEEP	canonical report	Top-10 ranking worthless OOS; selecting worse than not selecting; per-symbol framework (MCL MOMENTUM); no chronological chain; R6 retractions
+scan_reports/2026-09-24_ORB-and-ICT.md	KEEP	canonical report	ORB median -0.092R, ICT 0 live-eligible, 5 placebos all win, D35 fill-bug lesson, fib lead refuted
+scan_reports/2026-09-24_strategy-studies_21-study-programme.md	KEEP	canonical report	912 comparisons, 56 Bonferroni survivors (session-close off, exit model, 15-16 ET, cash-open fade), refuted premises, unusable groups
+research/backtests/cross_symbol_timeframes.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic MES/MGC/MCL + tf groups: HTF confirmation keeps 28-44% trades, -0.033R t -1.81; cost 5.4% (MCL) vs 1.7% (MGC) of risk; time_stop in 1m bars defect
+research/backtests/momentum_trend.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic MNQ MOMENTUM/TREND/PULLBACK/MTF: seed-5 winner fails on 3/5 paths, pooled OOS +0.0149R t 0.77; n=39 really n=25 (session-boundary round trips)
+research/backtests/profile_vwap.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic MNQ VWAP/VOLUME_PROFILE: VWAP WF IS +0.132 -> OOS -0.029R; above_vwap fires 100%; best rule +0.0263R t 2.142 withheld
+research/backtests/reversion_breakout.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic MNQ MEAN_REVERSION/REVERSAL/BREAKOUT/FIB: volatility_compressed starves BREAKOUT (3.1% bars), fib leg anchor broken (52.9% agreement), MR 13/19 rule sets zero signals
+research/backtests/supply_demand_liquidity.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic MNQ S/D, LIQUIDITY, OR: zones 0->0 rule sets >=30 trades, stop inside zone 83-93%, LIQUIDITY WF credible on 1 path of 3, OR 1-3 fires/120d
+research/confluence/analyst_b.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Audit of '38 of 38' coverage: 22/38 distinct, 17/38 exercised; 14/73 conditions never generated; 70% of strategies never fire (synthetic)
+research/confluence/developer.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Adversarial correctness audit f82bd35: S/R cache leaked future (3,803/4,000 snapshots), inverted news blackout, fib mirror bug - fixed at 5583805
+research/confluence/news_macro.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	econ_calendar audit: FOMC rule reproduced 52/72 decisions + 20 phantom; fixed to published dates; core PCE 6/15; 2025-26 shutdown breaks schedule
+research/confluence/reversion_specialist.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic review of profile/zone/fib conditions: poc_reversion 61.6% unreachable, lvn empty 34/59, zone_touch not a sweep relabel, no level-referenced exits
+research/confluence/strategy_research.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic audit of 21 new conditions: WF OOS -0.120R t -3.04; value_area_breakout = prior_day_breakout (J 0.831); news filters byte-identical 124/126
+research/confluence/trend_specialist.md	ARCHIVE	superseded synthetic-data seat report; findings captured in agent2_research.md	Synthetic trend-seat review: fib leg is a bounding box, imbalance_pullback has no pullback (+0.219 vs -0.016 ATR with real retrace), FIB/SD 6 and 1 rankable per 400
+workspace/studies/BRIEF.md	ARCHIVE	one-off agent brief	Study-programme brief: use toolkit, T.ab, deflation, minimum coverage (MGC/MES/NQ x 240/60 x 274/180/90)
+workspace/studies/BRIEF_ORB_ICT.md	ARCHIVE	one-off agent brief	ORB/ICT brief: known prior measurements table, paired tests (D28), firing rates, Jaccard, OOS rules
+workspace/studies/BRIEF_RANKING.md	ARCHIVE	one-off agent brief	Top-10 ranking brief: placebo cohort required in every cell
+workspace/studies/BRIEF_STRUCTURE.md	ARCHIVE	one-off agent brief	Structure-studies brief: full paired/OOS method; several priors in it measured backwards
+workspace/studies/DEFECTS.md	KEEP	canonical defect register	D1-D58 + merge hazards M1-M3 + D-candidates (MGC splice, evening session exit, non-contiguous bars, CL negative price); ema_stack contradiction
+workspace/studies/ORB_ICT_FINDINGS.md	ARCHIVE	detail superseded by scan_reports/2026-09-24_ORB-and-ICT.md; captured	6 ORB/ICT studies in full (firing rates, sham zones, sweep chain, kill zones, OTE alias); still carries unretracted 'nulls are real absence' and 'NQ=MNQ' lines
+workspace/studies/RANKING_FINDINGS.md	ARCHIVE	detail superseded by scan_reports ranking report; captured	Top-10 ranking: 112-cell placebo counts, nested overlap, disjoint thirds, realised roll, worker 1/2 detail, MGC+MCL re-scope
+workspace/studies/SERIES_AUDIT.md	KEEP	canonical data-eligibility gate	Roll/scale audit of 77 series: MGC daily fails roll, splice at 2012-04-25, CL negative price, grains flat bars, QQQ/SPY volume, open!=prior close; eligibility table
+workspace/studies/STRATEGY_CATALOGUE.md	KEEP	canonical catalogue of the searched space	13 templates, 79 conditions/19 groups, 9 exit models, per-symbol profile exclusions, void configurations (19% of strategies); note: 'no study overrode a profile' is wrong
+workspace/studies/STRUCTURE_FINDINGS.md	KEEP	only full record of 5 structure studies (no scan_report covers them)	freshness, swing depth, lead-lag, geometry, nested pullback: all refuted; 0.5-ATR structural stop floor; nested_resumption hypothesis
+workspace/studies/aggregate_studies.py	ARCHIVE	one-off merger	Merges workspace/studies/out/*.json (gitignored, absent) into merged.json
+workspace/studies/toolkit.py	KEEP	reusable tool (imported by roundtable code)	measure/ab/scan_rows/free_t/wilson/make_strategy/measure_custom(D38: zeroes custom conds)/disjoint_slices/save; ab() inflates z on correlated arms (D28)
+workspace/chrono/FINDINGS.md	ARCHIVE	superseded by scan_reports ranking report Part C; captured	No chronological chaining (MGC/MNQ/MES daily); says 'thirteen groups' (actually 6/4/3); MGC daily roll-contaminated
+workspace/chrono/ledger.py	KEEP	reusable tool (re-run command in scan report)	Builds per-(month, group) trade-expectancy ledger for one symbol/tf using all 13 groups
+workspace/chrono/analyse.py	KEEP	reusable tool (re-run command in scan report)	Winner persistence, own-group autocorrelation, cross-lag chaining tests with shuffle null + Bonferroni
+workspace/chrono/ledgers/	ARCHIVE	raw result dump	6 ledgers (MCL_60, MES_60/1440, MGC_60/1440, MNQ_1440): month -> group -> list of trade R
+workspace/chrono/*.log	ARCHIVE	raw run logs	5 one-line logs: strategies/trades/months per ledger (e.g. MGC 60m 5,443 strategies, 15,657 trades, 11 months)
+workspace/bigscan/cell.py	KEEP	reusable tool (deep-scan reproduce command)	Runs one (symbol, tf, window) cell over all 13 groups; clone collapse, Wilson CI, floor 15
+workspace/bigscan/aggregate.py	KEEP	reusable tool	Builds win-rate and payoff tables from cells; docstring quotes stale corr +0.037 (correct is +0.745)
+workspace/bigscan/rerun.txt	ARCHIVE	one-off job list	46 queued cells for MZC/MZS/MZW/QQQ/SPY; no results for QQQ/SPY exist in lane
+workspace/newstrats/__init__.py	KEEP	reusable condition/harness module	package marker (roundtable imports newstrats.placebo)
+workspace/newstrats/analyse.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/analyse_orb_w2.py	ARCHIVE	one-off driver/analysis; findings captured	Analysis of the worker-2 ORB census: joint distribution, paired arms, OOS.
+workspace/newstrats/analyse_wf.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/analyze.py	ARCHIVE	one-off driver/analysis; findings captured	Per-cell analysis of the geometry experiment.
+workspace/newstrats/census.py	ARCHIVE	one-off driver/analysis; findings captured	Firing-rate + geometry census. No strategies, no exits - just how often each
+workspace/newstrats/depth.py	KEEP	reusable condition/harness module	Swing-depth (consecutive HH/HL) conditions; sd_count_ge1 == structure_trend
+workspace/newstrats/freshness.py	KEEP	reusable condition/harness module	Structure age and distance-to-invalidation conditions
+workspace/newstrats/geometry.py	KEEP	reusable condition/harness module	Swing geometry conditions (legs expanding/contracting, symmetry, pullbacks shallowing)
+workspace/newstrats/ict_analyse.py	ARCHIVE	one-off driver/analysis; findings captured	Per-cell paired ablation.  No T.ab anywhere (defect D28).
+workspace/newstrats/ict_bias.py	ARCHIVE	one-off driver/analysis; findings captured	Bias audit: look-ahead, repainting, cost understatement, fill realism.
+workspace/newstrats/ict_blocks.py	KEEP	reusable condition/harness module	ICT order blocks, FVGs, breakers, inversion FVGs, fresh/newest/return conditions, sham-zone placebo
+workspace/newstrats/ict_census.py	ARCHIVE	one-off driver/analysis; findings captured	Floor-free census of the ICT sequence.  Counts first, performance later.
+workspace/newstrats/ict_jaccard.py	ARCHIVE	one-off driver/analysis; findings captured	Bar-level identity check against the library.
+workspace/newstrats/ict_lift.py	ARCHIVE	one-off driver/analysis; findings captured	Is the sequence a mechanism, or two independent events that sometimes land near each other?
+workspace/newstrats/ict_lift2.py	ARCHIVE	one-off driver/analysis; findings captured	The lift, with the mechanical confound removed.
+workspace/newstrats/ict_limit.py	ARCHIVE	one-off driver/analysis; findings captured	The strongest objection to this study's negative verdict, tested rather than argued.
+workspace/newstrats/ict_mtf.py	ARCHIVE	one-off driver/analysis; findings captured	Multi-timeframe: higher-timeframe liquidity, lower-timeframe entry.
+workspace/newstrats/ict_perf.py	ARCHIVE	one-off driver/analysis; findings captured	Ablation backtest of the ICT sequence, out of sample by construction.
+workspace/newstrats/ict_publish.py	ARCHIVE	one-off driver/analysis; findings captured	Publish the three deliverables.
+workspace/newstrats/ict_regime.py	ARCHIVE	one-off driver/analysis; findings captured	Where, when and in what regime the full chain's trades happen - and whether it matters.
+workspace/newstrats/ict_sens.py	ARCHIVE	one-off driver/analysis; findings captured	Parameter sensitivity: how many bars may elapse between the sweep and the MSS?
+workspace/newstrats/ict_sweep.py	KEEP	reusable condition/harness module	Ordered sweep -> MSS -> displacement FVG -> retrace chain detector (look-ahead audited)
+workspace/newstrats/ict_time.py	ARCHIVE	one-off driver/analysis; findings captured	ICT time-of-day (kill zones) and Optimal Trade Entry (OTE).
+workspace/newstrats/ict_wf.py	ARCHIVE	one-off driver/analysis; findings captured	Walk-forward on the one thing a user of this idea would actually tune: the timing tolerance.
+workspace/newstrats/leadlag.py	KEEP	reusable condition/harness module	LTF-breaks-before-HTF conditions (ltf_break_first, htf_confirms_late)
+workspace/newstrats/leadlag_measure.py	ARCHIVE	one-off driver/analysis; findings captured	Measurement: does the lower timeframe change structure before the higher one?
+workspace/newstrats/nested.py	KEEP	reusable condition/harness module	Nested MTF structure conditions (nested_pullback, nested_resumption, nested_aligned==mtf_aligned)
+workspace/newstrats/oos_orb_w2.py	ARCHIVE	one-off driver/analysis; findings captured	Out-of-sample for every headline claim: 60/40 temporal split + 3 disjoint slices.
+workspace/newstrats/orb.py	KEEP	reusable condition/harness module	Correct ORB conditions orb_break/touch/retest/fade_{5,15,30,60}m, INERT counter, long_series() for Oanda 1m archive
+workspace/newstrats/orb_w2.py	KEEP	reusable condition/harness module	Explicit ORB simulator and primitives (worker 2); D35 fill fix inside
+workspace/newstrats/placebo.py	KEEP	reusable condition/harness module	Placebo cohort builder (random/shift/shuffle); imported by 8+ roundtable scripts; placebo_shift leaks (D42)
+workspace/newstrats/publish.py	ARCHIVE	one-off driver/analysis; findings captured	Publish the geometry results into the three workspace files.
+workspace/newstrats/rank.py	KEEP	reusable condition/harness module	Recurring top-10 ranking with placebo arm built in (all groups)
+workspace/newstrats/rank_audit.py	KEEP	reusable condition/harness module	Three ranking audits: nested overlap null, disjoint-thirds persistence, realised causal roll
+workspace/newstrats/robust_orb_w2.py	ARCHIVE	one-off driver/analysis; findings captured	Robustness: parameter sensitivity, cost sensitivity, regime split, and a
+workspace/newstrats/robustness.py	ARCHIVE	one-off driver/analysis; findings captured	Anti-overfitting checks for the geometry conditions.
+workspace/newstrats/run_bt.py	ARCHIVE	one-off driver/analysis; findings captured	Matched arm comparison: early entry vs confirmation entry vs the incumbent.
+workspace/newstrats/run_freshness.py	ARCHIVE	one-off driver/analysis; findings captured	Driver for the structure-freshness / distance-to-invalidation study.
+workspace/newstrats/run_geometry.py	ARCHIVE	one-off driver/analysis; findings captured	Matched-arm experiment for swing geometry.
+workspace/newstrats/run_measure.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/run_orb_w2.py	ARCHIVE	one-off driver/analysis; findings captured	Worker-2 ORB census: firing rates first, then the joint (win, payoff, exp) distribution.
+workspace/newstrats/run_rank.py	ARCHIVE	one-off driver/analysis; findings captured	Worker 1's cells: MGC and MCL, 60m and 240m, four nested windows + three
+workspace/newstrats/run_rates.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/run_stress.py	ARCHIVE	one-off driver/analysis; findings captured	Parameter sensitivity + cost stress + a search-gap demonstration.
+workspace/newstrats/run_wf.py	ARCHIVE	one-off driver/analysis; findings captured	Walk-forward (6 sequential disjoint blocks) + the 240m structure-signal shootout.
+workspace/newstrats/save_arms.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/save_measure.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/save_mech.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/save_robust.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/save_wf.py	ARCHIVE	one-off driver/analysis; findings captured	driver/analysis script (no docstring)
+workspace/newstrats/sensitivity.py	ARCHIVE	one-off driver/analysis; findings captured	Parameter sensitivity of the geometry conditions.
+workspace/newstrats/store.py	ARCHIVE	one-off driver/analysis; findings captured	Incremental save under the single study id ``s_geometry``.
+workspace/newstrats/w4_arms.py	ARCHIVE	one-off driver/analysis; findings captured	Does trading the return to an order block / fair value gap pay, after costs?
+workspace/newstrats/w4_audit.py	ARCHIVE	one-off driver/analysis; findings captured	Leakage audit. Every claim in the ICT studies rests on these being true.
+workspace/newstrats/w4_barlevel.py	ARCHIVE	one-off driver/analysis; findings captured	Bar-level test of the ICT claim itself, before any strategy is built.
+workspace/newstrats/w4_barlevel_oos.py	ARCHIVE	one-off driver/analysis; findings captured	The bar-level test again, split 60/40 in time. In sample, then out.
+workspace/newstrats/w4_freshness.py	ARCHIVE	one-off driver/analysis; findings captured	Does freshness matter - an untested block versus one price has already used?
+workspace/newstrats/w4_perf.py	ARCHIVE	one-off driver/analysis; findings captured	Full statistics for the ICT block/gap conditions - the performance database.
+workspace/newstrats/w4_publish.py	ARCHIVE	one-off driver/analysis; findings captured	Publish the three deliverables for the ICT order-block / FVG study.
+workspace/newstrats/w4_rates.py	ARCHIVE	one-off driver/analysis; findings captured	Firing rates, bar-level Jaccard against the library, and parameter sensitivity.
+workspace/newstrats/w6_analyse.py	ARCHIVE	one-off driver/analysis; findings captured	Combine matched-arm cells: per-cell sign z, Stouffer, and a declared OOS split.
+workspace/newstrats/w6_arms.py	ARCHIVE	one-off driver/analysis; findings captured	Matched-arm harness: same bars, same base rule set, same exit, one thing swapped.
+workspace/newstrats/w6_bars.py	ARCHIVE	one-off driver/analysis; findings captured	Part A, step 1: BAR-LEVEL hour-of-day census, before any strategy exists.
+workspace/newstrats/w6_bars2.py	ARCHIVE	one-off driver/analysis; findings captured	Part A, step 2: the control that decides whether the ICT clock adds anything.
+workspace/newstrats/w6_deliver.py	ARCHIVE	one-off driver/analysis; findings captured	Publish the three deliverables, ranked on durability rather than on profit.
+workspace/newstrats/w6_fibbars.py	ARCHIVE	one-off driver/analysis; findings captured	The untested lead, tested the cleanest way first: golden pocket vs shallow
+workspace/newstrats/w6_ict_time.py	ARCHIVE	one-off driver/analysis; findings captured	ICT time-of-day (kill zones) and Optimal Trade Entry (OTE).
+workspace/newstrats/w6_publish.py	ARCHIVE	one-off driver/analysis; findings captured	Publication run: 6-fold walk-forward at 60m, full metric set, durability ranking.
+workspace/newstrats/w6_rates.py	ARCHIVE	one-off driver/analysis; findings captured	Firing rates and bar-level Jaccard overlap - before any performance number.
+workspace/newstrats/w6_robust.py	ARCHIVE	one-off driver/analysis; findings captured	Robustness report: the anti-overfitting audit, stated as what was checked and found.
+workspace/newstrats/w6_run_cost.py	ARCHIVE	one-off driver/analysis; findings captured	Cost control: rerun the hour census with the thin-book slippage tick removed.
+workspace/newstrats/w6_run_fib.py	ARCHIVE	one-off driver/analysis; findings captured	The only untested lead in the programme, given the out-of-sample test nobody ran.
+workspace/newstrats/w6_run_fibplacebo.py	ARCHIVE	one-off driver/analysis; findings captured	Rate-matched placebo for the fib bands.
+workspace/newstrats/w6_run_kz.py	ARCHIVE	one-off driver/analysis; findings captured	Part A, step 3: the kill zones as matched strategy filters.
+workspace/newstrats/w6_run_placebo.py	ARCHIVE	one-off driver/analysis; findings captured	Count-matched placebo: does ANY 1-in-24 entry filter beat no filter?
+workspace/newstrats/w6_store.py	ARCHIVE	one-off driver/analysis; findings captured	Incremental save for the ICT study.
+workspace/newstrats/walkforward.py	ARCHIVE	one-off driver/analysis; findings captured	Anchored walk-forward: does picking the best geometry arm in-sample help next period?
+workspace/strategy_research/ict_blocks_fvg_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: ICT OB/FVG study: firing rates, sham touch rates, paired arms IS/OOS, 387 rule sets ranked by durability (placebo OB ranks 2nd)
+workspace/strategy_research/ict_blocks_fvg_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: ICT OB/FVG study: firing rates, sham touch rates, paired arms IS/OOS, 387 rule sets ranked by durability (placebo OB ranks 2nd)
+workspace/strategy_research/ict_blocks_fvg_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: ICT OB/FVG study: firing rates, sham touch rates, paired arms IS/OOS, 387 rule sets ranked by durability (placebo OB ranks 2nd)
+workspace/strategy_research/ict_killzones_ote_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Kill zones + OTE: hour census, 24-hour placebo, 206 rule sets 6-fold WF, 0 live-eligible, best deflated t -0.80
+workspace/strategy_research/ict_killzones_ote_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Kill zones + OTE: hour census, 24-hour placebo, 206 rule sets 6-fold WF, 0 live-eligible, best deflated t -0.80
+workspace/strategy_research/ict_killzones_ote_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Kill zones + OTE: hour census, 24-hour placebo, 206 rule sets 6-fold WF, 0 live-eligible, best deflated t -0.80
+workspace/strategy_research/ict_sweep_mss_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Sweep->MSS->retrace: census, lift/MH odds ratios, 6-arm ablation, wrong-order and 5-bar placebo, WF tuning bias
+workspace/strategy_research/ict_sweep_mss_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Sweep->MSS->retrace: census, lift/MH odds ratios, 6-arm ablation, wrong-order and 5-bar placebo, WF tuning bias
+workspace/strategy_research/ict_sweep_mss_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Sweep->MSS->retrace: census, lift/MH odds ratios, 6-arm ablation, wrong-order and 5-bar placebo, WF tuning bias
+workspace/strategy_research/leadlag_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: LTF->HTF lead (6-17 bars), false-positive 78-81%, strategy arms null, BOS@240 retraction
+workspace/strategy_research/leadlag_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: LTF->HTF lead (6-17 bars), false-positive 78-81%, strategy arms null, BOS@240 retraction
+workspace/strategy_research/leadlag_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: LTF->HTF lead (6-17 bars), false-positive 78-81%, strategy arms null, BOS@240 retraction
+workspace/strategy_research/nested_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Nested pullback/resumption: 17 bases x 8 arms x 14 frames, IS/OOS, depth, tf pair, distinctness
+workspace/strategy_research/nested_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Nested pullback/resumption: 17 bases x 8 arms x 14 frames, IS/OOS, depth, tf pair, distinctness
+workspace/strategy_research/nested_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Nested pullback/resumption: 17 bases x 8 arms x 14 frames, IS/OOS, depth, tf pair, distinctness
+workspace/strategy_research/orb_test_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: ORB 1,920 configs 194k trades per symbol (deep/raw), payoff-win cancellation, yesterday-range placebo, top-30 NOT endorsed
+workspace/strategy_research/orb_test_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: ORB 1,920 configs 194k trades per symbol (deep/raw), payoff-win cancellation, yesterday-range placebo, top-30 NOT endorsed
+workspace/strategy_research/orb_test_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: ORB 1,920 configs 194k trades per symbol (deep/raw), payoff-win cancellation, yesterday-range placebo, top-30 NOT endorsed
+workspace/strategy_research/performance_db.json	ARCHIVE	duplicate raw dump	byte-identical duplicate of rank_w2_performance_db.json (8.3 MB)
+workspace/strategy_research/rank_mgc_mcl_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Worker 1 ranking MGC/MCL 60/240 (28 cells incl. thirds): placebo ranks, disjoint replication, fill/cost/power audits
+workspace/strategy_research/rank_mgc_mcl_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Worker 1 ranking MGC/MCL 60/240 (28 cells incl. thirds): placebo ranks, disjoint replication, fill/cost/power audits
+workspace/strategy_research/rank_mgc_mcl_selftest.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	selftest: Worker 1 ranking MGC/MCL 60/240 (28 cells incl. thirds): placebo ranks, disjoint replication, fill/cost/power audits
+workspace/strategy_research/rank_mgc_mcl_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Worker 1 ranking MGC/MCL 60/240 (28 cells incl. thirds): placebo ranks, disjoint replication, fill/cost/power audits
+workspace/strategy_research/rank_nq_es_grains_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Worker 3 ranking NQ/ES/MZC/MZS/MZW 60/240: deflation per cell (max t 3.923 NQ 60m 180d), grains data audit (D40), D24 RTH arm
+workspace/strategy_research/rank_nq_es_grains_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Worker 3 ranking NQ/ES/MZC/MZS/MZW 60/240: deflation per cell (max t 3.923 NQ 60m 180d), grains data audit (D40), D24 RTH arm
+workspace/strategy_research/rank_nq_es_grains_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Worker 3 ranking NQ/ES/MZC/MZS/MZW 60/240: deflation per cell (max t 3.923 NQ 60m 180d), grains data audit (D40), D24 RTH arm
+workspace/strategy_research/rank_persistence_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Pooled ranking persistence (all workers) + mgc_mcl_rescope verdicts
+workspace/strategy_research/rank_persistence_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Pooled ranking persistence (all workers) + mgc_mcl_rescope verdicts
+workspace/strategy_research/rank_persistence_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Pooled ranking persistence (all workers) + mgc_mcl_rescope verdicts
+workspace/strategy_research/rank_w2_performance_db.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	performance_db: Worker 2 ranking MES/MNQ 60/240: placebo in top 10, WF folds, MTF alignment paired
+workspace/strategy_research/rank_w2_robustness_report.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	robustness_report: Worker 2 ranking MES/MNQ 60/240: placebo in top 10, WF folds, MTF alignment paired
+workspace/strategy_research/rank_w2_strategy_rankings.json	ARCHIVE	raw result dump; findings captured in agent2_research.md	strategy_rankings: Worker 2 ranking MES/MNQ 60/240: placebo in top 10, WF folds, MTF alignment paired
+workspace/strategy_research/robustness_report.json	ARCHIVE	duplicate raw dump	byte-identical duplicate of rank_persistence_robustness_report.json
+workspace/strategy_research/strategy_rankings.json	ARCHIVE	duplicate raw dump	byte-identical duplicate of rank_persistence_strategy_rankings.json
+workspace/strategy_research/w3_audit.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Worker 3 audits: fill model, dollar arithmetic, costs, look-ahead, OOS, sensitivity.
+workspace/strategy_research/w3_cleanfeed.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Does the micro-grain data defect drive the micro-grain rankings?
+workspace/strategy_research/w3_publish.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Assemble worker 3's three published artefacts from the saved cells + audits.
+workspace/strategy_research/w3_rank.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Worker 3 — recurring profitability ranking for NQ, ES, MZC, MZS, MZW at 60m/240m.
+workspace/strategy_research/w3_rth.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	D24 arm: the same rule sets with the RTH gate flipped off.
+workspace/strategy_research/w3_run.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Driver: one symbol's eight cells (60m/240m x 30/90/180/274d) plus replication.
+workspace/strategy_research/w3_summary.py	ARCHIVE	one-off worker-3 driver/publisher; findings captured	Compact console summary of every cell, for the written report.
+workspace/strategy_research/w2/*.py	ARCHIVE	one-off worker-2 (MES/MNQ ranking) scripts; findings captured	w2rank (uses symbol profiles), drive, wf, mtf/mtf2/mtf3 (require_alignment), tagblind, audit, publish, save_rest
+workspace/strategy_research/w2/cells/	ARCHIVE	raw result dump (~91 MB, tracked because the cells/ ignore rule is one level deep)	MES/MNQ 60/240 x 30/90/180/274d + slices + rth cells, wf_*, mtf*_*, audit_{costs,lookahead,sens,tagblind}

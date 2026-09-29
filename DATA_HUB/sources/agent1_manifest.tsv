@@ -1,0 +1,181 @@
+path	decision	reason	summary
+workspace/roundtable/BRIEF.md	KEEP	canonical data policy + eligibility rulings	Programme brief: 8 settled rules, data-store policy (csv/raw frozen, archive ET tz), vendor caveats, D48/D50/D51, span arithmetic, roll/scale eligibility table; superseded in part by DATA_HUB agent1 md
+workspace/roundtable/DIVISION.md	ARCHIVE	round-1 task division; process only	Manager division of 53 families across R1-R3 tracks, round-2 amendments
+workspace/roundtable/LEDGER.md	ARCHIVE	dispatch/rate-limit log	Per-round context burn and rate-limit window type log
+workspace/roundtable/THROTTLE.md	ARCHIVE	stale rate-limit throttle note	Session-limit gating rules (ccr_promotional window, 850k cutoff)
+workspace/roundtable/OPEN_QUESTIONS.md	ARCHIVE	routed Q&A, resolved or captured in md	Researcher-to-researcher questions R1-Q1..R3-Q2 with collision note
+workspace/roundtable/OWNERSHIP.md	KEEP	ownership map used by check_ownership.py (CALL procedure)	One-writer-per-file map for roundtable + programme files
+workspace/roundtable/PARKED.md	ARCHIVE	park state captured in md	Which agents parked (BT3,EF1,EF2,EF3), EF3-vs-EF7 holiday-flat disagreement, BT3 placebo self-correction
+workspace/roundtable/PIPELINE.md	ARCHIVE	process design only	Discovery->scope->sectioned research pipeline rules, PIPELINE sec4 obligations
+workspace/roundtable/REGISTRY.md	ARCHIVE	id registry for roundtable citations	ID naming rules; EF1-H*, EF6-H1..H4 component ids; msg filename rules
+workspace/roundtable/check_refs.py	ARCHIVE	roundtable msgs lint, one-off process tool	Fails commit if a msgs/ file lacks RE: header
+workspace/roundtable/check_ownership.py	KEEP	referenced by workspace/paper/CALL/CHECK_PROCEDURE.md:186	Audits that changed files belong to the dispatched agent per OWNERSHIP map
+workspace/roundtable/lib/scale_audit.py	KEEP	reusable series integrity gate	Absolute audit of every price series: splice/scale break, roll gaps, rangeless/zero-vol bars, clock holes
+workspace/roundtable/lib/replay.py	KEEP	reusable replay harness used by workspace/paper/REPLAY	Bar-at-a-time paper replay with journal, count-matched placebo, engine-faithful fills, 16:00 flat, $50k ladder
+workspace/roundtable/manager/ADJUDICATIONS.md	ARCHIVE	rulings captured in md (defects D44-D58, ADJ-14 rule2, ADJ-15 edge gate)	Manager rulings ADJ-0..ADJ-16: defect allocations D44-D58, VOID vocabulary, rule-2 narrowing, edge-programme gate
+workspace/roundtable/manager/BOARD.md	ARCHIVE	task board, process	Standing rules R-1..R-13, MGR-T tasks, pre-registrations, edge programme constraints
+workspace/roundtable/msgs/	ARCHIVE	inter-agent message log; conclusions captured	45 messages: fidelity verify threads (BT<->R), defect reports (D45,D48,D49), EF1-02 240m correction, EF4-01 stale fills, EF2 MCL data gap
+workspace/roundtable/discovery/AVENUES.md	ARCHIVE	avenue ledger; open avenues summarised in md sec3/8	69 strategy-family avenues (I-*,II-*,III-*,X-*) with OPEN/CLOSED/DEFERRED status and blockers
+workspace/roundtable/discovery/MAIN_TASKS.md	ARCHIVE	MAIN-01 sampling-clock task; answered null by BT5	MAIN-01: are nulls a wall-clock-bar artefact (volume/range bars)
+workspace/roundtable/discovery/bursts/	ARCHIVE	burst log	Discovery seed burst: csv/raw span per tf (1m=5d, 5m=27d, 15/30m=58d, 1h=322d)
+workspace/roundtable/discovery/claims/	ARCHIVE	claim marker	DISC2 claim on II-7 cross-sectional momentum
+workspace/roundtable/discovery2/AVENUES.md	ARCHIVE	span arithmetic captured in BRIEF/md	DISC2: II-7 blocker lifted (25.7y daily reachable), Lo t=SR*sqrt(y), free_t single-hypothesis 1.177
+workspace/roundtable/discovery2/MAIN_TASKS.md	ARCHIVE	MAIN-02 proposal, not run	MAIN-02: 25-year ten-sector daily cross-section; blocked on roll audit and ContractSpecs
+workspace/roundtable/discovery2/bursts/	ARCHIVE	burst log	DISC2 cross-sectional universe probe (row counts, spans)
+workspace/roundtable/edge/RESULTS.md	KEEP	canonical edge-programme summary	Parent summary of EF1-EF7: top-10 arithmetically impossible, EF4/EF5/EF6 results, session-rule findings, cost corrections
+workspace/roundtable/edge/EDGE_BRIEF.md	ARCHIVE	edge programme brief	Owner request: top 10 swing/scalp per symbol within 18:00-16:00 ET; guardrails
+workspace/roundtable/edge/EF1/FINDINGS.md	ARCHIVE	captured in md sec5/6	EF1 session harness: components H1-H10, defects D3/D4 fixed, 240m expressible, 59.6-86.3% clock closes
+workspace/roundtable/edge/EF1/bursts/	ARCHIVE	burst log	EF1 bursts 1-5: boundary geometry, known-answer tests, 33 early-close violations, saturation, park
+workspace/roundtable/edge/EF1/code/	KEEP	session_window.py imported by tests and EF3-EF6; saturate/prefix_check reusable validators	SessionWindowEngine (18:00-16:00 rule), saturation invariant test, prefix-invariance check, 3-arm validation
+workspace/roundtable/edge/EF2/FINDINGS.md	ARCHIVE	no profitability numbers; facts captured	EF2 swing MGC/MCL 60m: populations 3156/3408, VOID census, D45 extends to STRUCTURE, 93.3%/89.5% completeness
+workspace/roundtable/edge/EF2/bursts/	ARCHIVE	burst log	EF2 bursts 1-13: session arithmetic, census, population, stop fidelity, flat reachability, roll calibration, 240m withdrawal
+workspace/roundtable/edge/EF2/code/	ARCHIVE	one-off census/population scripts	EF2 census/firecount/population/rank/plan/calibrate_roll/flat_reachability/weekend_gap scripts
+workspace/roundtable/edge/EF2/data/	ARCHIVE	raw outputs (17MB population.json)	EF2 JSON outputs: census, firecount, population (17MB), calibrate_roll, flat_reachability, weekend_gap
+workspace/roundtable/edge/EF3/FINDINGS.md	ARCHIVE	captured in md	EF3 swing MES/MNQ 60m: populations, 17.79% MNQ VOID via openinterest, engine reconciliation; embargoed ledger
+workspace/roundtable/edge/EF3/bursts/	ARCHIVE	burst log	EF3 bursts 1-6: substrate, census, population, pre-registered protocol, harness reconciliation
+workspace/roundtable/edge/EF3/code/ef3_session.py	KEEP	engine subclass with trading_day flat clause; live disagreement vs EF1/EF7	SessionEngine subclass of EF1 engine adding holiday-eve flat
+workspace/roundtable/edge/EF3/code/ef3_stage2.py	KEEP	ready-to-run placebo stage for embargoed ledger	Builds placebo cohort for 50 MES/83 MNQ rows
+workspace/roundtable/edge/EF3/code/ef3_rank.py	KEEP	ready-to-run ranking/walk-forward	Ranks IS expectancy, gates G1-G4, paired real-vs-placebo, 5 anchored folds
+workspace/roundtable/edge/EF3/code/ef3_audit.py	KEEP	ready-to-run sensitivity/cost audit	Sibling-family sensitivity, double-commission and +1-tick flat cost arms
+workspace/roundtable/edge/EF3/code/ef3_census.py	ARCHIVE	one-off	EF3 79-condition firing census
+workspace/roundtable/edge/EF3/code/ef3_measure.py	ARCHIVE	one-off	EF3 stage-1 measurement runner
+workspace/roundtable/edge/EF3/code/ef3_population.py	ARCHIVE	one-off	EF3 population builder seed 20260922
+workspace/roundtable/edge/EF3/code/ef3_stopcensus.py	ARCHIVE	one-off	D45 floor rate census MES/MNQ
+workspace/roundtable/edge/EF3/code/ef3_substrate.py	ARCHIVE	one-off	archive vs csv/raw equivalence check MES/MNQ
+workspace/roundtable/edge/EF3/out/stage1_MES_gap.json	KEEP	embargoed full trade ledger (53,252 trades), input to ef3_stage2	MES 60m session-window stage-1 ledger, placebo stage never run
+workspace/roundtable/edge/EF3/out/stage1_MNQ_gap.json	KEEP	embargoed full trade ledger (49,939 trades)	MNQ 60m session-window stage-1 ledger, placebo stage never run
+workspace/roundtable/edge/EF3/out/census_MES.json	ARCHIVE	raw output	MES condition census
+workspace/roundtable/edge/EF3/out/census_MNQ.json	ARCHIVE	raw output	MNQ condition census
+workspace/roundtable/edge/EF3/out/population_4000.json	ARCHIVE	raw output	population summary
+workspace/roundtable/edge/EF3/out/population_ids_4000.json	KEEP	id manifest needed by ef3_stage2/rank	Full strategy id manifest for EF3 population
+workspace/roundtable/edge/EF3/out/stopcensus.json	ARCHIVE	raw output	D45 floor rates 15.38% MES / 7.47% MNQ
+workspace/roundtable/edge/EF4/FINDINGS.md	KEEP	most complete profitability study in lane (MGC/MCL scalp); source of level tables	EF4 scalp MGC/MCL 5/15/30m: Track A 36 pre-registered arms, Track B 19,152, costs in R, rule 7, selection controls, placebos, 5+3 candidates none clear
+workspace/roundtable/edge/EF4/bursts/	ARCHIVE	burst log, captured in FINDINGS	EF4 bursts 1-7: power bound, cost in R, census, degeneracy, population, measurement, anti-overfitting audit
+workspace/roundtable/edge/EF4/code/audit_lookahead.py	KEEP	reusable full-pipeline prefix-invariance audit	Prefix invariance: rebuild frame/engine on bars[0:k], compare trades
+workspace/roundtable/edge/EF4/code/audit_fills.py	KEEP	reusable fill-model audit	Same-bar target credit, tie resolution, gap accounting
+workspace/roundtable/edge/EF4/code/audit_stale_fills.py	KEEP	reusable stale/weekend fill audit	Stale fill (lag>2 bars) and weekend-gap fill expectancy
+workspace/roundtable/edge/EF4/code/audit_adverse_selection.py	KEEP	reusable	Signal-close to fill-open adverse move audit
+workspace/roundtable/edge/EF4/code/cost_in_r.py	KEEP	reusable cost-in-R calculator incl min-stop floor	Commission+slippage as fraction of R per symbol/tf/stop
+workspace/roundtable/edge/EF4/code/run_cell.py	KEEP	reusable cell runner with gross reconstruction	Runs arms through SessionWindowEngine, gross from fill geometry, IS/OOS/folds metrics
+workspace/roundtable/edge/EF4/code/placebo.py	KEEP	reusable count-matched placebo builder	Count/direction-matched random-bar placebo arms
+workspace/roundtable/edge/EF4/code/run_placebo.py	KEEP	reusable	Runs 20 placebos per arm
+workspace/roundtable/edge/EF4/code/degeneracy.py	KEEP	reusable always-on/duplicate/untradeable-window census	Degeneracy census of conditions under session rule
+workspace/roundtable/edge/EF4/code/selection_control.py	KEEP	reusable selection controls	random-10, matched-10, reverse-time controls for top-10
+workspace/roundtable/edge/EF4/code/analyse.py	ARCHIVE	one-off	rule-7 share-positive analysis
+workspace/roundtable/edge/EF4/code/analyse2.py	ARCHIVE	one-off	split-sample selection analysis
+workspace/roundtable/edge/EF4/code/census.py	ARCHIVE	one-off	79x8 firing census
+workspace/roundtable/edge/EF4/code/mtf_arms.py	ARCHIVE	one-off	paired MTF alignment test
+workspace/roundtable/edge/EF4/code/or_resolvability.py	ARCHIVE	one-off	opening-range placement check
+workspace/roundtable/edge/EF4/code/population.py	ARCHIVE	one-off (defines Track A arms A1-A6)	Track A/B population declaration
+workspace/roundtable/edge/EF4/code/power.py	ARCHIVE	one-off	power bound per cell
+workspace/roundtable/edge/EF4/code/rank_final.py	ARCHIVE	one-off	de-duplicated final ranking
+workspace/roundtable/edge/EF4/code/selection_direction.py	ARCHIVE	one-off	long/short-only selection control
+workspace/roundtable/edge/EF4/code/session_clock.py	ARCHIVE	one-off second harness for diff-check	EF4 independent session clock
+workspace/roundtable/edge/EF4/code/trim_out.py	ARCHIVE	one-off	trims run outputs to summaries
+workspace/roundtable/edge/EF4/out/	ARCHIVE	raw outputs (54MB); key numbers captured in md sec2.1/2.2/3.2	run_*_summary.json per-arm metrics (19k arms), placebo_*.json, rank_final, cost_in_r, census, audits
+workspace/roundtable/edge/EF5/bursts/	ARCHIVE	burst log; captured in md sec2.3/2.4	EF5 bursts 1-11: power, census, D45, population, cost share, MNQ15 SESSION stress, universe, pooled table
+workspace/roundtable/edge/EF5/code/stress2_clean_holdout.py	KEEP	reusable leak-free holdout + n_eff deflation	Selection on IS cycles only, paired real vs placebo OOS
+workspace/roundtable/edge/EF5/code/stress3_regime_and_kind.py	KEEP	reusable regime-thirds and placebo-kind split	Contiguous/interleaved thirds, shuffle vs random placebo
+workspace/roundtable/edge/EF5/code/census.py	ARCHIVE	one-off	EF5 census
+workspace/roundtable/edge/EF5/code/cost_share.py	ARCHIVE	one-off	cost share per cell
+workspace/roundtable/edge/EF5/code/d45_vwap_band.py	ARCHIVE	one-off	D45 at 5/15/30m MES/MNQ
+workspace/roundtable/edge/EF5/code/ef5_data.py	ARCHIVE	one-off	loader
+workspace/roundtable/edge/EF5/code/eliminate.py	ARCHIVE	one-off	VOID elimination
+workspace/roundtable/edge/EF5/code/exit_census.py	ARCHIVE	one-off	exit and direction census
+workspace/roundtable/edge/EF5/code/floor_feasibility.py	ARCHIVE	one-off	top-10 floor feasibility
+workspace/roundtable/edge/EF5/code/measure.py	ARCHIVE	one-off	EF5 main measurement
+workspace/roundtable/edge/EF5/code/population.py	ARCHIVE	one-off	population builder
+workspace/roundtable/edge/EF5/code/stress_mnq15_session.py	ARCHIVE	one-off (superseded by stress2)	first MNQ15 stress incl leaky holdout
+workspace/roundtable/edge/EF5/code/universe.py	ARCHIVE	one-off	qualifying-universe table
+workspace/roundtable/edge/EF5/code/verify_census.py	ARCHIVE	one-off	census cross-check
+workspace/roundtable/edge/EF5/out/	ARCHIVE	raw outputs; captured in md	PROVISIONAL_measure_all.json (per-cell tables incl placebos), universe, census, elimination, stress outputs
+workspace/roundtable/edge/EF6/bursts/	ARCHIVE	burst log; captured in md/RESULTS	EF6 bursts 1-7: deflation, window expressibility, placebo faults, prefilter, forward roll, top-10 attack, scalp forward test
+workspace/roundtable/edge/EF6/code/deflation.py	KEEP	reusable threshold(n, span)	free_t, required Sharpe, max_n_answerable, span table
+workspace/roundtable/edge/EF6/code/forward.py	KEEP	reusable causal forward roll (calibrated clean)	Top-k vs universe vs random-k vs blocked permutation null
+workspace/roundtable/edge/EF6/code/placebo_w.py	KEEP	reusable window-legal placebo, realised-count matched	build_cohort(match_on=realised)
+workspace/roundtable/edge/EF6/code/attack.py	KEEP	reusable G1-G4 gates	VOID, placebo, deflation, forward gates per row
+workspace/roundtable/edge/EF6/code/arms.py	KEEP	reusable D48-safe arm tools	refilter, assert_unique, arm_report
+workspace/roundtable/edge/EF6/code/window.py	KEEP	reusable signal admissibility mask	signal_mask for session window
+workspace/roundtable/edge/EF6/code/firing.py	KEEP	reusable firing census	per-condition firing rates
+workspace/roundtable/edge/EF6/code/run_census.py	KEEP	reusable	runs census per cell
+workspace/roundtable/edge/EF6/code/run_prefilter.py	KEEP	reusable VOID prefilter	drops strategies carrying VOID conditions
+workspace/roundtable/edge/EF6/code/make_ledger.py	KEEP	reusable ledger interchange	builds forward.Ledger artefact
+workspace/roundtable/edge/EF6/code/session_engine.py	KEEP	independent session clock	EF6 18:00-16:00 engine
+workspace/roundtable/edge/EF6/code/analyse_census.py	ARCHIVE	one-off	census analysis
+workspace/roundtable/edge/EF6/code/probe_placebo.py	ARCHIVE	one-off	placebo fault probe
+workspace/roundtable/edge/EF6/code/run_attack_demo.py	ARCHIVE	one-off	MGC 60m top-10 attack demo
+workspace/roundtable/edge/EF6/out/	ARCHIVE	raw outputs; captured in md	census/ (40 cell censuses), ledgers MGC/MCL/MES/MNQ 60m+15m, roll_*.json, attack_MGC_60m, void_table (3MB), prefilter_summary
+workspace/roundtable/edge/EF7/FINDINGS.md	ARCHIVE	captured in md sec5/6	EF7 independent harness: 0 violations, EF7-D2 12:30 entry-bar exit, EF7-D3, stale fill across gap, EF1 comparison
+workspace/roundtable/edge/EF7/bursts/	ARCHIVE	burst log	EF7 bursts 1-7
+workspace/roundtable/edge/EF7/code/ef7_window.py	KEEP	imported by tests/test_ef7_session_window.py	EF7 independent session-window engine
+workspace/roundtable/edge/EF7/code/invariant.py	KEEP	reusable invariant checker	0-violation check on realised trades
+workspace/roundtable/edge/EF7/code/compare_ac.py	ARCHIVE	one-off	arm A vs C comparison
+workspace/roundtable/edge/EF7/code/measure.py	ARCHIVE	one-off	closure counts
+workspace/roundtable/edge/EF7/code/population.py	ARCHIVE	one-off	population-scale invariant run
+workspace/roundtable/edge/EF7/compare_ac.json	ARCHIVE	raw output	arm comparison
+workspace/roundtable/edge/EF7/invariant.json	ARCHIVE	raw output	0 violations 4 symbols
+workspace/roundtable/edge/EF7/measure.json	ARCHIVE	raw output	closure counts
+workspace/roundtable/edge/EF7/population.json	ARCHIVE	raw output	population invariant
+workspace/roundtable/backtest/BT1/ALGOS.md	ARCHIVE	captured	BT1-ALGO-1 absorption shape (vol>=2x, range<=1x); unmeasurable (2-41 fires/series)
+workspace/roundtable/backtest/BT1/REQUESTS.md	ARCHIVE	process	BT1 requests (store ruling, D37 scope, D38 guard)
+workspace/roundtable/backtest/BT1/VERIFY.md	ARCHIVE	fidelity ASKED, never ruled	BT1 fidelity questions to R1
+workspace/roundtable/backtest/BT1/bursts/	ARCHIVE	burst log	absorption shape burst
+workspace/roundtable/backtest/BT1/code/absorption.py	KEEP	reusable custom condition + D38-safe registration	absorption_bar SIGNAL / absorption_present FILTER
+workspace/roundtable/backtest/BT1/code/test_absorption.py	KEEP	33 checks for absorption.py	no-look-ahead, determinism, disjointness tests
+workspace/roundtable/backtest/BT1/code/frequency.py	ARCHIVE	one-off	absorption frequency census
+workspace/roundtable/backtest/BT2/ALGOS.md	ARCHIVE	captured	BT2-ALGO-1 scheduled-event gate on MGC/MCL; in-session HIGH events MGC 32/69, MCL 49/164; no backtest
+workspace/roundtable/backtest/BT2/REQUESTS.md	ARCHIVE	process	BT2 requests
+workspace/roundtable/backtest/BT2/VERIFY.md	ARCHIVE	fidelity ASKED	BT2 fidelity questions to R2
+workspace/roundtable/backtest/BT2/bursts/	ARCHIVE	burst log	event gate burst
+workspace/roundtable/backtest/BT2/code/	KEEP	reusable look-ahead-free econ calendar clock + gates, 26 tests	event_clock.py, event_gate.py, algo1.py, test_algo1.py
+workspace/roundtable/backtest/BT3/ALGOS.md	KEEP	only deflation-clearing result (governor survival); Tier A/B facts	BT3-ALGO-1 governor replay: $2,800 absorbing state, integer floor deletes 41.19% (MGC 4h 99.42%), survival z 6.16/5.54
+workspace/roundtable/backtest/BT3/REQUESTS.md	ARCHIVE	process	BT3 requests (D44 block bootstrap, dump fields)
+workspace/roundtable/backtest/BT3/VERIFY.md	ARCHIVE	fidelity cycle 2 unanswered	BT3 fidelity log
+workspace/roundtable/backtest/BT3/bursts/	ARCHIVE	burst log	governor replay cycles 1-2, placebo threshold correction
+workspace/roundtable/backtest/BT3/code/governor_replay.py	KEEP	imported by tests/test_bt3_governor_replay.py	Account-governor replay over stored trade stream
+workspace/roundtable/backtest/BT3/code/stops.py	KEEP	reconstructs stop distance; test fixture producer	Re-runs run_geometry to recover per-trade stop distance
+workspace/roundtable/backtest/BT3/code/stops_cache.json	KEEP	test fixture (8.5MB) for tests/test_bt3_governor_replay.py	geo_trades + entry/stop/symbol for 21,954 trades
+workspace/roundtable/backtest/BT3/code/paired_tests.py	KEEP	reusable exact McNemar/sign tests	paired tests over seed ensemble
+workspace/roundtable/backtest/BT3/code/checks.py	KEEP	assertions for replay	5 assertions
+workspace/roundtable/backtest/BT3/code/block_vs_iid.py	ARCHIVE	one-off, runs on D44-biased bootstrap	block vs iid bootstrap comparison
+workspace/roundtable/backtest/BT3/code/algo1_report.json	ARCHIVE	raw output	governor replay report
+workspace/roundtable/backtest/BT3/code/block_vs_iid.json	ARCHIVE	raw output, D44-biased	block vs iid numbers
+workspace/roundtable/backtest/BT3/code/paired_tests.json	ARCHIVE	raw output	paired test results
+workspace/roundtable/backtest/BT4/ALGOS.md	ARCHIVE	captured (D50, rule2 z -4.09 -> -3.05)	BT4-ALGO-1 daily-frame reduction: FRAMES[1440] self-confirms; rule-2 leave-1440-out
+workspace/roundtable/backtest/BT4/REQUESTS.md	ARCHIVE	process	BT4 requests
+workspace/roundtable/backtest/BT4/VERIFY.md	ARCHIVE	fidelity ASKED	BT4 fidelity log
+workspace/roundtable/backtest/BT4/bursts/	ARCHIVE	burst log	align_bucket collapse burst
+workspace/roundtable/backtest/BT4/code/	ARCHIVE	one-off; regression in tests/test_bt4_align_bucket.py	daily_mtf_reduction, regime_lag_at_1440, rule2_leave_1440_out, stores_at_1440, tf1440_census + json
+workspace/roundtable/backtest/BT5/ALGOS.md	ARCHIVE	captured (activity strat null)	BT5-ALGO-1 activity stratification: bar-level footprint large, strategy-level dE +0.018R p 0.58
+workspace/roundtable/backtest/BT5/REQUESTS.md	ARCHIVE	process	BT5 requests
+workspace/roundtable/backtest/BT5/VERIFY.md	ARCHIVE	fidelity ASKED	BT5 fidelity log
+workspace/roundtable/backtest/BT5/bursts/	ARCHIVE	burst log	activity strata burst
+workspace/roundtable/backtest/BT5/code/s2.py	KEEP	imported by tests/test_bt5_activity_strata.py	activity stratification measurement
+workspace/roundtable/backtest/BT5/code/activity.py	KEEP	join used by s2	per-bar activity stats joined to stored trades
+workspace/roundtable/backtest/BT5/code/checks.py	KEEP	assertions for s2	10 assertions
+workspace/roundtable/backtest/BT5/code/s2_report.json	ARCHIVE	raw output	S2 report
+workspace/roundtable/backtest/BT6/ALGOS.md	ARCHIVE	captured (D52 daily VWAP collapse)	BT6-ALGO-1: daily VWAP band sub-tick 100%, vwap_band1_bounce 0 fires, 2,126 zero-trade daily strategies
+workspace/roundtable/backtest/BT6/REQUESTS.md	ARCHIVE	process	BT6 requests incl MGC_1440 splice discovery
+workspace/roundtable/backtest/BT6/VERIFY.md	ARCHIVE	fidelity	BT6 fidelity log
+workspace/roundtable/backtest/BT6/bursts/	ARCHIVE	burst log	daily VWAP collapse + blast radius
+workspace/roundtable/backtest/BT6/code/	ARCHIVE	one-off; regression in tests/test_bt6_vwap_daily.py	vwap_daily_census.py, vwap_blast_radius.py
+workspace/roundtable/backtest/BT6/out/	ARCHIVE	raw output	vwap_daily_census.json, vwap_blast_radius.json
+workspace/roundtable/research/R1_group_audit.md	KEEP	canonical per-condition audit (what each of 79 conditions computes, defects D-L/D-P/D-F/D-VW)	Condition-group audit, 19 groups: fib leg defect, liquidity/OR dead at 1h, profile dead 4h, VWAP zero-width first bar, S/D scarcity
+workspace/roundtable/research/R4_group_audit.md	ARCHIVE	second audit of 7 groups; key items in md	R4 audit: D54 volume, MACD dup, bollinger subset, volatility misnamed, regime tf-inert, MTF at 240/1440
+workspace/roundtable/research/R6_report_audit.md	KEEP	canonical status of every published scan_reports claim	A1-A24, B1-B24, C1-C18 STANDS/WEAKENED/INVALID verdicts with reasons
+workspace/roundtable/research/R1_flow_auction.md	ARCHIVE	Class I catalogue; level/profile/VWAP/day-type content captured in md sec3	Class I families I-1..I-15, phantom groups orderflow/openinterest/news, TPO opening/day types with per-symbol day-type frequencies
+workspace/roundtable/research/R1_data_requirements.md	ARCHIVE	data ledger	Class I data requirements vs csv header
+workspace/roundtable/research/R1_REQUESTS.md	ARCHIVE	process	R1 requests REQ-1..6
+workspace/roundtable/research/R2_relational.md	ARCHIVE	Class II catalogue	II-1..II-19 families, seasonality power arithmetic, event inventory (HIGH calendar mostly outside RTH)
+workspace/roundtable/research/R2_expressibility_wall.md	ARCHIVE	catalogue	Two walls: one SymbolFrame per backtest (Wall A) and one-position spread (Wall B)
+workspace/roundtable/research/R2_wall_a_spec.md	KEEP	developer spec for partner-series support if ever built	8-edit implementation spec for partner frames in FeatureSnapshot/SymbolFrame
+workspace/roundtable/research/R2_recut_contingency.md	ARCHIVE	process	R2-Q1 recut consequences
+workspace/roundtable/research/R2_REQUESTS.md	ARCHIVE	process	R2 requests
+workspace/roundtable/research/R3_path_operation.md	ARCHIVE	Class III + engine facts; captured in md sec5	Trailing stop never ran, TRAIL unreachable, dead knobs, sizing channels, run_portfolio not a portfolio, III-1..III-19
+workspace/roundtable/research/R3_operating_vocabulary.md	ARCHIVE	catalogue	Operating-axis matrix (entry, risk, size, management, exit, re-entry, portfolio, roll)
+workspace/roundtable/research/R3_pairing_design.md	ARCHIVE	design, not run	D15 paired re-emission design, R3-A-13 replace/_id hazard
+workspace/roundtable/research/R3_REQUESTS.md	ARCHIVE	process	R3 requests
+workspace/roundtable/research/R4_REQUESTS.md	ARCHIVE	process	R4 requests
+workspace/roundtable/research/R5_SCOPE.md	ARCHIVE	MAIN-01 scope; answered by BT5	Sampling-clock scope, 1m substrate ~6.6 days, D51 BarSeries collapse
+workspace/developer/	ARCHIVE	EF1 validation artefacts, cited by EF1 FINDINGS	ef1_saturation.json (0 violations 40 runs), ef1_prefix_invariance.json, ef1_validation_swing_60m.json
+workspace/focus/cells.txt	ARCHIVE	orphan cell list; focus/cells dir and all_rows.json referenced by studies/toolkit.py are absent	39 (symbol, tf, window-days) cells MGC/MES/NQ for the old focus ranking corpus

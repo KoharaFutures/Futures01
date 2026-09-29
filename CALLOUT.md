@@ -1,5 +1,10 @@
 # Live callout session — operating brief
 
+> **2026-09-29: the desk now runs on scripts.** Follow `workspace/paper/CALL/DESK_BRIEF.md` (operating brief v2);
+> `desk_check.py` does every mechanical step, `desk_loop.sh` wakes the agent only on pre-registered triggers,
+> `plan_builder.py` builds and gates plans. Research context: `DATA_HUB/README.md`. This file still holds the
+> binding rules; where it and DESK_BRIEF conflict, this file wins.
+
 This session exists to make **live trade callouts** on micro futures for a **$50,000 account**,
 using the principles measured in this repository. Read this file first, every session.
 

@@ -1,0 +1,141 @@
+{
+ "rule": "OQ1_lvn_fade_1w60",
+ "rule_sha": "ea7a506a2b99",
+ "symbol": "MNQ",
+ "tf": 60,
+ "bars": 11320,
+ "data_sha": "294972d3a44c",
+ "score": {
+  "real": {
+   "n": 24,
+   "mean_r": -0.0459,
+   "sd": 1.0008,
+   "t": -0.225,
+   "win_rate": 0.5,
+   "payoff": 0.91,
+   "first_half": -0.4074,
+   "second_half": 0.3156
+  },
+  "placebo_P1": {
+   "mean_r": -0.1002,
+   "sd": 0.9781,
+   "draws": 1000
+  },
+  "z_vs_placebo": 0.266,
+  "empirical_p": 0.4396
+ },
+ "level_placebo": {
+  "runs": {
+   "0": {
+    "n": 15,
+    "mean_r": -0.4832,
+    "sd": 0.9158,
+    "t": -2.043,
+    "win_rate": 0.267,
+    "payoff": 0.968,
+    "first_half": -0.4467,
+    "second_half": -0.5151
+   },
+   "1": {
+    "n": 21,
+    "mean_r": -0.4909,
+    "sd": 0.8645,
+    "t": -2.602,
+    "win_rate": 0.238,
+    "payoff": 1.032,
+    "first_half": -0.2187,
+    "second_half": -0.7384
+   },
+   "2": {
+    "n": 13,
+    "mean_r": -0.6484,
+    "sd": 0.7582,
+    "t": -3.083,
+    "win_rate": 0.154,
+    "payoff": 1.043,
+    "first_half": -0.5477,
+    "second_half": -0.7347
+   },
+   "3": {
+    "n": 20,
+    "mean_r": -0.3649,
+    "sd": 0.9345,
+    "t": -1.746,
+    "win_rate": 0.35,
+    "payoff": 0.833,
+    "first_half": -0.3112,
+    "second_half": -0.4186
+   },
+   "4": {
+    "n": 16,
+    "mean_r": -0.4669,
+    "sd": 0.8873,
+    "t": -2.105,
+    "win_rate": 0.25,
+    "payoff": 1.031,
+    "first_half": -0.2735,
+    "second_half": -0.6604
+   },
+   "5": {
+    "n": 18,
+    "mean_r": -0.1282,
+    "sd": 1.0253,
+    "t": -0.531,
+    "win_rate": 0.444,
+    "payoff": 0.967,
+    "first_half": -0.1294,
+    "second_half": -0.1271
+   },
+   "6": {
+    "n": 13,
+    "mean_r": -0.5831,
+    "sd": 0.8359,
+    "t": -2.515,
+    "win_rate": 0.231,
+    "payoff": 0.859,
+    "first_half": -0.4089,
+    "second_half": -0.7324
+   },
+   "7": {
+    "n": 20,
+    "mean_r": -0.4565,
+    "sd": 0.9023,
+    "t": -2.263,
+    "win_rate": 0.3,
+    "payoff": 0.849,
+    "first_half": -0.4931,
+    "second_half": -0.4199
+   },
+   "8": {
+    "n": 15,
+    "mean_r": 0.1848,
+    "sd": 1.0137,
+    "t": 0.706,
+    "win_rate": 0.6,
+    "payoff": 0.97,
+    "first_half": 0.1264,
+    "second_half": 0.236
+   },
+   "9": {
+    "n": 19,
+    "mean_r": -0.2804,
+    "sd": 0.9903,
+    "t": -1.234,
+    "win_rate": 0.368,
+    "payoff": 0.966,
+    "first_half": -0.1308,
+    "second_half": -0.415
+   }
+  },
+  "mean": -0.3718,
+  "beats": 9
+ },
+ "luck_bar": 1.794,
+ "family_trials": 5,
+ "verdict": "TOO FEW TRADES (<30): no conclusion",
+ "equity": 49737.42,
+ "max_dd": 1150.34,
+ "absorbed": null,
+ "refused": 12,
+ "skipped": 14
+}

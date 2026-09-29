@@ -9062,3 +9062,55 @@ nothing of its own; `ema20()` is still a local reimplementation and should be ne
 correctly BEAR, bull needs the 4158.70 pivot taken out, which price at 4166.30 has already passed
 without `swings()` re-cutting (N102 again). MNQ still 0-3 unanimous on the N238/N239 window artifact and
 already carries CALL-0010.
+
+# N241 — fourth tool-versus-authority disagreement, and the general fix: `watch.py` decides nothing
+
+At 22:18 `watch.py` printed **"BEAR: all three components already agree"** for MGC while `regime.py`
+tallied the same frame **BEARISH 0-1**. Fourth instance of this class tonight, and the cause is once
+again a local reimplementation.
+
+**`watch.py`'s trend test was `(px > e) != (want > 0)`** — price against the EMA and nothing else.
+`chart.py` requires **both** price-vs-EMA *and* the EMA's own slope:
+
+```python
+d = "BULL" if (above and rising) else ("BEAR" if (not above and not rising) else "MIXED")
+```
+
+MGC at 22:18: close **4158.50** below EMA20 **4158.71**, but the EMA is **RISING**. So `chart.py` says
+trend MIXED; `watch.py` said trend already BEAR. The scanner was counting a component the gate does not
+count, and on the frame that authorises trades.
+
+**The fix is structural, not another patched constant.** `chart.bias()` already returns `components` —
+the authoritative per-component verdicts — and `watch.py` was already calling it for the headline and
+tally. It now reads which components are **outstanding** from that dict and only supplies the *level*
+for each:
+
+```python
+verdict = {name: v for name, v, _ in bi["components"]}
+...
+if verdict.get("trend") != target: ...
+if verdict.get("structure") != target: ...
+if verdict.get("location") != target: ...
+```
+
+`watch.py` no longer decides whether a component is satisfied; it only says how far the price is from
+the level that would satisfy it. Where the blocker is a slope rather than a level it says so
+explicitly — MGC now reads `trend: close below EMA20 4158.71 (0.21 away) [EMA20 slope must turn too]`,
+which is the honest statement: price is 0.21 away and that still would not flip the component.
+
+**The four in one session, all in `watch.py`, all from duplicating something `chart.py` already did:**
+N228 location thresholds (66/34 vs 60/40), N234 the missing counter-trend scan, N240 its own pivot
+detector, N241 its own trend rule. **The pattern is the finding.** The parent session should delete
+every local calculation in `watch.py` — `ema20()` is the last one standing — and make the rule explicit:
+a display tool imports its components from the authority or it is a second opinion masquerading as a
+measurement.
+
+**None of these four changed what may be traded.** `regime.py` never reads `watch.py`, so each fix moved
+a reported number toward the authority and authorised nothing. That is exactly why they were safe to make
+mid-session, and why the N225 tally-persistence repair — which *would* change what may be traded — is
+still deferred.
+
+**Tape:** MGC has given back the whole 4145 → 4169 push and sits at **4158.50**, trend MIXED with the
+EMA20 still rising by 0.21, location BEAR at 39.4% of [4143.90, 4181.00], 1m **BEARISH 0-3 unanimous**.
+MNQ unchanged at 0-3 unanimous, location BEAR **19.2% of [30430.00, 30722.00]** — its range low is now
+the 30430.00 print. No plan on either: MGC 15m is 0-1, and MNQ already carries CALL-0010.

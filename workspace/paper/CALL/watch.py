@@ -73,20 +73,32 @@ def report(sym: str) -> None:
           f"{'  UNANIMOUS' if bi['unanimous'] else ''}   px {px:.2f}")
     print(f"   ATR14 {a:.2f} vs {line:g} -> {'STOOD DOWN' if a > line else 'clear'}")
 
+    # N241: which components are OUTSTANDING is read from chart.bias(), the authority,
+    # never re-derived here. This tool's own trend test was `px > e`, which ignores the
+    # EMA SLOPE that chart.py also requires - so at 22:18 it called MGC's trend already
+    # BEAR (close 4158.50 < EMA20 4158.71) while chart.py called it MIXED, because the
+    # EMA was RISING. That made watch.py print "BEAR: all three components already
+    # agree" against regime.py's "15m is 0-1". Fourth disagreement of this class in one
+    # session (N228 thresholds, N234 missing scan, N240 pivots, this). watch.py now
+    # reports LEVELS for components the authority says are outstanding, and decides
+    # nothing itself.
+    verdict = {name: v for name, v, _ in bi["components"]}
+
     for side, want in (("BULL", +1), ("BEAR", -1)):
         need = []
+        target = "BULL" if want > 0 else "BEAR"
         # trend
-        if (px > e) != (want > 0):
+        if verdict.get("trend") != target:
             need.append(f"trend: close {'above' if want > 0 else 'below'} EMA20 {e:.2f}"
-                        f" ({abs(px - e):.2f} away)")
+                        f" ({abs(px - e):.2f} away)"
+                        f"{'  [EMA20 slope must turn too]' if (px > e) == (want > 0) else ''}")
         # structure: needs the relevant last pivot taken out
-        if want > 0 and len(hs) >= 1:
-            tgt = hs[-1]
-            if not (len(hs) >= 2 and hs[-1] > hs[-2]):
+        if verdict.get("structure") != target:
+            if want > 0 and len(hs) >= 1:
+                tgt = hs[-1]
                 need.append(f"structure: take out pivot high {tgt:.2f} ({tgt - px:+.2f} away)")
-        if want < 0 and len(ls) >= 1:
-            tgt = ls[-1]
-            if not (len(ls) >= 2 and ls[-1] < ls[-2]):
+            if want < 0 and len(ls) >= 1:
+                tgt = ls[-1]
                 need.append(f"structure: take out pivot low {tgt:.2f} ({tgt - px:+.2f} away)")
         # location
         if rng > 0:
@@ -96,11 +108,11 @@ def report(sym: str) -> None:
             # level ~22 MNQ points further away than the gate actually needed all
             # evening. chart.py/regime.py are the authority; this is a display fix
             # to agree with them, and it changes no rule and authorises no trade.
-            if want > 0 and loc < 0.60:
+            if want > 0 and verdict.get("location") != "BULL":
                 lvl = lo_r + 0.60 * rng
                 need.append(f"location: above {lvl:.2f} = 60% of [{lo_r:.2f}, {hi_r:.2f}]"
                             f" ({lvl - px:+.2f} away)")
-            if want < 0 and loc > 0.40:
+            if want < 0 and verdict.get("location") != "BEAR":
                 lvl = lo_r + 0.40 * rng
                 need.append(f"location: below {lvl:.2f} = 40% of [{lo_r:.2f}, {hi_r:.2f}]"
                             f" ({lvl - px:+.2f} away)")

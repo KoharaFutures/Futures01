@@ -1,22 +1,22 @@
 {
- "now_utc": "2026-09-29T13:32:11+00:00",
- "now_et": "2026-09-29 09:32 EDT",
+ "now_utc": "2026-09-29T13:34:19+00:00",
+ "now_et": "2026-09-29 09:34 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-09-29T09:20:00-04:00  c=4190.70 h=4191.00 l=4188.40  lag=12.2m  new=0 revised=1",
-  "MNQ 5m newest 2026-09-29T09:20:00-04:00  c=30661.50 h=30669.25 l=30658.50  lag=12.2m  new=0 revised=1",
+  "MGC 5m newest 2026-09-29T09:20:00-04:00  c=4191.60 h=4191.90 l=4188.40  lag=14.3m  new=0 revised=1",
+  "MNQ 5m newest 2026-09-29T09:20:00-04:00  c=30673.00 h=30676.25 l=30658.50  lag=14.3m  new=0 revised=1",
   "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+0 new, 1 revised), MGC 15m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+0 new, 1 revised), MNQ 15m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-09-29T09:20:00-04:00",
-   "lag_min": 7.2,
-   "close": 4190.7001953125
+   "lag_min": 9.3,
+   "close": 4191.60009765625
   },
   "MNQ": {
    "newest_5m": "2026-09-29T09:20:00-04:00",
-   "lag_min": 7.2,
-   "close": 30661.5
+   "lag_min": 9.3,
+   "close": 30673.0
   }
  },
  "resolve_log": [],
@@ -46,7 +46,7 @@
    "binding": false
   },
   "MNQ": {
-   "atr14_15m": 36.54,
+   "atr14_15m": 37.04,
    "line": 58.0,
    "binding": false
   }
@@ -73,7 +73,7 @@
   "MNQ": {
    "frames": {
     "1m": "BULLISH",
-    "5m": "CONFLICTED",
+    "5m": "BULLISH",
     "15m": "BULLISH",
     "60m": "BULLISH",
     "4h": "BULLISH",
@@ -104,142 +104,142 @@
    {
     "level": "60m P_RTH_H",
     "price": 4189.6,
-    "dist_atr": 0.16,
+    "dist_atr": 0.3,
     "state": "near",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "60m PD_VWAP",
     "price": 4198.9,
-    "dist_atr": 1.23,
+    "dist_atr": 1.09,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "60m SWING_H@4203.80",
     "price": 4203.8,
-    "dist_atr": 1.96,
+    "dist_atr": 1.82,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "VAL 3-day",
     "price": 4176.9,
-    "dist_atr": 2.06,
+    "dist_atr": 2.2,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
     "level": "5m ROUND2",
     "price": 4175.0,
-    "dist_atr": 2.35,
+    "dist_atr": 2.48,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
     "level": "60m ROUND2",
     "price": 4175.0,
-    "dist_atr": 2.35,
+    "dist_atr": 2.48,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "5m SWING_L@4172.60",
     "price": 4172.6,
-    "dist_atr": 2.7,
+    "dist_atr": 2.84,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
     "level": "60m SWING_L@4172.60",
     "price": 4172.6,
-    "dist_atr": 2.7,
+    "dist_atr": 2.84,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    }
   ],
   "MNQ": [
    {
-    "level": "60m SWING_L@30640.25",
-    "price": 30640.25,
-    "dist_atr": 0.58,
-    "state": "near",
-    "hub_asof": "2026-09-29T00:00:00-04:00"
-   },
-   {
     "level": "60m SWING_L@30684.00",
     "price": 30684.0,
-    "dist_atr": 0.62,
+    "dist_atr": 0.3,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "60m ROUND2",
     "price": 30700.0,
-    "dist_atr": 1.05,
+    "dist_atr": 0.73,
+    "state": "armed",
+    "hub_asof": "2026-09-29T00:00:00-04:00"
+   },
+   {
+    "level": "60m SWING_L@30640.25",
+    "price": 30640.25,
+    "dist_atr": 0.88,
+    "state": "near",
+    "hub_asof": "2026-09-29T00:00:00-04:00"
+   },
+   {
+    "level": "60m P_RTH_H",
+    "price": 30722.0,
+    "dist_atr": 1.32,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "60m PD_VWAP",
     "price": 30606.5,
-    "dist_atr": 1.51,
+    "dist_atr": 1.8,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "POC 3-day",
     "price": 30601.25,
-    "dist_atr": 1.65,
+    "dist_atr": 1.94,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
-    "level": "60m P_RTH_H",
-    "price": 30722.0,
-    "dist_atr": 1.66,
-    "state": "armed",
-    "hub_asof": "2026-09-29T00:00:00-04:00"
-   },
-   {
     "level": "60m ROUND1",
     "price": 30600.0,
-    "dist_atr": 1.68,
+    "dist_atr": 1.97,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "POC 1-week",
     "price": 30748.75,
-    "dist_atr": 2.39,
+    "dist_atr": 2.05,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
     "level": "POC 1-week(60m)",
     "price": 30748.75,
-    "dist_atr": 2.39,
+    "dist_atr": 2.05,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "POC 2-week",
     "price": 30750.25,
-    "dist_atr": 2.43,
+    "dist_atr": 2.09,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    },
    {
     "level": "60m SWING_H@30759.25",
     "price": 30759.25,
-    "dist_atr": 2.68,
+    "dist_atr": 2.33,
     "state": "armed",
     "hub_asof": "2026-09-29T00:00:00-04:00"
    },
    {
     "level": "LVN 1-day",
     "price": 30563.25,
-    "dist_atr": 2.69,
+    "dist_atr": 2.96,
     "state": "armed",
     "hub_asof": "2026-09-29T00:55:00-04:00"
    }
@@ -257,12 +257,12 @@
    "60m SWING_L@4172.60@4172.6": "armed"
   },
   "MNQ": {
-   "60m SWING_L@30640.25@30640.25": "near",
    "60m SWING_L@30684.00@30684.0": "armed",
    "60m ROUND2@30700.0": "armed",
+   "60m SWING_L@30640.25@30640.25": "near",
+   "60m P_RTH_H@30722.0": "armed",
    "60m PD_VWAP@30606.5": "armed",
    "POC 3-day@30601.25": "armed",
-   "60m P_RTH_H@30722.0": "armed",
    "60m ROUND1@30600.0": "armed",
    "POC 1-week@30748.75": "armed",
    "POC 1-week(60m)@30748.75": "armed",
@@ -289,5 +289,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "09:32 EDT \u00b7 MNQ 30661.5 MGC 4190.7 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,903.92 dd $252.64 \u00b7 quiet"
+ "one_line": "09:34 EDT \u00b7 MNQ 30673.0 MGC 4191.6 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,903.92 dd $252.64 \u00b7 quiet"
 }

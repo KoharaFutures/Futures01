@@ -10,3 +10,5 @@ Add a line whenever the desk repeats a judgment. The trigger, the rule, and the 
 | 4 | Plan-construction template for REVERSAL_CALLED (the audit's §2 proposal): run it in shadow against a placebo before it may register plans | open |
 | 5 | Resolve stops on 1m bars to cut the 15–27 min blind spot (N214 B) | open |
 | 6 | Push notification from the GitHub `call-desk` workflow (issue → phone) once the desk runs on Actions | built, schedule off |
+| 7 | Status card with an OPEN position: title reads "NO TRADE — DESK STATUS" and shows no entry/stop/TP/unrealised R for the open plan (seen 2026-09-29 03:21 on CALL-0010). `card_png.py` renders pending plans only. Make `status_card.py` (or `card_png.py`) draw an "OPEN" block from state.json `open` so the PLAN_EVENT card needs no prose | open |
+| 8 | PLAN_EVENT report text: desk_check could emit a ready-made `report` field (event + ledger line with win rate/payoff/E[R]/equity/dd), so the agent copies it rather than composing it each wake | open |

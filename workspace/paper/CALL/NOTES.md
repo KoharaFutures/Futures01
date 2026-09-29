@@ -9816,3 +9816,49 @@ compounding — a threshold inside the noise band, read off a bar the vendor had
 
 And the operational fact of this check: **gold is 2.40 above CALL-0011's 4161.00 limit**, the closest it has
 come since registration, on data 10.8 minutes old rather than 40.
+
+# N257 — MGC's gate LAPSED while CALL-0011's limit sat 0.20 from filling. N233 has now happened twice, on both sides.
+
+The new 15m `00:00` bar arrived and took MGC from **BULLISH 3-0 unanimous** to **BULLISH 1-0, NOT
+unanimous**. `regime.py` now says *"no reversal call — 15m is 1-0, not unanimous."*
+
+| component | at registration 22:50 | now, 15m `00:00` |
+|---|---|---|
+| trend | BULL — 4166.80 > EMA20 4160.51, rising | **MIXED** — 4162.70 **<** EMA20 4163.48, still rising |
+| structure | BULL — HH 4158.70→4169.10, HL 4145.00→4157.90 | BULL — HH 4170.80→4171.70, HL 4145.00→4157.90 |
+| location | BULL — 61.7% of [4143.90, 4181.00] | **MIXED** — 52.1% of [4143.90, 4180.00] |
+
+And the bar that killed it printed a **low of 4161.20** — **0.20 above** CALL-0011's 4161.00 buy limit.
+
+**This is invalidation (4) of the plan's own note, verbatim, and it is the second time tonight.** I wrote at
+22:50: *"THE LIMIT SITS ONLY 0.49 ABOVE A RISING EMA20, which is N233's decay with the sign flipped: if the
+EMA rises past 4161.00 before a fill, a fill would require the trend component to have already broken."*
+The EMA has risen 4160.51 → 4163.48 — **2.97 points, past the limit** — and price has fallen to meet it. A
+fill from here is a buy below a rising EMA20 in a gate that no longer fires.
+
+CALL-0009 was the first instance and it is the reason this matters rather than being a curiosity: that plan
+filled into precisely this condition on 2026-09-28 21:15 and lost **−1.084R**, with `thesis.py` recording
+*"the sub-EMA limit migrated above a falling EMA20 and the plan filled on the move that inverted its own
+gate."* Same mechanism, opposite sign, same distance from the anchor. **Two for two.**
+
+**What I am NOT doing: voiding CALL-0011.** Three reasons, and the first is the binding one.
+1. **N8.** Killing a live plan after watching price is editing after watching price. The fact that the edit
+   would now be in my favour is exactly why the rule exists — at 22:50 I could not know which way this
+   would cut, and the plan's expiry (08:20 ET, MGC's pit open) was set from the symbol profile, not chosen
+   to be convenient.
+2. **It was written down as a weakness, not discovered as one.** A plan whose stated weakness materialises
+   is a plan behaving as described. Voiding it would convert an honest pre-registration into a
+   retrospective one.
+3. **The gate lapsing is not the same as the plan being wrong.** Structure is still BULL on higher highs,
+   the EMA20 is still *rising*, and the trade's actual invalidation is 4156.40 — through the 4157.90 higher
+   low. Nothing has touched that.
+
+**But this is the concrete case the deferred question needs, and I am naming it as such:** *should a PENDING
+plan die when its originating gate lapses?* Tonight gives the parent session a real instance, on a plan
+0.20 from a fill, with a matched prior loss on the opposite sign. My own view, recorded now so it cannot be
+back-fitted to whatever CALL-0011 does: **the entry offset should track the anchor, or the plan should carry
+an expiry measured in bars rather than hours** — N233's original proposal. Voiding on gate-lapse is the
+cruder fix and would also have killed CALL-0008, which was right.
+
+MNQ, meanwhile, is untouched by any of this: its 15m has not advanced in **46.8 minutes**, its 1m is
+**18.8m** old, and it is **1.2 minutes** from the per-symbol BLIND line.

@@ -9995,3 +9995,33 @@ minute it fired, and the answer is still no — for a reason that has nothing to
 everything to do with **$2/pt against a 50-point ATR on a $120 cap** (N247/N254). Fixing the blindness did
 not make the trade affordable. That is a real limitation of this desk and it belongs in front of the owner
 rather than buried in a capacity line.
+
+## N252 addendum 2, 00:26 — MNQ's QUALIFIES lasted ONE CHECK, which makes it untradeable even without the capacity bar
+
+Two minutes after printing **QUALIFIES, sigma −1.55**, MNQ reads **no, sigma −1.45**. Price moved +5.50
+points over that interval (30431.50 → 30437.00). The qualification existed for a single check.
+
+**This changes the character of the N254 refusal and I want that said out loud.** I declined that setup on
+capacity grounds — $50.86 floor against $22.00 of room — and the decline was correct. But capacity was not
+the only thing that made it undoable: **a signal with a two-minute lifetime cannot be acted on by this desk
+at all**, because the desk observes on a 2-minute cadence through an ~11-minute feed lag. By the time a
+QUALIFIES print reaches me, the bar it was computed from is already ten minutes old; by the time I could
+write and register a plan, the reading it rested on is gone. I would have been registering a plan against a
+condition that had already expired — which is the same error as N226, in the other direction.
+
+So the honest statement about `reversal_setup()` after tonight is that it is **not an entry trigger and not
+even a reliable entry *window***. It is a description of a state that may have obtained a few minutes ago.
+N252 established that its two conditions fight each other by arithmetic; this establishes that even when
+they briefly agree, the agreement is shorter than this desk's own reaction time. Both facts point the same
+way: the usable form of this idea is a **level pre-registered in advance** — a limit resting at an
+identified support with a stop through it, written before the flush, which fills whether or not I am looking
+— not a scan I act on when it lights up.
+
+That is exactly what the owner did at 30430.00 and exactly what I could not do, and the reason is now fully
+decomposed: I was not running the detector (N234), the detector cannot hold its own signal (N251/N252), the
+reclaim it names is unreachable (N252 addendum), and the affordable entry is illegal while the legal one is
+unaffordable (N254). Four independent failures, only one of which I have fixed.
+
+For the parent session this collapses the deferred counter-trend work into one design question: **should the
+desk pre-register standing limits at measured support/resistance levels, sized legally, hours before any
+signal fires?** That is the only form in which this account could have owned the 30430.00 trade.

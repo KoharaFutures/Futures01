@@ -1061,3 +1061,33 @@ definitional check rather than by reading the code:
 
 The lesson worth keeping: **a metric needs a value it cannot legally take.** HEAT below 1.00 on a
 stopped-out trade is impossible, and that single constraint found two of the three bugs.
+
+## WATCH — the scan does not stop because a position is on
+
+Owner, 2026-09-28 20:19 ET: *"keep in mind i want you to be looking for future positions too and
+not only concentrate on the positions you do have, this is incase you see a possible reversal."*
+
+    python3 watch.py
+
+**The failure this fixes.** With two trades open, every check was reporting the book and then
+restating `regime.py`'s refusal — *"15m is 1-2, not unanimous"* — which is true and useless. It
+says a gate is shut without saying **what would open it**, so the next check re-derives the same
+sentence and nothing is actually being watched. N194 blamed exactly this tunnel vision for the desk
+sitting out the morning trend, and holding a winner is not a reason to stop scanning.
+
+`watch.py` prints, per symbol and per direction, which of the three components dissent and **the
+price that would flip each one**:
+
+- **trend** — the EMA20(15m) level itself
+- **structure** — the pivot high or low that must be taken out
+- **location** — the 66% / 34% boundary of the 40-bar range, with the range quoted (N46)
+
+It also prints **CAPACITY**: open risk against the $120 discretionary cap, and whether a
+1-contract plan at rule 4's 0.5-ATR floor would still fit. Two open trades hold $90, so there is
+$30 of room — enough for exactly one more minimum-stop contract on either symbol, and nothing more.
+
+**A level from `watch.py` is a thing to watch, never a plan.** Registering still requires
+`reversal()` to actually fire, both vetoes clear, capacity, and a written plan with its weakness
+stated. And when the gate that opens points the same way as a position already held, that is
+**pyramiding, not a new idea** — say so explicitly and treat the far smaller remaining capacity as
+the binding constraint rather than a reason to add.

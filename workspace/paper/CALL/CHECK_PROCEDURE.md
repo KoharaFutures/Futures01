@@ -1091,3 +1091,48 @@ $30 of room — enough for exactly one more minimum-stop contract on either symb
 stated. And when the gate that opens points the same way as a position already held, that is
 **pyramiding, not a new idea** — say so explicitly and treat the far smaller remaining capacity as
 the binding constraint rather than a reason to add.
+
+
+## EVERY check scans the side the headline is NOT on
+
+```
+python3 workspace/paper/CALL/watch.py        # now includes COUNTER-TREND
+```
+
+**Installed 2026-09-28 21:30 ET after the owner caught two longs this desk never examined** — MNQ
+bouncing off **30430.00** and MGC off **4145.00**, while every line the scan printed for two hours was
+about the short side (N234).
+
+The failure was not a bad judgement. It was that **no long-side mechanism was running at all**:
+
+- `regime.reversal()` only ever looks the way the current 15m headline points. Both symbols read 15m
+  BEARISH, so the gate could only authorise a SHORT.
+- `watch.py`'s per-symbol block measured only distances to levels that open a gate *in that same
+  direction*.
+- `reversal_setup()` — which this file already calls **"what the account owner means by a confident
+  reversal"** — was described here and never put in the loop. It was last run forty minutes before the
+  lows, to adjudicate a short.
+
+`watch.py` now calls `counter_trend()` on every check: `reversal_setup()` for **both** symbols, printing
+side, sigma, HTF support, the reclaim trigger, the volume character, and every failing condition.
+
+**Two things to understand about reading it.**
+
+1. **It authorises nothing.** Condition 3 requires a *reclaim* trigger, so `QUALIFIES` is never a
+   licence to buy the low — it is a licence to plan a reclaim entry. Buying the print because the
+   detector lit up is the "buy every dip" failure condition 3 exists to prevent.
+2. **Sigma is latency-sensitive and decays to nothing.** It is measured against the 20-bar mean of the
+   *current* window, so a flush that has already bounced reads near zero — MGC read `sigma +0.05, side
+   SHORT` within half an hour of printing 4145.00 on 3.12× flush volume. Running this occasionally does
+   not merely risk missing the signal, it **guarantees** seeing it only after it is gone. That is why it
+   is every check and not every hourly.
+
+**And say it out loud when it qualifies**, the same way a stand-down gets said. A qualifying
+counter-trend setup that only appears in a tool's stdout is not reported.
+
+**One standing conflict rule that came out of the same episode.** Do not register a plan that opposes a
+live PENDING plan on the **same symbol** inside a band narrower than that symbol's ATR14(15m). On
+2026-09-28 the qualifying MNQ long triggered at a 30529.75 reclaim while CALL-0010's short limit sat at
+30550.00 — twenty points apart on a 39-point ATR. Two opposing plans that close on each other is
+incoherent whatever each looks like alone, and N8 forbids voiding the older one to make room for the
+newer. The later plan waits for the earlier to fill or expire.

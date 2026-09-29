@@ -8647,3 +8647,107 @@ failure mode — that contrast is the cleanest evidence for the distinction.
 returned real bars at 10-15 minute lag, so this is not a fetch failure and the three-strikes stop
 condition is not near. Recorded because intermittent rate limiting is how a feed degrades before it
 breaks, and the desk should not discover that at a fill.
+
+# N234 — the owner caught two longs I was structurally incapable of seeing: MNQ 30430.00 and MGC 4145.00
+
+The account owner, at 21:29: *"you somehow missed a beautiful buy at 30430 for mnq"* and *"it should
+have been clear that the 4145 for mgc was suppose to be a long as well."* Both are confirmed from data
+fetched this turn, both were real, and the reason I missed them is mechanical rather than a judgement
+call. That makes it worse, not better.
+
+## The prints
+
+| symbol | exact low | bar | bounce so far |
+|---|---|---|---|
+| **MGC** | **4145.00** | 1m `21:00` | to 4155.90 = **+10.90 pts = $109/contract** |
+| **MNQ** | **30430.00** | 5m `21:15`, 1m `21:19` | to 30432.75, only +2.75 — still early |
+
+## Why MNQ bounced at 30430.00
+
+1. **fib 78.6% of the live up-leg sits at 30434.72.** The leg is 30356.50 (10:45) → 30722.00 (12:15),
+   365.50 points. The low printed **1.97 points through** that retracement and turned. `project.py`
+   had this level in hand and I never read it against the low.
+2. **It is a prior consolidation shelf from this morning.** The 15m `10:30` bar low was **30425.25**
+   closing 30428.75, and `10:45` opened 30428.50 — price built a base in 30425–30434 immediately
+   before the rally that became the whole up-leg. Four 15m bars in 200 have touched this band and
+   three of them are that morning base.
+3. **`reversal_setup('MNQ')` now returns `qualifies: true`** — sigma **−2.80** against the |1.5|
+   required, with **DAILY and WEEKLY** support, reclaim trigger 30529.75.
+4. **Against it:** volume **1.44×**, which the detector itself labels *"NO capitulation volume — a
+   drift, not a flush."* A drift into support is a weaker event than a flush into it.
+
+## Why MGC bounced at 4145.00
+
+1. **4143.00–4146.50 has been tested five times today and held every time**: 10:45 low **4143.00**
+   (the session low that launched the up-leg to 4181.00), 16:45 low 4143.90, 20:15 low 4146.30, 20:45
+   low 4145.50, 21:00 low **4145.00**. That is a demand shelf, not a coincidence.
+2. **4143.00 is the bottom of the 40-bar range I have printed in every single report tonight.** I
+   quoted `[4143.00, 4181.00]` in the location line at 21:00, 21:02, 21:05, 21:07, 21:08, 21:10,
+   21:12, 21:16, 21:18, 21:20, 21:22, 21:24, 21:26 and 21:28 while price walked down to 4145.00. The
+   level was on my own screen fourteen times and I read it only as the denominator.
+3. **It is a full retracement of the live up-leg** — 4143.00 is the leg origin, so 4145.00 is a 95%
+   retracement holding. Unlike MNQ, **MGC's FIBONACCI family HAS been generated** for this symbol, and
+   its profile gives the reason: gold's legs run over days, which is "the one place on this desk where
+   a Fibonacci retracement has a stable anchor."
+4. **Volume 3.12× — `flush`**, the real capitulation reading MNQ lacked. The stronger of the two
+   events on the one dimension that separates them.
+5. **Against it:** `reversal_setup('MGC')` does **not** qualify, and by the time I ran it the bounce
+   had already carried price above the 20-bar mean, so it reads `side SHORT, sigma +0.05`. At the low
+   it would have read strongly negative. See the latency point below.
+
+## Why I could not see either — four causes, none of them "I judged it and declined"
+
+1. **`regime.reversal()` only ever looks the way the 15m headline points.** Both symbols read 15m
+   BEARISH 0-3, so the gate could only ever authorise a SHORT. A long was not rejected; it was never
+   examined. The desk had no long-side mechanism running at all.
+2. **`watch.py` measured only gate-opening distances in that same direction.** Every line it printed
+   for two hours was about the short side. Nothing in the loop said "price is at the bottom of its own
+   range," which is the one sentence that would have flagged both.
+3. **`reversal_setup()` — the object `CHECK_PROCEDURE.md` itself calls "what the account owner means by
+   a confident reversal" — was in the procedure but not in the loop.** I ran it at 20:46 and 20:49 to
+   adjudicate a *short*, and then not once in the following forty minutes.
+4. **N228 compounded it.** From 20:34 to 21:02 I reported MNQ's bear location gate as ~22 points
+   further away than it was, so the attention that bug consumed was entirely on the short side.
+
+And the fifth, which is a property of the tool rather than of me: **`reversal_setup()` is
+latency-sensitive.** Sigma is measured against the 20-bar mean of the current window, so a flush that
+has already bounced reads near zero — MGC reads +0.05 now and would have read deeply negative at
+4145.00. Running it occasionally does not just risk missing the signal, it *guarantees* seeing it only
+after it has gone.
+
+## Fixed now, in the loop, not in a note
+
+`watch.py` gains `counter_trend()`, which runs `reversal_setup()` on **both** symbols on **every**
+check and prints side, sigma, HTF support, the reclaim trigger and the volume character, plus each
+failing condition. It authorises nothing; it reports the side the headline is not on. This is the same
+class of fix as N228 — a tool made to report what the procedure already said — not a rule change, and
+notably it would not have authorised a market buy at either low, because condition 3 requires a
+*reclaim*. What it would have done is put "MNQ QUALIFIES, side LONG" in front of me at the low instead
+of forty minutes later.
+
+## What I am NOT doing, and why
+
+**Not buying MNQ here.** The qualifying setup's trigger is a **reclaim of 30529.75**, which is 97
+points above the 30432.75 market. Buying at 30430 on a 2.75-point bounce with no reclaim is exactly the
+"buy every dip" failure that condition 3 exists to prevent, and it would be chasing the owner's
+observation rather than trading the setup.
+
+**And there is a conflict I will not paper over:** the book holds **CALL-0010, MNQ SHORT pending at
+30550.00**, twenty points above that long's 30529.75 reclaim trigger. Registering both would put
+opposing plans on one symbol inside a 20-point band, which is incoherent regardless of what each looks
+like alone. CALL-0010 was registered at 21:12 and N8 forbids my editing or voiding it now to make room
+for a trade I like better this minute. So the MNQ long waits for CALL-0010 to fill or expire, and I am
+stating that constraint rather than quietly choosing one.
+
+**Not buying MGC either** — `reversal_setup` fails two of four conditions there, and 4145.00 has
+already become 4155.90, so a long now is buying 10.90 points into a move the owner saw and I did not.
+N194 Cause 5 is chasing an extended move; this would be it.
+
+## The cost, honestly
+
+**UPPER BOUND, MGC:** 4145.00 → 4155.90 is **+10.90 points = $109** on one contract, and a 1-contract
+long at the rule-4 floor (3.33pt stop, $33.32 risk) would already be **+3.3R**. That is a real number
+and it is the largest single miss of the session. **MNQ:** +2.75 points so far, unresolved. **MARGINAL:**
+not zero, which is the uncomfortable part — unlike the 15:00-16:00 stand-downs, no installed veto
+blocked these. `reversal_setup` had the MNQ long qualifying on its own criteria; nothing was stopping
+it except that nobody ran it. **REALIZED:** $0.00. The book is still flat with two unfilled shorts.

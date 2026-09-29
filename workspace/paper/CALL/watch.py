@@ -124,10 +124,51 @@ def capacity() -> None:
               f" for 1 contract -> {ok}")
 
 
+def counter_trend() -> None:
+    """N234: run reversal_setup() on BOTH symbols, EVERY check, in the direction the
+    15m headline is NOT pointing.
+
+    Why this exists. `regime.reversal()` only ever looks the way the current 15m
+    headline points, and `report()` above only measures distance to levels that would
+    open a gate in that same direction. So on an evening where both symbols read 15m
+    BEARISH, a LONG was mechanically invisible to this desk - not rejected, never
+    examined. The owner caught MNQ bouncing off 30430.00 and MGC off 4145.00 while
+    every line this tool printed was about the short side.
+
+    reversal_setup() is the object CHECK_PROCEDURE.md already calls "what the account
+    owner means by a confident reversal". It was in the procedure but not in the loop.
+    This puts it in the loop. It authorises nothing on its own - it reports.
+
+    It is also LATENCY-SENSITIVE, which is the second half of the miss: sigma is
+    measured against the 20-bar mean of the CURRENT window, so a flush that has already
+    bounced reads near zero. Running it once every forty minutes guarantees seeing it
+    after the fact. Running it every check is the only way the number means anything.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("rg", str(HERE / "regime.py"))
+    rg = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rg)
+    print("\nCOUNTER-TREND (reversal_setup) — the side the 15m headline is NOT on")
+    for sym in ("MGC", "MNQ"):
+        try:
+            r = rg.reversal_setup(sym)
+        except Exception as exc:                    # never let this kill the check
+            print(f"  {sym}: reversal_setup FAILED — {exc}")
+            continue
+        mark = "QUALIFIES" if r.get("qualifies") else "no"
+        print(f"  {sym}  {mark}  side {r.get('side')}  sigma {r.get('sigma')}"
+              f"  htf {r.get('htf_support') or 'none'}")
+        print(f"       reclaim trigger {r.get('trigger')}  last {r.get('last')}"
+              f"  volume {r.get('climax_x')}x — {r.get('climax_note')}")
+        for why in r.get("reasons", []):
+            print(f"       fails: {why}")
+
+
 def main() -> int:
     print("WATCH — levels that would open a gate. A level is something to watch, NOT a plan.")
     for sym in ("MGC", "MNQ"):
         report(sym)
+    counter_trend()
     capacity()
     return 0
 

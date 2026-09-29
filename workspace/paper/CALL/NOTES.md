@@ -8610,3 +8610,40 @@ adverse 36.00 from its reference against favourable 6.75, **"DIRECTION WRONG"** 
 16.50 from the bar the call was built on. For an unfilled sell limit sitting above the market that
 upward move is progress toward a fill, but it is also the directional read going against me, and both
 of those are true at once.
+
+# N233 — a limit placed below a falling EMA becomes a limit above it: my CALL-0009 design decays
+
+CALL-0009's one deliberate construction choice was to place the sell limit **0.69 BELOW** the 15m
+EMA20, so that a fill would not require the trend component to die — the defect I watched play out on
+CALL-0007. At registration (20:49) EMA20 was **4158.19** and the limit **4157.50**.
+
+**At 21:24 EMA20 is 4156.85 and the limit is 0.65 ABOVE it.** The EMA fell 1.34 points while the limit
+sat still, and the protection inverted. MGC's 15m trend component now holds BEAR by **0.35 points**
+(close 4156.50 against 4156.85), and the 5m high of 4157.30 came within **0.20** of filling. So the
+plan is one tick from filling into a gate that is one tick from dying — precisely the CALL-0007
+scenario I built the placement to avoid, arrived at from the other direction.
+
+**The structural point, which is new and not a restatement of N225/N231.** A static price level
+measured as an offset from a *moving* average is only that offset at the instant of registration. On a
+falling EMA a sub-EMA short limit migrates above the EMA at the rate the average declines — here
+~1.3 points in 35 minutes against an offset of 0.69, so the design had a half-life of under 20
+minutes. Any future plan that justifies its entry by reference to a moving anchor needs either (a) the
+offset sized against the anchor's own drift over the plan's window, or (b) the honest admission that
+the justification expires quickly. CALL-0009 claimed (a) implicitly and delivered neither.
+
+This is **not** grounds to move the limit. N8 exists for exactly this moment: the plan was registered
+with its reasoning, the reasoning has decayed, and rewriting it now to restore the intended
+relationship would be re-registering a different trade under an old timestamp. The plan fills or
+expires as written.
+
+**What it does change** is the deferred list. Alongside recording the tally and requiring a new bar
+for persistence, the parent session should decide whether entry offsets from EMA-type anchors must be
+expressed as a *band* that tracks the anchor, or whether plans anchored to moving averages should
+carry a shorter expiry than plans anchored to static structure (a pivot, a prior high). CALL-0010's
+limit is anchored to the **30568.00 broken pivot low**, which does not move, so it does not have this
+failure mode — that contrast is the cleanest evidence for the distinction.
+
+**Feed note:** second `HTTP 429` on the crumb fetch in four checks (21:20, 21:24). Both pulls still
+returned real bars at 10-15 minute lag, so this is not a fetch failure and the three-strikes stop
+condition is not near. Recorded because intermittent rate limiting is how a feed degrades before it
+breaks, and the desk should not discover that at a fill.

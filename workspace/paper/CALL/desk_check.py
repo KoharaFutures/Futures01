@@ -346,7 +346,10 @@ def main() -> int:
                 triggers.append("REVERSAL_CALLED")
                 st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
         if setup.get("qualifies") and not prev_r.get("setup_qualifies"):
-            triggers.append("COUNTER_TREND_QUALIFIES")
+            if binding:    # AUTOMATE_NEXT #13: plan_builder G1 refuses any plan under a stand-down, so don't wake
+                notes.append(f"SETUP_UNDER_STANDDOWN {sym} {setup.get('side')} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
+            else:
+                triggers.append("COUNTER_TREND_QUALIFIES")
         st["regime"][sym] = {"frames": {regime.label(t["frame"]): t["headline"] for t in tfs},
                              "reversal_called": bool(rv.get("called")), "reversal_reasons": rv.get("reasons"),
                              "setup_qualifies": bool(setup.get("qualifies")), "setup_side": setup.get("side"),

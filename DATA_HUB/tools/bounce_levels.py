@@ -408,7 +408,7 @@ def current_levels(bars, sym, start, intraday, pivots, modes):
                          feature_history={m: {f: v["_by_feat"].get(f) for f in feats if f} for m, v in modes.items()},
                          reasons=reasons))
     rows.sort(key=lambda r: r["dist_atr"])
-    return dict(asof=last.ts.isoformat(), close=last.c, atr=round(atr, 3), ema50=round(ema, 3), levels=rows)
+    return dict(asof=last.ts.isoformat(), close=spec.round_to_tick(last.c), atr=round(atr, 3), ema50=round(ema, 3), levels=rows)
 
 
 # ------------------------------------------------------------------ driver

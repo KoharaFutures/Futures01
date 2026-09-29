@@ -95,3 +95,102 @@ Runs combined: MCL 5m, MCL 60m, MES 5m, MES 60m, MGC 5m, MGC 60m, MNQ 5m, MNQ 60
 | SWING SUPPORT | recent 60m swing high/low as support | 3/8 | -1.94 | -0.230 | -0.193 | 3065 |
 | overnight | outside regular hours | 3/8 | -2.63 | -0.247 | -0.218 | 10527 |
 | support | all supports | 2/8 | -2.70 | -0.234 | -0.203 | 8545 |
+
+## Volume profile: at a low-volume node (LVN), continuation or bounce?
+
+`extra continuation` = how much MORE often price continued through the LVN than it did through random prices in the same range (positive = LVNs favour continuation, negative = LVNs favour bouncing). `symbols agreeing` = how many of the symbols point the same way as the average.
+
+| profile range | condition at the LVN | touches | extra continuation (avg) | symbols agreeing | per symbol |
+|---|---|---|---|---|---|
+| 1-day | LVN (all) | 172 | +3 pts | 2/4 | MCL -1, MES -10, MGC +8, MNQ +11 |
+| 1-day | all | 172 | +3 pts | 2/4 | MCL -1, MES -10, MGC +8, MNQ +11 |
+| 1-day | range is BALANCED | 97 | -2 pts | 1/3 | MCL +0, MGC -12, MNQ +0 |
+| 1-day | range is TRENDING | 71 | +12 pts | 3/4 | MCL +2, MES -5, MGC +20, MNQ +37 |
+| 1-day | arrived WITH the range's trend | 11 | -33 pts | 1/1 | MES -33 |
+| 1-day | arrived AGAINST the range's trend | 29 | +11 pts | 2/2 | MES +24, MGC +3 |
+| 1-day | arrived from INSIDE value | 100 | -5 pts | 2/4 | MCL -21, MES +2, MGC +0, MNQ -3 |
+| 1-day | arrived from OUTSIDE value | 65 | +23 pts | 3/3 | MCL +16, MGC +23, MNQ +37 |
+| 1-day | high relative volume (>1.5x) | 102 | +0 pts | 2/4 | MCL -3, MES -20, MGC +10, MNQ +9 |
+| 1-day | normal volume | 61 | +6 pts | 2/3 | MCL +0, MGC +8, MNQ +11 |
+| 1-day | regular hours | 41 | +4 pts | 2/3 | MCL +8, MES -10, MNQ +8 |
+| 1-day | overnight | 123 | -0 pts | 3/4 | MCL -3, MES -10, MGC -2, MNQ +12 |
+| 1-day | falling into it (support test) | 102 | +8 pts | 3/4 | MCL +3, MES -18, MGC +20, MNQ +18 |
+| 1-day | rising into it (resistance test) | 70 | -4 pts | 3/4 | MCL -5, MES +4, MGC -7, MNQ -3 |
+| 3-day | LVN (all) | 153 | -9 pts | 3/4 | MCL -14, MES -19, MGC +27, MNQ -14 |
+| 3-day | all | 153 | -9 pts | 3/4 | MCL -14, MES -19, MGC +27, MNQ -14 |
+| 3-day | range is BALANCED | 87 | -10 pts | 3/4 | MCL -32, MES -8, MGC +46, MNQ -20 |
+| 3-day | range is TRENDING | 58 | -10 pts | 2/3 | MCL -4, MES -22, MGC +7 |
+| 3-day | arrived WITH the range's trend | 10 | -54 pts | 1/1 | MES -54 |
+| 3-day | arrived AGAINST the range's trend | 32 | -9 pts | 2/2 | MCL -18, MES -1 |
+| 3-day | arrived from INSIDE value | 111 | -8 pts | 2/4 | MCL +4, MES -22, MGC +26, MNQ -13 |
+| 3-day | arrived from OUTSIDE value | 30 | -24 pts | 2/2 | MCL -28, MNQ -17 |
+| 3-day | high relative volume (>1.5x) | 86 | -12 pts | 3/4 | MCL -26, MES -24, MGC +6, MNQ -2 |
+| 3-day | normal volume | 59 | -14 pts | 2/3 | MCL +6, MES -10, MNQ -25 |
+| 3-day | regular hours | 43 | -19 pts | 2/2 | MES -39, MNQ -4 |
+| 3-day | overnight | 98 | -4 pts | 3/4 | MCL -15, MES -3, MGC +47, MNQ -21 |
+| 3-day | falling into it (support test) | 84 | -17 pts | 3/4 | MCL -26, MES -24, MGC +25, MNQ -26 |
+| 3-day | rising into it (resistance test) | 60 | -5 pts | 2/3 | MCL +0, MES -13, MNQ -2 |
+| 1-week | LVN (all) | 167 | -4 pts | 2/4 | MCL +1, MES -10, MGC +3, MNQ -6 |
+| 1-week | all | 167 | -4 pts | 2/4 | MCL +1, MES -10, MGC +3, MNQ -6 |
+| 1-week | range is BALANCED | 104 | -5 pts | 3/4 | MCL +6, MES -4, MGC -10, MNQ -7 |
+| 1-week | range is TRENDING | 63 | -1 pts | 3/4 | MCL -7, MES -24, MGC +31, MNQ -0 |
+| 1-week | arrived AGAINST the range's trend | 15 | -18 pts | 1/1 | MNQ -18 |
+| 1-week | arrived from INSIDE value | 125 | -4 pts | 4/4 | MCL -2, MES -15, MGC -1, MNQ -1 |
+| 1-week | arrived from OUTSIDE value | 31 | +0 pts | 1/2 | MES -4, MGC +7 |
+| 1-week | high relative volume (>1.5x) | 88 | -6 pts | 3/4 | MCL +21, MES -3, MGC -19, MNQ -14 |
+| 1-week | normal volume | 79 | -0 pts | 2/4 | MCL -20, MES -11, MGC +37, MNQ +1 |
+| 1-week | regular hours | 68 | -20 pts | 3/4 | MCL +8, MES -20, MGC -12, MNQ -37 |
+| 1-week | overnight | 99 | +7 pts | 2/4 | MCL -3, MES -4, MGC +11, MNQ +25 |
+| 1-week | falling into it (support test) | 82 | -13 pts | 3/4 | MCL -6, MES -30, MGC +23, MNQ -24 |
+| 1-week | rising into it (resistance test) | 85 | +4 pts | 3/4 | MCL +4, MES +9, MGC -12, MNQ +16 |
+| 2-week | LVN (all) | 98 | -5 pts | 2/4 | MCL +4, MES +5, MGC -39, MNQ -3 |
+| 2-week | all | 98 | -5 pts | 2/4 | MCL +4, MES +5, MGC -39, MNQ -3 |
+| 2-week | range is BALANCED | 64 | +2 pts | 2/3 | MCL +21, MES +5, MGC -28 |
+| 2-week | range is TRENDING | 13 | +7 pts | 1/1 | MES +7 |
+| 2-week | arrived from INSIDE value | 31 | +19 pts | 2/2 | MCL +29, MES +7 |
+| 2-week | arrived from OUTSIDE value | 54 | -17 pts | 2/3 | MCL -27, MES +4, MGC -40 |
+| 2-week | high relative volume (>1.5x) | 52 | -5 pts | 2/3 | MCL -2, MES +12, MGC -40 |
+| 2-week | normal volume | 28 | +4 pts | 1/2 | MCL +12, MES -0 |
+| 2-week | regular hours | 22 | +28 pts | 2/2 | MCL +32, MES +24 |
+| 2-week | overnight | 61 | -10 pts | 3/3 | MCL -12, MES -4, MGC -18 |
+| 2-week | falling into it (support test) | 28 | +15 pts | 2/2 | MCL +10, MES +18 |
+| 2-week | rising into it (resistance test) | 51 | -23 pts | 2/3 | MCL +1, MES -5, MGC -106 |
+| 1-week(60m) | LVN (all) | 391 | -6 pts | 4/4 | MCL -3, MES -12, MGC -2, MNQ -7 |
+| 1-week(60m) | all | 391 | -6 pts | 4/4 | MCL -3, MES -12, MGC -2, MNQ -7 |
+| 1-week(60m) | range is BALANCED | 204 | -9 pts | 3/4 | MCL -7, MES -13, MGC +1, MNQ -14 |
+| 1-week(60m) | range is TRENDING | 187 | -4 pts | 3/4 | MCL +3, MES -11, MGC -6, MNQ -0 |
+| 1-week(60m) | arrived AGAINST the range's trend | 165 | -5 pts | 3/4 | MCL -2, MES -18, MGC -2, MNQ +1 |
+| 1-week(60m) | arrived from INSIDE value | 209 | -8 pts | 4/4 | MCL -16, MES -6, MGC -2, MNQ -7 |
+| 1-week(60m) | arrived from OUTSIDE value | 182 | -5 pts | 3/4 | MCL +17, MES -19, MGC -2, MNQ -7 |
+| 1-week(60m) | high relative volume (>1.5x) | 248 | -9 pts | 4/4 | MCL -10, MES -17, MGC -4, MNQ -2 |
+| 1-week(60m) | normal volume | 143 | -3 pts | 2/4 | MCL +8, MES -2, MGC +1, MNQ -21 |
+| 1-week(60m) | regular hours | 163 | -8 pts | 3/4 | MCL -7, MES -21, MGC +10, MNQ -3 |
+| 1-week(60m) | overnight | 228 | -5 pts | 4/4 | MCL -0, MES -3, MGC -6, MNQ -10 |
+| 1-week(60m) | falling into it (support test) | 214 | +3 pts | 2/4 | MCL +7, MES -6, MGC +16, MNQ -4 |
+| 1-week(60m) | rising into it (resistance test) | 177 | -17 pts | 4/4 | MCL -12, MES -18, MGC -35, MNQ -11 |
+| 1-month | LVN (all) | 265 | -5 pts | 3/4 | MCL -4, MES -11, MGC -7, MNQ +4 |
+| 1-month | all | 265 | -5 pts | 3/4 | MCL -4, MES -11, MGC -7, MNQ +4 |
+| 1-month | range is BALANCED | 157 | +2 pts | 2/4 | MCL +20, MES -5, MGC -14, MNQ +17 |
+| 1-month | range is TRENDING | 108 | -15 pts | 3/4 | MCL -26, MES -27, MGC +3, MNQ -13 |
+| 1-month | arrived AGAINST the range's trend | 95 | -13 pts | 3/4 | MCL -12, MES -38, MGC +5, MNQ -16 |
+| 1-month | arrived from INSIDE value | 162 | -3 pts | 3/4 | MCL -4, MES -8, MGC -11, MNQ +10 |
+| 1-month | arrived from OUTSIDE value | 103 | -6 pts | 4/4 | MCL -2, MES -14, MGC -1, MNQ -4 |
+| 1-month | high relative volume (>1.5x) | 162 | -19 pts | 4/4 | MCL -33, MES -35, MGC -5, MNQ -6 |
+| 1-month | normal volume | 103 | +19 pts | 3/4 | MCL +36, MES +41, MGC -8, MNQ +24 |
+| 1-month | regular hours | 107 | -16 pts | 3/4 | MCL -12, MES -35, MGC +1, MNQ -9 |
+| 1-month | overnight | 158 | +4 pts | 3/4 | MCL +2, MES +18, MGC -11, MNQ +12 |
+| 1-month | falling into it (support test) | 177 | -5 pts | 3/4 | MCL -14, MES -8, MGC +2, MNQ -3 |
+| 1-month | rising into it (resistance test) | 88 | -4 pts | 2/4 | MCL +13, MES -19, MGC -28, MNQ +17 |
+| 3-month | LVN (all) | 160 | -9 pts | 4/4 | MCL -18, MES -8, MGC -6, MNQ -0 |
+| 3-month | all | 160 | -9 pts | 4/4 | MCL -18, MES -8, MGC -6, MNQ -0 |
+| 3-month | range is BALANCED | 88 | -8 pts | 2/4 | MCL -21, MES -11, MGC +3, MNQ +8 |
+| 3-month | range is TRENDING | 72 | -10 pts | 4/4 | MCL -10, MES -4, MGC -16, MNQ -9 |
+| 3-month | arrived AGAINST the range's trend | 46 | -17 pts | 3/3 | MES -6, MGC -17, MNQ -31 |
+| 3-month | arrived from INSIDE value | 97 | -18 pts | 3/4 | MCL -45, MES -8, MGC -10, MNQ +1 |
+| 3-month | arrived from OUTSIDE value | 54 | +6 pts | 1/3 | MCL +26, MES -7, MGC -4 |
+| 3-month | high relative volume (>1.5x) | 99 | -7 pts | 3/4 | MCL -24, MES -8, MGC -5, MNQ +15 |
+| 3-month | normal volume | 53 | -8 pts | 3/3 | MCL -8, MES -6, MGC -11 |
+| 3-month | regular hours | 70 | -2 pts | 2/4 | MCL +3, MES -13, MGC -17, MNQ +27 |
+| 3-month | overnight | 90 | -14 pts | 4/4 | MCL -29, MES -1, MGC -1, MNQ -28 |
+| 3-month | falling into it (support test) | 97 | -13 pts | 4/4 | MCL -27, MES -5, MGC -8, MNQ -21 |
+| 3-month | rising into it (resistance test) | 63 | -2 pts | 2/4 | MCL -11, MES -13, MGC +8, MNQ +32 |

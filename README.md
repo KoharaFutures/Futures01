@@ -1,5 +1,10 @@
 # futures-agents
 
+> **Start at [`DATA_HUB/README.md`](DATA_HUB/README.md).** Consolidated 2026-09-29: every finding,
+> top strategies per symbol, the bounce-level / volume-profile playbook and the refresh tools.
+> Superseded material is in `Archived_Do_Not_Refference/` (see its `ARCHIVE_INDEX.md`, don't re-explore it).
+> The "Honest status" section below predates real-data testing. Real CME bars have been used since 2026-09-23.
+
 A coordinated multi-agent futures research, backtesting and live decision-support
 system, built around one constraint: **protecting a $50,000 account.**
 

@@ -41,6 +41,39 @@ def plain(bucket: str) -> str:
     return PLAIN.get(head, head) + (f" as {side[0].lower()}" if side else "")
 
 
+def vp_section() -> list[str]:
+    """LVN continuation-vs-bounce, pooled across symbols per profile range and condition.
+    'lean' = LVN (cont - bounce) minus random prices' (cont - bounce) in the same range."""
+    res = [json.load(open(f)) for f in sorted(glob.glob(str(LEVELS / "*_volume_profile.json")))]
+    if not res:
+        return []
+    out = ["\n## Volume profile: at a low-volume node (LVN), continuation or bounce?\n",
+           "`extra continuation` = how much MORE often price continued through the LVN than it did through random "
+           "prices in the same range (positive = LVNs favour continuation, negative = LVNs favour bouncing). "
+           "`symbols agreeing` = how many of the symbols point the same way as the average.\n",
+           "| profile range | condition at the LVN | touches | extra continuation (avg) | symbols agreeing | per symbol |",
+           "|---|---|---|---|---|---|"]
+    windows = [w["window"] for w in res[0]["windows"]]
+    conds = list(res[0]["windows"][0]["lvn_by_condition"])
+    for wi, wname in enumerate(windows):
+        for c in ["LVN (all)"] + conds:
+            vals = []
+            for r in res:
+                w = r["windows"][wi]
+                row = w["by_kind"]["LVN"] if c == "LVN (all)" else w["lvn_by_condition"][c]
+                a, b = row["real"], row["placebo"]
+                if a.get("n", 0) >= 10 and b.get("n"):
+                    vals.append((r["symbol"], a["n"], (a["cont"] - a["bounce"]) - (b["cont"] - b["bounce"])))
+            if not vals:
+                continue
+            n = sum(v[1] for v in vals)
+            avg = sum(v[2] * v[1] for v in vals) / n
+            agree = sum((v[2] > 0) == (avg > 0) for v in vals)
+            out.append(f"| {wname} | {c} | {n} | {avg*100:+.0f} pts | {agree}/{len(vals)} | "
+                       + ", ".join(f"{s} {d*100:+.0f}" for s, _, d in vals) + " |")
+    return out
+
+
 def main() -> None:
     runs = []
     for f in sorted(glob.glob(str(LEVELS / "*_bounce.json"))):
@@ -72,6 +105,7 @@ def main() -> None:
         for r in rows:
             out.append(f"| {r['bucket']} | {plain(r['bucket'])} | {r['pos']}/{r['runs']} | {r['stouffer']:+.2f} | "
                        f"{r['real']:+.3f} | {r['fake']:+.3f} | {r['n']} |")
+    out += vp_section()
     (LEVELS / "CONSISTENCY.md").write_text("\n".join(out) + "\n")
     print(f"wrote {LEVELS / 'CONSISTENCY.md'}")
 

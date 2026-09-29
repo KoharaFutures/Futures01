@@ -45,7 +45,12 @@ def read_rows(paths):
             for r in csv.DictReader(fh, delimiter="\t"):
                 if r.get("path") and r.get("decision", "").strip().upper() == "ARCHIVE":
                     r["path"] = r["path"].strip().rstrip("/")
-                    rows.append(r)
+                    if any(ch in r["path"] for ch in "*?["):
+                        hits = sorted(str(q.relative_to(ROOT)) for q in ROOT.glob(r["path"]))
+                        hits += sorted(str(q.relative_to(ROOT / ARCH)) for q in (ROOT / ARCH).glob(r["path"]))
+                        rows += [dict(r, path=h) for h in dict.fromkeys(hits)]
+                    else:
+                        rows.append(r)
     return rows
 
 
@@ -94,7 +99,7 @@ def main():
             if src.exists():               # untracked leftovers (e.g. ignored files) move by rename
                 src.rename(dst) if not dst.exists() else None
         moved += 1
-    idx = [HEADER]
+    idx = [HEADER.rstrip("\n")]
     for r in uniq:
         s = (r.get("summary") or "").replace("|", "/").strip()
         w = (r.get("reason") or "").replace("|", "/").strip()

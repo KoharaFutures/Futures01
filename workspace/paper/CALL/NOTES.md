@@ -8418,3 +8418,58 @@ registration → 4151.70 now, so the 4157.50 sell limit sits **5.80 above** the 
 bounce to fill. The trade's thesis is being confirmed by price while its entry becomes less likely —
 the ordinary fate of a pullback limit, and the reason 3 of 8 prior plans expired. `thesis.py` reports
 "no bars since creation", so there is nothing to track yet. I will not move the limit.
+
+# N228 — `watch.py` used the wrong location thresholds all evening, and I quoted the wrong level to the owner repeatedly
+
+**The bug.** `chart.py` cuts the location component at **60/40**:
+
+```
+d = "BULL" if pos > 60 else ("BEAR" if pos < 40 else "MIXED")
+```
+
+`watch.py` — the forward-scan tool I built at the owner's instruction — cut it at **66/34**. So the
+tool that exists to say *how far price is from opening a gate* was measuring against a boundary the
+gate does not use. `chart.py` and `regime.py` are the authority and were right the whole time; the
+scanner disagreed with them and I reported the scanner.
+
+**What it cost in reporting terms.** On MNQ the 34% boundary sits ~21.93 points below the 40% one, so
+every distance I gave for MNQ's bear location gate tonight was **~22 points too far**:
+
+| what I said | what it actually was |
+|---|---|
+| 20:34 "36.56 away, closing steadily" | ~14.6 away |
+| 20:39 "44.56 away — the sequence has broken" | ~22.6 away |
+| 20:54 "74.23 away, out of reach, not closing" | ~52.3 away |
+| 21:00 "24.73 away — closest it's been" | ~2.8 away |
+
+The qualitative story survives — the level did oscillate and then close hard — but "out of reach" was
+not a true description of a gate 52 points from a symbol whose 15m ATR is 35, and at 21:00 I told the
+owner the gate was 24.73 away when price was **2.80** from crossing it. That is the kind of
+authoritative-looking wrongness this desk exists to avoid, and it was mine.
+
+**Fixed now, and here is why that is not the N225 situation.** N225's tally-persistence repair stays
+deferred because installing it would have changed *which trades are permitted* while a plan it
+authorised was live — a rule change that ratifies a position. This is a different object: a pure
+arithmetic disagreement between a display tool and the authority it is supposed to describe. Fixing
+it permits nothing and blocks nothing, because `regime.py` never read `watch.py`. Leaving it would
+simply keep emitting wrong numbers. The constant is now 60/40 with a comment naming this note.
+
+**And the bug was hiding a live contradiction.** This check, `regime.py` reported MNQ's 15m as **0-3
+unanimous** while `watch.py` simultaneously listed location as the missing bear condition needing
+30480.77. Two of my own tools flatly contradicting each other on the frame that authorises trades is
+what surfaced this — not reading the code. After the fix `watch.py` reads "BEAR: all three components
+already agree," which is what `regime.py` had been saying.
+
+**The MNQ reversal call that fired on this bar: DECLINED, first-unanimous-bar.** `regime.py` printed
+`>>> REVERSAL CALLED: BEARISH (was BULLISH), held 15 checks, agreeing frames [1, 5, 60, 240]` for MNQ.
+Its 15m was **0-2 one check ago**, so this is exactly the N225 defect again: `held 15` measures the
+headline, and the unanimity is one check old. At 20:46 I declined MGC on this reasoning and registered
+at 20:49 when its 0-3 held a second consecutive check. The same standard applies here or it was never
+a standard. **If MNQ's 0-3 survives the next check, it becomes registrable; tonight it does not.**
+
+**MGC, separately: CALL-0009's thesis is now fully paid and the trade never existed.** `thesis.py`
+reads "DIRECTION RIGHT, TARGET DISTANCE COVERED — trigger was the problem": favourable excursion
+**6.80** against the **6.15** TP1 needed, adverse 0.20, with the 4157.50 limit still 5.20 away and
+never touched. Price is at 4146.90, 8.4% of [4143.00, 4189.60]. The read was right, the entry
+construction cost the entire trade, and that goes in the record as a loss of opportunity rather than
+a win — the plan is not edited and will expire NO_FILL at 08:20 unless gold bounces ten points.

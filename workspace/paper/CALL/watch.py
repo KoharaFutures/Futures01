@@ -15,7 +15,7 @@ would flip each one. Three components must agree for `reversal()` to fire:
 
   trend      close vs EMA20(15m)          -> the level is the EMA20 itself
   structure  last two pivot highs / lows  -> the level is the pivot that must be taken out
-  location   position in the 40-bar range -> the level is the 66% / 34% boundary
+  location   position in the 40-bar range -> the level is the 60% / 40% boundary (chart.py's own cut)
 
 A level here is a TRIGGER TO WATCH, never a plan. Pre-registering still requires the gate to
 actually fire, both vetoes clear, and a written plan with its weakness stated -- and `capacity`
@@ -85,13 +85,18 @@ def report(sym: str) -> None:
         # location
         if rng > 0:
             loc = (px - lo_r) / rng
-            if want > 0 and loc < 0.66:
-                lvl = lo_r + 0.66 * rng
-                need.append(f"location: above {lvl:.2f} = 66% of [{lo_r:.2f}, {hi_r:.2f}]"
+            # N228: these MUST match chart.py's own location thresholds, which are
+            # 60/40, not 66/34. They did not, and this tool reported a bear-location
+            # level ~22 MNQ points further away than the gate actually needed all
+            # evening. chart.py/regime.py are the authority; this is a display fix
+            # to agree with them, and it changes no rule and authorises no trade.
+            if want > 0 and loc < 0.60:
+                lvl = lo_r + 0.60 * rng
+                need.append(f"location: above {lvl:.2f} = 60% of [{lo_r:.2f}, {hi_r:.2f}]"
                             f" ({lvl - px:+.2f} away)")
-            if want < 0 and loc > 0.34:
-                lvl = lo_r + 0.34 * rng
-                need.append(f"location: below {lvl:.2f} = 34% of [{lo_r:.2f}, {hi_r:.2f}]"
+            if want < 0 and loc > 0.40:
+                lvl = lo_r + 0.40 * rng
+                need.append(f"location: below {lvl:.2f} = 40% of [{lo_r:.2f}, {hi_r:.2f}]"
                             f" ({lvl - px:+.2f} away)")
         if not need:
             print(f"   {side}: all three components already agree")

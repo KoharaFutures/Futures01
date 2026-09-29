@@ -8495,3 +8495,35 @@ Symmetry worth stating: this same standard is what let CALL-0009 through at 20:4
 currently a correct read with no fill. The standard is not a filter that only ever says no; it said
 yes to a plan whose thesis paid and whose entry construction failed. Those are separate defects and
 tonight produced one of each.
+
+# N230 — MNQ's 15m unanimity has now fired, lapsed and re-fired inside eight minutes
+
+Second data point on the N225 defect, recorded as it happened rather than reconstructed later.
+
+MNQ's 15m tally across the last five checks, from my own reports (the tally is **not** in
+`bias_history.jsonl` — that absence is the defect):
+
+| check | MNQ 15m | gate |
+|---|---|---|
+| 21:02 | **0-3 unanimous** | REVERSAL CALLED — declined, first bar |
+| 21:05 | 0-2 | no call |
+| 21:07 | 0-2 | no call |
+| 21:08 | 0-2 | no call |
+| 21:10 | **0-3 unanimous** | REVERSAL CALLED — declined, first bar again |
+
+So the gate has fired twice in eight minutes on a condition that did not survive a single check
+either time, and `held` reported 15 and then 19 while the thing that actually changed — the
+unanimity — was one check old on both firings. This is the shape `CHECK_PROCEDURE.md` already warns
+about from 2026-09-27, when MNQ's 15m headline flipped seven times in three hours; the difference is
+that tonight the flipping is in the **tally** rather than the headline, which is precisely the
+dimension the persistence test does not measure.
+
+Both firings were location crossing the 40% boundary and reverting: 39.3% → 44.2% → 42.1% → 41.2% →
+37.6%, against a boundary at 40.0%. A component oscillating either side of its own threshold is what
+condition 3 exists to filter, and it passes straight through because the number it examines is a
+string in a JSONL file.
+
+**Declined again, on the same standard.** If the 0-3 survives the next check it becomes registrable
+and I will treat it as such — the standard is two consecutive unanimous checks, not "MNQ is
+untradeable". Refusing a condition that does hold twice would be the discretionary veto N194 blamed
+for the morning miss, in the opposite direction.

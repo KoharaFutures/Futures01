@@ -2113,3 +2113,55 @@ exactly why a restart costs nothing here.
 none in flight — the cursor and `callouts.jsonl` agree at 2600/49, so no bar was advanced without its
 decision being recorded first. That ordering is what makes the record restart-safe, and it is worth stating
 because it is the property that would silently break if a future burst advanced bars before journalling.
+
+---
+
+## Burst 16 — bars 2600→3000. basis `9dce857`. Mode **1 AGENT [OPEN]**.
+
+400 bars (2025-03-23 → 2025-04-16), 1 callout, **0 trades**, equity unchanged **$50,688.86**. ~399 of 400
+bars passed over without a candidate. **No new merge**: both detectors report only December and March.
+
+### The finding: volatility is the only lever that moves the cost arithmetic, and it moves it 3×
+
+The tape has entered the widest regime in the record — a **619.5-point** window range (4909.25–5528.75) with
+**ATR14 at 21.59** against the **10.43** median of the first 1,635 bars. Recomputed at that ATR:
+
+| | 1 tick | commission ($2.69) | all-in hurdle |
+|---|---|---|---|
+| low-vol quartile (ATR 7.73) | 0.0323R | 0.0696R | **0.1019R** |
+| median (ATR 10.43) | 0.0240R | 0.0516R | **0.0756R** |
+| **this regime (ATR 21.59)** | **0.0116R** | **0.0249R** | **0.0365R** |
+
+Against E5's measured gross expectancy of **+0.0225R**, the net is **−0.053R at the median** and **≈ −0.014R
+here.** Still negative — but **a third of the shortfall.**
+
+> **So the instrument-choice conclusion sharpens from a gesture into something concrete: if MES 60m is ever
+> tradeable, it is in high-ATR regimes specifically, because volatility is the only lever that moves the cost
+> arithmetic and it moves it by a factor of three.**
+
+**This is a cost claim, not an edge claim, and the distinction is the whole point.** E2 still rules out
+linear structure large enough to trade; E5's 95% CI on gross still contains zero. Nothing here says a
+high-ATR regime *has* an edge — only that it is the one condition under which a given edge would survive
+being traded. That is arithmetic, and it is the only solid thing in this record.
+
+**And the honest sting: this is the regime where trading is least cost-burdened, and I have nothing to deploy
+in it.** Thesis 5 retired, levels withdrawn, no replacement predicate. **Retiring a pattern without a
+successor has a cost, and this burst is where it shows.** I am not going to invent one to fill the gap —
+that is how the last three weeks of this record got written — but the gap is real and worth naming.
+
+### `score` at bar 3,000 — unchanged, and the degenerate `t` recurs
+
+`REAL n 2 mean +1.8744R t +91.660` / `PLACEBO n 2 mean +0.8935R` / **separation z +1.021, `free_t(20)`
+2.448 — does not clear.** The `t +91.660` is the same n=2 sd-collapse artefact flagged at bar 2,000; it will
+recur at every checkpoint until a third trade exists. **The leak test is the separation z, not the arm's own
+t.**
+
+### Counterfactual (n=47)
+
+always-long +0.263R vs control **+0.352R** (z +1.72), always-short +0.026R vs control −0.016R (z −0.08),
+coin-flip +0.222R vs control +0.253R (z +1.23). **Nothing above |z| 2, and the long arm's control now exceeds
+the sample by 0.089R** — the crash regime lifted every long, mine and the control's alike, which is what
+drift looks like when it is large.
+
+**Stopped at:** cursor **3000/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades, 20 trading
+theses / 297 desk-wide, nothing armed, thesis 5 retired.

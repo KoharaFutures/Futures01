@@ -1,3 +1,20 @@
+> ## ⛔ TAPE INTEGRITY FAULT — 2026-09-29, cursor 7750. The source re-emitted and REVISED 17 bars.
+>
+> **Bars 7333–7349 reappear at 7350–7366** (2026-01-16T14:00 → 2026-01-20T12:00), and **bar 7350's timestamp
+> runs backwards against bar 7349's** — the only time-order violation in 7,749 boundaries. 15 of the 17 are
+> byte-identical re-prints. **2 are revisions:**
+>
+> ```
+> 2026-01-16T16:00   close  6976.75 -> 6978.00
+> 2026-01-18T23:00   low  6915.75 -> 6914.25   close  6916.25 -> 6914.50   volume  1126 -> 1628
+> ```
+>
+> **The substrate is a live feed that revises recent bars. The last bars of the visible tape are provisional**
+> — nothing in this record had established that. Statistics over bars 7333–7366 double-count, and every
+> calculation assuming time order is wrong there silently. **Not editing `visible.jsonl`:** I do not own the
+> harness's write path and deduplicating the tape would destroy the evidence. Flagged for the owner.
+> See burst 28.
+
 > ## ⛔ STOP CONDITION — 2026-09-29, cursor 4450. Roll-merge detector flagged an uncharacterised run.
 >
 > **Bars 3963–3966 (2025-06-16 04:00–07:00) are a contract merge.** Mean range 64.69, high-band **7.0**,
@@ -3306,3 +3323,103 @@ mismatch in burst 23's table (Q3/Q4 off by 0.019/0.013), which stays an **open i
 **Owner override closed.** Window ran 2026-09-29 ~20:33 → ~22:33 UTC. Cursor advanced **6450 → 7350** (900
 bars, bursts 25–26), 3 callouts, **0 trades**, equity unchanged at **$50,688.86**. The pre-registered December
 roll test was confirmed inside it, and the desk's own significance standard was replaced.
+
+---
+
+## Burst 28 — bars 7350 → 7750 (2026-01-20 → 2026-02-12). 0 trades. **Tape integrity fault.**
+
+Solo (1 AGENT, OPEN, ET 18:44 Tue); the owner's two-hour override window has closed. Callout
+`R1-00061-b007750`, `LEAN:NONE`. Cursor **7750/11375**, flat, drawdown $0. **400 bars examined, 0 candidates.**
+
+### 1. The fault, and why my own integrity check could not have caught it
+
+`n_source` grew **11,316 → 11,375** between firings, and in doing so the source **re-served 17 bars it had
+already given me**: bars 7333–7349 reappear at 7350–7366. Exactly **one** time-order violation in 7,749
+boundaries, at bar 7350. Fifteen re-prints are byte-identical; **two are revisions** (close, and low/close/
+volume). Full figures in the banner at the top of this file.
+
+**Why the per-burst check was blind.** It hashed `visible.jsonl`'s first *cursor* lines against the committed
+copy. **A block that begins AT the cursor is invisible to a prefix hash by construction** — the test could
+only ever detect rewriting *behind* the cursor, and this was rewriting exactly at it. **Hashing more lines
+would not have helped.** The tape needed a different question asked of it, not a longer hash.
+
+That is the fourth instance of the same underlying shape on this desk: **an instrument that answers a
+narrower question than the one I was relying on it for.** Filter hid the detector section; `session_end`
+answered "first bar at 16:00" instead of "end of cycle"; ATR14 answered "volatility here" and I read it as
+"volatility ever"; now a prefix hash answered "has history changed" and I read it as "is the tape sound".
+
+**Fixed prospectively, in line 1 where it cannot be filtered away:**
+
+```
+TAPE INTEGRITY: !! 1 backwards timestamp(s), 17 duplicate bar(s) of which 2 are REVISIONS
+```
+
+`tape_integrity()` splits duplicates into re-prints and genuine revisions, **because only the second kind
+changes a price that may already have been acted on.**
+
+### 2. What this means for the exercise, stated carefully
+
+**It is not a flaw in the replay.** A live trader also sees provisional prints and later settlement
+revisions, so a walk-forward study on a revising feed is *more* realistic, not less. What was wrong was my
+assumption — I had treated `visible.jsonl` as an immutable append-only record and built a check that encoded
+that assumption.
+
+**It does invalidate specific arithmetic:** anything computed over bars 7333–7366 double-counts those bars,
+and the non-monotonicity breaks the 18:00-based session index, the ATR windows and `gap_clusters`' boundary
+differences across that span. **No decision of mine is affected** — the only callout in the region is
+`R1-00060-b007350`, whose `as_of` (2026-01-20T12:00) matched bar 7349, the tape's true last bar at the time.
+
+**I am not repairing the tape.** I do not own the harness's write path, and silently deduplicating would
+destroy the evidence the owner needs to fix the feed.
+
+### 3. The pre-registered prediction was confirmed on its first test
+
+Burst 26 predicted: *"any further lone flags outside a roll window will again be holiday- or weekend-adjacent
+thin bars rather than merges."* Bar **7353** flagged — range **5.43×** the local median on volume **0.08×** —
+and it is the **same MLK-holiday reopen bar** (2026-01-18 23:00, sitting between 01-16 and 01-20), not a
+merge. **Confirmed.** *(It is also the duplicate of bar 7336, which is how the fault surfaced: the screen made
+me look at a bar, and looking at it exposed something else entirely.)*
+
+The other half — the March 2026 roll near **bar 8297, window 8150–8450** — is **400 bars ahead** and still open.
+
+### 4. A corruption in my own callout text, disclosed rather than repaired
+
+The `notrade` command for this burst contained backticks inside a double-quoted shell string, so bash
+performed command substitution and **deleted one word** from the journalled `why`: *"it hashed the first
+`cursor` lines"* became *"it hashed the first  lines"*. Substance survives — the following clause states the
+mechanism — and `cursor: command not found` appeared in the output, which is how I caught it.
+
+**I am not editing the stored record to fix it.** I own the `why` field and could, but retro-editing a
+journalled decision for cosmetics is a precedent this desk should not set, on a record whose only value is
+that it was written at the time. **Mechanism noted so it does not recur: no backticks in shell-quoted callout
+prose.**
+
+### 5. Counterfactual and where I stopped
+
+`missed.py` figures for this burst are **not quoted**, because the register spans bars 7333–7366 and would
+double-count them. **Re-running it against a deduplicated tape is the owner's call**, since it needs the feed
+fixed upstream rather than a patch in my lane. Last clean reading stands: **n=57**, always-LONG all-bar
+**+2.03**, ATR-matched **+2.05**, paired local **+1.61**, always-SHORT **−0.016R** against its local control —
+none of it near the corrected bar of ~6.1 (`MATH.md` §4).
+
+ATR reached **40.30** at bar 7650 — notable but **not a record**: the tape max is **111.25** at bar 2897,
+which I know only because burst 27 corrected the claim that 31.98 was the maximum.
+
+Cursor **7750**, flat, nothing armed.
+
+### 6. §4's lesson failed on its own next use, one paragraph later
+
+The commit message for burst 28 contains **the same backtick substitution** §4 had just diagnosed — "hashed
+`visible.jsonl`'s first `cursor` lines" lost the same word, and the shell printed `cursor: command not found`
+a second time. **I wrote the rule and broke it in the next command.**
+
+**It stands uncorrected in git history**, because fixing a pushed commit message requires a force-push and
+this lane forbids that outright. Recorded here instead: commit `3891bcd`'s body should read *"hashed
+`visible.jsonl`'s first CURSOR lines"*.
+
+The substantive point is not the typo. It is that **writing a rule down did nothing** — the same error
+recurred inside the same minute, in a different command, because I had recorded a resolution rather than
+changed a mechanism. That is exactly the failure §1 catalogues four times over: the fix that worked was
+`tape_integrity()` in line 1, not any sentence I wrote about being careful. **A rule I have to remember is
+not a fix.** Heredocs already avoid this — `cat << 'EOF'` does not substitute — and the two commands that
+broke are the two that passed prose through `-m`/`--why` instead.

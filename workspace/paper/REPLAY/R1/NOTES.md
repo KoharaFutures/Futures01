@@ -2042,6 +2042,13 @@ always-long +0.198R vs control +0.199R (**z +0.95**), always-short +0.071R (z +0
 exactly (+0.198 vs +0.199) — the clearest demonstration yet that the long arm's earlier creep was the tape's
 drift, present in both, and not judgement.
 
+> **RETRACTED (burst 27, found by temp agent T2 and verified).** The paragraph above is one of the
+> inverted readings of `missed.py`. **+0.199R was the sample-minus-control DIFFERENCE, not the control's
+> mean.** The control was **−0.001R** and the sample beat it by +0.199R. Nothing "converged"; the sentence
+> drew the opposite conclusion from the data and called it "the clearest demonstration yet". Burst 18's
+> correction table listed bursts 15/16/17 and **missed this one and burst 13**, so this reading sat live
+> for nine bursts after the instrument was fixed. See burst 27 §2.
+
 **Stopped at:** cursor **2000/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0, 2 closed
 trades, 20 trading theses / 297 desk-wide, nothing armed.
 
@@ -3037,3 +3044,265 @@ explicit: with 3 agents, **do not advance the cursor** — the replay has one cu
 parallel. **The owner's override is about running continuously with temporary help; it does not license
 parallel cursor work.** So the back half of this window goes to research and to consolidating T1 and T2,
 which is where it belonged anyway.
+
+---
+
+## Burst 27 — consolidation of temp agent T2. No bars advanced (cursor 7350, `mode.py` → 3 AGENTS).
+
+T2 audited bursts 13–24 and `SUMMARY.md` and returned **41 numbered discrepancies: 15 flattering, 9 against
+the desk, 8 two-sided.** Its report is model output, not fact, so **I re-derived every load-bearing claim
+myself before adopting it.** Everything in §§1–5 below I verified in code; anything I could not verify is
+labelled as T2's claim.
+
+**The direction of error has improved and that is worth saying: agent B's ledger at burst 12 was 27 errors
+all leaning one way. This one is 15/9/8.** But **the flattering ones are all load-bearing** — they sit in
+`SUMMARY.md` or inside a conclusion I had called closed.
+
+### 1. VERIFIED AND WORST: "the highest ATR of the entire tape" is false, and it cost me the window I was waiting for
+
+Burst 24 called ATR14 **31.98** "the highest of the entire tape" and its friction "the cheapest anywhere on
+this tape, 0.0246R". Burst 25 called **42.05** "a new tape high". Measured over bars 20–6449:
+
+```
+max ATR14 = 111.25 at bar 2897 (2025-04-09)
+bars exceeding 31.98: 351 of 6430 = 5.5%
+true cheapest friction at a 1.0-ATR stop = 0.0071R   (not 0.0246R — wrong by 3.5x)
+```
+
+**How the error was made, which matters more than the number.** `view.py` prints ATR14 *at the current bar*.
+I inferred a **tape-wide maximum from a sequence of per-bar readings I happened to have seen**, and never
+once computed the maximum. **This is the same failure as the burst-18 filter: asserting a global property
+from a local view.** Third occurrence of that shape (filter, `session_end`, this).
+
+**And the consequence is worse than the wording.** Burst 23 closed the "high ATR is where this becomes
+tradeable" hope, and bursts 23–25 repeatedly framed the loud stretches as the long-awaited cheap window.
+**The genuinely cheap regime had already passed — in April 2025, which burst 16 walked straight through,
+calling ATR 21.59 "the widest regime in the record" while the tape's ATR was 111.** I did not decline that
+window on evidence. **I never knew I was in it.**
+
+*(Finding 4's conclusion is untouched: T2 reproduced all twelve arm-cells as negative net of friction, and
+the April window is inside the tape the quartile study already covers as Q4. What is retracted is every claim
+about where the extremes are.)*
+
+### 2. VERIFIED: burst 18's self-correction was itself false, and in my favour
+
+Burst 18 §5 "corrected" burst 17 by asserting its 0.0365R and 0.0756R hurdles "were 0.5-ATR figures quoted
+without saying so", and gave "0.0342R at a 1.0-ATR stop". Friction in points is commission $2.69/$5 = 0.538
+plus one tick 0.25 = **0.788 points**:
+
+```
+0.788 / 21.59 = 0.0365R   <- burst 17's figure, an exact 1.0-ATR value
+0.788 / 10.43 = 0.0756R   <- likewise
+0.5-ATR at ATR 21.59     = 0.0730R, exactly double
+2.69 / (15.75 x 5)       = 0.0342R  <- commission ONLY, the tick dropped
+```
+
+**Burst 17 was right and my correction of it was wrong.** I invented an error that was not made, then
+compared a commission-plus-tick figure against a commission-only one and called the difference a
+mislabelling — **relabelling the hurdle about 6% lower in the process.**
+
+### 3. VERIFIED: the burst-18 correction table undercounts its own subject by two bursts
+
+It lists bursts 15/16/17 as the inverted readings. **Burst 15 has no counterfactual at all** — the figures
+credited to it are burst 16's. The genuinely inverted, unretracted ones were **bursts 13 and 14**, and burst
+14's is the worst in the record: it read the control as +0.199R when the control was **−0.001R**, and
+concluded "the clearest demonstration yet that the creep was drift" — **the exact opposite of its data.**
+Retraction now inserted inline above that paragraph. It sat live for nine bursts after the fix.
+
+### 4. VERIFIED: three smaller ones, all in `SUMMARY.md`, all now fixed
+
+- **"Every honest arm is negative in every bucket"** (burst 23, and `SUMMARY.md` in the strongest form) is
+  contradicted by its own table: always-long is **+0.045R in Q3 and +0.004R in Q4 gross.** True *net of
+  friction*, which is the claim that matters and is unchanged. The sentence was overstated; now qualified.
+- **`SUMMARY.md` truncated the z sequence at n=53 and called it "fully decayed"** while being written at
+  n=55, where the figure was **+2.06, above the line.** It cut off exactly where the data stopped supporting
+  the sentence and **dropped a report the standing brief requires.** Full sequence restored.
+- **`SUMMARY.md` still claimed "~5% of this tape is calendar spread"** — corrected in `NOTES.md` at burst 25
+  but not on the owner-facing page, which is the one that gets read. Now 1.8%. Also retracted: "each the
+  Monday–Tuesday of a roll week" — **no merge spans both days.**
+
+### 5. VERIFIED: `callouts.jsonl` double-counts one bar
+
+Two rows at `visible_bars` **1613** — 60 rows, 59 distinct. **Every callout total from burst 12 on is one
+too high.** `SUMMARY.md` now states rows and distinct separately.
+
+### 6. T2's most serious claim, which I can only partly check: E8 ships no code
+
+T2 reports that **E1, E3, E7 and E8 ship no `.py` at all**, and that E8 is the bad one: its **105 trials,
+family-wise p 0.86 and `free_t` 3.05 retired thesis 5, and that 105 is what feeds the desk-wide search width
+of 297/310 that deflates every other result on this desk.** I confirmed the files are absent. I cannot
+reconstruct the 105 from anything shipped.
+
+**This is the same category I named myself as the cause of the withdrawn bounce odds** — a published figure
+from an ad-hoc inline script the repository cannot regenerate — **and I did not flag it when it was my own
+number doing the load-bearing.** Thesis 5's retirement is *not contradicted*; it is **unsupported by
+anything reproducible**, and so is the width that every luck bar in this journal is computed from. Recorded
+as an open hole, not patched: regenerating 105 after the fact would be fitting the width to the conclusion.
+
+### 7. What T2 reproduced exactly, reported in proportion
+
+The entire counterfactual register for bursts 13→24 — every sample mean, gap, all-bar z, paired-local z,
+ATR-matched z and n, at eleven cursors — reproduced exactly under the pre-burst-25 `session_end`, including
+the drift arm's kill shot (`corr −0.0928, R² 0.86%, n=4704`). Every merge and detector claim tuple-for-tuple.
+Burst 23's quartile table (6,020 bars) to rounding, with only the coin-flip column failing to reproduce
+(Q3/Q4 off by 0.019/0.013 — **unexplained, and now an open item**). Burst 18 §3's fair-control levels table
+in full. E2's deterministic half independently: kurtosis 24.11, the 7-lag set, Q(24) 78.32.
+
+### 8. A caveat T2 raised that I had not considered
+
+Because `session_end()` was fixed in burst 25, **re-running the shipped `missed.py` today reproduces none of
+bursts 13–24's z-values exactly** (n=55 now prints +2.08 where the record says +2.06), and nothing warned a
+reader. **Stated here so the journal is readable against the current code:** every counterfactual figure
+before burst 25 was computed with the half-day defect in place, and the fix moves them by ≤0.03 in z.
+
+### 9. Verdict, and the pattern worth carrying
+
+**Every headline conclusion survives the arithmetic; the wrappers around them do not.** Findings 4, 5, 6 and
+7 stand — finding 6's *measurements* completely, its *generalisations* not. The bottom line, that nothing
+here clears its own deflated threshold, is robust to every error found in both directions. **The one
+conclusion with no reproducible support is thesis 5's retirement.**
+
+**The pattern T2 named and I accept: the correction machinery has become a second place where errors hide.**
+Burst 18 produced a self-correction that is false in my own favour (§2) and an error ledger that undercounts
+its subject by two bursts and misattributes a third (§3). **Neither was ever audited by the standard I hold
+the findings to.** From here, a correction is a claim like any other and gets checked before it is published.
+
+---
+
+## Burst 27 (cont.) — consolidation of temp agent T1. Verdict: nothing survives, and `free_t` was too lenient all along.
+
+T1 searched a grid of past-only entry predicates with family-wise accounting. **Verdict: nothing survives.**
+As with T2, its report is model output; I verified the two claims that matter myself.
+
+### 10. VERIFIED INDEPENDENTLY, and it revises the standard this whole journal is judged by
+
+T1's headline is methodological: **`free_t = sqrt(2 ln N)` is far too lenient for a correlated grid on this
+tape.** I did not take that on trust — I built my own shift-null, different grid, different construction:
+
+```
+my grid: K=341 cells (n>=60), outcome = always-LONG R at 1.0-ATR stop, costs charged
+  free_t(341) = sqrt(2 ln 341)                    = 3.415
+  NULL max|t| over 200 circular shifts: median 4.352   90th 5.494   95th 6.104   99th 8.476
+  REAL tape best cell |t| 3.823  ->  family-wise p = 0.695
+T1's grid: N=61,272 cells
+  free_t = 4.695   null median 5.164   95th 7.561   best cell |t| 7.652, p = 0.055
+```
+
+**`free_t` sits BELOW the null's median in both tests.** A grid with no content whatsoever produces a best
+cell above `free_t` more than half the time. The empirical 5% bar is **79% higher** than `free_t` on my grid
+and 61% higher on T1's. Two reasons, both present here: `free_t` is the expected maximum of N **independent**
+standard normals, while these cells heavily overlap; and the outcome distribution is **heavy-tailed —
+kurtosis 24 on this tape (finding 2)** — so the maximum of a t-family runs well above its Gaussian
+expectation.
+
+**What this does to the record: it strengthens every conclusion and weakens none.** Everything this desk has
+measured failed a bar that was *too low*; against the correct bar it fails by more. The largest |z| anywhere
+is +4.30 and belongs to a broken volume field; my own best cell here is **|t| 3.823 at family-wise p 0.695.**
+
+**Adopted as the desk standard from here: any search over a correlated grid reports the shift-null, not
+`free_t`.** `free_t` stays as a quick floor and is explicitly no longer sufficient. *(Note the interaction
+with §6: the desk-wide width of 297/310 rests on E8's unreproducible 105. So the journal's deflated bar was
+both computed from a number nobody can regenerate and set by a formula too lenient for the job.)*
+
+### 11. PARTLY VERIFIED, number corrected: stop sizing against the hour you hold through
+
+T1's one actionable result is a **specification rule, not an edge**: the biggest effect on the tape is a
+**mis-sized stop, not direction.** It decomposed each cell into symmetric and antisymmetric parts and found
+long and short losing *equally* in the worst cells — so the effect is geometry, not a directional signal.
+Its falsifiable prediction was confirmed on its own run: symmetric edge −0.258 at a 0.5-ATR stop → **+0.031**
+at 1.0-ATR → **+0.086** with an hour-conditional stop.
+
+**I could not reproduce its headline ratio.** T1 reports the fill hour's true range at **2.93× trailing
+ATR14 for `hour=08`** and a range down to 0.47×. Measured directly:
+
+| ET hour | mean TR / trailing ATR14 |
+|---|---|
+| 09:00 | **2.62** |
+| 10:00 | 2.52 |
+| 11:00 | 1.83 |
+| 08:00 | **1.81** |
+| 22:00 / 00:00 / 23:00 | 0.44 / 0.43 / **0.41** |
+
+So the **mechanism is real and the spread is 6.4× across the clock (0.41 → 2.62)**, but the specific 2.93 is
+not reproducible as stated. Most likely a signal-hour vs fill-hour offset — a signal at 08:00 fills at 09:00,
+which measures 2.62 — or a different volatility base. **Recorded as T1's claim with my number beside it, not
+adopted as 2.93.**
+
+**The usable statement:** an ATR14 stop is an average-hour stop, and the hours are not average. A 0.5-ATR
+stop taken into the 09:00–10:00 ET bars is roughly **a fifth of the excursion it will face**; the same stop
+overnight is several times what it needs. This is a real defect in the geometry the desk has used for every
+counterfactual, and it costs nothing to fix.
+
+### 12. T1's independent confirmation of finding 3, on 15× the data
+
+All **48** of its side × geometry × vol-base arms are negative net of costs. **Gross is positive in 2 of 48**
+(+0.0004R, +0.0034R) and the $2.69 erases both. Of 114 marginal level × side combinations, **107 negative.**
+Finding 3 was measured on 444 trades; this reproduces it on ~6,500 bars.
+
+Its best directional family (`distance from session open` → revert) clears `free_t` in 123 cells in-sample
+*and* out-of-sample with no sign flips, and **still dies**: no gradient (only the ±2-ATR tails pay, and the
+bucket straddling the fitted cut runs the wrong way), no special anchor (prior close and a 20-close mean pay
+the same, so 123 "survivors" are **~1 hypothesis**), and decisively — **one position at a time, first signal
+per session, costs charged: +0.029R over 233 trades, t +0.34.** The grid takes 8.6 bites per session; an
+account gets one. **That last test is the one this desk should copy: a grid's edge is not an account's edge.**
+
+### 13. T1's own stated limitations, which I am keeping rather than smoothing
+
+- **Roll contamination is untreated in both halves of its split**, including the December 2025 merge at
+  6864–6896, which falls inside its out-of-sample window. It could not identify merge bars without files
+  outside its whitelist. So its out-of-sample figures include ~33 untradeable bars.
+- **`visible.jsonl` grew from 6,450 to 7,350 lines while it worked**, so its numbers are stamped to the
+  7,350-bar snapshot and a rerun will not reproduce them exactly. It correctly flagged that it could not tell
+  whether the cursor had moved or the source was appending ahead of it, and did not read `state.json` to find
+  out. **That is the right call and I am recording it as such** — the cursor did move; I advanced it.
+- Volume features excluded deliberately (finding 7's broken field), as were three-way interactions and
+  continuous cut-point optimisation. **So "nothing survives" is a statement about the grid searched, not
+  about all possible predicates.**
+
+### 14. Contradiction between the two temps, named rather than smoothed
+
+**T2 says the desk's `free_t`-based verdicts are sound as far as they go; T1 says the `free_t` standard
+itself is too lenient.** These do not conflict — T2 audited whether the arithmetic was done correctly, T1
+audited whether the threshold was the right one — but only together do they give the picture: **the desk's
+sums were mostly right, its correction machinery was not, and its significance bar was too low.** All three
+push the same way: **nothing here is an edge, and rather more firmly than the journal claimed.**
+
+### 15. The shift-null kept as a desk instrument, and a nuance its self-test exposed
+
+`shiftnull.py` written and self-tested — **my own implementation, not T1's**, so nothing unverified survives
+into the desk's permanent tooling. It takes outcomes and cell masks and returns the family-wise p, the
+empirical 5% bar and the null distribution.
+
+**A shift is deliberately not a permutation.** Permuting would destroy the serial dependence that makes the
+tails fat, which is the very thing being corrected for. Circular-shifting the outcomes while holding features
+fixed preserves the grid's correlation structure, every cell's n, and the outcome's own fat tails and
+volatility clustering.
+
+**The self-test corrects an overstatement I was about to make.** On i.i.d. Gaussian outcomes with 40 heavily
+overlapping cells, the null's 95th percentile is **2.065 against `free_t` 2.716** — *below* it, the opposite
+direction from the real tape. So **`free_t` errs in either direction, and which one depends on whether cell
+overlap or tail weight dominates**: overlap cuts the effective number of independent trials and pulls the bar
+down, heavy tails push it up. On this tape, with kurtosis 24, tails win and `free_t` is too lenient. **Stated
+as a property of this tape, not a general law about `free_t`** — which is what I would have written if I had
+not run the self-test.
+
+### 16. Temp agents closed out
+
+Both temporary agents have finished and are gone. **Deleted, after consolidation:**
+
+| file | lines | where its content now lives |
+|---|---|---|
+| `agents/T1_predicates.md` | 592 | §§10–14 above |
+| `agents/T1_predicates.py` | 1,181 | method reimplemented and verified as `shiftnull.py` |
+| `agents/T2_audit.md` | 630 | §§1–9 above, plus the inline retraction at burst 14 |
+| `agents/T2_audit.py` | 588 | its verified checks re-derived inline in §§1–5 |
+
+**What is kept:** `shiftnull.py` (a standard I adopted, so it cannot be a temp artefact), the corrections to
+`SUMMARY.md`, the inline retraction at burst 14, and §§1–15 of this section. **What is not kept:** their
+prose, their scripts, and any claim of theirs I could not reproduce — of which two are recorded as theirs
+rather than adopted: T1's 2.93× hour ratio (I measure 2.62× at 09:00) and T2's unexplained coin-flip column
+mismatch in burst 23's table (Q3/Q4 off by 0.019/0.013), which stays an **open item**.
+
+**Owner override closed.** Window ran 2026-09-29 ~20:33 → ~22:33 UTC. Cursor advanced **6450 → 7350** (900
+bars, bursts 25–26), 3 callouts, **0 trades**, equity unchanged at **$50,688.86**. The pre-registered December
+roll test was confirmed inside it, and the desk's own significance standard was replaced.

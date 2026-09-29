@@ -2084,3 +2084,32 @@ each as it arrives; the envelope test stays as a second opinion.
 
 **Stopped at:** cursor **2600/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades, nothing
 armed, thesis 5 retired.
+
+---
+
+## Container restart — nothing lost. Verified rather than assumed.
+
+The container running this session was restarted. `REPLAY.md` records that this programme has survived three
+restarts and a rate-limit kill "because everything was on disk as it happened"; **this is the fourth, and
+the discipline held again.** Verified after the restart rather than assumed:
+
+| | |
+|---|---|
+| cursor | **2600/11287** — unchanged |
+| equity / peak / drawdown | **$50,688.86 / $50,688.86 / $0** — unchanged |
+| closed trades | 2 |
+| `callouts.jsonl` | **49** rows |
+| `visible.jsonl` | **2,600** bars |
+| `NOTES.md` | 2,086 lines |
+| `agents/` | all 24 artefacts from the A/B/C and E1–E9 rounds present |
+| working tree | clean; nothing unpushed |
+
+**What was actually lost:** one background shell task (`bvx4tc6rq`, "wait for analysis process to exit"). It
+was a leftover waiter, not a producer — **no finding, no callout and no state depended on it**, and nothing
+needs recreating. Every conclusion in this file traces to a committed file or a bar in the tape, which is
+exactly why a restart costs nothing here.
+
+**The one thing a restart could have cost and did not:** a decision taken but not yet journalled. There was
+none in flight — the cursor and `callouts.jsonl` agree at 2600/49, so no bar was advanced without its
+decision being recorded first. That ordering is what makes the record restart-safe, and it is worth stating
+because it is the property that would silently break if a future burst advanced bars before journalling.

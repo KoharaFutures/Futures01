@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **5650/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **6050/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **5650/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **5,650** of 11,316 (2024-10-06 → 2025-09-30) |
-| decisions journalled | **56** (2 trades, 54 stand-downs) |
+| bars traded forward | **6,050** of 11,316 (2024-10-06 → 2025-10-24) |
+| decisions journalled | **57** (2 trades, 55 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
@@ -38,13 +38,19 @@ says anything else.** What follows is why.
    any R figure before this run. Break-even needs **0.081R/trade** against a measured gross of **+0.0225R**.
    The supported sentence is *"any structure at 60m is smaller than the cost of trading it"* — **not** "there
    is no structure", which the sample cannot test.
-4. **Volatility is the only lever that moves that arithmetic, and the friction floor scales as 1/ATR.**
-   Commission is fixed while R scales with ATR. On a **0.5-ATR stop**: **0.1019R** in the low-vol quartile,
-   **0.0756R** at the median, **0.0365R** at ATR 21.6. *(Every hurdle figure now carries its stop multiple —
-   the same tape gives 0.0342R at a 1.0-ATR stop, and quoting one without the other is meaningless.)* At bar
-   3800 ATR14 fell to **8.02**, the quietest stretch of the tape: a 0.5-ATR stop is 4.01 pts, so commission
-   is 0.134R and the engine's one-tick entry 0.062R — **≈0.20R gone before price moves.** My two winners were
-   taken at roughly triple that ATR. **Their geometry does not transfer.**
+4. **Volatility cuts the cost 4.4× and does NOT make this instrument tradeable. This closes the one door
+   the record had left open.** Commission is fixed while R scales with ATR, so the friction floor falls from
+   **0.1102R** in the quietest quartile to **0.0252R** in the loudest (1.0-ATR stop; on a 0.5-ATR stop the
+   figures double). Earlier versions of this page said *"if this instrument is ever tradeable it is in
+   high-ATR regimes"*. **Tested across all 6,020 eligible bars and it is not.** Directional efficiency
+   (`|close−open| / range`) is **flat at 0.436–0.448 in every ATR quartile** — high volatility buys range and
+   no extra direction. The 2R target gets *less* reachable as ATR rises (**57.9% → 49.4%**). And every honest
+   arm is **negative in every bucket**, with always-long non-monotone and peaking in Q3, not Q4. Net of
+   friction a coin flip runs **−0.202R in Q1 and −0.054R in Q4**: less bad, never positive. **Waiting for
+   volatility reduces the loss rate; there is no positive gross for cheaper friction to rescue.** The
+   October 2025 window shows it plainly — daily ranges of 129/115/119/147 points and ~7 points of net
+   movement across four closes. In a tape whose returns are a random walk (finding 2), volatility being
+   predictable while direction is not is exactly what produces this.
 5. **My stand-downs cost nothing that clears the bar — but the honest reading is unflattering, and I had it
    backwards for three bursts.** `missed.py` printed *sample minus control*; I read it as the control's mean
    and wrote three times that the control beat my sample. **The sample beat the control.** Corrected and
@@ -107,8 +113,8 @@ item 5 ran the *other* way — against me. **An error that flatters nobody is st
 
 ## The bottom line
 
-**Nothing in this record clears its own deflated threshold.** Desk-wide search width is **297**
-(`free_t` 3.37). The largest |z| anywhere is **+4.30**, and it belongs to **a broken volume field** — not to
+**Nothing in this record clears its own deflated threshold.** Desk-wide search width is **310**
+(`free_t` 3.39). The largest |z| anywhere is **+4.30**, and it belongs to **a broken volume field** — not to
 a trade, a level, a filter or an hour.
 
 **What would change the answer:** a different instrument or timeframe where 1R is large relative to

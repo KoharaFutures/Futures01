@@ -255,6 +255,16 @@ def main() -> int:
     st["data"] = data
 
     # 2-5. resolve (the only writer of outcomes) and diff
+    # CALLOUT.md: basis = the branch head this check runs on. BASIS had been frozen at 285962f all session,
+    # so every card printed a stale basis. Refresh it each check (the card and resolve.py read this file).
+    try:
+        import subprocess
+        head = subprocess.run(["git", "-C", str(HERE), "rev-parse", "--short", "HEAD"], capture_output=True,
+                              text=True, timeout=10).stdout.strip()
+        if head and not a.dry_run:
+            (HERE / "BASIS").write_text(head + "\n")
+    except Exception:
+        pass
     basis = (HERE / "BASIS").read_text().strip() if (HERE / "BASIS").exists() else "unknown"
     state = resolve.load_state()
     before = json.loads(json.dumps(state))

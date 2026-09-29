@@ -2981,3 +2981,59 @@ outside this desk's whitelist, so it is **flagged for the owner** rather than as
 always-LONG +0.328R, all-bar gap +0.369R **z +1.94**, ATR-matched +0.370R **z +1.94**, paired local +0.280R
 **z +1.49**. always-SHORT **+0.000R against its local control** — flat to three decimals. coin-flip +1.79 /
 +1.69. **Nothing reaches |z| 2 on any honest arm.**
+
+---
+
+## Burst 26 — bars 6950 → 7350 (2025-12-21 → 2026-01-20). 0 trades. Equity $50,688.86.
+
+Still inside the owner's two-hour override; `mode.py` 1 AGENT, OPEN, ET 16:43 Tue. Callout
+`R1-00060-b007350`, `LEAN:NONE`. Cursor **7350/11316**, flat, drawdown $0, 60 callouts. Prefix clean.
+**400 bars examined, 0 candidates.**
+
+### 1. The range/volume screen has its first out-of-sample false positive — reported against my own claim
+
+**Last burst I wrote that the screen "fired zero times outside a merge across the 1,214 bars since I
+pre-registered it."** At bar **7336** it fired again, and it is not a merge:
+
+```
+ [7335] 2026-01-16T16:00  o 6976.50 h 6980.25 l 6973.50 c 6976.75  range  6.75  v  25901
+ [7336] 2026-01-18T23:00  o 6976.75 h 6976.75 l 6915.75 c 6916.25  range 61.00  v   1126   <- FLAGGED
+ [7337] 2026-01-20T00:00  o 6903.25 h 6909.25 l 6901.75 c 6905.00  range  7.50  v   7568
+```
+
+Range **6.42×** the prior-100-bar median on volume **0.08×** median. The tape runs **Friday 01-16 16:00 →
+this single Sunday 23:00 bar → Tuesday 01-20 00:00**, because **2026-01-19 is MLK Day**. The bar opens
+exactly at Friday's close and drops 61 points on 1,126 contracts: **a thin holiday-reopen bar whose range
+spans a move the market made while shut.** Neither the envelope nor the gap-cluster detector fired.
+
+**Honest out-of-sample record for the screen: 19 true merge flags + 1 false positive over ~1,700 bars.**
+
+**The distinction that matters.** It is a false positive *for merge detection* and a **correct flag for the
+instruction it actually prints, `LOOK BEFORE TRADING`** — a 61-point range on 1,126 contracts is not
+tradeable either. Operationally it did its job; taxonomically it was wrong.
+
+**It also exposes that my 18:00-ET exclusion was a patch on a symptom, not the class.** The real class is *a
+thin session bar spanning a gap*; this one is at 23:00, so the exclusion missed it. **I am not patching it
+now** — that would be a fifth tuning round against examples already seen.
+
+**PRE-REGISTERED instead, at bar 7350:** the **March 2026 roll should fall near bar 8297, window 8150–8450**
+(1,433 bars past December's 6864). I predict (a) the screen fires there, and (b) any further lone flags
+*outside* a roll window will again be **holiday- or weekend-adjacent thin bars, not merges.** Two claims,
+both falsifiable, both written before the bars exist here.
+
+### 2. 7,000-bar milestone and counterfactual
+
+`score --trials 22`: **z +1.021**, `free_t(22)` 2.486 — unchanged, same two-trade comparison.
+
+Counterfactual **n=57**: always-LONG all-bar **+2.03**, paired local **+1.61**; coin-flip +1.92 / —;
+always-SHORT **−0.016R against its local control**. The all-bar long arm is back over the line, continuing to
+wander: **+2.09, +2.01, +1.92, +1.84, +2.06, +1.94, +2.03** across seven bursts while the paired local
+control has *never once* crossed. Deflated bar 3.387.
+
+### 3. Where I stopped, and why
+
+Cursor **7350**. `mode.py` flips to **3 AGENTS at 17:00 ET**, minutes from now, and the standing rule is
+explicit: with 3 agents, **do not advance the cursor** — the replay has one cursor and cannot be traded in
+parallel. **The owner's override is about running continuously with temporary help; it does not license
+parallel cursor work.** So the back half of this window goes to research and to consolidating T1 and T2,
+which is where it belonged anyway.

@@ -10159,3 +10159,46 @@ own stop.
 Separately — **MNQ is in a full bearish cascade**: 1m, 5m, 15m and 60m all **0-3 unanimous**, price
 **30430.00**, which is the owner's level to the tick. Under the registration freeze adopted at 00:44 nothing
 is registrable regardless of what the gate says, and I note it only so the record shows the desk saw it.
+
+# N262 — 26% of my 5m and 15m bars have NO VOLUME FIELD, the pattern is identical across two unrelated contracts, and `climax_x` reports the gap as an absence of trading
+
+Prompted by REPLAY's SUMMARY.md finding 7 — that MES 60m's 18:00 ET bar carries no volume on Mon–Thu, *"a
+missing field, not a thin market"*. I checked my own symbols and the same defect is present, larger, and
+worse placed.
+
+| frame | MGC | MNQ | timestamps identical across the two contracts? |
+|---|---|---|---|
+| 15m | **102 / 393 = 26%** | **102 / 394 = 26%** | **YES — intersection 102, MGC-only 0, MNQ-only 0** |
+| 5m | 305 / 1171 = 26% | 304 / 1168 = 26% | 303 of 305 shared |
+| 1m | 447 / 8454 = 5% | 443 / 8410 = 5% | 429 shared |
+
+**Gold and the Nasdaq did not independently trade 102 identical fifteen-minute windows at zero volume with
+real ranges.** Those bars carry ranges of 3.1, 1.9, 2.1 points. Two unrelated contracts with byte-identical
+zero-volume timestamp sets is a **vendor field omission on a schedule**, not a market condition. `chart.load()`
+already drops the true stubs (`v==0 and h==l`); these survive because they have real ranges.
+
+**Where it bites, exactly.** `reversal_setup()` computes the median from `[x['v'] for x in bars5[-40:] if
+x['v'] > 0]` — it correctly filters zeros out of the *median* — but `climax = ext_bar['v'] / medv` uses the
+extreme bar's raw volume. **Checked live this minute: MGC's extreme-low bar is `00:35` with `v = 0.0`**, so
+gold's climax reading right now is **0.00×**, and the tool prints *"NO capitulation volume — a drift, not a
+flush."* That sentence is false. It is not a drift; it is a bar with no volume field.
+
+With 26% of 5m bars affected, **roughly one check in four has a chance of reading a missing field as an
+absence of capitulation**, on either symbol, and the tool never says which.
+
+**What this retracts.** Every `climax_x` figure I have given the owner tonight is suspect, and one specific
+claim is now unsupported: in the 4145.00 research I cited **"3.12× flush volume"** as confluence. That number
+came from this same series and I never checked whether its denominator or its extreme bar was intact. I am not
+claiming it was wrong — I am saying **I cannot support it**, which is the honest status, and it should not have
+been offered as evidence without the check I have only just run. The structural parts of that research (the
+five-times-tested shelf, the 40-bar range floor) do not depend on volume; the flush claim does.
+
+This also lands on REPLAY's own retraction list, which withdrew *"all key-level and touch-count claims"*
+because its control fabricated touch counts. **My "five-times-tested shelf" on MGC 4145 and "the morning
+30425–30434 base" on MNQ are touch-count claims of exactly that family, and I ran no control on either.** By
+REPLAY's standard they are unvalidated, and I should have said so when I offered them.
+
+**Fix, for the parent session:** `reversal_setup` should return `climax_x = None` with a distinct note when
+`ext_bar['v'] == 0`, never 0.0 with a drift verdict; and any tool quoting a volume multiple should state the
+count of real-volume bars behind it, the way REPLAY's cost work states its round-turn. I am not changing it
+tonight — it is an authorising condition with a live plan and a PENDING plan on the book.

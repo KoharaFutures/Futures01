@@ -121,3 +121,76 @@ I looked for places where the desks disagree. There are two apparent ones and bo
 
 **Two sessions are stalled waiting on the owner, and REPLAY is close to its context ceiling.** Those are
 decisions only he can make; they are listed here so they are visible rather than buried in a session list.
+
+---
+
+## 8. Update, 00:50 ET — REPLAY published `SUMMARY.md` and it lands on this desk in four places
+
+The replay desk woke at 00:45, advanced to bar **3,400**, and wrote its own one-page summary. Four of its
+findings apply directly here, and two of them cost me claims I had made.
+
+**Its headline number is the one this desk still cannot produce:** placebo separation **z +1.021** against a
+`free_t(20)` of 2.448 — **does not clear.** And **0 of 36** stop/target geometries × 3 direction arms reach
+|z| 2 on its stand-downs.
+
+### 8.1 Costs — computed here for the first time
+
+REPLAY: *"the round-turn is $2.69 = 2.15 ticks, never counted in any R figure before this run. Break-even
+needs 0.081R/trade against a measured gross of +0.0225R."* My equivalents, computed from
+`resolve.py:costs_per_contract` (fees + one tick of slippage per side):
+
+| | round-turn | in points | in ticks | hurdle on the live plan | hurdle at the rule-4 floor |
+|---|---|---|---|---|---|
+| MGC | **$3.44** | 0.344 | 3.44 | **0.0748R** (CALL-0011, $46) | 0.0936R ($36.75) |
+| MNQ | **$2.44** | 1.22 | 4.88 | **0.0469R** (CALL-0010, $52) | 0.0529R ($46.12) |
+
+`resolve.py` *does* subtract these, so the ledger is honest — but **I had never reported the hurdle**, and
+MNQ's 4.88-tick round-turn is more than double REPLAY's 2.15 on MES. For this desk costs are not the binding
+constraint (my expectancy is −0.434R, twenty times the hurdle) — the constraint is direction. Stated anyway,
+because REPLAY's point is that an R figure quoted without its cost hurdle is incomplete.
+
+### 8.2 The +0.8R partial I have called "the top deferred item" all night is UNEXECUTABLE
+
+**Every fill this desk has ever taken is 1 contract** — CALL-0002, 0006, 0007, 0008, 0009, 0011, all
+`contracts: 1`. You cannot exit half of one contract. The proposal as I stated it, *"TP0 = 0.8R, fraction
+0.5"*, cannot be run at any size this account has used, and 2 contracts at the rule-4 floor costs $73.50
+(MGC) or $92.24 (MNQ) against a $120 cap.
+
+**The executable forms are different instruments and must be tested as such:**
+- **(a)** at +0.8R move the stop to breakeven, hold 1 contract — costs nothing, changes the loss
+  distribution only
+- **(b)** exit the whole position at +0.8R — converts every 1.5R target into 0.8R and needs a win rate above
+  ~55% to beat the current geometry
+- **(c)** 2 contracts, halved — doubles risk and only fits an empty book
+
+I repeated the unexecutable version to the owner at least four times tonight. That is the cost of not
+checking an arithmetic claim against the sizing floor.
+
+### 8.3 Volume — a missing field read as an absence of trading (N262)
+
+REPLAY found MES's 18:00 ET bar has no volume Mon–Thu. Mine is worse: **26% of MGC and MNQ 15m bars carry no
+volume field, and the 102 affected timestamps are identical across the two contracts** — a vendor omission,
+not a market fact. `reversal_setup`'s `climax_x` divides the extreme bar's raw volume by the median, and
+**MGC's extreme-low bar right now is `00:35` with `v = 0.0`**, so it reports *"NO capitulation volume — a
+drift, not a flush"* about a bar that has no volume field at all. **Every `climax_x` figure I have quoted is
+suspect, and the "3.12× flush volume" I offered as confluence for MGC 4145.00 is unsupported** — not
+disproved, unsupported, which is the honest status.
+
+### 8.4 Touch-count claims — retracted by REPLAY's standard, so retracted here
+
+REPLAY withdrew *"all key-level and touch-count claims"* because its control fabricated touch counts and
+tested at 31% higher ATR. **My "five-times-tested shelf" at MGC 4145 and "the morning 30425–30434 base" at
+MNQ 30430 are the same family of claim, and I ran no control on either.** The structural parts of that
+research — the 78.6% retracement at 30434.72, the 40-bar range floor, and the higher low the desk's own
+`swings()` registered at 30427.75 — do not depend on touch counts. The touch counts do, and they are
+withdrawn as evidence.
+
+### 8.5 The line from REPLAY worth carrying above all the numbers
+
+> **"Two fabricated figures reached live decisions. Both happened to push me toward the safer action. That is
+> luck, not a safeguard."**
+
+Tonight this desk had the same shape three times over: `watch.py`'s 66/34 thresholds, its own `pivots()`, and
+its trend test that ignored EMA slope all fed wrong numbers into live reporting, and the N249 capacity bug
+told me I had $120 of room when I had $22. **Every one of those four happened to make me more cautious, not
+less.** Same luck, same absence of a safeguard.

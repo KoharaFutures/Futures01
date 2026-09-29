@@ -9723,3 +9723,38 @@ after I wrote it, which is the best possible timing for it: the answer was fixed
 arrived, and it does not change. `reversal_setup` sigma reads **−1.25** off the 23:50 5m close and is
 therefore itself understated against the 1m — but even at |1.5| nothing is registrable, because MNQ's
 rule-4 floor has risen to **26.10pt = $52.20** against **$22.00** of room.
+
+# N256 — two consecutive pulls advanced NOTHING, and I am fixing now what "blind" means, before I need the answer
+
+Second consecutive truncated pull. The vendor's series still ends **22:15** — lag 108.9m, `new=0
+revised=0`, `stubs_dropped: 1`, so it is returning a stub past that bar and nothing real. Across the
+00:01 and 00:03 checks the merged store did not advance on a single intraday frame:
+
+| frame | store newest, both checks | age at 00:04 ET |
+|---|---|---|
+| 1m | 23:58 | 6 min |
+| 5m | 23:50 | 14 min |
+| 15m | 23:30 | 34 min |
+| 60m | 22:00 | 124 min |
+
+**This is degradation, not one of the three consecutive fetch failures that stop the desk.** The call
+returned real bars, raised no exception, and the store is intact — `chart.load()` merges, so nothing was
+lost, and the 240m/1440m frames advanced one bar each on the previous pull. Every reading this check is
+byte-identical to 00:01, which is the correct behaviour for a frozen store and is why I am not reporting
+any of them as movement.
+
+**But "the call did not error" is a bad definition of seeing.** A desk whose freshest print is an hour old
+is blind whether or not its fetch raised. So, pre-committed here rather than argued later:
+
+> **If the merged store's newest 1m bar is more than 20 minutes older than the wall clock, I report the
+> desk as BLIND on the card, register nothing regardless of what any gate says, and stop describing the
+> 15m panel as a current read.** Twenty minutes is the documented observation blind spot this desk already
+> sizes plans around — the interval inside which a fill and a stop-out can both happen unseen — so it is
+> the threshold the rest of the machinery is already built on, not a number I picked tonight.
+
+Right now the 1m is **6 minutes** old, so the desk is degraded and not blind, and I say so plainly rather
+than either ignoring it or overstating it.
+
+One incidental confirmation of **N248**: `held` went **81 → 83** on MGC and **178 → 180** on MNQ across
+two checks in which not one bar arrived on any frame. The persistence counter climbed 2 on a completely
+frozen market. That is the defect demonstrated as cleanly as it can be.

@@ -1,38 +1,10 @@
 {
   "starting_equity": 50000.0,
-  "equity": 50100.68,
+  "equity": 50052.24,
   "peak_equity": 50156.56,
-  "drawdown": 55.88,
-  "realized_pnl": 100.68,
-  "open": [
-    {
-      "call_id": "CALL-0008",
-      "symbol": "MNQ",
-      "side": "LONG",
-      "bar_minutes": 15,
-      "entry_price": 30588.0,
-      "entry_bar_ts": "2026-09-28T19:45:00-04:00",
-      "initial_stop": 30565.0,
-      "stop": 30565.0,
-      "risk_points": 23.0,
-      "contracts": 1,
-      "remaining": 1,
-      "tps": [
-        {
-          "label": "TP1",
-          "r": 1.5,
-          "fraction": 1.0,
-          "price": 30622.5,
-          "hit": false
-        }
-      ],
-      "risk_dollars": 46.0,
-      "realized": 0.0,
-      "triggered_at_utc": "2026-09-29T00:00:40+00:00",
-      "basis_at_trigger": "cab564f",
-      "entry_fill_note": "resting limit filled at its price, no slippage charged"
-    }
-  ],
+  "drawdown": 104.32,
+  "realized_pnl": 52.24,
+  "open": [],
   "closed": [
     {
       "call_id": "CALL-0002",
@@ -142,6 +114,41 @@
       "net": 62.56,
       "r_multiple": 1.422,
       "result": "WIN"
+    },
+    {
+      "call_id": "CALL-0008",
+      "symbol": "MNQ",
+      "side": "LONG",
+      "bar_minutes": 15,
+      "entry_price": 30588.0,
+      "entry_bar_ts": "2026-09-28T19:45:00-04:00",
+      "initial_stop": 30565.0,
+      "stop": 30565.0,
+      "risk_points": 23.0,
+      "contracts": 1,
+      "remaining": 0,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.5,
+          "fraction": 1.0,
+          "price": 30622.5,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 46.0,
+      "realized": -48.44,
+      "triggered_at_utc": "2026-09-29T00:00:40+00:00",
+      "basis_at_trigger": "cab564f",
+      "entry_fill_note": "resting limit filled at its price, no slippage charged",
+      "exit_price": 30565.0,
+      "exit_bar_ts": "2026-09-28T20:15:00-04:00",
+      "exit_reason": "STOP",
+      "ambiguous": false,
+      "closed_at_utc": "2026-09-29T00:30:35+00:00",
+      "net": -48.44,
+      "r_multiple": -1.053,
+      "result": "LOSS"
     }
   ]
 }

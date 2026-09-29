@@ -8285,3 +8285,53 @@ this environment, so **every MAE here is a lower bound and every HEAT is an unde
 HEAT of 0.95 could have been a stop touch in reality. HEAT therefore never argues a stop was "not
 quite" hit — `resolve.py` decides that from bars and remains the only thing permitted to write an
 outcome.
+
+# N225 — the reversal gate fired on MGC and I declined it: unanimity has no persistence requirement
+
+At 20:46 ET `regime.py` printed `>>> REVERSAL CALLED: BEARISH (was BULLISH), held 21 checks,
+agreeing frames [60, 240]` for MGC. All four coded conditions of `reversal()` held. I did not
+register a plan, and the reason is a defect in the gate rather than a feeling about the tape.
+
+**Condition 3 measures the persistence of the HEADLINE. Condition 2 measures the unanimity of the
+TALLY. Nothing measures the persistence of the unanimity.** `_history()` stores only the headline
+string (`{"15": "BEARISH"}`) — the 0-2 / 0-3 tally is never written. So `held` counts how long the
+headline has read BEARISH, which on MGC was **31 minutes** (continuously BEARISH since 00:15:26Z,
+last differing headline CONFLICTED at 00:14:17Z, and the BULLISH it claims to reverse from is older
+still). The call did not fire because something turned at 20:46. It fired because the tally crossed
+0-2 → 0-3 for the first time, and the persistence test had been pre-satisfied half an hour earlier
+by a different condition.
+
+The composite therefore reads "a sign change that held" when what it means is "a sign change that
+held, plus unanimity that may be one bar old." A first-unanimous-bar call is exactly what condition
+3 was written to prevent, and on this sequence it passed straight through it.
+
+**What the tape was doing while the gate matured.** Over the four checks before the call, MGC went
+4149.50 → 4153.70 → 4153.30 → 4157.10, location 12.9% → 28.1%, the 1m to BULLISH 3-0 unanimous and
+the 5m from BEARISH 0-2 to CONFLICTED. The 15m trend component held BEAR by **1.28 points**
+(4157.10 against EMA20 4158.38) and the same bar's **high of 4158.70 was already above that EMA**.
+So the unanimity that fired the call was intrabar-false at the moment it was printed, and a short
+taken on it would have been a short into a rising tape one tick from losing its own trend
+component.
+
+**`reversal_setup()` settles it, and this is why the procedure keeps the two objects apart.** MGC
+sigma is **−0.06** — dead on the 20-bar 15m mean, against the |1.5| the market test requires — with
+**zero** higher frames on the reversal's side. A reversal needs something to revert *from*; a market
+sitting exactly at its mean offers nothing. The indicator flipped; the market did not turn. That
+distinction is the whole content of the procedure's section on this, and tonight is the first time
+it has actually cost a call rather than illustrated one.
+
+MNQ, for contrast, failed the same test at sigma −1.01 but **with DAILY and WEEKLY support** — one
+condition short rather than two, and short on extension rather than on structure. If either symbol
+produces a genuine setup this evening it is more likely that one.
+
+**Not fixed mid-session.** Recording the tally in `bias_history.jsonl` and requiring unanimity to
+hold two checks is the obvious repair, and it would have suppressed tonight's call. I am not
+installing it while a call it would have blocked is on the table — that is changing the rule to
+ratify the decision I just made. It goes to the parent session with the rest, and it is now ahead
+of `swings()` as the load-bearing item, because this one fires trades rather than mislabelling them.
+
+**The honest cost accounting.** UPPER BOUND: if MGC falls from 4157.10 the declined short is
+forgone profit, and I will measure it at the next hourly rather than assume it. MARGINAL: nothing —
+`reversal_setup()` failing means no plan could have carried a market-structure justification, so
+the veto cost is zero against the desk's own standard for a confident reversal. REALIZED: $0.00,
+the book is flat.

@@ -1,21 +1,21 @@
 {
- "now_utc": "2026-09-29T22:02:03+00:00",
- "now_et": "2026-09-29 18:02 EDT",
+ "now_utc": "2026-09-29T22:04:24+00:00",
+ "now_et": "2026-09-29 18:04 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-09-29T16:55:00-04:00  c=4215.00 h=4215.30 l=4212.70  lag=67.1m  new=0 revised=0",
-  "MNQ 5m newest 2026-09-29T16:55:00-04:00  c=30651.00 h=30662.75 l=30648.25  lag=67.1m  new=0 revised=0",
+  "MGC 5m newest 2026-09-29T16:55:00-04:00  c=4215.00 h=4215.30 l=4212.70  lag=69.4m  new=0 revised=0",
+  "MNQ 5m newest 2026-09-29T16:55:00-04:00  c=30651.00 h=30662.75 l=30648.25  lag=69.4m  new=0 revised=0",
   "snapshots written: MGC 1m (+0 new, 1 revised), MNQ 1m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-09-29T16:55:00-04:00",
-   "lag_min": 62.1,
+   "lag_min": 64.4,
    "close": 4215.0
   },
   "MNQ": {
    "newest_5m": "2026-09-29T16:55:00-04:00",
-   "lag_min": 62.1,
+   "lag_min": 64.4,
    "close": 30651.0
   }
  },
@@ -270,5 +270,5 @@
  ],
  "notes": [],
  "needs_attention": true,
- "one_line": "18:02 EDT \u00b7 MNQ 30651.0 MGC 4215.0 \u00b7 pending none \u00b7 open 1 \u00b7 eq $50,100.48 dd $56.08 \u00b7 ATTENTION: DATA_STALE"
+ "one_line": "18:04 EDT \u00b7 MNQ 30651.0 MGC 4215.0 \u00b7 pending none \u00b7 open 1 \u00b7 eq $50,100.48 dd $56.08 \u00b7 ATTENTION: DATA_STALE"
 }

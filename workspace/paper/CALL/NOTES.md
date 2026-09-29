@@ -9187,3 +9187,40 @@ against the 60% boundary, with trend BULL and structure BULL both holding a sixt
 already **4168.10**, above the 4166.16 threshold. But the 15m frame is pinned at `22:15` for the sixth
 consecutive check (`+0 new`), so nothing is confirmed: this is the N231 case exactly, and a unanimity
 printed on a revision is not one I will register on. The `22:30` 15m bar is what decides it.
+
+# N244 — MNQ's counter-trend long re-qualified by 0.01 of sigma on drift volume; declined
+
+At 22:44 `counter_trend()` reads **MNQ QUALIFIES, side LONG, sigma −1.51**, DAILY and WEEKLY support,
+reclaim trigger 30507.25. Threshold is |1.5|. It qualifies by **0.01**.
+
+**Declined, on three grounds, none of which is a feeling about the tape.**
+
+1. **0.01 of margin on a statistic that has crossed this threshold five times tonight.** Sigma's path:
+   −2.80 (22:34 era qualifying), −1.17, −1.47, −0.47, −1.51. A measurement oscillating either side of
+   its own boundary is the N238/N239 pattern — a component flip produced by the measuring apparatus
+   rather than by the market. 0.01 over a line is not evidence of extension; it is evidence that the
+   line is where the data happens to sit.
+2. **The volume character has inverted since the setup was real.** When this qualified off the 30430.00
+   print it read **2.39×–2.46× flush**. It now reads **0.94× — "NO capitulation volume — a drift, not a
+   flush"** in the detector's own words. Condition 4 is *reported, not required*, so it cannot veto on
+   its own — but a flush into higher-timeframe support and a drift into it are different events, and the
+   procedure says the caller deserves to be told which. This is the drift.
+3. **It opposes CALL-0010 on the same symbol, and only just clears the conflict rule.** The long's
+   reclaim at 30507.25 against the short limit at 30550.00 is a **42.75** gap versus MNQ's ATR14(15m) of
+   **41.20** — over by 1.55 points. Clearing a coherence rule by 4% of an ATR is not the same as being
+   coherent, and I wrote that rule to stop exactly this shape of book.
+
+Capacity would have allowed it: room is $68.00, and a 1-contract long from 30507.25 with a stop below the
+30478.50 bar low is 28.75 pt = **$57.50**. So this is not a capacity decline — it is a quality decline,
+and stating that distinctly matters because the two have different remedies.
+
+**What would change my answer:** sigma re-extending with margin (say beyond −1.8) *and* volume returning
+to a flush reading, or CALL-0010 resolving so the long stands alone. Either is a real condition rather
+than a redefinition, and both are checkable next firing.
+
+**MGC, still 0.06 from its bull gate and still on a pinned 15m** — eighth consecutive check with `+0 new`
+on the 15m, so the `22:15` bar is now 29 minutes old against a 15-minute frame. That staleness is itself
+worth watching: if the 15m frame has genuinely stopped publishing rather than merely lagging, every 15m
+reading in these reports is describing a bar that has been superseded by three 5m bars. The 5m shows
+4167.80 with a 4169.60 high, well above the 4166.16 gate threshold, so the 15m is the only thing holding
+the gate shut.

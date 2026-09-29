@@ -313,6 +313,120 @@ for lbl, pick in PICKS:
     print(f"  {lbl:<26} n={len(sv):<5} sample {mean(sv):+.3f}R  ATR-matched ctrl {cm:+.3f}R  "
           f"gap {mean(sv) - cm:+.3f}R  z {z:+.2f}")
 
+# ---- DRIFT-REMOVED ARM (burst 20) ------------------------------------------
+# WHY. Bursts 18 and 19 both found the always-LONG arm at my stand-downs running
+# ~+0.3R above control and surviving an ATR match and a local-window match. The one
+# explanation those controls cannot rule out is DRIFT: this tape rose 218.8 points
+# over its first 4050 bars, and a long arm in a rising market beats a mixed control
+# without any judgement being involved. So this arm removes the drift from the
+# forward path and re-runs the identical barrier test.
+#
+# HOW, and why it is not look-ahead. The drift estimate mu is the mean close-to-close
+# over the DRIFT_W bars ENDING AT THE DECISION BAR - strictly past data, the same
+# information the ATR stop already uses. Each forward bar j is then shifted by
+# -mu*(j-f): the fill is untouched (j=f), and the path is tilted back to flat. If the
+# long-arm gap is drift, it collapses here. If it survives, drift is not the story.
+#
+# SYMMETRY CHECK, built in: de-drifting must hurt the long arm and help the short arm
+# by a similar amount. If both move the same way, the adjustment is broken, not the
+# finding - so both are printed.
+DRIFT_W = 120
+
+
+def local_mu(f):
+    """Mean close-to-close over the DRIFT_W bars ending at the decision bar f-1."""
+    a = max(1, f - DRIFT_W)
+    if f - 1 <= a:
+        return None
+    ch = [rows[i]["c"] - rows[i - 1]["c"] for i in range(a, f)]
+    return sum(ch) / len(ch) if ch else None
+
+
+def simulate_dd(f, side, S, mu):
+    """simulate(), with the forward path tilted back to zero drift."""
+    end = session_end(f)
+    if end is None or S is None or S <= 0 or mu is None:
+        return None
+    sgn = 1 if side == "LONG" else -1
+    fill = rows[f]["o"] + sgn * TICK
+    stop, targ = fill - sgn * S, fill + sgn * RR * S
+    for j in range(f, end + 1):
+        b, d = rows[j], mu * (j - f)
+        h, l, c = b["h"] - d, b["l"] - d, b["c"] - d
+        hit_stop = l <= stop if sgn > 0 else h >= stop
+        hit_targ = h >= targ if sgn > 0 else l <= targ
+        if hit_stop:
+            return -1.0
+        if hit_targ:
+            return RR
+    return sgn * (rows[end]["c"] - mu * (end - f) - fill) / S
+
+
+def dd_arm(bars):
+    """(long R's, short R's) on de-drifted paths for the given fill bars."""
+    lo, sh = [], []
+    for f in bars:
+        a = atr(f - 1)
+        mu = local_mu(f)
+        if a is None or mu is None:
+            continue
+        L = simulate_dd(f, "LONG", STOP_ATR * a, mu)
+        Sx = simulate_dd(f, "SHORT", STOP_ATR * a, mu)
+        if L is None or Sx is None:
+            continue
+        lo.append(L); sh.append(Sx)
+    return lo, sh
+
+
+sd_bars = [e["bar"] for c, e in res]
+ct_bars = [e["bar"] for e in ctrl]
+s_L, s_S = dd_arm(sd_bars)
+c_L, c_S = dd_arm(ct_bars)
+
+# VALIDITY TEST, RUN BEFORE THE ARM IS ALLOWED TO PRINT A NUMBER.
+# The arm only removes forward drift if the prior-window estimate PREDICTS forward
+# drift. Measured on this tape: corr(prior-120-bar drift, next-24-bar realised drift)
+# = -0.093, R^2 0.86% - and NEGATIVE. So mu is very nearly uncorrelated with what the
+# path actually does, and subtracting it adds a noise term (sd 1.22 pts/bar) to a
+# forward drift whose own sd is 3.12. THE ARM DOES NOT DO WHAT IT WAS BUILT TO DO.
+# It is kept, printed, and labelled INVALID rather than deleted, because it produced
+# this desk's first honest-arm |z| above 2 (+2.08) and a deleted instrument is one a
+# later burst rebuilds and believes.
+def _drift_validity(W=DRIFT_W, H=24):
+    xs, ys = [], []
+    for f in range(W + 2, len(rows) - H):
+        m = local_mu(f)
+        if m is None:
+            continue
+        xs.append(m); ys.append((rows[f + H]["c"] - rows[f]["c"]) / H)
+    n = len(xs); mx, my = mean(xs), mean(ys)
+    sxy = sum((a - mx) * (b - my) for a, b in zip(xs, ys))
+    sxx = sum((a - mx) ** 2 for a in xs); syy = sum((b - my) ** 2 for b in ys)
+    r = sxy / (sxx * syy) ** 0.5 if sxx and syy else 0.0
+    return n, r
+
+
+_n_v, _r_v = _drift_validity()
+print(f"\nDRIFT-REMOVED ARM  ***INVALID - DO NOT QUOTE THE z BELOW***")
+print(f"  validity test: corr(prior-{DRIFT_W}-bar drift, next-24-bar realised drift) = {_r_v:+.4f} "
+      f"(R2 {_r_v * _r_v:.2%}, n={_n_v}, sign NEGATIVE)")
+print(f"  -> the estimate explains under 1% of forward drift, so this arm subtracts NOISE,")
+print(f"     not trend. Its numbers do not test what they were built to test.")
+print(f"  (the arm's own correlation t looks large only because the windows overlap;")
+print(f"   ~24-bar blocks cut the effective n by about 24x and the t with it.)")
+print(f"  shown for the record, path tilted using the {DRIFT_W} bars BEFORE the decision:")
+mu_all = [local_mu(f) for f in sd_bars]
+mu_all = [m for m in mu_all if m is not None]
+print(f"  mean local drift at my stand-downs {mean(mu_all):+.4f} pts/bar "
+      f"(tape-wide {sum(rows[i]['c'] - rows[i-1]['c'] for i in range(1, len(rows))) / (len(rows) - 1):+.4f})")
+for lbl, sv, cv in (("always LONG", s_L, c_L), ("always SHORT", s_S, c_S)):
+    print(f"  {lbl:<26} n={len(sv):<5} sample {mean(sv):+.3f}R  ctrl {mean(cv):+.3f}R  "
+          f"gap {mean(sv) - mean(cv):+.3f}R  z {welch(sv, cv):+.2f}")
+print("  SYMMETRY: de-drifting must push the long and short arms in OPPOSITE directions.")
+print(f"    long arm moved  {mean(s_L) - mean([e['long'][0] for c, e in res]):+.3f}R   "
+      f"short arm moved {mean(s_S) - mean([e['short'][0] for c, e in res]):+.3f}R   "
+      "(same sign = the adjustment is broken, not the finding)")
+
 print("""
 READ THE 'BEST of both' ROW AS AN ARTEFACT, NOT A RESULT. Picking the direction
 after seeing the outcome makes a 2R target with a 1-ATR stop reachable at most

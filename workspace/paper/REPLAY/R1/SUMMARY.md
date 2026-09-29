@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **4450/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **4850/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **4450/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **4,450** of 11,316 (2024-10-06 → 2025-07-16) |
-| decisions journalled | **53** (2 trades, 51 stand-downs) |
+| bars traded forward | **4,850** of 11,316 (2024-10-06 → 2025-08-11) |
+| decisions journalled | **54** (2 trades, 52 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** against a stop-condition of 4.5 and a `free_t(20)` of 2.448 — **does not clear** |
@@ -57,9 +57,16 @@ says anything else.** What follows is why.
    | coin flip | +0.295R | +0.321 / z +1.57 | +0.328 / z +1.60 | +0.315 / z +1.54 |
 
    My stand-down bars average **ATR 13.18 vs 18.26 tape-wide — the 38th percentile** — a large composition
-   bias that moves the long-arm gap by **0.004R**. Period composition explains about a quarter of it. **Nothing
-   reaches |z| 2 on any honest arm** against a deflated threshold of **3.37**. But the lean is persistent and
-   directional: **the bars where I declined were mildly long-favourable bars.** 16% of stand-downs were bars
+   bias that moves the long-arm gap by **0.004R**; and their local drift is **+0.2935 pts/bar against
+   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. At n=51 the long arm
+   now reads **z +2.09** (all-bar) and **+2.06** (ATR-matched) — **reported because the brief requires it,
+   and not a finding**: it fails `free_t(297)` = 3.375, fails even `free_t(12)` = 2.229 counting only the
+   controls run on this one sample, weakens to **+1.77** under the strictest (period-matched) control, and
+   above all **is not a rule** — "go long where I declined" describes a sample defined by my own
+   non-reproducible discretion. A drift-removed arm built to settle it gave the biggest z yet (+2.08) and
+   was **withdrawn**: prior-window drift correlates **−0.093** with realised forward drift (R² 0.86%), so it
+   subtracts noise, not trend. It is kept in the code labelled INVALID rather than deleted. **What survives
+   is a standing note, not an edge: my stand-downs skew long-favourable.** 16% of stand-downs were bars
    where **both** directions would have lost.
 6. **The data's contract merges are the QUARTERLY ROLL, and roughly 5% of this tape is calendar spread.**
    December 17 2024, March 18 2025 (**75 bars**) and June 16 2025 — all the Monday–Tuesday of a roll week.

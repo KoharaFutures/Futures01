@@ -2535,3 +2535,105 @@ continuing to hold prospectively — 2 more zero-volume 18:00 bars, still the wi
 missing field rather than a thin market.
 
 **Stopped at 4450 on the stop condition rather than running the budget out.**
+
+---
+
+## Burst 20 — bars 4450 → 4850 (2025-07-16 → 2025-08-11). 0 trades. Equity $50,688.86.
+
+Solo (`mode.py`: 1 AGENT, OPEN, ET 06:44 Tue). Callout `R1-00054-b004850`, `LEAN:NONE`.
+Cursor **4850/11316**, flat, drawdown $0, 54 callouts. Prefix hash checked first thing: **clean**.
+
+### 1. A CLAUDE.md instruction I am deliberately not following, and why
+
+`CLAUDE.md` item 1: *"Start at `DATA_HUB/README.md`. It's the consolidated record of everything earlier
+agent teams measured (2026-09-29), with top strategies per symbol, the owner's bounce-level /
+volume-profile playbook…"*
+
+**I have not read it and will not while this cursor is at 4850.** That file is dated **2026-09-29** and
+holds measured results for MES derived from the whole series — which runs roughly **6,500 bars past where
+I stand**. Reading "top strategies for MES" would import conclusions fitted on bars I have not been shown.
+**That is look-ahead by proxy, and worse than the `state.json` breach, because it would arrive as
+ready-made confidence rather than as a number.** `REPLAY.md`'s leak rule is the desk-specific mandate and
+the entire reason the exercise is worth running, so it wins over the repo-wide default here.
+
+**Flagging rather than silently skipping**, because quietly ignoring a checked-in instruction is its own
+failure mode. If the owner wants the playbook applied, the honest way is to **end the replay first** and
+then test the playbook on the remaining tape as a pre-registered out-of-sample run — not to read it now.
+(The one part I already have is the owner's bounce-level interest, which is what `levels.py` and
+`scenario.py` were built for, and which burst 18 measured dead against a fair control.)
+
+### 2. REQUIRED REPORT: the always-LONG arm crossed |z| 2. It is still not a finding.
+
+The standing brief says to report any arm separating from control beyond |z| 2. At **n=51**:
+
+| control construction | sample | control | gap | z |
+|---|---|---|---|---|
+| all-bar | +0.399R | −0.018R | **+0.417R** | **+2.09** |
+| ATR-matched (post-stratified) | +0.399R | −0.013R | **+0.412R** | **+2.06** |
+| paired local ±120 bars (strictest) | +0.399R | +0.049R | +0.351R | +1.77 |
+
+**Why this does not become a thesis, in the order the reasons bite:**
+
+1. **It is not a rule.** "Go long at the bars where I decided not to trade" describes a sample selected by
+   my own discretion. The discretion is not written down, not reproducible, and not available to anyone
+   else — including a later version of me. **There is no predicate here to trade.**
+2. **It fails every luck bar, including a generous one.** `free_t(297)` = **3.375** for this desk's real
+   search width. Even counting *only* the 4 control constructions × 3 honest arms run on this one sample,
+   `free_t(12)` = **2.229**. **z 2.09 < 2.229 < 3.375.**
+3. **The strictest control is the one that disagrees.** The paired local-window control — the only one that
+   removes period composition — gives **+1.77**. The two that cross 2 both compare against the whole tape.
+4. **The short arm is flat everywhere** (z −0.09 to +0.15), so this is a directional effect in a tape that
+   has now risen from 5800 to 6419. That is exactly what unmodelled drift looks like.
+
+**What it does honestly say**, and it is the answer to the owner's original question: the bars where I
+declined to act were, on an always-long arm, about **+0.4R better than comparable bars** — persistently,
+across six bursts and four controls. **Not an edge. A standing note that my stand-downs skew
+long-favourable, and the thing to keep scoring.**
+
+### 3. The drift-removed arm: built as promised, produced my best number, withdrawn
+
+Burst 19 named this as the next instrument. Built it: forward path tilted to zero drift using μ = mean
+close-to-close over the **120 bars ending at the decision bar** (past data only, same information the ATR
+stop uses). Symmetry check **passed** — de-drifting moved the long arm **−0.076R** and the short arm
+**+0.217R**, opposite directions as required. And it gave the largest honest-arm z this desk has produced:
+**long gap +0.409R, z +2.08.**
+
+**Then the validity test killed it.**
+
+```
+corr(prior-120-bar drift, next-24-bar realised drift) = -0.0928   R2 0.86%   n=4704
+prior-window drift sd 1.22 pts/bar   |   forward drift sd 3.12 pts/bar
+```
+
+**The estimate explains under 1% of forward drift, and the sign is negative.** So subtracting μ does not
+remove the path's trend — it **adds a noise term of sd 1.22 to a quantity whose own sd is 3.12**. The arm
+does not test what it was built to test. *(And the correlation's own t of −6.39 is itself an artefact: the
+windows overlap, so ~24-bar blocks cut the effective n by about 24× and the t with it, to roughly −1.3.
+Same kurtosis/overlap family as finding 2.)*
+
+**Kept in the code, printed, and labelled `***INVALID — DO NOT QUOTE THE z BELOW***`, not deleted.** A
+deleted instrument is one a later burst rebuilds and believes. This one produced the most flattering number
+in the register and the reason it is worthless now sits three lines above the number.
+
+**Interesting by-product, and it stands on its own:** mean local drift at my stand-down bars is
+**+0.2935 pts/bar against +0.1272 tape-wide** — I decline in stretches drifting upward **2.3× faster** than
+average. That is a large, real composition bias and it is the mechanism most likely behind §2. It is *not*
+ruled out by the drift arm, because the drift arm does not work.
+
+### 4. Friction, and the quietest bar of the tape so far
+
+ATR ran **5.50 → 22.61 → 8.82** across these 400 bars (the 22.61 on 2025-08-01). At bar 4600, **ATR 5.50**:
+
+| geometry | risk/contract | commission | +1 tick | friction floor |
+|---|---|---|---|---|
+| 0.5 ATR = 2.75 pts (**11 ticks**, floor is 8) | $13.75 | **0.196R** | 0.091R | **≈0.287R** |
+| 1.0 ATR = 5.50 pts | $27.50 | 0.098R | 0.045R | ≈0.143R |
+
+**Nearly 30% of R gone before price moves**, and the 0.5-ATR stop is within three ticks of the engine's own
+minimum. **400 bars examined, 0 candidates** — and the reason is arithmetic, not judgement.
+
+### 5. Where I stopped
+
+Cursor **4850**, flat, nothing armed. The **pre-registered September 2025 roll test** (burst 19 §3) is
+**500–750 bars ahead: a merge must appear near bar 5450, window 5350–5600.** That prediction was written
+before those bars existed on my tape and it is the sensitivity test the detector has never had.

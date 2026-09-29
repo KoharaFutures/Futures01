@@ -5,15 +5,28 @@
 # Outside the ET window it sleeps 10 minutes at a time (desk_check exits 3 there), so it is safe to
 # leave running over the 15:30-18:00 break and the weekend.
 # Usage (from the repo root):  bash workspace/paper/CALL/desk_loop.sh   [interval_seconds, default 120]
+#
+# REPORT MODE (owner, 2026-09-29 08:20 ET: "check and update every 2 minutes like the other callout desk
+# and make sure you are providing the same style cards"):  DESK_REPORT_EVERY=1 bash .../desk_loop.sh
+#   every in-window check renders its card(s) (--render always) and exits 11 = routine report, so the
+#   agent sends the card each check (CHECK_PROCEDURE "EVERY CHECK EMITS A CARD"). exit 10 still = attention.
 set -u
 cd "$(dirname "$0")/../../.."
 INTERVAL="${1:-120}"
+REPORT="${DESK_REPORT_EVERY:-0}"
+RENDER=auto; [ "$REPORT" = "1" ] && RENDER=always
 fails=0
 while true; do
-  python3 workspace/paper/CALL/desk_check.py --render auto --scale 3
+  if [ "$REPORT" = "1" ] && [ -f workspace/paper/CALL/desk_status.json ]; then   # keep the 2-min cadence across restarts
+    age=$(( $(date +%s) - $(stat -c %Y workspace/paper/CALL/desk_status.json) ))
+    [ "$age" -lt "$INTERVAL" ] && sleep $(( INTERVAL - age ))
+  fi
+  python3 workspace/paper/CALL/desk_check.py --render "$RENDER" --scale 3
   rc=$?
   case "$rc" in
-    0)  fails=0; sleep "$INTERVAL" ;;
+    0)  fails=0
+        [ "$REPORT" = "1" ] && { echo "DESK_LOOP: report -> send the card(s) in desk_status.json"; exit 11; }
+        sleep "$INTERVAL" ;;
     3)  sleep 600 ;;
     10) echo "DESK_LOOP: needs_attention -> see workspace/paper/CALL/desk_status.json"; exit 10 ;;
     *)  fails=$((fails + 1)); echo "DESK_LOOP: desk_check exit $rc (failure $fails)"

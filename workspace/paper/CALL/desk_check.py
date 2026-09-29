@@ -404,9 +404,20 @@ def main() -> int:
         try:
             card = _mod("card_png")
             card.SCALE = a.scale
-            for p in pend:
+            # the old desk's card rule: one card per live plan (PENDING, or OPEN = "ACTIVE · IN POSITION"),
+            # plus the plan's card on the check it closes/expires/voids; the grey status card when none
+            # are live. (AUTOMATE_NEXT #7: an open position used to get the NO TRADE card)
+            allp = [json.loads(l) for l in (HERE / "pending.jsonl").read_text().splitlines() if l.strip()] \
+                if (HERE / "pending.jsonl").exists() else []
+            live_ids = set(st["book"]["pending"]) | set(st["book"]["open"])
+            ended = {e.get("id") for e in events if e.get("kind") == "CLOSED" or (e.get("kind", "").startswith("PLAN_") and e["kind"] not in ("PLAN_PENDING", "PLAN_TRIGGERED"))}
+            latest = {}
+            for p in allp:
+                if p.get("call_id") in live_ids | ended:
+                    latest[p["call_id"]] = p            # last record per call_id wins
+            for p in latest.values():
                 cards.append(str(card.render(p, HERE / f"card_{p['symbol']}_{p['call_id']}.png")))
-            if not pend:
+            if not live_ids:
                 sc.C.SCALE = a.scale
                 cards.append(str(sc.render(HERE / "card_STATUS.png", sc.auto_reason())))
         except Exception as exc:                           # rendering must never block the check

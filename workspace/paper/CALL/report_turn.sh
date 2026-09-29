@@ -7,7 +7,7 @@ python3 - <<'PY'
 import json;d=json.load(open('workspace/paper/CALL/desk_status.json'))
 print("LINE", d["one_line"]); print("TRIGGERS", d["triggers"]); print("NOTES", d["notes"])
 live = len(d["book"]["pending"]) + len(d["book"]["open"])
-need = bool(live or d["triggers"])
+need = bool(live or [t for t in d["triggers"] if t != "BRIEF_CHANGED"])
 print("CARD_NEEDED" if need else "NO_CARD (still no trade: text update only)")
 for c in d["cards"]: print("CARD", c)
 PY

@@ -10202,3 +10202,62 @@ REPLAY's standard they are unvalidated, and I should have said so when I offered
 `ext_bar['v'] == 0`, never 0.0 with a drift verdict; and any tool quoting a volume multiple should state the
 count of real-volume bars behind it, the way REPLAY's cost work states its round-turn. I am not changing it
 tonight — it is an authorising condition with a live plan and a PENDING plan on the book.
+
+# N263 — CALL-0011 STOPPED, −1.075R. Sixth fill, sixth to reach +0.83R, and the account is now below its starting equity.
+
+`resolve.py`: **CLOSED CALL-0011 LOSS STOP net −$49.44 (−1.075R)**, exit 4156.40 on the 15m `00:30` bar.
+`heat.py` records **MAE 4.60pt, HEAT 1.00, MFE +4.60pt (+1.00R), stop had −0.00pt left** — a clean full-stop
+with the adverse excursion exactly equal to the stop distance.
+
+**Equity $49,958.36. Realized −$41.64. The desk is below its $50,000 start for the first time.** Peak
+$50,156.56, drawdown **$198.20**, $2,601.80 to the $2,800 absorbing state.
+
+## The measured record, n=5 (CALL-0002 excluded per N155)
+
+| | |
+|---|---|
+| wins / losses | **1 / 4** |
+| win rate | **20%** — with a payoff of **1.34**, never one without the other (rule 3) |
+| expectancy | **−0.562R**, worse than the −0.434R I was reporting an hour ago |
+| mean HEAT | **1.08**, max 1.43 |
+| winners' mean HEAT | 0.61 on n=1 |
+| **losers' mean MFE** | **+1.23R** |
+
+## What this closes
+
+**Six fills. All six reached at least +0.83R of favourable excursion. Two finished positive — one of five in
+the measured set.** The losers averaged **+1.23R** of MFE before losing 1R. That is no longer a pattern with
+an open case attached to it; the case closed at the stop.
+
+**And it closed the way I said it would, twenty-four minutes before it did.** At 00:36 I wrote that the trade
+had given back its full +1.00R and named the counterfactual; at 00:45 I recorded HEAT 0.85 with 0.70 points
+of stop left and wrote *"recorded at the moment it mattered rather than reconstructed after the stop prints."*
+It printed. **The value of that is not the prediction — it is that the record cannot now be re-told in a way
+that flatters me**, which is the only thing a journal is for.
+
+## The correction that survives from 00:50, and matters more than the loss
+
+The fix this record argues for is **not** the 50% partial I called the top deferred item four times tonight.
+At 1 contract — which is every fill this desk has ever taken — that instrument does not exist. What the
+numbers actually support testing, in order:
+
+1. **Stop to breakeven at +0.8R, 1 contract.** Costs nothing, executable today, and on this record it converts
+   four −1R losses into four ~0R scratches while leaving the two winners untouched *if* they never traded back
+   through entry after +0.8R. **That last clause is the whole test and it is answerable from the archive** —
+   CALL-0007 reached +1.66R and won; did it dip below entry after first touching +0.8R? Unknown to me now,
+   knowable from bars on disk.
+2. **Full exit at +0.8R.** Converts 1.5R targets into 0.8R; needs a win rate near 55% to beat the current
+   geometry, against a measured 20%.
+3. Only then the 2-contract version, which doubles risk and only fits an empty book.
+
+**Neither (1) nor (2) is a change I may make from this desk while a PENDING plan is live**, and both belong
+to the parent session with the placebo work. What I can say is that the ordering above is corrected for the
+sizing floor, which the version I repeated all night was not.
+
+## Book state
+
+CALL-0010 remains **PENDING** — MNQ SHORT 30550.00, stop 30576.00, now ~123 points above a market at
+30427.00, with its gate dead since `00:15` and its 09:30 ET expiry ahead of it. It is the only thing on the
+book. The registration freeze adopted at 00:44 stands: **nothing new is registrable until this desk has a
+placebo and a counterfactual**, which is the recommendation in `CONSOLIDATION.md` §5 and the reason the owner
+had to be the one to notice.

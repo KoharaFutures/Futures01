@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
-**One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **6450/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+**One page, for the account owner. `MATH.md` is the consolidated arithmetic with every formula; `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
+Written at cursor **7350/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **6450/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **6,450** of 11,316 (2024-10-06 → 2025-11-18) |
-| decisions journalled | **58** (2 trades, 56 stand-downs) |
+| bars traded forward | **7,350** of 11,316 (2024-10-06 → 2026-01-20) |
+| decisions journalled | **60 rows, 59 distinct** (2 trades, 58 stand-downs) — `callouts.jsonl` has two rows at `visible_bars` 1613, so every callout total from burst 12 on double-counts that bar |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
@@ -45,7 +45,10 @@ says anything else.** What follows is why.
    high-ATR regimes"*. **Tested across all 6,020 eligible bars and it is not.** Directional efficiency
    (`|close−open| / range`) is **flat at 0.436–0.448 in every ATR quartile** — high volatility buys range and
    no extra direction. The 2R target gets *less* reachable as ATR rises (**57.9% → 49.4%**). And every honest
-   arm is **negative in every bucket**, with always-long non-monotone and peaking in Q3, not Q4. Net of
+   arm is **negative in every bucket NET OF FRICTION**, with always-long non-monotone and peaking in Q3, not
+   Q4. *(Gross, always-long is **+0.045R in Q3 and +0.004R in Q4** — earlier versions of this page said
+   "negative in every bucket" without the qualifier, which its own table contradicts. The conclusion is
+   unchanged; the sentence was overstated.)* Net of
    friction a coin flip runs **−0.202R in Q1 and −0.054R in Q4**: less bad, never positive. **Waiting for
    volatility reduces the loss rate; there is no positive gross for cheaper friction to rescue.** The
    October 2025 window shows it plainly — daily ranges of 129/115/119/147 points and ~7 points of net
@@ -64,9 +67,13 @@ says anything else.** What follows is why.
 
    My stand-down bars average **ATR 13.18 vs 18.26 tape-wide — the 38th percentile** — a large composition
    bias that moves the long-arm gap by **0.004R**; and their local drift is **+0.2935 pts/bar against
-   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. The long arm briefly crossed |z| 2 and has **fully decayed** as n grew: all-bar **+2.09 → +2.01 → +1.92**
-   across n=51/52/53, paired-local **+1.77 → +1.65 → +1.52**. Reported when it crossed because the brief
-   requires it; watched out of the region since — **reported because the brief requires it,
+   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. The long arm keeps **wandering across |z| 2** as n grows one at a time: all-bar **+2.09, +2.01, +1.92,
+   +1.84, +2.06, +1.94, +2.03** at n=51…57, while the paired-local control ran **+1.77, +1.65, +1.52, +1.43, +1.59, +1.49, +1.61** and **never once
+   crossed**. An earlier version of this page cut the sequence at n=53 and called it "fully decayed" — it was
+   written at n=55, where the figure was **+2.06, above the line**, so it truncated exactly where the data
+   stopped supporting the sentence and dropped a report the standing brief requires. **A statistic that
+   crosses a threshold in both directions on single observations is a null at a cut point** — which is the
+   same conclusion, honestly reached — **reported because the brief requires it,
    and not a finding**: it fails `free_t(297)` = 3.375, fails even `free_t(12)` = 2.229 counting only the
    controls run on this one sample, weakens to **+1.77** under the strictest (period-matched) control, and
    above all **is not a rule** — "go long where I declined" describes a sample defined by my own
@@ -75,9 +82,14 @@ says anything else.** What follows is why.
    subtracts noise, not trend. It is kept in the code labelled INVALID rather than deleted. **What survives
    is a standing note, not an edge: my stand-downs skew long-favourable.** 16% of stand-downs were bars
    where **both** directions would have lost.
-6. **The contract merges are the QUARTERLY ROLL — four of them now — and ~5% of this tape is calendar
-   spread, not price.** December 2024, March 2025 (**75 bars**), June 2025 and September 2025, each the
-   Monday–Tuesday of a roll week. **The one pre-registered test this desk has run resolved here and it
+6. **The contract merges are the QUARTERLY ROLL — five of them now — and the measured cost is 1.8% of this
+   tape, not the ~5% this page claimed for ten bursts.** December 2024 (13 bars), March 2025 (**75**), June
+   2025 (4), September 2025 (3) and December 2025 (33) = **128 of 7,350 = 1.8%**, or ~2.8% including ATR
+   tails. **The 5% was an extrapolation from the single 75-bar March case and is retracted** — March is the
+   outlier, not the rule. It had become the standing excuse for discounting anything measured across a roll
+   week. 1.8% is a lower bound, since the envelope detector under-bounds every merge it catches. Also
+   retracted: "each the Monday–Tuesday of a roll week" — **no merge spans both days** (Dec-24 Tue, Mar-25
+   Tue–Fri, Jun-25 and Sep-25 Mon). **The one pre-registered test this desk has run resolved here and it
    split: the prediction was right and the instrument was wrong.** At bar 4450 I predicted a September
    merge near bar 5450 (window 5350–5600); it is at **5396–5398**, three ~63-point bars oscillating between
    two bands 60 points apart, after which the tape sits permanently at the upper level. **Both detectors
@@ -111,17 +123,56 @@ leaning my way, and the three-burst misreading of my own counterfactual control.
 is luck, not a safeguard**, and it is the single most important thing to carry forward. Note the misreading in
 item 5 ran the *other* way — against me. **An error that flatters nobody is still an error.**
 
+## The significance bar this page uses was itself too low
+
+**`free_t = sqrt(2 ln N)` — the deflated threshold every verdict here is measured against — is too lenient
+for a correlated grid on this tape, and it fails in the direction that makes the record's conclusions
+stronger.** Built an empirical family-wise null (circular shifts of the outcome series, features held fixed,
+identical grid) twice, on two independently constructed grids:
+
+| grid | cells | `free_t` | null median max\|t\| | null 95th | best real cell |
+|---|---|---|---|---|---|
+| 341 cells, always-LONG at 1.0-ATR | 341 | **3.415** | **4.352** | **6.104** | 3.823 → family-wise **p 0.695** |
+| 61,272 cells, full predicate search | 61,272 | **4.695** | **5.164** | **7.561** | 7.652 → p 0.055 |
+
+**`free_t` sits below the null's MEDIAN in both.** A grid with no content produces a best cell above `free_t`
+more than half the time. Two causes, both present: `free_t` is the expected maximum of N *independent*
+normals while these cells overlap heavily, and the outcome distribution is heavy-tailed (**kurtosis 24**,
+finding 2), so a t-family's maximum runs far above its Gaussian expectation.
+
+**Nothing in this record flips** — everything failed a bar that was too low, so against the correct bar it
+fails by more. **From here, any search over a correlated grid reports the shift-null; `free_t` is a floor and
+explicitly not sufficient.** Note also that the desk-wide width of 310 rests on a figure (E8's 105 trials)
+that ships no code and cannot be regenerated: **the bar was computed from an unreproducible number using a
+formula too lenient for the job, and still nothing cleared it.**
+
+## One thing here is usable, and it is a specification rule, not an edge
+
+**An ATR14 stop is an average-hour stop, and the hours are not average.** Mean true range relative to
+trailing ATR14, by ET hour: **09:00 = 2.62×, 10:00 = 2.52×, 11:00 = 1.83×, 08:00 = 1.81× … 22:00 = 0.44×,
+23:00 = 0.41×** — a **6.4× spread across the clock**. A 0.5-ATR stop taken into the 09:00–10:00 bars is about
+a fifth of the excursion it will face; the same stop overnight is several times what it needs. The largest
+measured effect on this tape is **a mis-sized stop, not a direction** — long and short lose equally in the
+worst cells, which is the signature of geometry rather than signal. **Size stops to the volatility of the
+hours you will hold through.** This costs nothing to adopt and requires no edge.
+
 ## The bottom line
 
-**Nothing in this record clears its own deflated threshold.** Desk-wide search width is **310**
-(`free_t` 3.39). The largest |z| anywhere is **+4.30**, and it belongs to **a broken volume field** — not to
+**Nothing in this record clears its own deflated threshold — and the threshold was too low.** Desk-wide
+search width is **310** (`free_t` 3.39, itself below the shift-null's median; see above). The largest |z| anywhere is **+4.30**, and it belongs to **a broken volume field** — not to
 a trade, a level, a filter or an hour.
 
 **The desk has not run out of caution; it has run out of hypotheses.** Thesis 5 retired, the key-level
-bounce thesis retired by measurement, the high-ATR hope closed. At bar 6450 — the highest ATR on the tape,
-a 306-point four-session decline, a 78-point reversal candle on 248k contracts, friction at 0.0246R — every
+bounce thesis retired by measurement, the high-ATR hope closed. At bar 6450 — ATR 31.98, a 306-point
+four-session decline, a 78-point reversal candle on 248k contracts, friction at 0.0246R — every
 ingredient a discretionary trader wants was present except a predicate, and the two things making that bar
-attractive were the two this desk has specifically shown carry nothing. **A trade taken to populate a thin
+attractive were the two this desk has specifically shown carry nothing. *(Correction: that burst called it
+"the highest ATR of the entire tape" and its friction "the cheapest anywhere on this tape". Both are false.
+**Max ATR14 is 111.25 at bar 2897, 2025-04-09, and 351 bars — 5.5% — exceed 31.98**; the true cheapest
+friction is **0.0071R**. The desk inferred a tape-wide maximum from the per-bar ATR its own viewer prints,
+never having computed the maximum. The consequence is worse than the wording: **the cheap-friction regime
+this desk said it was waiting for had already passed in April 2025 — bars it walked through, calling ATR
+21.59 "the widest regime in the record" while the tape's ATR was 111.)* **A trade taken to populate a thin
 ledger tests nothing, because its outcome is uninterpretable either way.**
 
 **What would change the answer:** a different instrument or timeframe where 1R is large relative to

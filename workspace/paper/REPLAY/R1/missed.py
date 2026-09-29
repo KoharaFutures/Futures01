@@ -51,13 +51,40 @@ def atr(i, n=14):
     return sum(trs) / len(trs)
 
 
+# NEXT-18:00 INDEX, built once. The 18:00 ET bar starts each daily cycle, so the bar
+# BEFORE the next 18:00 is where that cycle ends, whatever hour it happens to be.
+_next18 = [None] * len(rows)
+_nxt = None
+for _i in range(len(rows) - 1, -1, -1):
+    _next18[_i] = _nxt
+    if rows[_i]["ts"][11:13] == "18":
+        _nxt = _i
+
+
 def session_end(f):
-    """Index of the 16:00 ET bar that closes the cycle containing bar f, or None
-    if the cycle has not finished inside the visible tape."""
-    for j in range(f, len(rows)):
-        if rows[j]["ts"][11:13] == "16":
-            return j
-    return None
+    """Last bar of the 18:00->16:00 cycle containing bar f, or None if that cycle has
+    not finished inside the visible tape.
+
+    FIXED (burst 25). This used to scan forward for the first bar whose hour is "16".
+    On a normal day that IS the cycle end and the two agree. But 67 of the tape's 355
+    ET dates have NO 16:00 bar, and four of them are half-day sessions that trade
+    09:30-12:30 and close early (2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28), with
+    more around holidays (2025-01-09, 2025-05-26, 2025-06-19, 2025-07-04, 2025-07-27).
+    On those the old scan ran past the early close and returned a LATER day's 16:00, so
+    the counterfactual held the position across a session boundary and through an
+    overnight gap - up to 32 bars instead of 9 - while the report claimed "flat at the
+    session close". Measured reach: 236 of 6,680 eligible bars (3.5%) and 2 of 56
+    stand-downs (bars 874 and 1343). Both arms were affected at similar rates, which is
+    why the published z-values moved little, but "the error was small" is a measurement
+    and not a defence: the instrument was not doing what its own docstring said.
+
+    NOTE ON SCOPE: this fixes MY counterfactual only. Whether the harness itself has the
+    same half-day blind spot I cannot check - reading its source is outside this desk's
+    reading whitelist - so it is flagged for the owner rather than assumed either way."""
+    n = _next18[f]
+    if n is None:
+        return None
+    return n - 1 if n - 1 >= f else None
 
 
 def simulate(f, side, S):

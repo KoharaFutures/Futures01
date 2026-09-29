@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **6050/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **6450/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **6050/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **6,050** of 11,316 (2024-10-06 → 2025-10-24) |
-| decisions journalled | **57** (2 trades, 55 stand-downs) |
+| bars traded forward | **6,450** of 11,316 (2024-10-06 → 2025-11-18) |
+| decisions journalled | **58** (2 trades, 56 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
@@ -116,6 +116,13 @@ item 5 ran the *other* way — against me. **An error that flatters nobody is st
 **Nothing in this record clears its own deflated threshold.** Desk-wide search width is **310**
 (`free_t` 3.39). The largest |z| anywhere is **+4.30**, and it belongs to **a broken volume field** — not to
 a trade, a level, a filter or an hour.
+
+**The desk has not run out of caution; it has run out of hypotheses.** Thesis 5 retired, the key-level
+bounce thesis retired by measurement, the high-ATR hope closed. At bar 6450 — the highest ATR on the tape,
+a 306-point four-session decline, a 78-point reversal candle on 248k contracts, friction at 0.0246R — every
+ingredient a discretionary trader wants was present except a predicate, and the two things making that bar
+attractive were the two this desk has specifically shown carry nothing. **A trade taken to populate a thin
+ledger tests nothing, because its outcome is uninterpretable either way.**
 
 **What would change the answer:** a different instrument or timeframe where 1R is large relative to
 $2.69 + one tick, or a pre-registered predicate that survives out-of-sample. Neither exists here yet, and

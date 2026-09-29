@@ -9937,3 +9937,61 @@ it does not excuse me from reconstructing what I can.
 at **−1.45**, *0.05 from the |1.5| extension line*. This is precisely the state N254 was written for at
 23:58, and the pre-commitment holds unchanged: MNQ's rule-4 floor is **25.31pt = $50.62** against **$22.00**
 of room. Not registrable. Reported, not passed on.
+
+# N259 — CALL-0011 FILLED on the very bar that killed its gate, and MNQ QUALIFIES on the same check. Both pre-commitments tested, both held.
+
+Two things happened at 00:23 and each one is a written promise coming due.
+
+## 1. CALL-0011 is OPEN — MGC LONG 1 @ 4161.00, stop 4156.40, TP1 4167.90, $46 at risk
+
+`resolve.py`: *"TRIGGERED CALL-0011 MGC LONG @ 4161.0 (bar 2026-09-29T00:00:00-04:00)"*. The 15m `00:00`
+bar printed `l 4161.00 h 4165.60` — it touched the limit exactly and then rallied 4.60 points.
+
+**The bar that filled the trade is the bar whose close lapsed the gate.** That `00:00` close of 4162.50
+is what put trend at MIXED (below a still-rising EMA20 4163.46) and location at MIXED (51.5%), taking
+MGC from 3-0 unanimous to 1-0. One bar, both events. I called the lapse at 00:16 (N257) without knowing
+the same bar had already filled me — the 15m low only appeared in the store on this pull.
+
+So **N233 is now three for three, and this is its second FILL**:
+
+| plan | mechanism | outcome |
+|---|---|---|
+| CALL-0009 | sub-EMA sell limit; falling EMA20 migrated below it; filled on the move that inverted the gate | **−1.084R**, MFE +2.24R |
+| CALL-0011 | above-EMA buy limit; rising EMA20 migrated above it; filled on the move that inverted the gate | **OPEN** |
+| (CALL-0010) | same construction, never filled | PENDING |
+
+Current state: MGC 4162.60, **+1.60 in favour (+$16)**. `heat.py` reads **MAE 0.00, HEAT 0.00, MFE +4.60pt
+= +1.00R** — it has not traded a tick against me, and it has already touched exactly +1R without reaching
+TP1 at +1.5R. That last number is the pre-registered-partial question (three losers at mean MFE +1.30R) now
+sitting on a live position rather than in a post-mortem, and I am **not** acting on it: no partial exists in
+this plan, adding one now would be editing after watching price (N8), and `resolve.py` is the only thing
+permitted to write an exit.
+
+**What I am watching and what I will not do.** The trade's real invalidation is 4156.40, below the 4157.90
+higher low, and that is untouched. The gate being dead is weakness (4) as written, not a reason to close
+early — I do not get to void a plan because its stated weakness arrived, any more than I got to void it at
+00:16 when the same fact favoured me. It runs to its stop, its target, or its 08:20 ET expiry, and
+`resolve.py` decides which.
+
+## 2. MNQ QUALIFIES — sigma −1.55, DAILY + WEEKLY on side — and it is NOT registrable
+
+`counter_trend()`: **MNQ QUALIFIES, side LONG, sigma −1.55**, htf ['DAILY', 'WEEKLY'], level 30479.25, volume
+1.39×. MNQ's 15m is BEARISH 0-3 at **6.7%** of [30412.50, 30695.25] — the bottom fifteenth of its range.
+
+This is precisely the event **N254** was written for at 23:58, twenty-five minutes before it happened, and
+the pre-commitment is unchanged:
+
+- MNQ rule-4 floor **25.43pt × $2 = $50.86** for one contract
+- room **$22.00** ($46 open + $52 pending of the $120 cap)
+- the affordable version, a ~10-point stop at the extreme, is **illegal under rule 4**
+
+**So: reported, not registrable, and not a setup I "passed on" — it was never available.** I am not voiding
+CALL-0010 to fund it, and I note that CALL-0010 is a SHORT on the same symbol, which makes funding it by
+voiding the short doubly improper: N8 plus the same-symbol opposing-plan rule.
+
+Worth recording as the honest scorecard on this detector: the first time it printed QUALIFIES tonight I was
+not running it (N234, the 30430.00 miss). The second time, I am running it every check, I saw it in the same
+minute it fired, and the answer is still no — for a reason that has nothing to do with the signal and
+everything to do with **$2/pt against a 50-point ATR on a $120 cap** (N247/N254). Fixing the blindness did
+not make the trade affordable. That is a real limitation of this desk and it belongs in front of the owner
+rather than buried in a capacity line.

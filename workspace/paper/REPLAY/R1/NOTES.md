@@ -1,3 +1,14 @@
+> ## ⛔ STOP CONDITION — 2026-09-29, cursor 4450. Roll-merge detector flagged an uncharacterised run.
+>
+> **Bars 3963–3966 (2025-06-16 04:00–07:00) are a contract merge.** Mean range 64.69, high-band **7.0**,
+> low-band **4.75**, max-jump 53.0 — four consecutive ~65-point bars pinned to the same high *and* the same
+> low on 7k volume, against 8–12 point neighbours.
+>
+> **Last burst I published the opposite**, as a headline finding: *"the June 2025 roll in this series is
+> clean"*, and *"December 2024 and March 2025 are two specific defects rather than a recurring quarterly
+> feature"*. **Both are retracted.** See burst 19 §1 for how I came to publish a finding my own detector had
+> been contradicting for 100 bars. No trade is affected — I traded none of those bars, and equity is unchanged.
+
 # REPLAY R1 — MES 60m walk-forward paper. Notes, newest burst at the bottom.
 
 Owner of this directory: agent `REPLAY`. Nothing outside `workspace/paper/REPLAY/**` is written by me.
@@ -2413,3 +2424,114 @@ window with the test half-run. I checked both detectors after every 50-bar chunk
 end, and no candidate setup was passed over in the extra 250 bars: ATR ran 8.0–18.4 with the friction
 floor at 0.10–0.20R on a 0.5-ATR stop, which is the condition section 5 describes. **Recording the
 overrun and its reason rather than letting the number pass unremarked.**
+
+---
+
+## Burst 19 — bars 4050 → 4450 (2025-06-20 → 2025-07-16). 0 trades. **Stopped early on the roll stop condition.**
+
+Solo (`mode.py`: 1 AGENT, OPEN, ET 04:44 Tue). Callout `R1-00053-b004450`, `LEAN:NONE`.
+Cursor **4450/11316**, flat, equity **$50,688.86**, peak = current, drawdown $0, 53 callouts.
+
+### 1. I published a finding my own detector was contradicting, and the cause was a filter I wrote
+
+Burst 18 §4 said the June 2025 roll was clean and offered it as the merge detector's first prospective
+test — a *specificity* result, a detector that correctly stays silent. **The detector was never silent.**
+
+Replaying `roll_flags` over truncated copies of my own tape:
+
+```
+  tape truncated to  3967 bars ->  3 run(s); June run: []
+  tape truncated to  3968 bars ->  4 run(s); June run: (3963, 3966, 64.69, 7.0, 4.75, 53.0)
+  tape truncated to  4000 / 4050 / 4250 / 4450  ->  same flag, every length
+```
+
+**It fired the moment bar 3967 became visible and never stopped.** It was flagging through four consecutive
+chunks of burst 18 while I wrote that it had found nothing.
+
+**Why I did not see it.** My chunk loop piped `view.py` through
+`sed -n '1p;/gap-cluster/,$p'` — line 1, then everything from the gap-cluster heading onward. **That filter
+deletes the roll-merge section**, which sits between them. I wrote the filter to keep the output small and
+in doing so removed exactly the half of the output the stop condition depends on.
+
+**This is the second time.** `watch.py` in burst 9 filtered its harness output and so reported a successful
+HALT on a bar it had never advanced past. Same class of error, different filter, eleven bursts apart. The
+lesson did not take the first time because I fixed the instance rather than the habit. **A filter is a place
+where evidence goes to die.**
+
+**And then I confirmed my own mistake with the wrong statistic.** Seeing nothing (because nothing was shown),
+I hand-audited the window — on **boundary gaps**, which is the statistic `gap_clusters` uses. This merge has
+exactly **one** large boundary gap (+53.00 at bar 3965) and zeroes elsewhere, so a gap audit *cannot* see it.
+Its signature is in the **ranges and the envelope**. I then wrote that "a hand audit agrees with its silence",
+which dressed a blind test up as corroboration. **Two independent instruments agreeing means nothing when one
+of them was not shown the data and the other cannot measure the effect.**
+
+**The fix is structural, not procedural.** `view.py` now computes both detectors *before* the price header and
+prints the verdict as **line 1**:
+
+```
+MERGE DETECTORS: !! 4 envelope run(s), 2 gap-cluster run(s), newest bars 3963+   <- line 1 by design
+```
+
+Any filter that keeps line 1 — including the one that caused this — now keeps the warning. The reasoning is
+written into the file above the code so the next filter-writer meets it.
+
+### 2. What I checked before blaming myself, and what it ruled out
+
+The source series grew **11287 → 11316** between firings: the tape I am walking is still being written at its
+far end. That raises a real integrity question — **can bars change behind my cursor?** Checked directly:
+
+```
+md5 of first 4050 lines of visible.jsonl : 4e4f3a751f7d32bed00a9008eeaf621b
+md5 of the same 4050 lines at last commit: 4e4f3a751f7d32bed00a9008eeaf621b
+```
+
+**Identical — no backfill.** The bars were always what they are; the fault was entirely mine. This prefix-hash
+check is cheap and now runs at the start of every burst, because a live-appending source is a standing risk
+and I would rather have the null result on record than assume it.
+
+It also means **"end of series" is a moving target** and every `n/11316` denominator in this journal is
+provisional. Noted against the `state.json` disclosure in burst 18: the end date I saw there was the end date
+*as of then*, and the series has already grown past it.
+
+### 3. What the retraction actually costs, and the one thing it buys
+
+Retracted: "the June 2025 roll is clean"; "December and March are two specific defects rather than a recurring
+quarterly feature"; and the *specificity* claim, which asserted a property of the detector I had not observed.
+
+**What replaces it is worse for the data and better understood.** December 17 2024, March 18 2025 and June 16
+2025 are all the Monday–Tuesday of a quarterly roll week. **This is the MES quarterly roll (Z/H/M/U), not three
+accidents.** March alone cost 75 bars. **Roughly 5% of this tape is calendar spread rather than price**, and
+`SERIES_AUDIT.md` passes MES 60m as eligible while being blind to all of it.
+
+**The two detectors are complementary, not redundant, and each is blind where the other sees.** June shows
+envelope constancy with a single boundary gap → `roll_flags` sees it, `gap_clusters` is blind. March drifted
+~60 points across the window → the envelope broke and under-bounded it 5×, while the recurring ~51pt gap made
+`gap_clusters` right. **Neither alone is sufficient, and I will not again report one's silence as evidence.**
+
+**PRE-REGISTERED, before seeing the bars.** If the quarterly reading is right, the **September 2025 roll**
+(week of 2025-09-15) must show a merge. At ~16.2 bars per calendar day, that lands near **bar 5450, window
+5350–5600**. I predict `roll_flags` flags a run there. **This is written down now, at bar 4450, so it is a
+real out-of-sample test rather than another finding fitted after the fact** — and it is the sensitivity test
+the detector has never had, since both merges it was tuned on were in-sample.
+
+### 4. Counterfactual, n=50 — unchanged in substance
+
+| arm | sample | all-bar gap / z | local ±120 paired gap / z |
+|---|---|---|---|
+| always LONG | +0.367R | +0.391 / **z +1.94** | +0.323 / z +1.62 |
+| always SHORT | −0.036R | −0.007 / z −0.04 | +0.040 / z +0.22 |
+| coin flip | +0.329R | +0.354 / z +1.75 | +0.349 / z +1.71 |
+
+**No honest arm reaches |z| 2**, against a deflated threshold of 3.37. (The best-of-both arm prints z +2.18 and
+is the hindsight artefact — not quoted as a result.) **21 of 50** stand-downs are pivot-tagged local reversals;
+**that tag uses forward bars**, so it bounds what a real-time detector could have caught rather than describing
+one that exists.
+
+### 5. Bars passed over, and why
+
+**400 bars examined, 0 candidates.** ATR ran **8.93–15.29**; at bar 4250 it was 8.93, giving a friction floor
+of ~**0.18R** on a 0.5-ATR stop. Bars 4248 and 4449 are both 18:00 ET with **v = 0**, which is finding 7
+continuing to hold prospectively — 2 more zero-volume 18:00 bars, still the widest overnight hour, still a
+missing field rather than a thin market.
+
+**Stopped at 4450 on the stop condition rather than running the budget out.**

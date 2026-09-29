@@ -9114,3 +9114,43 @@ still deferred.
 EMA20 still rising by 0.21, location BEAR at 39.4% of [4143.90, 4181.00], 1m **BEARISH 0-3 unanimous**.
 MNQ unchanged at 0-3 unanimous, location BEAR **19.2% of [30430.00, 30722.00]** — its range low is now
 the 30430.00 print. No plan on either: MGC 15m is 0-1, and MNQ already carries CALL-0010.
+
+# N242 — MNQ's evening-long bearish gate finally broke, and MGC is 0.76 from the session's first bullish one
+
+Two structural turns on the `22:15` 15m bar, both from `swings()` re-cutting, and a feed warning worse
+than the 429s.
+
+**MNQ's unanimity is gone after roughly ninety consecutive checks.** Its 15m structure flipped BEAR →
+**MIXED** because the swing lows re-cut **30430.00 → 30479.50 (higher)**. So the sequence that had
+produced `REVERSAL CALLED` at every check since ~20:45 is broken, the headline is now BEARISH **0-2**,
+and `regime.py` prints `no reversal call`. The component that broke it is the one the owner's 30430.00
+print created — that low is no longer the last pivot, so the lower-lows chain ended.
+
+**MGC's 15m structure flipped BULL** on the same bar: highs **4158.70 → 4169.10 (higher)** *and* lows
+**4145.00 → 4157.90 (higher)**. Both conditions, not one. With trend already BULL (4165.40 above a
+rising EMA20 4159.69), MGC is **BULLISH 2-0** and needs only location above **4166.16 — 0.76 points
+away**. That would be the **first bullish 15m gate of the session** on either symbol.
+
+**If it opens I will not register on the first unanimous check.** The standard set at 21:02 and applied
+four times to MNQ (N230/N232/N238/N239) requires the unanimity to hold, and N231 requires that the hold
+span a new or revised 15m bar rather than two reads of one. A bullish gate on gold is not exempt because
+it is new or because the session has been short-only. Applying a rule only in the direction it has
+already been tested is how a standard becomes a preference.
+
+**Also worth pre-stating, so it is not decided under pressure:** if MGC does open a bull gate, N196
+forbids the obvious entry. The established displacement on the fast frames is now **up**, so a buy-stop
+over the 4169.10 pivot high is a break of a short-term extreme in the direction of displacement — the
+prohibited trade, z -2.61 to -4.72 in 4 of 4 cells. Any long would have to be a **limit below market**,
+pulling back toward the rising EMA20, with the stop under the 4157.90 higher low. At 1 contract that is
+roughly 7.50 points of risk = **$75**, which fits the $120 cap only because CALL-0010 holds $52 —
+$75 + $52 = $127 **exceeds** it. So a gold long and the live MNQ short cannot both be carried at 1
+contract each unless the stop is tighter than the structure justifies. Stating the arithmetic now, before
+the gate opens, rather than discovering it while wanting the trade.
+
+**Feed degradation, one step worse.** This pull printed `Cookie/crumb fetch failed (ConnectionError)`
+rather than the `HTTP 429` seen at 21:20 and 21:24, and it came with **revised=4** on the 5m and
+**revised=3** on the 15m against the usual 1-2. Data still arrived at a 10.6-minute lag with sensible
+values, so this is not a fetch failure and the three-strikes stop condition is not near. But the
+progression 429 → ConnectionError with elevated revision counts is the shape of a feed degrading, and
+the revisions matter more than the warning: four revised 5m bars means four readings I reported earlier
+were provisional in a way N41/N47 anticipates.

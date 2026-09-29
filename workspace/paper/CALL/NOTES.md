@@ -9615,3 +9615,32 @@ For the parent session, the three parts of this are now separable and should be 
 
 Until then I state the tool's output as what it is — *an extension reading plus the nearest level on the
 far side* — and I do not use the word "trigger" for it.
+
+# N253 — the ledger's "ambiguous-bar resolutions" count reads 0 and cannot ever count the one ambiguous bar this desk has had
+
+`resolve.py:556` reports *"ambiguous-bar resolutions (counted as losses)"* from
+`len([p for p in closed if p.get("ambiguous")])`. Right now that is **0**, and every closed trade
+carries `ambiguous: false`. **CALL-0009 should be counted there and structurally cannot be.**
+
+Why. `ambiguous` is set True at `resolve.py:443-444`, inside the loop over bars **after** the entry bar,
+when a bar touches the stop and the target both. CALL-0009 resolved **on its entry bar** — the 15m
+`21:15` bar, `o 4156.40 h 4163.10 l 4148.30` — through the separate entry-bar branch at 385-420, which
+by deliberate design *"on the entry bar only the stop is checked, never the target."* That branch has no
+`ambiguous` assignment at all, so the flag keeps its default False. Meanwhile `heat.py` measures that
+same bar at **MFE +2.24R**: TP1 4151.40 was touched by 9.20 points.
+
+So the desk's own honesty metric — the one whose whole purpose is to publish how often a resolution
+rested on an undecidable bar — is blind to the only genuinely undecidable resolution in the record, and
+it is blind precisely because the resolver's conservative choice happens in a code path that does not
+report. The number is not wrong in code; it is **wrong as a measurement**, which is worse, because it
+reads clean.
+
+**I am not touching it.** DECISIONS row 6's standard is that a mid-session resolver change is safe only
+when it can only make my numbers worse. Adding `ambiguous = True` to the entry-bar branch would satisfy
+that — it changes no P&L and only ever raises the count of resolutions I must caveat — but it is still a
+change to the one file that writes outcomes while two plans are live, and the honest fix is wider than a
+flag: the entry-bar branch should record *what it declined to check*, so the ledger can distinguish
+"stop only, target not evaluated" from "neither touched". That belongs with the parent session.
+
+**Until then I report the count as `0 flagged, 1 real`** and name CALL-0009 every time. Reporting a bare
+0 would be the flattering error the resolver's own comment was written to prevent.

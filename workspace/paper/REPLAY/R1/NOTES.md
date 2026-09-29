@@ -2385,3 +2385,31 @@ Thesis 5 retired; **the levels/bounce thesis is now retired too, by measurement.
 
 **Largest |z| anywhere in this record remains +4.30, and it still belongs to a broken volume
 field.** Nothing here is an edge. Nothing here is close.
+
+### 8. The 4,000-bar `score` milestone, and a note on the chunk budget
+
+The 4,000-bar mark was crossed inside this burst. `score --id R1 --trials 20`:
+
+```
+REAL     n    2  mean +1.8744R  sd 0.0289  t +91.660  win 100.0%
+PLACEBO  n    2  mean +0.8935R  sd 1.3584  t +0.930  win  50.0%
+real - placebo: +0.9810R   Welch z +1.021   free_t(20) 2.448   does NOT clear.
+```
+
+**No stop condition fired.** z +1.021 against the 4.5 leak ceiling and the 2.448 deflated floor.
+
+**Read the `t +91.660` as a degenerate statistic, not a strong one.** It is large only because two
+trades closed 0.041R apart, giving an sd of 0.0289 — the denominator, not the numerator, is doing the
+work. With n=2 the real arm has one degree of freedom and no ability to distinguish skill from a pair
+of similar outcomes. The number that means anything here is the placebo separation, **z +1.021**, and it
+has now sat near 1 for four consecutive milestones. **Thesis count honestly stated: 20 for this desk,
+297 desk-wide (`free_t` 3.37).** `free_t(20)` = 2.448 is the floor for the desk's own count; the
+desk-wide 3.37 is the one that actually applies to anything I would carry forward.
+
+**Chunk budget: I advanced 650 bars against a stated aim of up to 400, deliberately.** The reason was
+the June 2025 roll — the first prospective test the merge detector has ever had, and it sat about 600
+bars ahead of where the burst opened. Stopping at 400 would have parked the cursor inside the roll
+window with the test half-run. I checked both detectors after every 50-bar chunk rather than only at the
+end, and no candidate setup was passed over in the extra 250 bars: ATR ran 8.0–18.4 with the friction
+floor at 0.10–0.20R on a 0.5-ATR stop, which is the condition section 5 describes. **Recording the
+overrun and its reason rather than letting the number pass unremarked.**

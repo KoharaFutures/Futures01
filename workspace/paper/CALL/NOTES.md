@@ -9862,3 +9862,40 @@ cruder fix and would also have killed CALL-0008, which was right.
 
 MNQ, meanwhile, is untouched by any of this: its 15m has not advanced in **46.8 minutes**, its 1m is
 **18.8m** old, and it is **1.2 minutes** from the per-symbol BLIND line.
+
+# N258 — MNQ IS BLIND. The threshold I set at 00:03 has fired, and this is the first time this desk has declared it.
+
+At 00:19:05 ET, MNQ's newest 1m bar is `2026-09-28T23:58` — **age 21.1 minutes**, past the 20-minute line
+fixed at 00:03 and made per-symbol at 00:12. MNQ's whole tail is stale: 5m `23:50` (29.1m), 15m `23:30`
+(**49.1m**), and `fetch.py` still returns a series ending 22:15 at lag 123.9m with `new=0 revised=0`.
+
+**MGC is NOT blind** — 1m `00:08`, age 11.1m — and under the per-symbol rule the two symbols are judged
+independently. Gold remains a sighted market with a lapsed gate; MNQ is an unsighted market with a live
+one.
+
+**What BLIND means, exactly as pre-committed:**
+1. **Nothing may be registered on MNQ**, whatever `regime.py` prints. It is currently printing `REVERSAL
+   CALLED: BEARISH, agreeing frames [1, 5, 60, 240]` — four frames and a fired gate — and that call is
+   computed entirely from bars between 21 and 49 minutes old. It authorises nothing tonight.
+2. **The MNQ 15m panel stops being described as a current read.** Every MNQ number in this check is a
+   historical observation of 23:30, not a statement about where MNQ is.
+3. It does **not** void CALL-0010. A blind state is an instruction about what I may *add*, not a licence to
+   edit what is already written (N8).
+
+**The consequence I have to state plainly, because it is weakness (10) of CALL-0010's own note arriving:** I
+cannot currently tell whether that plan has filled or stopped. Its limit is 30550.00 with a 30576.00 stop —
+a 26-point band — and I have no MNQ print since 23:58. `resolve.py` resolves only from bars it fetched, so
+its `open 0` this check means *"nothing resolved in the data I have"*, not *"nothing happened"*. At
+registration I wrote: *"this carries a pending limit across ~12.3 hours of overnight tape inside a 15-27
+minute observation blind spot, so a fill and a stop-out could both happen unseen."* That is no longer a
+hypothetical.
+
+**What would clear it:** one MNQ 1m bar newer than 20 minutes. Nothing else — not a bounce, not a gate, not
+another check. I will keep reporting the age every check and will not quietly resume treating MNQ as live
+because the number is close to the line.
+
+**On the fetch-failure count, one last time.** This is the ninth consecutive MNQ pull that advanced nothing.
+I have consistently declined to call these fetch failures because the calls succeed and return real bars,
+and I stand by that distinction — but the reason it was safe to stand by is that I bound myself to a
+measurable alternative. That alternative has now fired and the desk is standing down on MNQ. The
+distinction cost nothing because it was never the only safeguard.

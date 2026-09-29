@@ -8824,3 +8824,52 @@ kind of rule worth having. The MNQ long waits for CALL-0010 to fill or expire at
 trigger was the problem" — with the 30550.00 limit 82.00 above the market. So tonight has produced two
 correct directional reads, one of which filled at the worst possible moment and one of which never
 filled at all. The common factor is the entry construction, not the direction.
+
+# N236 — the conflict rule stopped binding on the MNQ long, and capacity blocks it instead
+
+At 21:46 the reason I cannot take the MNQ long changed, and the new reason is arithmetic rather than a
+rule I wrote, so it is worth stating precisely rather than letting "still blocked" stand.
+
+**The conflict rule no longer binds.** `reversal_setup('MNQ')`'s reclaim trigger **dropped from
+30529.75 to 30508.25** as the recent swing high re-cut, and MNQ's ATR14(15m) eased from 39.68 to
+**36.45**. Gap to CALL-0010's short limit at 30550.00 is now **41.75 against a 36.45 ATR** — wider than
+one ATR, so the 21:30 rule permits the registration it forbade at 21:34, 21:37, 21:40, 21:42 and 21:44.
+I am not going to keep citing a constraint that has stopped applying.
+
+**What blocks it now is that a properly-stopped version does not fit the cap.** The long's structural
+invalidation is the **30430.00** pivot low — which `swings()` has now adopted as MNQ's registered 15m
+swing low, so the level the owner flagged is formally in the structure. A stop that clears it from a
+30508.25 reclaim entry is:
+
+| stop | distance | risk at 1 contract | fits $68 of room? |
+|---|---|---|---|
+| 30425.00 | 83.25 pts | **$166.50** | NO |
+| 30420.00 | 88.25 pts | **$176.50** | NO |
+
+CALL-0010 holds **$52.00** of the $120 discretionary cap, leaving **$68.00** — a maximum stop of **34.00
+points** at the 1-contract floor. Thirty-four points from 30508.25 puts the stop at 30474.25, which is
+**44 points above the low the trade is built on**: inside the noise of the very bounce being traded and
+nowhere near where the thesis is wrong. Rule 4's floor (0.5 ATR = 18.22 pts) would be satisfied, which
+is exactly why the floor is not sufficient on its own — a stop can clear the ATR test and still be in
+the wrong place.
+
+**So the honest statement is: the reclaim entry is 78 points above its own invalidation, and this book
+cannot carry that.** Not "the rule forbids it." A reclaim trigger that far from the structural stop is
+an expensive trade by construction, and the cap is doing its job by refusing it rather than letting me
+size down into a stop that means nothing.
+
+**The two ways it becomes takeable, neither of which I will manufacture.** CALL-0010 fills or expires,
+freeing $52 and making the full $120 available — $120 buys a 60-point stop at 1 contract, still short of
+the 83 needed, so even then a 30508.25 entry does not fit. Or price pulls back toward 30430.00 and the
+reclaim entry moves down with the swing high, shrinking entry-to-stop distance until it does. The
+second is the one that actually works, and waiting for it is not the same as missing it.
+
+**And note what this says about the 30430 print itself.** At the low, an entry near 30435 with a stop at
+30425 would have been a **10-point, $20 risk** trade with the whole 78-point reclaim as upside. The
+reason that was unavailable is N234's blindness, not capacity — the capacity problem only exists
+*because* the entry is now 78 points above the level. Buying support is cheap; buying the reclaim of
+support is not. That asymmetry is the strongest argument for keeping `counter_trend()` in the loop.
+
+**MGC, separately: its 15m has gone `CONFLICTED 0-0`** — all three components MIXED, structure flipped
+on a **higher** swing high (4158.70 → 4164.40). The symbol I was short ninety minutes ago now has no
+directional read at all, and `reversal()` refuses it on three grounds at once.

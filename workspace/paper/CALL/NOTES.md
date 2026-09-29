@@ -8751,3 +8751,76 @@ and it is the largest single miss of the session. **MNQ:** +2.75 points so far, 
 not zero, which is the uncomfortable part — unlike the 15:00-16:00 stand-downs, no installed veto
 blocked these. `reversal_setup` had the MNQ long qualifying on its own criteria; nothing was stopping
 it except that nobody ran it. **REALIZED:** $0.00. The book is still flat with two unfilled shorts.
+
+# N235 — CALL-0009 filled and stopped on the same bar that went through its target, and the resolver was right to call it a loss
+
+`resolve.py` at 21:34: `TRIGGERED CALL-0009 MGC SHORT @ 4157.5 (bar 21:15) stop 4161.6` then
+`CLOSED CALL-0009 LOSS STOP net $-44.44 (-1.084R)`. Equity **$50,007.80**, drawdown **$148.76**.
+
+## The uncomfortable arithmetic, and why the loss is nonetheless correct
+
+The 15m `21:15` bar is `o4156.40 h4163.10 l4148.30 c4161.20`. Against entry 4157.50, TP1 **4151.40** and
+stop **4161.60**, that single bar touched **both**: the low 4148.30 is 9.20 points through TP1, and the
+high 4163.10 is 1.50 through the stop. `heat.py` reads **MFE +2.24R**. So the trade's best excursion
+was past its own target and it is recorded as a −1.084R loss.
+
+**That is the resolver behaving exactly as designed, and the design is right.** Its amended entry-bar
+rule (documented at `resolve.py:389-415`) says: when a limit fills, price must TRAVEL to the limit from
+the far side, so a stop lying beyond the entry in that same direction can only be reached afterwards —
+forced ordering. The `21:15` bar opened at **4156.40, below** the 4157.50 sell limit, so price rose
+through the limit and on to 4163.10. **But a target on the entry bar is not forced by that argument, so
+the entry bar checks the stop and never the target.** Crediting a same-bar target would invent wins.
+
+`ambiguous: false` is therefore correct too — nothing ambiguous was adjudicated, because the target was
+never eligible on that bar. The honest statement is narrower and worse: **the true outcome is unknown.**
+Price reached both levels inside fifteen minutes and OHLC cannot order them. The record takes the
+pessimistic read, which is the only direction a paper ledger is allowed to guess in.
+
+**I am not touching the resolver.** DECISIONS row 6 set the standard: a mid-session resolver change is
+safe only when it can *only* make my numbers worse. A change that could convert this loss into a TP1
+win is the exact inverse, and it would be the most self-serving edit available to me tonight.
+
+## N233 predicted the mechanism and it played out in full
+
+The plan filled on the move that killed its own gate. At 21:24 I wrote that the sub-EMA limit had
+migrated above a falling EMA20 and that the plan was "one tick from filling into a gate that is one
+tick from dying." It then filled at 4157.50 and MGC's 15m trend is now **MIXED** (close 4161.20 above
+EMA20 4156.91), its 1m and 5m are both **BULLISH 2-0**, and the reversal call is gone. The gate did not
+merely lapse — it inverted, and the stop was the price of that.
+
+## The exit finding is now strong enough to name, and still not strong enough to act on
+
+| trade | MFE | outcome |
+|---|---|---|
+| CALL-0006 | +0.84R | LOSS |
+| CALL-0008 | +0.83R | LOSS |
+| CALL-0009 | **+2.24R** | LOSS |
+
+**Three losers out of three with MFE above +0.8R; mean MFE +1.30R.** Meanwhile the sole winner's HEAT
+is 0.61. So the entries are finding movement and the exits are giving all of it back, which is the
+opposite of the failure mode a desk with a −0.434R expectancy would usually have.
+
+n=3 losers is still not a basis for changing the exit mid-session, and inventing a partial now would be
+fitting the rule to the last trade. But **a pre-registered test of a partial exit at +0.8R is now the
+highest-value item on the deferred list**, ahead of the tally-persistence repair, because it addresses
+where the money is actually going rather than which trades get opened.
+
+## The counter-trend scan installed thirty minutes ago is already earning
+
+Its second run reads **`MNQ QUALIFIES side LONG sigma -2.29 htf ['DAILY','WEEKLY'] volume 2.39x —
+flush`**. The volume character has upgraded from `1.44x — a drift, not a flush` to a genuine flush, so
+the one condition the 30430.00 bounce was weak on has strengthened. This is the scan doing precisely
+what N234 installed it for.
+
+**And the conflict rule I wrote at 21:30 binds me the first time it applies.** The qualifying long's
+reclaim trigger is **30529.75**; CALL-0010's pending short limit is **30550.00**, a gap of 20.25 against
+MNQ's ATR14(15m) of **39.50**. The rule says do not register a plan opposing a live PENDING plan on the
+same symbol inside that symbol's ATR. It forbids the trade I would otherwise want, which is the only
+kind of rule worth having. The MNQ long waits for CALL-0010 to fill or expire at 09:30.
+
+## CALL-0010's thesis has now also fully paid without filling
+
+`thesis.py`: **fav 63.75 against the 39.00 TP1 needed** — "DIRECTION RIGHT, TARGET DISTANCE COVERED —
+trigger was the problem" — with the 30550.00 limit 82.00 above the market. So tonight has produced two
+correct directional reads, one of which filled at the worst possible moment and one of which never
+filled at all. The common factor is the entry construction, not the direction.

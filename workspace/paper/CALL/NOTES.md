@@ -10089,3 +10089,48 @@ The same revision gave the open position its first adverse excursion — **MAE 0
 4160.90 is 0.10 below the 4161.00 entry. Trivial in size, and worth recording only because it means the trade
 is no longer a zero-heat trade and my earlier "never traded a tick against me" is now superseded rather than
 merely stale.
+
+# N261 — SIX filled trades, SIX that reached at least +0.83R of MFE, TWO that closed positive. This is now the sharpest number on the desk.
+
+CALL-0011 has given back its entire favourable excursion. It touched **4165.60 = +1.00R** on its entry bar
+and is now **4160.90, −0.10 against the 4161.00 entry**, with `heat.py` reading **MAE 0.90pt, HEAT 0.20**,
+stop 3.70 points clear. Its 1m is **0-3 unanimous bearish** and its 5m bearish; every fast frame is against
+the position.
+
+With that, the pattern is unanimous across every trade this desk has ever filled:
+
+| plan | MFE | closed outcome |
+|---|---|---|
+| CALL-0002 | +1.61R | +1.566R (EXCLUDED from the measured record, N155) |
+| CALL-0006 | +0.84R | **−1.021R** |
+| CALL-0007 | +1.66R | +1.422R |
+| CALL-0008 | +0.83R | **−1.053R** |
+| CALL-0009 | +2.24R | **−1.084R** |
+| CALL-0011 | +1.00R | OPEN, currently −0.10pt |
+
+**Six fills. Six that reached at least +0.83R. Two of the five closed ones finished positive.** Every single
+loss had been up more than +0.8R first, and the two winners were not better entries — they were the two that
+happened to keep going.
+
+This is the same finding I have been logging as "the top deferred item" since 21:34, but it is no longer an
+inference from three losers. It is **every trade in the record without exception**, and the mechanism is
+visible live right now: a plan that was +1R twenty minutes ago is underwater, and nothing about the entry has
+changed.
+
+**I am still not acting on it, and the reason matters more than the restraint.** A partial at +0.8R would have
+banked roughly 4.60 × 0.8 = 3.68 points on this trade. Adding one now would be (a) editing a live plan after
+watching price, which is N8 and the whole reason my pre-registrations mean anything, and (b) exactly the
+retroactive rule-invention I caught myself at with `reversal_setup` at 20:46. The value of this observation
+depends entirely on it being tested **as a pre-registered rule on the next plan**, not retrofitted onto this
+one.
+
+**So, the concrete instruction for the parent session, stated as a testable rule rather than a sentiment:**
+
+> Pre-register `TP0 = 0.8R, fraction 0.5, move stop to breakeven on fill` on every new plan, and measure it
+> against the same archive. With 6 of 6 fills reaching +0.83R, the first leg fills in every case observed so
+> far; the question the test must answer is whether the surviving half at breakeven gives back enough of the
+> two winners' tails to cost more than the three losses it halves.
+
+That question is answerable from the existing bars and does not need a single new trade. It should be the
+first thing done, ahead of the gate-persistence repair, because it is the only change tonight's record
+argues for with n = 6 and no exceptions.

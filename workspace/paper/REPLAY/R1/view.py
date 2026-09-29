@@ -142,12 +142,67 @@ def gap_clusters(rows, min_gap=20.0, tol=0.15, min_hits=4, max_span=200,
     return out
 
 
+# --- third detector: RANGE/VOLUME DISSOCIATION (added after September 2025) -----
+# WHY A THIRD. At bar 4450 this desk PRE-REGISTERED that the September 2025 roll must
+# show a merge near bar 5450, window 5350-5600. It does: bars 5396-5398 (2025-09-15
+# 06:00-08:00) are three ~63-point bars at 8.4x the local median range, oscillating
+# between a ~6595-6602 band and a ~6656-6667 band sixty points above it, after which
+# the tape stays permanently at the upper level - the Sep->Dec contract switch.
+# THE PREDICTION WAS RIGHT AND BOTH EXISTING DETECTORS MISSED IT, for two structural
+# reasons, neither of which is a bug:
+#   * roll_flags needs k>=4 consecutive bars. This run is THREE.
+#   * roll_flags needs a boundary JUMP of >=50% of mean range. This run's internal
+#     boundary gaps are +0.50 and +0.00, because here the two contract bands appear
+#     WITHIN single bars rather than across their boundaries. gap_clusters, keyed
+#     entirely on boundary gaps, is blind for the same reason.
+# Both parameters were chosen when the only known merges (December, March) happened
+# to be long and to jump at boundaries. The detectors encoded a picture of a merge
+# drawn from two examples, and September is the same defect wearing a different shape.
+#
+# WHAT THIS ONE KEYS ON, and why it is physically motivated rather than fitted: a
+# genuine 60-point hour in a real market prints enormous volume (bar 5449, the FOMC
+# hour, is 75.75 points on 350,024 contracts). A merged bar is wide because it spans
+# two instruments, so its width carries NO extra trade. Range up, volume flat.
+#
+# IN-SAMPLE HONESTY, stated at full strength. This screen was built AFTER seeing all
+# four merges and is in-sample on every one of them. Measured over 5650 bars: 167 bars
+# have range >= 4x the local median; 15 of those also have volume < 1.5x median; 13 of
+# the 15 sit inside a merge region. The other 2 are both 18:00 ET bars, which the
+# desk already knows carry a BROKEN VOLUME FIELD (finding 7) - so the 18:00 exclusion
+# below is itself a fitted parameter, not a free one.
+# It is a SCREEN THAT MAKES ME LOOK, never a verdict. It marks regions; it does not
+# delimit them - it catches only 1 of September's 3 bars and 4 of December's 13.
+#
+# PRE-REGISTERED, at bar 5650, before those bars exist on this tape: the DECEMBER 2025
+# roll must show a merge near BAR 6829, window 6700-6950 (Jun 16 -> Sep 15 ran 1433
+# bars; the same step forward from 5396). All three detectors are now on the record
+# for it, and this one has never been tested out of sample.
+def vol_dissoc(rows, rng_mult=4.0, vol_mult=1.5, look=100):
+    """Bars whose range explodes while volume does not follow. 18:00 ET excluded:
+    that hour's volume field is broken (finding 7), so it dissociates for free."""
+    out = []
+    for i in range(look + 20, len(rows)):
+        if rows[i]["ts"][11:13] == "18":
+            continue
+        seg = rows[i - look:i]
+        rs = sorted(r["h"] - r["l"] for r in seg)
+        vs = sorted(r["v"] for r in seg)
+        mr, mv = rs[len(rs) // 2], vs[len(vs) // 2]
+        r_x = (rows[i]["h"] - rows[i]["l"]) / max(mr, 0.25)
+        v_x = rows[i]["v"] / max(mv, 1.0)
+        if r_x >= rng_mult and v_x < vol_mult:
+            out.append((i, round(r_x, 2), round(v_x, 2)))
+    return out
+
+
 _f = roll_flags(rows)
 _g = gap_clusters(rows)
+_d = vol_dissoc(rows)
 
-_alarm = ("CLEAN" if not (_f or _g) else
-          f"!! {len(_f)} envelope run(s), {len(_g)} gap-cluster run(s)"
-          + (f", newest bars {max(r[0] for r in _f + _g)}+" if (_f or _g) else ""))
+_all = [r[0] for r in _f + _g] + [d[0] for d in _d]
+_alarm = ("CLEAN" if not _all else
+          f"!! {len(_f)} envelope run(s), {len(_g)} gap-cluster run(s), "
+          f"{len(_d)} range/volume bar(s), newest bars {max(_all)}+")
 print(f"MERGE DETECTORS: {_alarm}   <- line 1 by design; see the note above")
 print(f"visible {len(rows)} bars  |  {rows[0]['ts']} -> {rows[-1]['ts']}  |  ATR14 {atr():.2f}  (0.5 floor {atr()/2:.2f})")
 print(f"\nlast {sessions} ET dates:")
@@ -178,3 +233,7 @@ print(f"\ngap-cluster detector: {len(_g)} run(s) — the drift-immune test")
 for a, b, n, med in _g:
     print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
           f"{n} gaps near {med}pt  << DO NOT TRADE (contract merge)")
+
+print(f"\nrange/volume dissociation: {len(_d)} bar(s) — IN-SAMPLE on all four merges, a screen not a verdict")
+for i, rx, vx in _d:
+    print(f"  !! bar {i}  {rows[i]['ts'][:16]}  range {rx}x median, volume {vx}x  << LOOK BEFORE TRADING")

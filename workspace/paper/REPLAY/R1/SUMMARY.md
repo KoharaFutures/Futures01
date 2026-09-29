@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **5250/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **5650/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **5250/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **5,250** of 11,316 (2024-10-06 → 2025-09-04) |
-| decisions journalled | **55** (2 trades, 53 stand-downs) |
+| bars traded forward | **5,650** of 11,316 (2024-10-06 → 2025-09-30) |
+| decisions journalled | **56** (2 trades, 54 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
@@ -58,9 +58,9 @@ says anything else.** What follows is why.
 
    My stand-down bars average **ATR 13.18 vs 18.26 tape-wide — the 38th percentile** — a large composition
    bias that moves the long-arm gap by **0.004R**; and their local drift is **+0.2935 pts/bar against
-   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. At n=52 the long arm
-   reads **z +2.01** (all-bar) and **+1.96** (ATR-matched, back below the line — one extra stand-down moved
-   two of three controls under it, which is a statistic sitting on a null near a cut point) — **reported because the brief requires it,
+   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. The long arm briefly crossed |z| 2 and has **fully decayed** as n grew: all-bar **+2.09 → +2.01 → +1.92**
+   across n=51/52/53, paired-local **+1.77 → +1.65 → +1.52**. Reported when it crossed because the brief
+   requires it; watched out of the region since — **reported because the brief requires it,
    and not a finding**: it fails `free_t(297)` = 3.375, fails even `free_t(12)` = 2.229 counting only the
    controls run on this one sample, weakens to **+1.77** under the strictest (period-matched) control, and
    above all **is not a rule** — "go long where I declined" describes a sample defined by my own
@@ -69,18 +69,21 @@ says anything else.** What follows is why.
    subtracts noise, not trend. It is kept in the code labelled INVALID rather than deleted. **What survives
    is a standing note, not an edge: my stand-downs skew long-favourable.** 16% of stand-downs were bars
    where **both** directions would have lost.
-6. **The data's contract merges are the QUARTERLY ROLL, and roughly 5% of this tape is calendar spread.**
-   December 17 2024, March 18 2025 (**75 bars**) and June 16 2025 — all the Monday–Tuesday of a roll week.
-   **Correction: I reported at bar 4050 that the June roll was clean and that December and March were isolated
-   defects. Both were wrong**, and my own detector had been flagging June for 100 bars while I wrote it — I had
-   filtered the detector's output out of my own console and then "confirmed" the result with a statistic that
-   cannot see this kind of merge. Fixed structurally: the verdict is now line 1 of `view.py`, unfilterable.
-   The two detectors are **complementary and each blind where the other sees** — June shows envelope constancy
-   with one boundary gap (`roll_flags` sees it, `gap_clusters` cannot); March drifted 60 points so the envelope
-   under-bounded it 5× while the recurring ~51pt gap made `gap_clusters` right. **Neither one's silence is
-   evidence.** `SERIES_AUDIT.md` passes MES 60m as eligible and its four checks are blind to all of this.
-   **Pre-registered at bar 4450, before the bars are visible:** the September 2025 roll must show a merge near
-   **bar 5450 (window 5350–5600)**. That is the sensitivity test this detector has never had.
+6. **The contract merges are the QUARTERLY ROLL — four of them now — and ~5% of this tape is calendar
+   spread, not price.** December 2024, March 2025 (**75 bars**), June 2025 and September 2025, each the
+   Monday–Tuesday of a roll week. **The one pre-registered test this desk has run resolved here and it
+   split: the prediction was right and the instrument was wrong.** At bar 4450 I predicted a September
+   merge near bar 5450 (window 5350–5600); it is at **5396–5398**, three ~63-point bars oscillating between
+   two bands 60 points apart, after which the tape sits permanently at the upper level. **Both detectors
+   missed it** — one needs 4+ consecutive bars (this is 3), both need a boundary *jump* (here the two
+   contract bands appear *within* single bars). Their parameters were set when the only known merges
+   happened to be long and to jump. **I did not retune them** — that would be a third fitting round with no
+   independent test left. A third screen was added on a physical argument instead (**range explodes,
+   volume does not** — a merged bar is wide because it spans two instruments, so its width carries no
+   trade): 13 flagged bars over 5650, all 13 inside merge regions, **but in-sample on all four merges and
+   explicitly a screen, not a verdict.** **Pre-registered at bar 5650: the December 2025 roll must show a
+   merge near bar 6829, window 6700–6950.** `SERIES_AUDIT.md` passes MES 60m as eligible and is blind to
+   all of this.
 7. **The 18:00 ET bar has no volume on Mon–Thu** (56 of 60 zero-volume bars, 79% of that hour) **while being
    the widest overnight hour** (z +4.30). A missing field, not a thin market — and it is the first bar of your
    own 18:00→16:00 cycle, so never condition on its volume.

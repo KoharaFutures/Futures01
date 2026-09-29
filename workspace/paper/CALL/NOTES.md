@@ -8335,3 +8335,42 @@ forgone profit, and I will measure it at the next hourly rather than assume it. 
 `reversal_setup()` failing means no plan could have carried a market-structure justification, so
 the veto cost is zero against the desk's own standard for a confident reversal. REALIZED: $0.00,
 the book is flat.
+
+# N226 — correcting N225: `reversal_setup()` cannot veto a continuation short, and the real objection expired
+
+Two checks after declining the MGC reversal call I registered CALL-0009 on it. Both halves of that
+need to be defensible, so here is what changed and what I got wrong.
+
+**What I got wrong.** N225 leaned on `reversal_setup('MGC')` returning `qualifies: false` as grounds
+to decline. That function returns `side: LONG` at sigma −0.38: it is evaluating a **mean-reversion
+long**, because side is derived from the sign of the deviation from the 20-bar mean. The gate's call
+was BEARISH. So I quoted a failed test of the opposite trade as a veto on this one. The procedure
+keeps `reversal()` and `reversal_setup()` apart for a good reason, but the reason is that one tests
+the indicator and the other tests a **reversion setup** — neither tests a trend continuation, which
+is what a bearish call on an already-bearish 60m/4h stack actually is. The sigma number survives as
+a genuine weakness and is written into the plan as invalidation (3): price sitting at its mean means
+there is no extension edge in either direction. It does not survive as a veto.
+
+**What changed on its own terms.** The objection that *was* sound is that condition 2 (unanimity)
+has no persistence requirement while condition 3 (persistence) measures only the headline string.
+At 20:46 the 0-3 tally was one check old wearing a `held 21` number earned by a different condition.
+At 20:49 the 0-3 held a **second consecutive check**, with the 5m joining the agreeing frames. That
+is precisely what condition 3 would have demanded had it been written to measure the right thing.
+The missing condition came true; I registered on that check rather than on the check where I noticed
+it was missing.
+
+**This is not N8.** N8 forbids editing a pre-registered plan after watching price. There was no plan
+at 20:46 — declining to register and then registering when a stated condition is met is the opposite
+of editing a live plan, and the condition I named at 20:46 is the one I waited for.
+
+**The tape moved toward the trade, not away from it, which is the uncomfortable part.** Price went
+4157.10 → 4155.10 and the 5m went CONFLICTED → BEARISH 1-2 between the decline and the registration.
+So the bounce I cited as a reason to wait faded, which reads as confirmation and must not be treated
+as any. The plan is registered because a coded condition completed, not because the last two minutes
+looked better, and the 1m is still BULLISH 3-0 unanimous **against** the trade.
+
+**Still deferred, still not installed.** Recording the tally in `bias_history.jsonl` and requiring
+unanimity to hold two checks remains the repair, and it now matters in both directions: it would
+have suppressed the 20:46 call and **permitted** the 20:49 one, which is the right behaviour on both.
+I am not installing it while a plan it would have authorised is live — that would make the rule
+change look like it was written to bless a position. Parent session, ahead of `swings()`.

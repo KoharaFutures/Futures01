@@ -25,13 +25,10 @@ while true; do
   rc=$?
   case "$rc" in
     0)  fails=0
-        # owner 2026-09-29 11:49 ET: "if the previous was a no trade and the new update is still a no trade,
-        # you dont have to update the card" -> a quiet check with an empty book stays silent (no wake, no card).
-        # A live plan (pending/open) still gets its card every check; any trigger (rc 10) always hands off.
-        if [ "$REPORT" = "1" ]; then
-          live=$(python3 -c "import json;b=json.load(open('workspace/paper/CALL/desk_status.json'))['book'];print(len(b['pending'])+len(b['open']))" 2>/dev/null || echo 1)
-          [ "$live" != "0" ] && { echo "DESK_LOOP: report -> send the card(s) in desk_status.json"; exit 0; }
-        fi
+        # owner 2026-09-29 13:15 ET: "i need you to run every 2 minute" -> every in-window check hands off
+        # (one-line update each check). The 11:49 rule still holds for the CARD: report_turn.sh prints
+        # CARD_NEEDED only when a plan is live or a trigger fired; no-trade -> no-trade is text only.
+        [ "$REPORT" = "1" ] && { echo "DESK_LOOP: report"; exit 0; }
         sleep "$INTERVAL" ;;
     3)  sleep 600 ;;
     10) echo "DESK_LOOP: needs_attention -> see workspace/paper/CALL/desk_status.json"

@@ -29,7 +29,7 @@ bash workspace/paper/CALL/desk_loop.sh          # checks every 2 min; exits 10 o
 loop as `DESK_REPORT_EVERY=1 bash workspace/paper/CALL/desk_loop.sh` (background). Every in-window check
 renders its cards and exits **0 = routine hand-off** (check `triggers` in desk_status.json for attention items; only exit 2 = data failure): write the one line (`one_line` from desk_status.json),
 then send every file in `cards` with `SendUserFile` (`display: "render"`), card LAST, then restart the loop
-(it waits out the rest of the 2 minutes itself). **Owner, 11:49 ET: no-trade → no-trade sends no card** — the loop only hands off when a plan is live (card every check) or a trigger fires (plan event, reversal, setup, stale data, limits), so a quiet empty book is silent. Cards follow CHECK_PROCEDURE "EVERY CHECK EMITS A CARD":
+(it waits out the rest of the 2 minutes itself). **Owner, 11:49 + 13:15 ET: a one-line update EVERY check; the card only when report_turn prints CARD_NEEDED** (a plan is live, or a trigger fired). No-trade → no-trade = text line only. Cards follow CHECK_PROCEDURE "EVERY CHECK EMITS A CARD":
 `card_png` for each PENDING or OPEN plan (and on the check a plan closes), grey `card_STATUS.png` when none.
 Exit 10 is still handled per §2.
 

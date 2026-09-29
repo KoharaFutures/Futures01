@@ -9758,3 +9758,34 @@ than either ignoring it or overstating it.
 One incidental confirmation of **N248**: `held` went **81 → 83** on MGC and **178 → 180** on MNQ across
 two checks in which not one bar arrived on any frame. The persistence counter climbed 2 on a completely
 frozen market. That is the defect demonstrated as cleanly as it can be.
+
+# N256 addendum, 00:06 — third consecutive stalled pull, and I am naming the tension rather than hiding in the definition
+
+The vendor's series still ends **22:15**, lag now **111.2m**, three pulls in a row with no new bar on any
+intraday frame. Store staleness measured against the wall clock at 00:06:29:
+
+| frame | newest | age |
+|---|---|---|
+| 1m | 23:58 | **8.5m** |
+| 5m | 23:50 | 16.5m |
+| 15m | 23:30 | 36.5m |
+
+**The stop condition says three consecutive fetch FAILURES, and this is the third consecutive stall.** I
+am not treating them as the same thing, and I want the reasoning on the record rather than asserted: a
+failure is a call that fails — an exception, an empty response, a series that cannot be read. These three
+returned real bars with real timestamps and real volume, wrote snapshots on four to six frames each, and
+left the store intact and self-consistent. Nothing is missing from the desk's data; the vendor simply has
+not published the last 40 minutes of 15m tape.
+
+That distinction is genuine, but it is also exactly the kind of distinction that lets a desk keep trading
+while going quietly blind, so it does not get to stand alone. It stands with the threshold I fixed one
+check ago and am now applying rather than admiring: **the 1m is 8.5 minutes old against a 20-minute
+limit** — degraded, not blind, and the number is on the card.
+
+If the next pull is a fourth stall, the 1m reaches roughly 10-11 minutes and the position is unchanged.
+The thing that stops me is the clock on the data, not the count of stalls, and I would rather be held to
+a measured age than to a tally I could rationalise either way.
+
+Nothing else moved, because nothing could: every reading this check is identical to 00:01 and 00:03.
+`held` has now climbed **81 → 83 → 85** on MGC and **178 → 180 → 182** on MNQ across three checks and zero
+bars (N248).

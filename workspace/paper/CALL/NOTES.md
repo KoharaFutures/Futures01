@@ -8944,3 +8944,46 @@ MGC ATR14(15m) **7.59** vs the 10 stand-down — climbing all evening (5.95 → 
 **36.96** vs 58 — clear. **Neither symbol is stood down**, so the near-empty book is a consequence of
 shut gates and a disqualified counter-trend setup, not of the volatility veto. Stating that explicitly
 because an empty book has several possible causes and they are not interchangeable.
+
+# N238 — MNQ's reversal fired on a sliding denominator, not on price: N46 is doing real work
+
+At 22:00 `regime.py` printed `>>> REVERSAL CALLED: BEARISH (was BULLISH), held 63 checks, agreeing
+frames [5, 60, 240]` for MNQ, its 15m having gone 0-2 → **0-3 unanimous**. The component that flipped
+was **location**, and it flipped because the 40-bar window slid, not because price fell.
+
+| window | range | width | location at 30493.00 |
+|---|---|---|---|
+| prior check | [30356.50, 30722.00] | 365.50 | **37.3% — MIXED** |
+| this check | [30405.00, 30722.00] | 317.00 | **27.8% — BEAR** |
+
+The range **low rose 48.50 points** as the 10:45 session low (30356.50) aged out of the 40-bar window,
+narrowing the denominator by 13%. Price itself moved **11.50 points** between checks, from 30504.50 to
+30493.00. So the unanimity that authorised a reversal call was manufactured by the measuring window
+rather than by the market — which is precisely the failure N46 exists to catch, and the reason the
+procedure requires quoting range endpoints with every percentage. A bare "location 27.8%, BEAR" would
+have looked like a price event.
+
+**Declined, on two independent grounds.**
+
+1. **First-unanimous-bar.** MNQ's 15m was 0-2 one check ago, so the unanimity is one check old and
+   `held 63` measures the headline string, exactly as in N225/N230/N232. This is now the **fourth** time
+   MNQ's gate has fired on a one-check unanimity tonight.
+2. **The symbol already carries CALL-0010.** No second plan on one symbol, and the 21:30 conflict rule
+   plus plain coherence both say so.
+
+**The denominator problem is a new item for the parent session, and it is narrower than N46.** N46 tells
+me to *quote* the endpoints so a reading is comparable. It does not stop the gate from *firing* on a
+window slide. The location component should either be measured against a range anchored to something
+that does not age out mid-session, or the gate should require that a component's flip be accompanied by
+a price move exceeding the window's own change in that component's threshold. Tonight the threshold
+moved 19.40 points (40% of 48.50) while price moved 11.50 — the threshold outran the market.
+
+**Separately, MGC printed the session's first BULLISH 15m headline: 2-1.** Trend BULL (4166.40 above a
+**rising** EMA20 4158.58), location BULL at **60.6% of [4143.90, 4181.00]**, structure still BEAR on
+pivots price has left 7.70 behind (N102). `watch.py` reads `BULL: all three components already agree`
+while `regime.py` reads 2-1 — the same disagreement class as N228, and worth checking whether
+`watch.py`'s "already agree" line is reading a different component set than `regime.py`'s tally. Not
+investigated this check; noted so it is not lost. No call either way: 2-1 is not unanimous and it has
+held one check.
+
+MGC's range low also moved, 4143.00 → **4143.90**, so its location percentage carries the same caveat.

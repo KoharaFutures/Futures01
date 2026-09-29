@@ -8374,3 +8374,47 @@ unanimity to hold two checks remains the repair, and it now matters in both dire
 have suppressed the 20:46 call and **permitted** the 20:49 one, which is the right behaviour on both.
 I am not installing it while a plan it would have authorised is live — that would make the rule
 change look like it was written to bless a position. Parent session, ahead of `swings()`.
+
+# N227 — 20:54 hourly: CALLOUT.md overrules my own rth_note on CALL-0009, and three callouts went un-journalled
+
+Two corrections this hourly, both against me, and one of them against a plan that is live right now.
+
+**1. The `rth_only=False` argument in CALL-0009 is wrong, and CALLOUT.md wins.** I registered the
+plan citing MGC's profile — `rth_only=False`, with the longest rationale in `profiles.py` about the
+dollar, real yields and the London fix moving gold around the clock — as grounds that evening gold is
+*inside* what this symbol is measured on, unlike CALL-0008's MNQ. **CALLOUT.md section 3 says that
+field is ignored.** "Nothing in the generation path reads that field. It is asserted by
+`tests/test_symbol_profiles.py:98` and ignored by the combinator, which imports only `groups_for`.
+Measured: `rth_only` True on **184/184 MGC** generated strategies." So the profile states an
+intention that the machinery never honoured, and MGC was only ever tested **RTH-only, 08:20–13:30**.
+The same section's conclusion applies to me directly: *"A callout outside a contract's RTH is outside
+everything this repo has ever measured — say so."*
+
+I confused a **stated preference** in a config file with a **measured fact**, and then used it to
+downgrade a weakness. The honest position is that CALL-0009's 20:49 registration is as far outside
+measured territory as CALL-0008's was, and its `rth_note` overstates the case.
+
+**The plan is NOT edited.** N8 forbids changing a pre-registered plan after watching price, and that
+holds for its prose as well as its numbers — a plan whose rationale gets quietly improved after the
+fact is not pre-registered. The correction lives here and in the journal's `rth_correction` field,
+where it is visible without the record being rewritten. It moves the plan strictly weaker: ten
+invalidations now rather than nine.
+
+**2. Three callouts existed without journal rows, and CALLOUT.md is explicit that they do not count.**
+"Journal every callout, or it never happened… A callout with no journal entry does not count."
+CALL-0002/0003/0004 each got a `-PREREG` row at registration. CALL-0006, CALL-0007 and CALL-0008 did
+not — their only journal rows were written by `resolve.py` at trigger. So for the interval between
+registration and fill, each was an emitted callout with no journal entry, and had any of them expired
+unfilled the row would have arrived from the expiry path rather than from the registration. That is
+the record depending on the resolver rather than on the act of calling.
+
+Fixed forward only: `CALL-0009-PREREG` is now written, with `outcome: null`, `call_id` deliberately
+suffixed so `rewrite_journal_outcome()` — which matches on `CALL-0009` — cannot collide with it.
+**I am not back-filling rows for 0006/0007/0008.** A pre-registration row written after the outcome
+is known is not a pre-registration; leaving the gap visible is the honest record.
+
+**3. The state of the live plan.** MGC has moved *away* from the limit, not toward it: 4157.10 at
+registration → 4151.70 now, so the 4157.50 sell limit sits **5.80 above** the market and needs a
+bounce to fill. The trade's thesis is being confirmed by price while its entry becomes less likely —
+the ordinary fate of a pullback limit, and the reason 3 of 8 prior plans expired. `thesis.py` reports
+"no bars since creation", so there is nothing to track yet. I will not move the limit.

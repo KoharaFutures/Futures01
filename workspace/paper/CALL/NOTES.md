@@ -8473,3 +8473,25 @@ reads "DIRECTION RIGHT, TARGET DISTANCE COVERED — trigger was the problem": fa
 never touched. Price is at 4146.90, 8.4% of [4143.00, 4189.60]. The read was right, the entry
 construction cost the entire trade, and that goes in the record as a loss of opportunity rather than
 a win — the plan is not edited and will expire NO_FILL at 08:20 unless gold bounces ten points.
+
+# N229 — the first-unanimous-bar decline was vindicated in three minutes
+
+At 21:02 `regime.py` called MNQ BEARISH on a 0-3 unanimity that was one check old, and I declined it
+on N225/N226 grounds: the gate's persistence condition measures the headline, not the unanimity, so a
+first-unanimous-bar call carries a `held` number it did not earn.
+
+**At 21:05 MNQ's 15m is back to 0-2** — location reverted from BEAR 39.3% to MIXED 44.2% as price
+bounced 30500.00 → 30518.00 — and `regime.py` prints `no reversal call`. Had I registered on that
+firing, the plan would have been born on a gate that lapsed on the very next bar.
+
+This is one observation and it proves nothing about the rule's expectancy. What it does establish is
+that the failure mode is **real and fast**, not hypothetical: the interval between "all four
+conditions hold" and "the 15m is no longer unanimous" was a single 2-minute check. It is now the
+concrete case behind the deferred repair — record the tally in `bias_history.jsonl`, require the
+unanimity to hold two consecutive checks — and it strengthens the argument that the repair belongs in
+the parent session rather than being argued from first principles.
+
+Symmetry worth stating: this same standard is what let CALL-0009 through at 20:49, and CALL-0009 is
+currently a correct read with no fill. The standard is not a filter that only ever says no; it said
+yes to a plan whose thesis paid and whose entry construction failed. Those are separate defects and
+tonight produced one of each.

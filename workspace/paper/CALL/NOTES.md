@@ -10134,3 +10134,28 @@ one.
 That question is answerable from the existing bars and does not need a single new trade. It should be the
 first thing done, ahead of the gate-persistence repair, because it is the only change tonight's record
 argues for with n = 6 and no exceptions.
+
+## N261 addendum, 00:45 — the pattern completed in front of me: HEAT 0.85, and the stop has 0.70 points left
+
+CALL-0011 was **+1.00R** twenty-two minutes ago. `heat.py` now reads **MAE 3.90pt ($39), HEAT 0.85, stop had
++0.70pt left**. Price 4157.80 against a 4161.00 entry and a 4156.40 stop: **−3.20 (−$32), 0.70 points from a
+full −1R.**
+
+The counterfactual is now exact rather than illustrative. A pre-registered **TP0 at +0.8R** would have exited
+half at **4164.68** for **+3.68pt = +$18.40** on that half, and the remaining half would be at breakeven with
+the stop moved to 4161.00 — the trade would currently be **flat to slightly positive instead of 0.70 points
+from its maximum loss.** That is one trade and proves nothing on its own; it is the **fifth** consecutive
+instance of the same shape, and the shape is now 6 of 6 fills reaching ≥ +0.83R with 2 of 5 closing positive.
+
+**I am not adding the partial.** No TP0 exists in CALL-0011, adding one after watching price is N8, and
+`resolve.py` is the only thing permitted to write an exit. The trade goes to 4156.40 or to 4167.90 or to its
+08:20 ET expiry, and the resolver decides. What I can do is make sure the number is recorded at the moment it
+mattered rather than reconstructed after the stop prints — which is what this addendum is.
+
+Also worth noting against the trade: MGC's location has fallen to **44.0% of [4143.90, 4175.50]**, the
+component is MIXED, and every frame other than the 15m is bearish. The long has nothing supporting it but its
+own stop.
+
+Separately — **MNQ is in a full bearish cascade**: 1m, 5m, 15m and 60m all **0-3 unanimous**, price
+**30430.00**, which is the owner's level to the tick. Under the registration freeze adopted at 00:44 nothing
+is registrable regardless of what the gate says, and I note it only so the record shows the desk saw it.

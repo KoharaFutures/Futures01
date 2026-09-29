@@ -195,6 +195,46 @@ def vol_dissoc(rows, rng_mult=4.0, vol_mult=1.5, look=100):
     return out
 
 
+# --- TAPE INTEGRITY (added burst 28, after the source re-emitted 17 bars) --------
+# WHY. At cursor 7350 the source series grew 11,316 -> 11,375 and in doing so RE-EMITTED
+# the 17 bars it had already served: bars 7333-7349 reappear at 7350-7366, spanning
+# 2026-01-16 14:00 -> 2026-01-20 12:00, and bar 7350's timestamp runs BACKWARDS against
+# bar 7349's. Fifteen of the seventeen are byte-identical re-prints. TWO ARE REVISIONS:
+#   2026-01-16T16:00  close 6976.75 -> 6978.00
+#   2026-01-18T23:00  low 6915.75 -> 6914.25, close 6916.25 -> 6914.50, vol 1126 -> 1628
+# So the substrate is a LIVE FEED THAT REVISES RECENT BARS, which nothing in this desk's
+# record had established. The last bars of the visible tape are provisional.
+#
+# WHY THE EXISTING CHECK MISSED IT. The per-burst integrity test hashed visible.jsonl's
+# first `cursor` lines against the committed copy. A block that begins AT the cursor is
+# invisible to a prefix hash by construction - the check could only ever see rewriting
+# BEHIND the cursor, and this was rewriting exactly at it. Hashing more would not have
+# helped; the tape needed a different question asked of it.
+#
+# Every downstream calculation assumes time order: the _next18 session index, ATR
+# windows, gap_clusters' boundary differences. On a non-monotonic tape all three are
+# wrong in ways that do not announce themselves. So this goes in LINE 1 with the merge
+# verdict, for the same reason.
+def tape_integrity(rows):
+    """(n_backwards, n_duplicate_ts, n_revised) - duplicates split into re-prints and
+    genuine revisions, because only the second kind changes a price already acted on."""
+    back = sum(1 for i in range(1, len(rows)) if rows[i]["ts"] <= rows[i - 1]["ts"])
+    seen, dup, rev = {}, 0, 0
+    for r in rows:
+        k = r["ts"]
+        sig = (r["o"], r["h"], r["l"], r["c"], r["v"])
+        if k in seen:
+            dup += 1
+            if seen[k] != sig:
+                rev += 1
+        else:
+            seen[k] = sig
+    return back, dup, rev
+
+
+_ti = tape_integrity(rows)
+
+
 _f = roll_flags(rows)
 _g = gap_clusters(rows)
 _d = vol_dissoc(rows)
@@ -204,6 +244,11 @@ _alarm = ("CLEAN" if not _all else
           f"!! {len(_f)} envelope run(s), {len(_g)} gap-cluster run(s), "
           f"{len(_d)} range/volume bar(s), newest bars {max(_all)}+")
 print(f"MERGE DETECTORS: {_alarm}   <- line 1 by design; see the note above")
+if any(_ti):
+    print(f"TAPE INTEGRITY: !! {_ti[0]} backwards timestamp(s), {_ti[1]} duplicate bar(s) "
+          f"of which {_ti[2]} are REVISIONS  <- the source re-emits and revises; see tape_integrity()")
+else:
+    print("TAPE INTEGRITY: monotonic, no duplicate timestamps")
 print(f"visible {len(rows)} bars  |  {rows[0]['ts']} -> {rows[-1]['ts']}  |  ATR14 {atr():.2f}  (0.5 floor {atr()/2:.2f})")
 print(f"\nlast {sessions} ET dates:")
 for k, d in list(days.items())[-sessions:]:

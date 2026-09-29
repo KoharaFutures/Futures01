@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `MATH.md` is the consolidated arithmetic with every formula; `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
-Written at cursor **7350/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **7750/11375**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -9,11 +9,19 @@ Written at cursor **7350/11316**, 2026-09-29 (the source series is live-appendin
 > history that nobody can act on, so I read the stop as scoped to that desk and kept going. **If you meant it
 > desk-wide, say so and this stops immediately.**
 
+> **TAPE INTEGRITY FAULT, 2026-09-29.** The source series **re-served 17 bars it had already given** (bars
+> 7333–7349 reappear at 7350–7366) and **revised two of them** — one close moved 6976.75 → 6978.00, another
+> bar's low, close and volume all changed. **The substrate is a live feed that revises recent bars, so the
+> last bars of the visible tape are provisional**, which nothing in this record had established. Statistics
+> over that span double-count and any time-order-dependent calculation is silently wrong there. No decision
+> of mine is affected. **The tape has not been edited** — deduplicating it would destroy the evidence you
+> need to fix the feed upstream. A `tape_integrity()` check now prints in line 1 of `view.py`.
+
 ## The result
 
 | | |
 |---|---|
-| bars traded forward | **7,350** of 11,316 (2024-10-06 → 2026-01-20) |
+| bars traded forward | **7,750** of 11,375 (2024-10-06 → 2026-02-12) — but **17 of them are duplicates**; see below |
 | decisions journalled | **60 rows, 59 distinct** (2 trades, 58 stand-downs) — `callouts.jsonl` has two rows at `visible_bars` 1613, so every callout total from burst 12 on double-counts that bar |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |

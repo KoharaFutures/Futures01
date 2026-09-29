@@ -141,7 +141,9 @@ def build(a) -> dict:
 
     gate("G1 stand-down", atr <= STANDDOWN.get(sym, 1e9), f"ATR14(15m) {atr:.2f} vs line {STANDDOWN.get(sym)}")
     t = now_et.hour * 60 + now_et.minute
-    gate("G2 no late entries", not (15 * 60 <= t < 18 * 60), f"now {now_et:%H:%M} ET (no entries 15:00-18:00)")
+    # owner 2026-09-29 17:53 ET: 17:50-18:00 is the PRE-OPEN review; plans drafted then can only fill after the
+    # 18:00 reopen, so they are allowed. 15:00-17:50 stays closed.
+    gate("G2 no late entries", not (15 * 60 <= t < 17 * 60 + 50), f"now {now_et:%H:%M} ET (no entries 15:00-17:50; 17:50-18:00 = pre-open planning)")
     moving_up = last["c"] > bars15[-4]["c"]
     chasing = trig_type.startswith("STOP") and ((side == "LONG") == moving_up)
     gate("G3 no breakout chasing", not chasing, "STOP entry in the direction of the last hour's move" if chasing

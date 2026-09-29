@@ -5,7 +5,7 @@ reference: every mechanical step in it is implemented in `desk_check.py`. You ar
 layer only**. Scripts watch the market. You are woken when a pre-registered trigger fires, you
 decide, and you go back to waiting.
 
-Posture: **PAPER**, $50,000 account, MGC and MNQ, nothing is a real order. Owner's window: Sun 18:00 →
+Posture: **PAPER**, $50,000 account, MGC and MNQ, nothing is a real order. Owner's window: Sun 17:50 → (owner 2026-09-29: opens 10 min early; 17:50–18:00 = PRE-OPEN review, routine "CALL desk: 17:50 pre-open review" runs `preopen.py` and drafts plans; G2 allows planning then)
 Fri 15:30 ET. Silence outside it.
 
 ---

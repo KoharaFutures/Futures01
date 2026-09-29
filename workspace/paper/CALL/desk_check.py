@@ -72,9 +72,10 @@ def _mod(name):
 def in_window(now_et: datetime) -> bool:
     """Owner's cadence window: Sun 18:00 ET → Fri 15:30 ET, dark 15:30–18:00 daily."""
     wd, t = now_et.weekday(), now_et.hour * 60 + now_et.minute
-    if wd == 5 or (wd == 6 and t < 18 * 60) or (wd == 4 and t >= 15 * 60 + 30):
+    # owner 2026-09-29 17:53 ET: the window opens 10 min early (17:50) for the pre-open review
+    if wd == 5 or (wd == 6 and t < 17 * 60 + 50) or (wd == 4 and t >= 15 * 60 + 30):
         return False
-    return not (15 * 60 + 30 <= t < 18 * 60)
+    return not (15 * 60 + 30 <= t < 17 * 60 + 50)
 
 
 def quiet(fn, *a, **k):
@@ -342,7 +343,7 @@ def main() -> int:
                       and now_utc - datetime.fromisoformat(last_wake["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
             if recent:
                 notes.append(f"REVERSAL_REPEAT {sym} {setup.get('side')} (woke {last_wake['t']}, quiet)")
-            elif 15 <= now_et.hour < 18:  # plan_builder G2: no new entries 15:00-18:00 ET, so no plan is possible
+            elif 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:  # plan_builder G2: no new entries 15:00-18:00 ET, so no plan is possible
                 notes.append(f"REVERSAL_AFTER_1500 {sym} (no entries 15:00-18:00, quiet)")
             elif binding:  # AUTOMATE_NEXT #13: no plan is possible under a stand-down (plan_builder G1)
                 notes.append(f"REVERSAL_UNDER_STANDDOWN {sym} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
@@ -350,7 +351,7 @@ def main() -> int:
                 triggers.append("REVERSAL_CALLED")
                 st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
         if setup.get("qualifies") and not prev_r.get("setup_qualifies"):
-            if 15 <= now_et.hour < 18:
+            if 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:
                 notes.append(f"SETUP_AFTER_1500 {sym} {setup.get('side')} (no entries 15:00-18:00, quiet)")
             elif binding:    # AUTOMATE_NEXT #13: plan_builder G1 refuses any plan under a stand-down, so don't wake
                 notes.append(f"SETUP_UNDER_STANDDOWN {sym} {setup.get('side')} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")

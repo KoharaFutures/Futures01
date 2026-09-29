@@ -10025,3 +10025,50 @@ unaffordable (N254). Four independent failures, only one of which I have fixed.
 For the parent session this collapses the deferred counter-trend work into one design question: **should the
 desk pre-register standing limits at measured support/resistance levels, sized legally, hours before any
 signal fires?** That is the only form in which this account could have owned the 30430.00 trade.
+
+# N260 — the desk's own structure component has now confirmed the owner's 30430.00 read, and BOTH gates are dead at once
+
+The new 15m `00:15` bar changed three things worth recording.
+
+## 1. MNQ put in a HIGHER LOW, and the level is the owner's
+
+MNQ's 15m structure flipped from BEAR to **MIXED**: swing highs still lower (30537.75 → 30500.00), but
+swing **lows 30412.50 → 30427.75 — HIGHER**. The 30412.50 low held and price based above it, so
+`chart.swings()` now registers a higher low **at 30427.75**.
+
+That is the shelf the owner identified at 30430.00 four hours ago, and it is now in the desk's own
+structure component rather than in hindsight. The original research stands (fib 78.6% at 30434.72 plus the
+morning's 30425-30434 base); what is new is that **the mechanical read has caught up with the eye**. This is
+the most direct confirmation available that the 30430.00 call was structural rather than lucky: the desk's
+own pivot detector, which had no opinion at the time, now marks that area as the low that held.
+
+## 2. Both gates are now dead, and the same rule applies to both plans
+
+- MGC 15m: **1-0, not unanimous** since `00:00` — *"no other timeframe agrees"*
+- MNQ 15m: **0-2, not unanimous** as of `00:15` — *"no reversal call"*
+
+So CALL-0010 has lost its authorising gate while still PENDING and unfilled 110 points away, exactly as
+CALL-0011 lost its gate on the bar that filled it. **The rule I applied to CALL-0011 at 00:16, when the
+lapse ran in my favour, applies unchanged to CALL-0010 now that it runs against a plan I would rather keep
+alive:** a lapsed gate does not void a live plan. CALL-0010 runs to its 30550.00 limit, its 09:30 ET expiry,
+or nothing — and I do not touch it (N8). Applying this asymmetrically would make it a preference rather than
+a rule, which is the N226/N230 error.
+
+Both plans now sit in the state the deferred question asks about, simultaneously, and my answer is the one
+recorded in N257 before either outcome was known: the fix is an entry offset that tracks its anchor or an
+expiry measured in bars — not death on gate-lapse.
+
+## 3. My own fill became structure, and gold's range top rolled out of the window
+
+MGC's swing lows now read **4157.90 → 4161.00 (higher)** — and 4161.00 is CALL-0011's entry price. The limit
+I placed on a 38.2% retracement is now the registered higher low of the 15m structure component. Pleasing,
+and worth exactly nothing as evidence: the level is a swing low because price bounced there, which is the
+same fact as the fill, not a second one.
+
+Separately and per N46: gold's 40-bar range top fell **4180.00 → 4175.50** as the old high rolled out of the
+window, which lifted location **52.1% → 56.3% with no upward price move at all** — the N238/N239 endpoint
+migration, visible again. Price closed 4161.70, *lower* than the 4162.70 that read 52.1%.
+
+Position unchanged: CALL-0011 open, MAE **0.00**, HEAT **0.00**, MFE +4.60pt = **+1.00R**, now +0.70 (+$7) at
+4161.70. ATRs fell to MGC **7.43** and MNQ **48.52**; neither stood down, and at 7.43 the 4.60-point stop is
+0.62× ATR.

@@ -9271,3 +9271,72 @@ of a live gate:
 artifact — bear needs the 30479.50 pivot low taken out, price is 30484.50, and the last two lows read
 30430.00 -> 30479.50 (higher). Its counter-trend long has fallen back below threshold at sigma -1.36 with
 volume **0.45x**, so N244's decline stands unchanged.
+
+# N246 — 22:52 hourly: the desk finally holds a long, and the standard that let it through is the session's real product
+
+Hourly consolidation. Crons `5b6f90c7` / `697d7750` / `13cbeeca` all alive in UTC, no repair, no gap.
+CALLOUT.md md5 `b2abcd6c…` — identical to the 20:54 and 21:53 reads, so nothing has changed in it and no
+new disagreement with `CHECK_PROCEDURE.md` exists. Basis `7c7c4cf`, current with the branch head.
+
+## Ledger — MEASURED, CALL-0002 EXCLUDED (N155), n=4
+
+Unchanged this hour: no trade resolved. **1 win, 3 losses. 25% win rate with a payoff of 1.35** (avg win
++1.422R, avg loss −1.053R). Expectancy **−0.434R**, total −1.736R, **−$148.76**, **0 ambiguous bars**.
+Equity **$50,007.80**, peak $50,156.56, drawdown **$148.76**, **$2,651.24** to the absorbing state.
+
+Mean HEAT 1.10, max 1.43, sole winner 0.61. **All three losers reached MFE above +0.8R, mean +1.30R** —
+still the finding I would carry above every other, and still not acted on because n=3 is not a licence to
+redesign an exit.
+
+## The book, for the first time tonight, is two-sided
+
+| plan | symbol | side | limit | stop | risk | state |
+|---|---|---|---|---|---|---|
+| CALL-0010 | MNQ | SHORT | 30550.00 | 30576.00 | $52 | PENDING, 71.50 above market |
+| CALL-0011 | MGC | LONG | 4161.00 | 4156.40 | $46 | PENDING, 6.50 below market |
+
+**$98.00 of the $120 discretionary cap**, $22.00 spare. Opposite directions on independent markets, which
+per CALLOUT.md is two bets rather than a hedge: both losing costs $98.00.
+
+## What this hour actually produced, and it is not the trade
+
+The hour's substantive output is that **the first-unanimous-bar standard held in the direction it had never
+been tested.** It was set at 21:02 against MNQ, enforced four times against MNQ (N230/N232/N238/N239),
+pre-committed in writing at 22:30 *before* a bullish gate existed, declined at 22:48 when that gate fired,
+and satisfied at 22:50 when the unanimity survived a **revised** 15m bar — which is N231's stricter
+version, not merely the original. A rule that only ever says no in one direction is a bias with a
+justification attached. This one now has a case on each side.
+
+The counted cost of the standard tonight: it declined five firings and permitted two. Of the five declines,
+**four demonstrably would have been wrong to take** — MNQ's unanimity lapsed within one to three checks
+every time (N229 measured the first case at a single 2-minute check). The fifth, the 22:48 MGC firing, was
+declined and then registered two minutes later at a **1.10-point worse** notional reference, which is the
+cost of the discipline stated in points rather than asserted as prudence.
+
+## Fresh read, both symbols
+
+**MGC has genuinely turned on the 15m and below.** 15m **BULLISH 3-0 unanimous** — trend BULL (4167.50
+above a rising EMA20 4160.57), structure BULL (higher highs 4158.70 → 4169.10 AND higher lows 4145.00 →
+4157.90), location BULL at **63.6% of [4143.90, 4181.00]**. 5m 3-0 unanimous too. But the **60m is BEARISH
+0-2 with location at 11.5% of [4143.00, 4351.60]** — the bottom of a 208-point range — and the 4h is
+BEARISH 0-3 unanimous. So the bull case is real and entirely confined to frames of 15 minutes and under.
+That is written into CALL-0011 as invalidation (1) and (2), and it is the plan's largest weakness.
+
+**MNQ is one point from a bear gate it cannot legally act on.** 15m BEARISH 0-2; bear needs the 30479.50
+pivot low taken out and price is **30478.50, already 1.00 through it**, with structure still MIXED because
+`swings()` reads the last two lows as 30430.00 → 30479.50 (higher). Even if it re-cut, taking out that low
+is a break of a short-term extreme in the direction of the 60m/4h displacement, so **N196 forbids the
+entry**. A gate that opens into a prohibited trade is a gate that produces nothing, and this is the second
+time tonight that combination has appeared.
+
+Its counter-trend long sits at sigma **−1.47** — 0.03 short — with volume **0.51×**, the sixth time it has
+approached the threshold without a flush behind it. N244's decline stands unchanged and for the same
+reasons.
+
+## Vetoes, re-measured this firing, nothing inherited
+
+MGC ATR14(15m) **8.35** vs the 10 stand-down — up 40% from 5.95 at 20:34 and the closest it has come all
+session. MNQ **43.96** vs 58, up from 30.71. **Neither symbol is stood down**, so both pending plans are
+live by measurement rather than by omission. If MGC's ATR crosses 10 no new gold plan may be registered,
+and CALL-0011's 4.60-point stop would then sit at 0.46× ATR — below rule 4's floor. That does not
+retroactively invalidate a plan sized correctly at registration, but it is the number to watch.

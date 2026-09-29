@@ -9384,3 +9384,33 @@ counter-trend entry on MNQ is systematically too expensive for this account's ca
 deep.** MGC's $10/pt makes the same setup affordable; MNQ's $2/pt does not, because the point distances
 scale faster than the point value shrinks. That belongs in the parent session's list as a sizing
 question, not a discipline question.
+
+# N248 — the "held N consecutive checks" counter counts INVOCATIONS, not bars, and I just watched it inflate by 2 with `new=0`
+
+At the top of the 23:32 check `regime.py` printed MGC *"held 58 checks"* and MNQ *"held 155 checks"*.
+Ten minutes later, on the **same bar** — `fetch.py` reported `new=0 revised=1`, so no 15m bar closed in
+between — a second invocation printed **60** and **157**.
+
+The mechanism, at `regime.py:144-151`: `held` walks backwards through `_history(symbol, 15)` counting
+equal headlines. `_history` is appended **once per call**, so the counter measures *how many times I ran
+this script*, not *how long the market has held this reading*. Running the check twice in a minute buys
+two checks of apparent persistence. Nothing about price changed.
+
+**Why this matters beyond bookkeeping.** `reversal()`'s third condition is `held >= 2`. That condition is
+the desk's entire defence against acting on a single-bar flip, and it is satisfiable by re-running a
+script. It is not a persistence test at all; it is a call-count test that *correlates* with persistence
+only because the cron happens to run more often than bars close — which cuts the wrong way: at a 2-minute
+cadence against a 15-minute bar, `held >= 2` is met roughly 7 times inside a single bar's life, so the
+gate's anti-whipsaw condition has been **structurally vacuous** for as long as the fast checks have run.
+
+This is the empirical confirmation of **N231**, which asked for persistence across a *new or revised* 15m
+bar. N231 was filed as a design preference. It is now a measured defect with a reproduction: two
+invocations, one bar, +2 held. The fix belongs to the parent session with the rest of the gate repair
+(N225 tally, N231 persistence, N238/N239 attribution) because it changes what authorises a trade, and
+N8 forbids me changing that mid-flight with plans live.
+
+**What I will do in the meantime, tonight:** report the counter as the raw number the tool printed, and
+never cite it as evidence that a reading has *lasted*. Where I need persistence I will say which
+**bars** carried the reading — MNQ's 0-3 stood at both the 23:30 and 23:32 checks, which are 2 minutes
+apart and therefore quite possibly the same bar; the honest statement is "0-3 on the 23:15 bar and still
+0-3 now", not "held 157 checks".

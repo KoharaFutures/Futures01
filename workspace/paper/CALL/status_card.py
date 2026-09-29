@@ -31,7 +31,7 @@ import card_png as C  # noqa: E402
 from chart import load, bias  # noqa: E402
 import regime as R  # noqa: E402
 
-SPEC = {"MGC": {"pv": 10.0, "line": 10.0}, "MNQ": {"pv": 2.0, "line": 58.0}}
+SPEC = {"MGC": {"pv": 10.0, "line": 10.0}, "MNQ": {"pv": 2.0, "line": 80.0}}
 def _budget() -> tuple[float, float]:
     """Permitted risk from the shipped drawdown ladder at the CURRENT equity/peak (was hard-coded
     $240/$120, which overstated room once drawdown > 0), and the 50%-while-DISCRETIONARY cap."""
@@ -42,9 +42,11 @@ def _budget() -> tuple[float, float]:
     eq = float(st.get("equity", 50_000.0))
     peak = float(st.get("peak_equity", st.get("peak", max(eq, 50_000.0))))
     allowed, _ = permitted_risk(eq, max(0.0, peak - eq))
-    return round(allowed, 2), round(allowed / 2.0, 2)
+    # owner 2026-09-29 13:55 ET ("Loosen both"): each plan may use the FULL permitted risk, not 50%.
+    return round(allowed, 2), round(allowed * SIZE_FRACTION, 2)
 
 
+SIZE_FRACTION = 1.0   # was 0.5 (the "50% while unproven" rule) until the owner lifted it 2026-09-29 13:55 ET
 PERMITTED, CAP = _budget()
 
 

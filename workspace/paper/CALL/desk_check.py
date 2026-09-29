@@ -46,7 +46,7 @@ ET = ZoneInfo("America/New_York")
 STATUS = HERE / "desk_status.json"
 EVENTS = HERE / "desk_events.jsonl"
 SYMBOLS = ("MGC", "MNQ")
-STANDDOWN = {"MGC": 10.0, "MNQ": 58.0}              # ATR14(15m) lines, N214
+STANDDOWN = {"MGC": 10.0, "MNQ": 80.0}   # owner 2026-09-29 13:55 ET: was 58              # ATR14(15m) lines, N214
 ARM_ATR, TOUCH_ATR = 1.0, 0.25                     # same ARM as bounce_levels.py
 BRIEFS = (ROOT / "CALLOUT.md", HERE / "DESK_BRIEF.md", HERE / "CHECK_PROCEDURE.md",
           ROOT / "DATA_HUB" / "RULES_AND_PITFALLS.md")

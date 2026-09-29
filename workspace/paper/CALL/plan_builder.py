@@ -45,7 +45,7 @@ from futures_agents.config import CONTRACTS  # noqa: E402
 
 ET = ZoneInfo("America/New_York")
 CFG = json.loads((ROOT / "desk" / "desk-config.json").read_text())["account"]
-STANDDOWN = {"MGC": 10.0, "MNQ": 58.0}
+STANDDOWN = {"MGC": 10.0, "MNQ": 80.0}   # owner 2026-09-29 13:55 ET: was 58
 FLOOR = 2600.0
 RTH_OPEN = {"MNQ": "09:30", "MES": "09:30", "MGC": "08:20", "MCL": "09:00"}
 

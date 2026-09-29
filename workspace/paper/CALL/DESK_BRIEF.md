@@ -83,7 +83,8 @@ Full detail: `DATA_HUB/README.md` → `STRATEGIES_BY_SYMBOL.md`, `BOUNCE_AND_VOL
    Wait for the reclaim, or skip.
 5. Don't buy plain swing lows as support. On MGC 5m that's worse than random (z −3.2).
 6. Don't fade overnight-high/low sweeps on gold (z −3.0).
-7. Volatility stand-down: MNQ ATR14(15m) > 58, MGC > 10.
+7. Volatility stand-down: MNQ ATR14(15m) > **80** (owner raised it from 58, 2026-09-29 13:55 ET), MGC > 10.
+8. **Sizing (owner, 2026-09-29 13:55 ET):** plans may use the FULL permitted risk (was ≤50%).
 
 **The owner's style: volume-profile LVNs and bounce levels (the playbook's checklist):**
 - LVNs on **60m-built 1-week/1-month/3-month profiles** lean bounce vs random on all 4 symbols.

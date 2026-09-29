@@ -1,38 +1,10 @@
 {
   "starting_equity": 50000.0,
-  "equity": 49903.92,
+  "equity": 50100.48,
   "peak_equity": 50156.56,
-  "drawdown": 252.64,
-  "realized_pnl": -96.08,
-  "open": [
-    {
-      "call_id": "CALL-0012",
-      "symbol": "MNQ",
-      "side": "LONG",
-      "bar_minutes": 15,
-      "entry_price": 30522.5,
-      "entry_bar_ts": "2026-09-29T13:45:00-04:00",
-      "initial_stop": 30464.0,
-      "stop": 30464.0,
-      "risk_points": 58.5,
-      "contracts": 1,
-      "remaining": 1,
-      "tps": [
-        {
-          "label": "TP1",
-          "r": 1.7,
-          "fraction": 1.0,
-          "price": 30622.0,
-          "hit": false
-        }
-      ],
-      "risk_dollars": 117.0,
-      "realized": 0.0,
-      "triggered_at_utc": "2026-09-29T18:03:24+00:00",
-      "basis_at_trigger": "18e3f4a",
-      "entry_fill_note": "resting limit filled at its price, no slippage charged"
-    }
-  ],
+  "drawdown": 56.08,
+  "realized_pnl": 100.48,
+  "open": [],
   "closed": [
     {
       "call_id": "CALL-0002",
@@ -282,6 +254,43 @@
       "net": -54.44,
       "r_multiple": -1.047,
       "result": "LOSS"
+    },
+    {
+      "call_id": "CALL-0012",
+      "symbol": "MNQ",
+      "side": "LONG",
+      "bar_minutes": 15,
+      "entry_price": 30522.5,
+      "entry_bar_ts": "2026-09-29T13:45:00-04:00",
+      "initial_stop": 30464.0,
+      "stop": 30464.0,
+      "risk_points": 58.5,
+      "contracts": 1,
+      "remaining": 0,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.7,
+          "fraction": 1.0,
+          "price": 30622.0,
+          "hit": true,
+          "hit_bar_ts": "2026-09-29T14:30:00-04:00",
+          "qty": 1
+        }
+      ],
+      "risk_dollars": 117.0,
+      "realized": 196.56,
+      "triggered_at_utc": "2026-09-29T18:03:24+00:00",
+      "basis_at_trigger": "18e3f4a",
+      "entry_fill_note": "resting limit filled at its price, no slippage charged",
+      "exit_price": 30622.0,
+      "exit_bar_ts": "2026-09-29T14:30:00-04:00",
+      "exit_reason": "TARGET TP1",
+      "ambiguous": false,
+      "closed_at_utc": "2026-09-29T18:46:13+00:00",
+      "net": 196.56,
+      "r_multiple": 1.68,
+      "result": "WIN"
     }
   ]
 }

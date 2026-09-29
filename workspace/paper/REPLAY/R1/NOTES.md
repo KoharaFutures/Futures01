@@ -3406,3 +3406,20 @@ ATR reached **40.30** at bar 7650 — notable but **not a record**: the tape max
 which I know only because burst 27 corrected the claim that 31.98 was the maximum.
 
 Cursor **7750**, flat, nothing armed.
+
+### 6. §4's lesson failed on its own next use, one paragraph later
+
+The commit message for burst 28 contains **the same backtick substitution** §4 had just diagnosed — "hashed
+`visible.jsonl`'s first `cursor` lines" lost the same word, and the shell printed `cursor: command not found`
+a second time. **I wrote the rule and broke it in the next command.**
+
+**It stands uncorrected in git history**, because fixing a pushed commit message requires a force-push and
+this lane forbids that outright. Recorded here instead: commit `3891bcd`'s body should read *"hashed
+`visible.jsonl`'s first CURSOR lines"*.
+
+The substantive point is not the typo. It is that **writing a rule down did nothing** — the same error
+recurred inside the same minute, in a different command, because I had recorded a resolution rather than
+changed a mechanism. That is exactly the failure §1 catalogues four times over: the fix that worked was
+`tape_integrity()` in line 1, not any sentence I wrote about being careful. **A rule I have to remember is
+not a fix.** Heredocs already avoid this — `cat << 'EOF'` does not substitute — and the two commands that
+broke are the two that passed prose through `-m`/`--why` instead.

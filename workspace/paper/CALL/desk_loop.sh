@@ -8,8 +8,8 @@
 #
 # REPORT MODE (owner, 2026-09-29 08:20 ET: "check and update every 2 minutes like the other callout desk
 # and make sure you are providing the same style cards"):  DESK_REPORT_EVERY=1 bash .../desk_loop.sh
-#   every in-window check renders its card(s) (--render always) and exits 11 = routine report, so the
-#   agent sends the card each check (CHECK_PROCEDURE "EVERY CHECK EMITS A CARD"). exit 10 still = attention.
+#   every in-window check renders its card(s) (--render always) and exits 0 = routine hand-off (attention, if any, is in desk_status.json triggers), so the
+#   agent sends the card each check (CHECK_PROCEDURE "EVERY CHECK EMITS A CARD"). Only exit 2 (3 data failures in a row) is a real failure.
 set -u
 cd "$(dirname "$0")/../../.."
 INTERVAL="${1:-120}"
@@ -25,10 +25,11 @@ while true; do
   rc=$?
   case "$rc" in
     0)  fails=0
-        [ "$REPORT" = "1" ] && { echo "DESK_LOOP: report -> send the card(s) in desk_status.json"; exit 11; }
+        [ "$REPORT" = "1" ] && { echo "DESK_LOOP: report -> send the card(s) in desk_status.json"; exit 0; }
         sleep "$INTERVAL" ;;
     3)  sleep 600 ;;
-    10) echo "DESK_LOOP: needs_attention -> see workspace/paper/CALL/desk_status.json"; exit 10 ;;
+    10) echo "DESK_LOOP: needs_attention -> see workspace/paper/CALL/desk_status.json"
+        [ "$REPORT" = "1" ] && exit 0 || exit 10 ;;   # report mode: a normal hand-off, not an error
     *)  fails=$((fails + 1)); echo "DESK_LOOP: desk_check exit $rc (failure $fails)"
         [ "$fails" -ge 3 ] && { echo "DESK_LOOP: 3 consecutive failures"; exit 2; }
         sleep "$INTERVAL" ;;

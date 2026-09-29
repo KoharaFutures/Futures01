@@ -27,7 +27,7 @@ bash workspace/paper/CALL/desk_loop.sh          # checks every 2 min; exits 10 o
 
 **OWNER OVERRIDE (2026-09-29 08:20 ET): report every 2 minutes with cards, like the old desk.** Run the
 loop as `DESK_REPORT_EVERY=1 bash workspace/paper/CALL/desk_loop.sh` (background). Every in-window check
-renders its cards and exits **11 = routine report**: write the one line (`one_line` from desk_status.json),
+renders its cards and exits **0 = routine hand-off** (check `triggers` in desk_status.json for attention items; only exit 2 = data failure): write the one line (`one_line` from desk_status.json),
 then send every file in `cards` with `SendUserFile` (`display: "render"`), card LAST, then restart the loop
 (it waits out the rest of the 2 minutes itself). Cards follow CHECK_PROCEDURE "EVERY CHECK EMITS A CARD":
 `card_png` for each PENDING or OPEN plan (and on the check a plan closes), grey `card_STATUS.png` when none.

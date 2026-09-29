@@ -1,6 +1,6 @@
 # R1 — MES 60m walk-forward replay: what it established
 
-**One page, for the account owner. `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
+**One page, for the account owner. `MATH.md` is the consolidated arithmetic with every formula; `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
 Written at cursor **7350/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call

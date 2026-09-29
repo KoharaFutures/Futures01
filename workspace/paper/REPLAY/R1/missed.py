@@ -164,7 +164,7 @@ def welch(a, b):
 def arm(rs, label, ctrl_rs):
     hit = lambda v, t=1.5: sum(1 for x in v if x >= t) / len(v) if v else 0.0
     print(f"  {label:<26} n={len(rs):<5} mean {mean(rs):+.3f}R  sd {sd(rs):.2f}  "
-          f">=1.5R {hit(rs):5.1%}   vs control {mean(rs)-mean(ctrl_rs):+.3f}R  "
+          f">=1.5R {hit(rs):5.1%}   minus all-bar ctrl {mean(rs)-mean(ctrl_rs):+.3f}R  "
           f"z {welch(rs, ctrl_rs):+.2f}")
 
 
@@ -198,6 +198,120 @@ for lbl, v in (("always LONG", ct_long), ("always SHORT", ct_short),
                ("coin flip (bar parity)", ct_flip), ("BEST of both (HINDSIGHT)", ct_best)):
     hit = sum(1 for x in v if x >= 1.5) / len(v) if v else 0
     print(f"  {lbl:<26} n={len(v):<5} mean {mean(v):+.3f}R  sd {sd(v):.2f}  >=1.5R {hit:5.1%}")
+
+print("""
+  NOTE ON THE COLUMN ABOVE, and a correction. The figure after each sample arm is
+  the DIFFERENCE sample-minus-control, not the control's mean. It used to print as
+  "vs control X", and in bursts 15, 16 and 17 this desk read X as the control's own
+  mean and wrote three times that "the control exceeds the sample". The opposite was
+  true: the sample exceeded the control by X. The label is now unambiguous. The error
+  ran AGAINST me - it reported my stand-downs as worse than random when they measured
+  better - which is worth saying plainly, because an error that flatters nobody is
+  still an error and I found it by re-reading my own print statement, not by insight.
+""")
+
+# ---- WINDOW-MATCHED control (burst 18) -------------------------------------
+# WHY THIS EXISTS. The all-bar control answers "how did this arm do on the average
+# bar of the whole tape?". My stand-downs are not spread evenly over the tape, so a
+# gap against that control can be nothing but period composition: if I happened to
+# decline mostly in stretches where buying paid, an always-long arm at my bars beats
+# the all-bar mean with no judgement involved. This control asks the narrower and
+# harder question - on the average ELIGIBLE BAR NEAR each of my stand-downs, how did
+# the same arm do? It is paired: one control number per stand-down, from that
+# stand-down's own neighbourhood. If the gap survives this, composition does not
+# explain it. If it collapses, the all-bar gap was a calendar artefact.
+WIN = 120
+ctrl_by_bar = {e["bar"]: e for e in ctrl}
+ctrl_bars = sorted(ctrl_by_bar)
+
+
+def paired_local(pick):
+    """(sample values, local-control values) aligned one-to-one by stand-down."""
+    sv, cv = [], []
+    for c, e in res:
+        b = e["bar"]
+        vals = [pick(ctrl_by_bar[x]) for x in ctrl_bars
+                if x != b and abs(x - b) <= WIN]
+        if not vals:
+            continue
+        sv.append(pick(e))
+        cv.append(sum(vals) / len(vals))
+    return sv, cv
+
+
+PICKS = [
+    ("always LONG", lambda e: e["long"][0]),
+    ("always SHORT", lambda e: e["short"][0]),
+    ("coin flip (bar parity)", lambda e: e["long"][0] if e["bar"] % 2 == 0 else e["short"][0]),
+    ("BEST of both (HINDSIGHT)", lambda e: e["best"]),
+]
+
+print(f"\nWINDOW-MATCHED CONTROL (+/-{WIN} bars, paired, excludes the stand-down bar):")
+print("  does the all-bar gap survive being compared against LOCAL tape instead?")
+for lbl, pick in PICKS:
+    sv, cv = paired_local(pick)
+    d = [a - b for a, b in zip(sv, cv)]
+    m, s_ = mean(d), sd(d)
+    z = m / (s_ / len(d) ** 0.5) if len(d) > 1 and s_ > 0 else 0.0
+    print(f"  {lbl:<26} n={len(d):<5} sample {mean(sv):+.3f}R  local ctrl {mean(cv):+.3f}R  "
+          f"paired gap {m:+.3f}R  z {z:+.2f}")
+print("  A paired z here is not comparable to the all-bar z: the paired test has the "
+      "\n  period effect removed, so it is the stricter of the two.")
+
+# ---- ATR-MATCHED all-bar control (burst 18) --------------------------------
+# WHY. R is normalised by ATR (the stop IS one ATR), so a fixed point move is worth
+# more R on a quiet bar than a loud one. Measured at bar 4050: my stand-down bars
+# average ATR 13.18 against 18.26 for all bars, sitting at the 38th percentile of the
+# tape's own ATR distribution. That is a large composition difference, and it biases
+# every R-denominated arm in a tape that drifts upward. So the all-bar control is
+# re-weighted onto the sample's own ATR mix before being compared. This does not fix
+# the sample; it stops the control from being a different population.
+def bar_atr(i, n=14):
+    seg = rows[max(0, i - n):i + 1]
+    if len(seg) < 3:
+        return None
+    trs = [max(c["h"] - c["l"], abs(c["h"] - p["c"]), abs(c["l"] - p["c"]))
+           for p, c in zip(seg, seg[1:])]
+    return max(sum(trs) / len(trs), 0.5)
+
+
+s_atr = [bar_atr(e["bar"] - 1) for c, e in res]
+cuts = sorted(x for x in s_atr if x)
+Q = [cuts[int(f * (len(cuts) - 1))] for f in (0.25, 0.50, 0.75)]
+bucket = lambda a: 0 if a <= Q[0] else 1 if a <= Q[1] else 2 if a <= Q[2] else 3
+
+s_w = [0, 0, 0, 0]
+for a in s_atr:
+    if a:
+        s_w[bucket(a)] += 1
+tot = sum(s_w) or 1
+
+c_buckets = [[] for _ in range(4)]
+for e in ctrl:
+    a = bar_atr(e["bar"] - 1)
+    if a:
+        c_buckets[bucket(a)].append(e)
+
+print(f"\nATR-MATCHED ALL-BAR CONTROL (post-stratified on the sample's own ATR mix)")
+print(f"  sample ATR quartile cuts {Q[0]:.2f} / {Q[1]:.2f} / {Q[2]:.2f}   "
+      f"control bars per bucket {[len(b) for b in c_buckets]}")
+for lbl, pick in PICKS:
+    sv = [pick(e) for c, e in res]
+    num = den = 0.0
+    for k in range(4):
+        if c_buckets[k] and s_w[k]:
+            num += (s_w[k] / tot) * mean([pick(e) for e in c_buckets[k]])
+            den += s_w[k] / tot
+    cm = num / den if den else 0.0
+    # se of the weighted control mean, plus the sample's own se
+    var = 0.0
+    for k in range(4):
+        if len(c_buckets[k]) > 1 and s_w[k]:
+            var += (s_w[k] / tot) ** 2 * sd([pick(e) for e in c_buckets[k]]) ** 2 / len(c_buckets[k])
+    se = (sd(sv) ** 2 / len(sv) + var) ** 0.5
+    z = (mean(sv) - cm) / se if se > 0 else 0.0
+    print(f"  {lbl:<26} n={len(sv):<5} sample {mean(sv):+.3f}R  ATR-matched ctrl {cm:+.3f}R  "
+          f"gap {mean(sv) - cm:+.3f}R  z {z:+.2f}")
 
 print("""
 READ THE 'BEST of both' ROW AS AN ARTEFACT, NOT A RESULT. Picking the direction

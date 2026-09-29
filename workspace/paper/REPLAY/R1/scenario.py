@@ -11,31 +11,32 @@ not decoration: SERIES_AUDIT section 3 measured open[i+1] != close[i] on 57-80% 
 MES 60m boundaries, and it voided a live armed plan at bar 1616 when a 10.75-point
 holiday gap cut a planned 2.00 R:R to 1.55.
 
-READ THIS BEFORE USING IT. levels.py measured what actually happens when price
-reaches these levels, against a control of RANDOM price lines tested identically:
+READ THIS BEFORE USING IT. THE BOUNCE STUDY IS DEAD — measured, not suspected.
+Every number that used to stand here (fresh extreme 45.7% bounce, n=162; retested
+53.7%; random control 55.0%; "the one thing worth knowing") is WITHDRAWN. It was
+compared against a control that fabricated its touch counts from choice([2,2,3,4]),
+so it contained no 1-touch line at all — a 1-touch treatment against a 2+-touch
+control — drew 12 lines per bar against 9.78 real ones, left a fifth of itself
+sitting inside the test band of a REAL level, and tested in a 31% louder tape
+(ATR 23.80 vs 18.34).
 
-    fresh swing extreme     n=162   bounce 45.7%   break 54.3%   <- 1 touch
-    retested level (2+)     n=175   bounce 53.7%   break 46.3%
-    random price lines      n=200   bounce 55.0%   break 45.0%   <- the control
+agents/E9_levels_fair.py rebuilds that control properly: count-matched to the real
+level population, touch-matched by resampling the REAL touch distribution (58.0% of
+real levels are 1-touch), and decontaminated — any control line landing within
+0.25 ATR of a real level is redrawn, verified at 0.0% residual contamination.
+Run at bar 3450:
 
-THE ONE THING WORTH KNOWING: a FRESH swing extreme - the untested high or low a
-trader actually watches - BREAKS more often than it holds (54.3%), and it is the
-largest deviation from the random control anywhere in the study, about 9 points
-below it. Retested levels sit on top of the control and carry nothing.
+    population                    real          fair control D    diff      z
+    1-touch fresh extreme      50.1% (n=477)    54.5% (n=433)    -4.4%    -1.33
+    retested, 2+ touches       55.5% (n=402)    55.2% (n=337)    +0.3%    +0.08
+    bounce TRADE arm          +0.018R (n=879)   +0.076R          -0.058R    -
+    break  TRADE arm          +0.015R (n=879)   +0.045R          -0.030R    -
 
-Do not bank on it. On the rate that difference is z ~ 1.76, which clears the
-codebase's single-pre-registered-hypothesis floor of 1.177 but NOT the ~2.33 that
-this study's real search width demands - I tested touch buckets, support vs
-resistance, trend alignment and 1-touch separately, so the honest n of trials is
-a dozen or more, not one. And it converts to nothing in money: the bounce and
-break trade arms return +0.048R and +0.045R at z +0.08 and +1.17 against random.
-Rule 3 yet again - the rate moved and the expectancy did not.
-
-The detected levels are, if anything, marginally WORSE than random at predicting
-which branch happens. Touch count does not rescue it (2/3/4/5/6+ touches run
-48.6 / 52.9 / 63.6 / 70.0 / 54.3% against a control that runs 53.6 / 54.7 / 60.0,
-and the 6+ collapse kills the monotonic story), nor does support-vs-resistance,
-nor trend alignment.
+RANDOMLY DRAWN PRICE LINES BOUNCE AS OFTEN AS THE DETECTED LEVELS, AND BOTH TRADE
+ARMS PAY BETTER ON THE RANDOM LINES. The retested bucket differs from a random line
+by three tenths of a percentage point. The 1-touch bucket differs in the WRONG
+direction. Touch count rescues nothing: every touch-bucket claim rested on the same
+fabricated control.
 
 SO THE MAP IS NOT A FORECAST AND THE BRANCHES ARE NOT WEIGHTED. Treating the
 bounce as the likely case is precisely the error the owner warned about - a level
@@ -45,9 +46,11 @@ worked out BEFORE price arrives, so the decision at the bar is execution rather
 than invention, and so the branch that does happen is the one that gets traded
 instead of the one that was hoped for.
 
-The one arm with any hint of separation is trading the BREAK (+0.063R detected
-against -0.127R random, z +1.13) - not significant, and stated here only so it is
-not quietly dropped.
+There is no longer any arm with a hint of separation. The BREAK arm, the last one
+that had one, runs +0.015R against a fair control's +0.045R: the control wins. Both
+branches of every level on this map are the branches of a coin, and the map's whole
+remaining value is that it makes you write the non-bounce branch down before price
+arrives.
 """
 import json, os, sys
 
@@ -56,7 +59,11 @@ import levels as LV
 
 rows, N = LV.rows, LV.N
 ACCOUNT_RISK, POINT_VALUE, TICK = 240.0, 5.0, 0.25
-# ODDS WITHDRAWN 2026-09-28 — do not restore without a rerun against a fair control.
+# ODDS WITHDRAWN PERMANENTLY. Withdrawn 2026-09-28 pending a fair-control rerun;
+# the rerun HAPPENED (burst 18, agents/E9_levels_fair.py at bar 3450) and it did not
+# rescue them — it measured the levels indistinguishable from random price lines. So
+# there is nothing left to restore. The four branches stay; the probabilities do not
+# come back. The owner's caution — "bounce levels may not even bounce" — is the result.
 #
 # These figures were published here as "measured" and they were not. Two
 # independent audits killed them:

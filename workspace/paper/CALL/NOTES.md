@@ -9414,3 +9414,35 @@ never cite it as evidence that a reading has *lasted*. Where I need persistence 
 **bars** carried the reading — MNQ's 0-3 stood at both the 23:30 and 23:32 checks, which are 2 minutes
 apart and therefore quite possibly the same bar; the honest statement is "0-3 on the 23:15 bar and still
 0-3 now", not "held 157 checks".
+
+# N249 — `capacity()` counted only OPEN risk, so it reported $120 of room while the book had $22
+
+At the 23:37 check `watch.py` printed **"open risk $0.00 of the $120 discretionary cap → $120.00 of
+room"**, and then told me a 1-contract MGC plan at the rule-4 floor "fits" and a 1-contract MNQ plan
+"fits". Both readings are wrong. Two PENDING limits hold **$98.00**: CALL-0010 MNQ SHORT $52 and
+CALL-0011 MGC LONG $46. Real room is **$22.00**, and at the rule-4 floor neither symbol fits —
+MGC needs $41.29, MNQ $50.70.
+
+**The tool disagreed with the standard I applied when writing the plans it was ignoring.** CALL-0011's
+own `sizing_basis` reads *"the BOOK total is $98.00 = 40.8% of the $240 permitted, inside the 50%
+discretionary cap of $120 with $22.00 spare. Sized against the BOOK, not an empty account — two pending
+plans that each pass alone can breach the cap together."* I wrote that sentence and then shipped a
+capacity function that contradicts it. Same class as N228, N240, N241: a local tool restating a rule
+and getting it wrong, in a session where I have now found five of them.
+
+Mechanically it was two things: `capacity()` summed `state.json["open"]` and never opened
+`pending.jsonl`, and the two files spell the same quantity differently — `risk_dollars` on an open
+position, `risk_dollars_intended` on a pre-registered plan. So even a naive sum over pending rows would
+have read `None`.
+
+**Why I fixed this mid-session with plans live, when I deferred the gate repair.** The change can only
+ever make reported room SMALLER, so it forbids trades and permits none — the shape DECISIONS row 6
+requires of any mid-session change. It touches no plan (N8), writes no outcome, and moves no gate. The
+gate-persistence repair is deferred precisely because it does the opposite: it would change what
+authorises a trade.
+
+**What it changes tonight.** At 23:32 I said the only bar to a second MNQ short was the same-symbol
+same-direction stacking rule. That was true and incomplete: **capacity bars it too**, $50.70 minimum
+against $22.00 of room. Two independent refusals, and I was only aware of one. A pending limit is a
+commitment — it can fill unseen inside the 15-27 minute observation blind spot — and counting it as
+free room is how a desk breaches a cap while believing it has spare.

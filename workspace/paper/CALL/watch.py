@@ -124,12 +124,58 @@ def report(sym: str) -> None:
                 print(f"      - {n}")
 
 
-def capacity() -> None:
+def _risk(p: dict) -> float:
+    """Risk in dollars for a plan row, whichever key it carries.
+
+    Open positions in state.json use `risk_dollars`; pre-registered plans in
+    pending.jsonl use `risk_dollars_intended`. Same quantity, two spellings.
+    """
+    for k in ("risk_dollars", "risk_dollars_intended"):
+        v = p.get(k)
+        if v is not None:
+            return float(v)
+    return 0.0
+
+
+def committed() -> tuple[float, float, list[str]]:
+    """Dollars the BOOK has committed: open positions PLUS live PENDING plans.
+
+    N249: this used to count `state.json["open"]` only, so with nothing filled it
+    reported the full ${CAP} of room while two PENDING limits held $98 of it. Every
+    plan's own `sizing_basis` counts pending risk against the cap -- CALL-0011's says
+    "the BOOK total is $98.00 ... inside the 50% discretionary cap of $120 with $22.00
+    spare" -- so the tool disagreed with the standard actually applied at registration.
+    A pending limit is a commitment: if it fills, the risk is real, and it can fill
+    unseen inside the 15-27 minute observation blind spot.
+
+    This can only ever SHRINK reported room, so it forbids trades and permits none --
+    the shape DECISIONS row 6 says a mid-session change must have.
+    """
     st = json.loads((HERE / "state.json").read_text())
-    used = sum(p["risk_dollars"] for p in st["open"])
+    open_risk = sum(_risk(p) for p in st["open"])
+    pend_risk, labels = 0.0, []
+    pj = HERE / "pending.jsonl"
+    if pj.exists():
+        for line in pj.read_text().splitlines():
+            if not line.strip():
+                continue
+            d = json.loads(line)
+            if d.get("status") == "PENDING":
+                r = _risk(d)
+                pend_risk += r
+                labels.append(f"{d.get('call_id')} {d.get('symbol')} "
+                              f"{d.get('side')} ${r:.2f}")
+    return open_risk, pend_risk, labels
+
+
+def capacity() -> None:
+    open_risk, pend_risk, labels = committed()
+    used = open_risk + pend_risk
     room = CAP - used
-    print(f"\nCAPACITY  open risk ${used:.2f} of the ${CAP:.0f} discretionary cap"
+    print(f"\nCAPACITY  committed ${used:.2f} of the ${CAP:.0f} discretionary cap"
           f" (${PERMITTED:.0f} permitted) -> ${room:.2f} of room")
+    print(f"  open positions ${open_risk:.2f}  +  PENDING plans ${pend_risk:.2f}"
+          f"{'  [' + '; '.join(labels) + ']' if labels else ''}")
     if room <= 0:
         print("  NO ROOM: a new plan would breach the cap. Scan anyway, but do not register.")
         return

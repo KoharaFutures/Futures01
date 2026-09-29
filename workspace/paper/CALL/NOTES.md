@@ -10261,3 +10261,65 @@ CALL-0010 remains **PENDING** — MNQ SHORT 30550.00, stop 30576.00, now ~123 po
 book. The registration freeze adopted at 00:44 stands: **nothing new is registrable until this desk has a
 placebo and a counterfactual**, which is the recommendation in `CONSOLIDATION.md` §5 and the reason the owner
 had to be the one to notice.
+
+# N264 — OWNER STOP, 00:58 ET: *"stop your call outs for now."* The desk is dark. What was stopped and what was left standing.
+
+## What I stopped
+
+| mechanism | id | action |
+|---|---|---|
+| fast-check cron, Sun–Thu 18:00–19:58 ET | `5b6f90c7` | **deleted** |
+| fast-check cron, 20:00 ET → 14:58 ET | `697d7750` | **deleted** |
+| fast-check cron, 15:00–15:28 ET | `13cbeeca` | **deleted** |
+| hourly durable backstop Routine | `trig_01NZGwNRd8mftXdxyLvuVpdD` | **disabled** (`enabled: false`, not deleted) |
+
+`CronList` now returns **"No scheduled jobs."** The Routine is disabled rather than deleted because the owner
+created it and a disabled Routine keeps its run history and re-enables in one call; deleting it would destroy
+both. Nothing else was armed — no `send_later` chain (N42/N45).
+
+**I sent no card with this stop.** The standing rule is that every check ends with a card, and the reason for
+that rule is that the owner reads cards rather than text. But he has just told me to stop the callouts, and a
+callout card is the thing he asked me to stop. Obeying the letter of the card rule here would have been
+ignoring the instruction it exists to serve.
+
+## What was left standing, and why it matters
+
+**CALL-0010 is still PENDING and will now not resolve.** MNQ SHORT, limit 30550.00, stop 30576.00, TP1
+30511.00, $52 at risk, registered 21:12 with `expires_bar_ts` **2026-09-29T09:30:00-04:00**.
+
+`resolve.py` can only write an outcome from a bar it has fetched, and with the crons gone nothing fetches.
+So at 09:30 ET the plan will **not** expire on its own — it will sit in `pending.jsonl` as PENDING past its
+own expiry until a check runs again. **I am not writing EXPIRED by hand.** `resolve.py` is the only thing
+permitted to write an outcome (CALLOUT.md, and the standing instruction), and hand-writing a disposition
+because the machinery is switched off is exactly the fabrication that rule prevents — it would also be the
+easiest possible outcome to write, since EXPIRED costs nothing and tidies the record.
+
+**One check, at or after 09:30 ET, closes it honestly.** That is the whole remaining obligation and it is the
+owner's to call.
+
+## State at the stop, for whoever resumes
+
+- equity **$49,958.36** · peak $50,156.56 · drawdown **$198.20** · **$2,601.80** to the $2,800 absorbing state
+- realized **−$41.64** across 6 closed trades; the desk is **below its $50,000 start**
+- MEASURED record n=5 (CALL-0002 excluded, N155): **1 win / 4 losses, 20% with a payoff of 1.34, expectancy
+  −0.562R**, mean HEAT 1.08, losers' mean MFE **+1.23R**, ambiguous bars 0 flagged / 1 real
+- 11 callouts: 6 TRIGGERED, 3 EXPIRED, 1 VOID_UNREACHABLE, **1 PENDING**
+- last data: 15m `00:30`, 5m `00:45`, 1m `00:47`; MGC 4158.20, MNQ 30427.25
+- ATR14(15m) MGC 7.44 vs 10, MNQ 46.25 vs 58 — neither stood down at the stop
+- basis `285962f`, all work pushed to `claude/intelligent-feynman-ongyjw`
+
+## The register of what this desk owes before it should ever call again
+
+From `CONSOLIDATION.md` §5, unchanged by the stop and now the whole agenda:
+
+1. **Build the placebo and the counterfactual.** Until they exist no output of this desk is evidence of
+   anything, and that is why the owner had to be the one to notice.
+2. **Test stop-to-breakeven at +0.8R on 1 contract** — executable today, unlike the 50% partial I recommended
+   four times before checking it against the sizing floor (N263).
+3. **Stop selecting sides on evening tape**; use volatility for sizing and stand-downs only, which is the one
+   measured result in the corpus.
+4. **Fix entries to fixed structural levels**, not moving anchors (N233, three for three, two of them fills).
+5. **Count the gate's search width**, which has never been counted.
+6. **`climax_x` must return None, not 0.0, when the extreme bar has no volume field** (N262) — 26% of bars.
+
+Filed at 00:58 ET 2026-09-29. The desk is dark and will stay dark until the owner says otherwise.

@@ -719,6 +719,84 @@ def main():
                   % (cell_name((fam,), lab, 1), int(P.n1[lab]), mL[lab], mS[lab],
                      eL[lab], eS[lab], zL[lab], zS[lab]))
 
+    # -- the mechanism behind the symmetric cells ---------------------------
+    print("\n== MECHANISM: realised range in the holding window vs the stop "
+          "you sized from ==")
+    print("For every decision hour: the excursion actually available after the "
+          "fill, divided by ATR14(d) (the desk's stop scale) and by hvol(d+1) "
+          "(the fill hour's own volatility).  A ratio >> 1 means a k=0.5 stop "
+          "is inside the noise of the bar it will be held through, so BOTH "
+          "sides get stopped and the cell looks 'significant' without any "
+          "direction in it.")
+    o_, h_, l_, c_ = S["o"], S["h"], S["l"], S["c"]
+    fw_atr = defaultdict(list)
+    fw_h = defaultdict(list)
+    nb_hold = defaultdict(list)
+    for ix in range(m):
+        d = int(dec[ix])
+        f = d + 1
+        e = S["flat_idx"][f]
+        hi = h_[f:e + 1].max()
+        loo = l_[f:e + 1].min()
+        ex = max(hi - o_[f], o_[f] - loo)
+        fw_atr[int(S["hour"][d])].append(ex / S["atr"][d])
+        fw_h[int(S["hour"][d])].append(ex / S["hvol"][f])
+        nb_hold[int(S["hour"][d])].append(e - f + 1)
+    print("%-6s %6s %10s %10s %10s %14s"
+          % ("dec_hr", "n", "bars_held", "exc/ATR14", "exc/hvol", "ATR14/hvol"))
+    for hh in sorted(fw_atr):
+        a = np.array(fw_atr[hh])
+        b = np.array(fw_h[hh])
+        print("%-6d %6d %10.1f %10.2f %10.2f %14.2f"
+              % (hh, len(a), np.mean(nb_hold[hh]), a.mean(), b.mean(),
+                 (a / np.maximum(b, 1e-9)).mean()))
+
+    print("\n== SYMMETRIC EDGE BY DECISION HOUR AND STOP WIDTH (in sample) =====")
+    print("sym = (edge_long + edge_short)/2 at R=2.0.  Matched control = the "
+          "ATR quartile mix (hour is the treatment, so it is dropped from the "
+          "matching).  Read down a column: if the effect is a mis-sized stop it "
+          "must shrink as k grows and vanish under vol=hatr.")
+    Ph = Plan(F, ("hour",), IS, clu_is, MIN_N)
+    cols = [(vb, k) for vb in VBASES for k in KS]
+    print("%-6s %6s " % ("dec_hr", "n") +
+          " ".join("%10s" % ("%s k=%.1f" % (vb, k)) for vb, k in cols))
+    for lab in Ph.keep:
+        row = []
+        for vb, k in cols:
+            eL, _, _ = Ph.evaluate(netR[(1, k, 2.0, vb)][IS])
+            eS, _, _ = Ph.evaluate(netR[(-1, k, 2.0, vb)][IS])
+            row.append(0.5 * (eL[lab] + eS[lab]))
+        print("%-6s %6d " % (lvl_name("hour", lab), int(Ph.n1[lab])) +
+              " ".join("%+10.4f" % v for v in row))
+
+    print("\n== THE SAME SEARCH RESTRICTED TO DIRECTIONAL (paired) ARMS ONLY ====")
+    dcells = [c for c in cells if c[1][0] == 0]
+    dz = np.array([c[0] for c in dcells])
+    ft_d = math.sqrt(2.0 * math.log(len(dcells)))
+    print("directional cells evaluated  N_dir = %d   free_t = %.4f"
+          % (len(dcells), ft_d))
+    print("|z| >= 1.96 : %d (chance %.0f)   |z| >= 3.0 : %d (chance %.1f)   "
+          "|z| >= free_t : %d"
+          % (int((dz >= 1.96).sum()), 0.05 * len(dcells),
+             int((dz >= 3.0).sum()), 0.0027 * len(dcells),
+             int((dz >= ft_d).sum())))
+    print("largest |z| among directional cells = %.3f" % dz.max())
+    print("%-4s %4s %4s %5s %8s %8s %7s %6s %7s  %s"
+          % ("vol", "k", "R", "n", "dirR", "edgeR", "z_clu", "win%", "payoff",
+             "predicate"))
+    for (az, arm, sp, lab, n1, edge, z, mc, share, sm, nb2) in dcells[:15]:
+        side, k, rm, vb = arm
+        side_pick = 1 if edge > 0 else -1
+        rp = netR[(side_pick, k, rm, vb)][IS]
+        mask = plans_is[sp].cl == lab
+        wr, aw, al, po = wr_payoff(rp[mask])
+        print("%-4s %4.1f %4.1f %5d %+8.4f %+8.4f %+7.2f %5.1f%% %7.2f  %s "
+              "[trade %s]"
+              % (vb, k, rm, n1, float(rp[mask].mean()), edge, z, 100 * wr, po,
+                 cell_name(sp, lab, nb2), "LONG" if side_pick > 0 else "SHORT"))
+    print("(dirR / win%% / payoff are for the side the in-sample edge points to, "
+          "traded with costs charged.)")
+
     print("\ndone.")
 
 

@@ -13,7 +13,7 @@ from the rules the hub measured, and refuses the plan outright when a hard rule 
     G5 reward:risk              TP1 in R >= desk-config min_reward_risk (1.6), measured after costs
     G6 book room                risk <= 50% cap - (open + pending risk) (N249). Contracts are sized from the room
     G7 drawdown floor           drawdown < $2,600
-    G8 one per symbol           no other PENDING/open plan on the same symbol
+    G8 max 3 per symbol         at most 3 PENDING/open plans on the same symbol (owner, 2026-09-29; was 1)
 
   CONTEXT (attached, never a gate): nearest hub levels and their measured history vs placebo, the LVN
   continuation/bounce lean, the 15m regime, and whether the entry sits on a STACKED level (measured
@@ -47,6 +47,7 @@ ET = ZoneInfo("America/New_York")
 CFG = json.loads((ROOT / "desk" / "desk-config.json").read_text())["account"]
 STANDDOWN = {"MGC": 10.0, "MNQ": 80.0}   # owner 2026-09-29 13:55 ET: was 58
 FLOOR = 2600.0
+MAX_PER_SYMBOL = 3   # owner 2026-09-29 19:12 ET (was 1)
 RTH_OPEN = {"MNQ": "09:30", "MES": "09:30", "MGC": "08:20", "MCL": "09:00"}
 
 
@@ -165,7 +166,8 @@ def build(a) -> dict:
     gate("G7 drawdown floor", state.get("drawdown", 0) < FLOOR, f"drawdown ${state.get('drawdown', 0):,.2f} vs ${FLOOR:,.0f}")
     busy = [l for l in labels if f" {sym} " in f" {l} "] + [p.get("call_id") for p in state.get("open", [])
                                                             if p.get("symbol") == sym]
-    gate("G8 one per symbol", not busy, f"already on {sym}: {busy}" if busy else "symbol free")
+    # owner 2026-09-29 19:12 ET: "do 3 plans per symbol" (was 1). Pending + open both count.
+    gate("G8 max 3 per symbol", len(busy) < MAX_PER_SYMBOL, f"{len(busy)} live on {sym}: {busy} (max {MAX_PER_SYMBOL})")
     dl = _mod("daily_loss")
     day_r = dl.day_realized(state)
     gate("G9 daily loss limit", day_r > -dl.DAILY_LOSS_LIMIT,

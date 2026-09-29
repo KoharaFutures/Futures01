@@ -64,7 +64,7 @@ python3 workspace/paper/CALL/plan_builder.py ... --commit
 
 The builder does entry/stop/target/expiry/sizing/book-room and eight hard gates: volatility stand-down,
 no entries 15:00–18:00, no breakout chasing, stop ≥ 0.5 ATR, R:R ≥ 1.6 after costs, 50%-cap book room,
-drawdown floor, and one plan per symbol. It also attaches the hub's measured record for every level
+drawdown floor, and max 3 plans per symbol (owner 2026-09-29; was one). It also attaches the hub's measured record for every level
 near the entry. **Your job is two lines of "why" and one line of invalidation, plus the yes/no.** If a
 gate fails, there is no plan. Don't argue with a gate. Gates change only through the owner.
 

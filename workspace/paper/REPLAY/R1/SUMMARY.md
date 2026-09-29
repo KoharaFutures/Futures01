@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **4850/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **5250/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,11 +13,11 @@ Written at cursor **4850/11316**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **4,850** of 11,316 (2024-10-06 → 2025-08-11) |
-| decisions journalled | **54** (2 trades, 52 stand-downs) |
+| bars traded forward | **5,250** of 11,316 (2024-10-06 → 2025-09-04) |
+| decisions journalled | **55** (2 trades, 53 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
-| placebo separation | **z +1.021** against a stop-condition of 4.5 and a `free_t(20)` of 2.448 — **does not clear** |
+| placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
 
 **Two winning trades out of two is not evidence of anything, and the record says so in more detail than it
 says anything else.** What follows is why.
@@ -58,8 +58,9 @@ says anything else.** What follows is why.
 
    My stand-down bars average **ATR 13.18 vs 18.26 tape-wide — the 38th percentile** — a large composition
    bias that moves the long-arm gap by **0.004R**; and their local drift is **+0.2935 pts/bar against
-   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. At n=51 the long arm
-   now reads **z +2.09** (all-bar) and **+2.06** (ATR-matched) — **reported because the brief requires it,
+   +0.1272 tape-wide**, so I decline in stretches rising **2.3× faster** than average. At n=52 the long arm
+   reads **z +2.01** (all-bar) and **+1.96** (ATR-matched, back below the line — one extra stand-down moved
+   two of three controls under it, which is a statistic sitting on a null near a cut point) — **reported because the brief requires it,
    and not a finding**: it fails `free_t(297)` = 3.375, fails even `free_t(12)` = 2.229 counting only the
    controls run on this one sample, weakens to **+1.77** under the strictest (period-matched) control, and
    above all **is not a rule** — "go long where I declined" describes a sample defined by my own

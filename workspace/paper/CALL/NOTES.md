@@ -10072,3 +10072,20 @@ migration, visible again. Price closed 4161.70, *lower* than the 4162.70 that re
 Position unchanged: CALL-0011 open, MAE **0.00**, HEAT **0.00**, MFE +4.60pt = **+1.00R**, now +0.70 (+$7) at
 4161.70. ATRs fell to MGC **7.43** and MNQ **48.52**; neither stood down, and at 7.43 the 4.60-point stop is
 0.62× ATR.
+
+## N260 addendum, 00:33 — the 4161.00 swing low de-registered on a revision, one check after I noted it
+
+Last check I recorded that MGC's swing lows read **4157.90 → 4161.00** and that my own fill price had become
+the registered higher low. It no longer does: the `00:15` bar's low was **revised 4161.10 → 4160.90**, which
+is below 4161.00, so the 3-bar fractal no longer marks 4161.00 as a pivot and structure reverts to
+**4145.00 → 4157.90**.
+
+A 0.20-point revision to one bar deleted a structure pivot. I said at the time the observation was "worth
+exactly nothing as evidence" — that was right for the wrong reason: I discounted it because the pivot and the
+fill are the same fact, and the better reason is that **the pivot was not stable enough to be a fact at
+all.** Same class as N238/N239 and N251: components and thresholds moving on revisions rather than on price.
+
+The same revision gave the open position its first adverse excursion — **MAE 0.10pt ($1), HEAT 0.02** — since
+4160.90 is 0.10 below the 4161.00 entry. Trivial in size, and worth recording only because it means the trade
+is no longer a zero-heat trade and my earlier "never traded a tick against me" is now superseded rather than
+merely stale.

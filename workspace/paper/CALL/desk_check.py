@@ -203,6 +203,9 @@ def rule_signals(sym: str, prev_seen: dict) -> list[dict]:
     return out
 
 
+REVERSAL_REARM_MIN = 60
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-fetch", action="store_true")
@@ -315,8 +318,18 @@ def main() -> int:
         if not a.dry_run and last15 and last15 != prev.get("regime", {}).get(sym, {}).get("last15"):
             regime.record(sym, tfs)                  # once per NEW 15m bar, not per check (N231/N248)
         prev_r = prev.get("regime", {}).get(sym, {})
+        # AUTOMATE_NEXT #10: the call flaps off/on between checks. The same (symbol, side) reversal wakes
+        # at most once per REVERSAL_REARM_MIN; repeats inside that window become a quiet note.
+        last_wake = prev.get("reversal_woke", {}).get(sym, {})
+        st.setdefault("reversal_woke", dict(prev.get("reversal_woke", {})))
         if rv.get("called") and not prev_r.get("reversal_called"):
-            triggers.append("REVERSAL_CALLED")
+            recent = (last_wake.get("side") == setup.get("side") and last_wake.get("t")
+                      and now_utc - datetime.fromisoformat(last_wake["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
+            if recent:
+                notes.append(f"REVERSAL_REPEAT {sym} {setup.get('side')} (woke {last_wake['t']}, quiet)")
+            else:
+                triggers.append("REVERSAL_CALLED")
+                st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
         if setup.get("qualifies") and not prev_r.get("setup_qualifies"):
             triggers.append("COUNTER_TREND_QUALIFIES")
         st["regime"][sym] = {"frames": {regime.label(t["frame"]): t["headline"] for t in tfs},

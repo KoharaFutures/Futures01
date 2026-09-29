@@ -8571,3 +8571,42 @@ me making. But it is the single strongest argument against the trade and it belo
 **Book posture.** Two PENDING shorts, $93.00 of the $120 discretionary cap, $27.00 spare. MGC and MNQ
 are different markets, so per CALLOUT.md these are two independent bets in the same direction — not a
 hedge and not one correlated position. Both filling and both stopping costs $93.00.
+
+# N232 — N231's prediction was confirmed on the very next bar: MNQ's unanimity failed the moment fresh data arrived
+
+Four minutes after registering CALL-0010, the first genuinely new 15m bar published (`21:00`, +1 new)
+and **MNQ's 15m unanimity failed immediately** — location reverted from BEAR 37.6% to MIXED 42.1%,
+tally 0-3 → 0-2, `regime.py` prints `no reversal call`.
+
+This is the cleanest possible demonstration of the defect N231 described, and it arrived faster than
+the note did. The sequence, stated plainly because it indicts the plan I just wrote:
+
+| check | 15m bar | new 15m? | MNQ 15m | gate |
+|---|---|---|---|---|
+| 21:10 | 20:45 | +0 new, 2 revised | 0-3 unanimous | CALLED — declined, first bar |
+| 21:12 | 20:45 | **no 15m activity at all** | 0-3 unanimous | CALLED — **CALL-0010 registered** |
+| 21:16 | **21:00** | **+1 new** | **0-2** | no call |
+
+So the two checks that satisfied my persistence standard saw one bar, and the first check that saw a
+*second* bar broke the condition. The standard did not measure what it was written to measure, exactly
+as N231 said, and the plan it authorised is the evidence.
+
+**I am not killing CALL-0010.** Whether a PENDING plan should die when its originating gate lapses is
+an open question already on the deferred list, and it is not one I get to settle mid-flight in the
+direction that erases a plan I am uncomfortable with. CALL-0007 filled on a gate that had lapsed 20
+minutes earlier and paid +1.422R; inventing a post-hoc void rule now would have killed that trade and
+would be N8 violated in substance if not in letter. The plan stands as written, with its weakness (1)
+now demonstrated rather than hypothetical.
+
+**What this does change: the repair is no longer optional and its priority is now above `swings()`.**
+Both halves are needed together — record the tally, AND require persistence across a new or revised
+15m bar. Tonight produced a registered plan that neither half would have permitted, which is the
+strongest argument for the fix and simultaneously the reason I will not install it while that plan is
+live.
+
+**Thesis state, both plans, reported without flattering either.** CALL-0009: fav 7.30, adv 4.50,
+"DIRECTION RIGHT, TARGET DISTANCE COVERED — trigger was the problem", limit 3.10 away. CALL-0010:
+adverse 36.00 from its reference against favourable 6.75, **"DIRECTION WRONG"** — MNQ has gone up
+16.50 from the bar the call was built on. For an unfilled sell limit sitting above the market that
+upward move is progress toward a fill, but it is also the directional read going against me, and both
+of those are true at once.

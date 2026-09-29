@@ -48,7 +48,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[3]))
 from futures_agents.config import CONTRACTS  # noqa: E402
 
 HERE = pathlib.Path(__file__).resolve().parent
-DATA = HERE / "data"
+DATA = HERE / "live"   # base layer: symlinks to data/archive (0000-archive); fetch deltas land beside them, gitignored
 PENDING = HERE / "pending.jsonl"
 JOURNAL = HERE / "journal.jsonl"
 STATE = HERE / "state.json"

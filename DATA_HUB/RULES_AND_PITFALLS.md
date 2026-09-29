@@ -61,7 +61,9 @@ teams days of work. The full lists with sources are in `sources/agent1_roundtabl
 7. **`csv/raw/` is read-only** (`chattr +i`). Never write there. `data/archive/` is append-only via
    `BarArchive` and never shrinks.
 8. `open[i+1] ≠ close[i]` on 57–80% of bars. Quote fills from the next **open**, never a close.
-9. The Oanda 1m archive used by the old "deep ORB" work is gitignored and not in the repo.
+9. CALL tools read `workspace/paper/CALL/live/`: links to `data/archive` plus gitignored fetch deltas.
+   Never point them at an archived folder (that silently broke `resolve.py` once).
+10. The Oanda 1m archive used by the old "deep ORB" work is gitignored and not in the repo.
 
 ### Method
 10. **Every result needs a placebo** (random entries or random levels, same exits, same bars).

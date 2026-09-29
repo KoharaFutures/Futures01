@@ -26,7 +26,7 @@ import pathlib
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-DATA = HERE / "data"
+DATA = HERE / "live"   # base layer: symlinks to data/archive (0000-archive); fetch deltas land beside them, gitignored
 
 BLUE_BG, WHITE_FG = "\x1b[48;5;27m", "\x1b[38;5;231m"
 ORANGE_BG, BLACK_FG = "\x1b[48;5;208m", "\x1b[38;5;16m"

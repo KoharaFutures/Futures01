@@ -11,9 +11,9 @@ workspace/paper/CALL/journal.jsonl	KEEP	canonical callout journal (CALLOUT.md sc
 workspace/paper/CALL/NOTES.md	ARCHIVE	session notes (10,325 lines); durable content extracted to DATA_HUB/_sweep/agent3_desks.md and FINDINGS_INDEX.md; keep as N-number source	Chronological findings N1-N264 of the live CALL desk 2026-09-27..29
 workspace/paper/CALL/DECISIONS.md	ARCHIVE	session decision log; lessons extracted	39 priced decisions (foreclosed/marginal/realized) incl. cron UTC bug, stand-down costs, owner stop
 workspace/paper/CALL/BASIS	KEEP	runtime input read by resolve.py/card.py/status_card.py (value 285962f is stale)	one-line basis sha 285962f
-workspace/paper/CALL/bias_history.jsonl	ARCHIVE	runtime log appended per regime.py call; held-counter counts invocations (N248); regime.py works without it	1,578 rows of per-frame headlines per check 2026-09-28..29
-workspace/paper/CALL/feed_lag.jsonl	ARCHIVE	raw per-fetch lag log; summarised in N7/N57/N60 (median 12.9 min at 5m)	5,488 rows symbol/frame/newest bar/lag_minutes
-workspace/paper/CALL/standdown_cost.txt	ARCHIVE	stale one-line status text read by status_card.py	'BOTH ATRs CLEAR - the vetoes are off...'
+workspace/paper/CALL/bias_history.jsonl	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	1,578 rows of per-frame headlines per check 2026-09-28..29
+workspace/paper/CALL/feed_lag.jsonl	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	5,488 rows symbol/frame/newest bar/lag_minutes
+workspace/paper/CALL/standdown_cost.txt	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	'BOTH ATRs CLEAR - the vetoes are off...'
 workspace/paper/CALL/cont1_results.json	KEEP	evidence behind the breakout-continuation prohibition	CONT-1 results 4 cells MGC/MNQ 15m/60m: E -0.23..-0.36R, t -3.6..-5.1
 workspace/paper/CALL/card_*.png	ARCHIVE	rendered card images (13 PNGs), regenerable by card_png.py/status_card.py	Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT
 workspace/paper/CALL/data/	ARCHIVE	raw fetch fragments: 2,960 delta snapshots (16MB) + fetch_manifest.json; deltas are the only copy of revisions, so archive whole dir, never prune	MGC/MNQ 1m(446 files each), 5m(474/470), 15m(414/411), 60m(101/100), 240m(46), 1440m(3); fetched 2026-09-27T18:15Z..2026-09-29T04:57Z; merged coverage 1m 09-20..09-29 00:47 ET, 15m 09-22..09-29 00:30, 60m 08-30..09-28 22:00
@@ -31,7 +31,7 @@ workspace/paper/CALL/status_card.py	KEEP	reusable status PNG (cosmetic)	python3 
 workspace/paper/CALL/index_notes.py	KEEP	rebuilds FINDINGS_INDEX.md	python3 index_notes.py
 workspace/paper/CALL/cont1.py	KEEP	pre-registered CONT-1 test backing an installed prohibition	reads data/archive MGC/MNQ 15m/60m, writes cont1_results.json
 workspace/paper/CALL/vol1.py	ARCHIVE	one-off VOL-1 test (null, N221)	pivot-bar volume vs forward direction, 200-draw placebo
-workspace/paper/CALL/confluence.py	ARCHIVE	early one-off 13-family disagreement tool; superseded	evaluate plan vs 13 strategy families + levels()
+workspace/paper/CALL/confluence.py	KEEP	read at runtime by CALL tools (card_png, status_card, regime, fetch) - restored 2026-09-29	evaluate plan vs 13 strategy families + levels()
 workspace/paper/REPLAY/R1/SUMMARY.md	KEEP	active replay desk; one-page result	R1 result at bar 3400: 2 wins +$688.86, placebo z +1.021, random walk, costs 0.081R hurdle, retractions
 workspace/paper/REPLAY/R1/NOTES.md	KEEP	active replay desk (journal being appended)	Bursts 1-17 journal, 9-agent round, corrections, levels study
 workspace/paper/REPLAY/R1/state.json	KEEP	active replay desk (harness state)	cursor 3400/11287, equity 50688.86, MES spec cost 2.69

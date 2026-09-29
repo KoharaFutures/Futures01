@@ -34,6 +34,7 @@ the old material sits in `Archived_Do_Not_Refference/` with an index. **Don't re
 | [`BOUNCE_AND_VOLUME_PROFILE_PLAYBOOK.md`](BOUNCE_AND_VOLUME_PROFILE_PLAYBOOK.md) | **Your style:** bounce levels, multi-timeframe volume profile, LVNs, continuation vs bounce, *why* a level holds, and today's levels |
 | [`RULES_AND_PITFALLS.md`](RULES_AND_PITFALLS.md) | Risk rules, session rules, data traps that already cost earlier agents |
 | [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md) | What to test next, in priority order, and the obligations left open |
+| [`AUTOMATION.md`](AUTOMATION.md) | **What now runs without an LLM:** desk check script, walk-forward engine, daily data refresh, and the first pre-registered test of your LVN idea |
 | [`MAP.md`](MAP.md) | **Every live file in the repo, one line each** (generated) |
 | [`SESSIONS_AND_AGENTS.md`](SESSIONS_AND_AGENTS.md) | Who did what before, where their data went, which sessions are archived or paused |
 | `levels/` | **Generated** reports: `<SYM>_bounce.md`, `<SYM>_volume_profile.md`, `CONSISTENCY.md` |
@@ -54,6 +55,7 @@ bash DATA_HUB/tools/update_hub.sh --no-fetch   # re-analyse without pulling
 | `tools/bounce_levels.py` | Classic levels (prior day/week high-low-close, overnight high/low, prior-day POC & VWAP, 60m swings, round numbers). Every touch is tested two ways, *buy at the level* and *sweep & reclaim*, against fake levels. Lists the levels near price now. |
 | `tools/vp_levels.py` | **Multi-timeframe volume profiles** (1-day, 3-day, 1-week, 2-week on 5m bars; 1-week, 1-month, 3-month on 60m bars). Finds POC, value area, HVNs and **LVNs**, splits each range into its trend legs, and measures **continuation vs bounce** at LVNs against random prices. |
 | `tools/level_consistency.py` | Which of those findings repeat across **all** symbols, the only kind worth trusting. |
+| `tools/walkforward.py` | Replays any **pre-registered** rule bar by bar with the replay harness's exact fills, a corrected placebo and a ledger-counted luck bar. Rules live in `tools/rules/`. |
 | `tools/build_map.py` | Regenerates `MAP.md` from each file's own docstring/heading. |
 | `tools/apply_archive.py` | Moves files listed ARCHIVE in a manifest into `Archived_Do_Not_Refference/` and rewrites its index. |
 

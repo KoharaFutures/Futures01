@@ -101,7 +101,6 @@ Paths are the ORIGINAL repo paths; the file now lives at `Archived_Do_Not_Reffer
 | `workspace/paper/CALL/DECISIONS.md` | 39 priced decisions (foreclosed/marginal/realized) incl. cron UTC bug, stand-down costs, owner stop | session decision log; lessons extracted |
 | `workspace/paper/CALL/FINDINGS_INDEX.md` | Generated index of CALL NOTES.md N-numbered findings N1-N264 | index of the archived CALL NOTES.md; findings in DATA_HUB/sources/agent3_desks.md §2 |
 | `workspace/paper/CALL/NOTES.md` | Chronological findings N1-N264 of the live CALL desk 2026-09-27..29 | session notes (10,325 lines); durable content extracted to DATA_HUB/_sweep/agent3_desks.md and FINDINGS_INDEX.md; keep as N-number source |
-| `workspace/paper/CALL/bias_history.jsonl` | 1,578 rows of per-frame headlines per check 2026-09-28..29 | runtime log appended per regime.py call; held-counter counts invocations (N248); regime.py works without it |
 | `workspace/paper/CALL/card_MGC_CALL-0002.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
 | `workspace/paper/CALL/card_MGC_CALL-0004.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
 | `workspace/paper/CALL/card_MGC_CALL-0007.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
@@ -115,11 +114,8 @@ Paths are the ORIGINAL repo paths; the file now lives at `Archived_Do_Not_Reffer
 | `workspace/paper/CALL/card_STATUS.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
 | `workspace/paper/CALL/card_blank_LONG.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
 | `workspace/paper/CALL/card_blank_SHORT.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
-| `workspace/paper/CALL/confluence.py` | evaluate plan vs 13 strategy families + levels() | early one-off 13-family disagreement tool; superseded |
 | `workspace/paper/CALL/data` | MGC/MNQ 1m(446 files each), 5m(474/470), 15m(414/411), 60m(101/100), 240m(46), 1440m(3); fetched 2026-09-27T18:15Z..2026-09-29T04:57Z; merged coverage 1m 09-20..09-29 00:47 ET, 15m 09-22..09-29 00:30, 60m 08-30..09-28 22:00 | raw fetch fragments: 2,960 delta snapshots (16MB) + fetch_manifest.json; deltas are the only copy of revisions, so archive whole dir, never prune |
-| `workspace/paper/CALL/feed_lag.jsonl` | 5,488 rows symbol/frame/newest bar/lag_minutes | raw per-fetch lag log; summarised in N7/N57/N60 (median 12.9 min at 5m) |
 | `workspace/paper/CALL/index_notes.py` | Builds FINDINGS_INDEX.md from CALL NOTES.md headers | generator for FINDINGS_INDEX.md; its input NOTES.md is archived |
-| `workspace/paper/CALL/standdown_cost.txt` | 'BOTH ATRs CLEAR - the vetoes are off...' | stale one-line status text read by status_card.py |
 | `workspace/paper/CALL/vol1.py` | pivot-bar volume vs forward direction, 200-draw placebo | one-off VOL-1 test (null, N221) |
 | `workspace/paper/REPLAY/R1/NO_TRADE.jsonl` | 1 NO TRADE row at bar 40 (2024-10-08 11:00) | dead: burst-1 hand-written stand-down, superseded by harness callout R1-00001 |
 | `workspace/paper/REPLAY/R1/agents/E5_raw.txt` | E5 raw printout | dead raw output mirror of E5_costs.py (regenerable) |

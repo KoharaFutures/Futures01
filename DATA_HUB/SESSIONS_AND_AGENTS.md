@@ -12,10 +12,14 @@ lost when they closed. Nothing in the repo suggests any was.
 | `session_01M1u9BYAAVXRo95HBsA2EiA` **Round 4: audits, fidelity loops, the endorsed arm** | Audits; built the REPLAY harness (`workspace/roundtable/lib/replay.py`) and fixed its callout-id collision bug | **Archived.** Its open question ("how many bars to replay") was answered: the REPLAY desk runs on a schedule | `sources/agent1_roundtable.md`, `sources/agent3_desks.md` §5 |
 | `session_01EE6PFk7fGa2tM4KP6dpfWD` **Paper callout desk (CALL)** | Live paper callouts on MGC/MNQ. 11 plans, 6 fills | **PAUSED** by the owner 2026-09-29 00:58 ET. Its crons were deleted, and its hourly trigger `trig_01NZGwNRd8mftXdxyLvuVpdD` is **disabled** and renamed `[PAUSED]`; it re-enables in one call. The session itself is kept, not archived | `sources/agent3_desks.md`. Tools stay in `workspace/paper/CALL/`; notes and cards are archived |
 | `session_01Aqg8aVp7jcAbzEF7sfZYjA` **Replay desk (REPLAY)** | Walk-forward paper trading, MES 60m, bar by bar with a placebo | **Still running** (trigger `trig_01JEYGTTbgAk4wkHHHRPqnAR`, every 2 h, on the `intelligent-feynman` branch). Kept, not archived | `sources/agent3_desks.md` §1c, §4c. Files stay in `workspace/paper/REPLAY/R1/` |
-| `session_01RQMHC7VXaqqFou2LgLRkQS` | This consolidation (3 sweep agents + hub tools) | — | this folder |
+| `session_01RQMHC7VXaqqFou2LgLRkQS` | This consolidation (3 sweep agents, 2 automation audits, hub tools, `desk_check.py`, `walkforward.py`, GitHub Actions) | — | this folder, `AUTOMATION.md` |
 
 Two sessions on a different repository (`Futures00`: "Clone AI-Trading-1 project", "Claude code
 client sounds") hold no futures research. They were left untouched.
+
+**Automation of the two desks:** see [`AUTOMATION.md`](AUTOMATION.md). The CALL desk's check is now
+one script. The REPLAY desk's question is answered faster by `walkforward.py`, and its harness placebo has a
+bug (F1).
 
 ## The old agent team (archived)
 

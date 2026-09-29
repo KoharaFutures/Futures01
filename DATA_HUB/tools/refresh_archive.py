@@ -85,6 +85,10 @@ def fetch(archive: BarArchive, symbols, frames) -> None:
             if res.is_empty:
                 print(f"fetch {sym:4s} {mins:>5}m EMPTY ({'; '.join(res.warnings)[:120]})")
                 continue
+            stubs = [b for b in res.series if b.volume == 0 and b.high == b.low]
+            if stubs:                                  # vendor placeholders (CALL N5a): never archive them
+                res.series = BarSeries(res.series.symbol, res.series.minutes,
+                                       [b for b in res.series if not (b.volume == 0 and b.high == b.low)])
             _report("fetch", sym, mins, archive.reconcile_result(res), archive)
 
 

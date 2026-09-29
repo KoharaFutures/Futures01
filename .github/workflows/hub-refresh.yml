@@ -1,0 +1,34 @@
+# Keeps the bar archive and every DATA_HUB level report current with NO LLM.
+# Yahoo serves 1-minute bars for 7 days only, so a bar not archived within a week is gone for
+# good. This job is what guarantees the archive keeps growing.
+# Scheduled workflows run only from the repository's DEFAULT branch.
+name: hub-refresh
+on:
+  schedule:
+    - cron: "17 22 * * 0-4"      # 22:17 UTC Sun-Thu = 18:17 EDT / 17:17 EST, after the daily halt
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: { group: hub-refresh, cancel-in-progress: false }
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install yfinance
+      - run: bash DATA_HUB/tools/update_hub.sh
+      - name: commit and push (retry, never force)
+        run: |
+          git config user.name "hub-refresh bot"
+          git config user.email "hub-refresh@users.noreply.github.com"
+          git add data/archive DATA_HUB/levels DATA_HUB/MAP.md
+          git diff --cached --quiet && { echo "nothing new"; exit 0; }
+          git commit -m "hub-refresh: archive + level reports $(date -u +%FT%H:%MZ)"
+          for i in 1 2 3 4; do
+            git pull --no-rebase --no-edit origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2**i))
+          done
+          exit 1

@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `NOTES.md` is the full journal (2,380+ lines) and wins on any detail.**
-Written at cursor **4050/11287**, 2026-09-29. **PAPER — UNVALIDATED throughout.**
+Written at cursor **4450/11316**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -13,8 +13,8 @@ Written at cursor **4050/11287**, 2026-09-29. **PAPER — UNVALIDATED throughout
 
 | | |
 |---|---|
-| bars traded forward | **4,050** of 11,287 (2024-10-06 → 2025-06-20) |
-| decisions journalled | **52** (2 trades, 50 stand-downs) |
+| bars traded forward | **4,450** of 11,316 (2024-10-06 → 2025-07-16) |
+| decisions journalled | **53** (2 trades, 51 stand-downs) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
 | placebo separation | **z +1.021** against a stop-condition of 4.5 and a `free_t(20)` of 2.448 — **does not clear** |
@@ -61,13 +61,18 @@ says anything else.** What follows is why.
    reaches |z| 2 on any honest arm** against a deflated threshold of **3.37**. But the lean is persistent and
    directional: **the bars where I declined were mildly long-favourable bars.** 16% of stand-downs were bars
    where **both** directions would have lost.
-6. **The data has two contract-merge regions — and the next roll was clean.** December 2024 (bars 1146–1158)
-   and March 2025 (**2517–2591, 75 bars**; ~600 bars or 5.3% of the tape implied). Both detectors stayed
-   **silent through the entire June 2025 roll**, and a hand audit of every boundary gap in that window agrees:
-   three gaps ≥10pt in 230 bars, all different magnitudes, none recurring — against March's **20 gaps near
-   51.0pt**. So the merges are **two specific defects, not a quarterly feature.** This is a **specificity**
-   result only: the detector did not fire on a real 53-point news gap or a 28-point weekend gap.
-   **Its sensitivity is still untested prospectively** — both merges it catches were in-sample when I tuned it.
+6. **The data's contract merges are the QUARTERLY ROLL, and roughly 5% of this tape is calendar spread.**
+   December 17 2024, March 18 2025 (**75 bars**) and June 16 2025 — all the Monday–Tuesday of a roll week.
+   **Correction: I reported at bar 4050 that the June roll was clean and that December and March were isolated
+   defects. Both were wrong**, and my own detector had been flagging June for 100 bars while I wrote it — I had
+   filtered the detector's output out of my own console and then "confirmed" the result with a statistic that
+   cannot see this kind of merge. Fixed structurally: the verdict is now line 1 of `view.py`, unfilterable.
+   The two detectors are **complementary and each blind where the other sees** — June shows envelope constancy
+   with one boundary gap (`roll_flags` sees it, `gap_clusters` cannot); March drifted 60 points so the envelope
+   under-bounded it 5× while the recurring ~51pt gap made `gap_clusters` right. **Neither one's silence is
+   evidence.** `SERIES_AUDIT.md` passes MES 60m as eligible and its four checks are blind to all of this.
+   **Pre-registered at bar 4450, before the bars are visible:** the September 2025 roll must show a merge near
+   **bar 5450 (window 5350–5600)**. That is the sensitivity test this detector has never had.
 7. **The 18:00 ET bar has no volume on Mon–Thu** (56 of 60 zero-volume bars, 79% of that hour) **while being
    the widest overnight hour** (z +4.30). A missing field, not a thin market — and it is the first bar of your
    own 18:00→16:00 cycle, so never condition on its volume.

@@ -27,25 +27,24 @@ for i, r in enumerate(rows):
     d = days.setdefault(k, {"o": r["o"], "h": r["h"], "l": r["l"], "c": r["c"], "n": 0, "first": i})
     d["h"] = max(d["h"], r["h"]); d["l"] = min(d["l"], r["l"]); d["c"] = r["c"]; d["n"] += 1
 
-print(f"visible {len(rows)} bars  |  {rows[0]['ts']} -> {rows[-1]['ts']}  |  ATR14 {atr():.2f}  (0.5 floor {atr()/2:.2f})")
-print(f"\nlast {sessions} ET dates:")
-for k, d in list(days.items())[-sessions:]:
-    print(f"  {k}  o {d['o']:<9} h {d['h']:<9} l {d['l']:<9} c {d['c']:<9} bars {d['n']}")
+# DETECTORS FIRST, AND THEIR VERDICT GOES IN LINE 1 OF THE OUTPUT.
+#
+# WHY. In burst 18 this desk advanced 3400->4050 with a chunk loop that filtered
+# view.py's output through `sed -n '1p;/gap-cluster/,$p'` - line 1 plus the
+# gap-cluster section. That filter DELETED THE ROLL-MERGE SECTION. The envelope
+# detector had been flagging the June 2025 merge (bars 3963-3966) from the moment
+# bar 3967 became visible, through four consecutive chunks, and I never saw one of
+# those flags. I then hand-audited the window with the WRONG STATISTIC - boundary
+# gaps, which that merge does not show - and published "the June 2025 roll is
+# clean" as a finding, contradicting my own detector.
+#
+# This is the SECOND time an output filter of mine hid the exact signal it was
+# written to check (watch.py, burst 9, reported a successful HALT on a bar it had
+# never advanced past). The lesson that did not take the first time: a filter is a
+# place where evidence goes to die, and the fix is not "filter more carefully" but
+# to make the warning unfilterable. So the verdict is now the FIRST thing printed,
+# ahead of the price header, and any filter that keeps line 1 keeps the warning.
 
-lo = min(r["l"] for r in rows[-sessions * 22:])
-hi = max(r["h"] for r in rows[-sessions * 22:])
-print(f"\nrange over that window: {lo} - {hi}  ({hi - lo:.2f} pts), last close {rows[-1]['c']}")
-
-print(f"\nlast {detail} bars:")
-for i, r in enumerate(rows[-detail:], start=len(rows) - detail):
-    print(f"  [{i}] {r['ts']}  o {r['o']:<9} h {r['h']:<9} l {r['l']:<9} c {r['c']:<9} v {int(r['v'])}")
-
-# --- roll-merge detector -------------------------------------------------
-# Added burst 7. Bars 1146-1158 (2024-12-17) were two contract months merged
-# into one bar series: 13 consecutive bars each spanning the SAME ~84-point
-# envelope, highs clustered in 13.5 pts and lows in 20.75 pts. See NOTES.md
-# burst 6. SERIES_AUDIT.md's four checks all pass on such bars, so this is the
-# fifth check: envelope constancy. Real volatility MOVES the envelope.
 def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0, jump_frac=0.50):
     """Runs of >=k consecutive bars whose high-band and low-band are both tight
     relative to the mean bar range, while that range is >= blow x the prior
@@ -99,13 +98,6 @@ def roll_flags(rows, k=4, band_frac=0.30, blow=3.0, min_range=25.0, jump_frac=0.
             i += 1
     return out
 
-_f = roll_flags(rows)
-print(f"\nroll-merge detector: {len(_f)} suspect run(s) in {len(rows)} visible bars")
-for a, b, mr, hs, ls, mg in _f:
-    print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
-          f"mean range {mr}  high-band {hs}  low-band {ls}  max-jump {mg}  << DO NOT TRADE")
-
-
 # --- gap-cluster merge detector (added after the March 2025 roll) ------------
 # The envelope test above CAUGHT the March 2025 merge but UNDER-BOUNDED it 5x:
 # it flagged 15 bars of a 75-bar merge (2517-2591, 2025-03-18 04:00 -> 03-21 09:00).
@@ -150,7 +142,38 @@ def gap_clusters(rows, min_gap=20.0, tol=0.15, min_hits=4, max_span=200,
     return out
 
 
+_f = roll_flags(rows)
 _g = gap_clusters(rows)
+
+_alarm = ("CLEAN" if not (_f or _g) else
+          f"!! {len(_f)} envelope run(s), {len(_g)} gap-cluster run(s)"
+          + (f", newest bars {max(r[0] for r in _f + _g)}+" if (_f or _g) else ""))
+print(f"MERGE DETECTORS: {_alarm}   <- line 1 by design; see the note above")
+print(f"visible {len(rows)} bars  |  {rows[0]['ts']} -> {rows[-1]['ts']}  |  ATR14 {atr():.2f}  (0.5 floor {atr()/2:.2f})")
+print(f"\nlast {sessions} ET dates:")
+for k, d in list(days.items())[-sessions:]:
+    print(f"  {k}  o {d['o']:<9} h {d['h']:<9} l {d['l']:<9} c {d['c']:<9} bars {d['n']}")
+
+lo = min(r["l"] for r in rows[-sessions * 22:])
+hi = max(r["h"] for r in rows[-sessions * 22:])
+print(f"\nrange over that window: {lo} - {hi}  ({hi - lo:.2f} pts), last close {rows[-1]['c']}")
+
+print(f"\nlast {detail} bars:")
+for i, r in enumerate(rows[-detail:], start=len(rows) - detail):
+    print(f"  [{i}] {r['ts']}  o {r['o']:<9} h {r['h']:<9} l {r['l']:<9} c {r['c']:<9} v {int(r['v'])}")
+
+# --- roll-merge detector -------------------------------------------------
+# Added burst 7. Bars 1146-1158 (2024-12-17) were two contract months merged
+# into one bar series: 13 consecutive bars each spanning the SAME ~84-point
+# envelope, highs clustered in 13.5 pts and lows in 20.75 pts. See NOTES.md
+# burst 6. SERIES_AUDIT.md's four checks all pass on such bars, so this is the
+# fifth check: envelope constancy. Real volatility MOVES the envelope.
+print(f"\nroll-merge detector: {len(_f)} suspect run(s) in {len(rows)} visible bars")
+for a, b, mr, hs, ls, mg in _f:
+    print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "
+          f"mean range {mr}  high-band {hs}  low-band {ls}  max-jump {mg}  << DO NOT TRADE")
+
+
 print(f"\ngap-cluster detector: {len(_g)} run(s) — the drift-immune test")
 for a, b, n, med in _g:
     print(f"  !! bars {a}-{b}  {rows[a]['ts'][:16]} -> {rows[b]['ts'][:16]}  "

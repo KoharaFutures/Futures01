@@ -2033,3 +2033,54 @@ drift, present in both, and not judgement.
 
 **Stopped at:** cursor **2000/11287**, flat, equity **$50,688.86**, peak $50,688.86, drawdown $0, 2 closed
 trades, 20 trading theses / 297 desk-wide, nothing armed.
+
+---
+
+## ⚠ Burst 15 — STOP CONDITION: the roll detector flagged a new run. Bars 2000→2600.
+
+basis `0f3b629`. Mode **1 AGENT [OPEN]**. 600 bars, 2 callouts, **0 trades**, equity unchanged
+**$50,688.86**.
+
+### The March 2025 merge: bars 2517–2591 (2025-03-18 04:00 → 03-21 09:00), ending at the 3/21 expiry
+
+Verified by hand, and it is unmistakable: ranges of **4.5–8.5 points immediately before** and
+**35/31/25/13 immediately after**, against **55–99 points throughout**; boundary gaps recurring at
+**52.00, 52.25, 50.75, 51.50, 51.50, 50.00, 51.00, 50.25, 50.00, 49.50** — the Mar→Jun calendar spread
+printed **twenty times**; zero-volume bars at 09:00, 14:00, 18:00 and 20:00 ET; and a **545,226** volume
+spike at bar 2524. Same signature as December at a ~51pt spread against December's ~74.5pt, consistent with
+the lower index level. **No decision was taken across those bars and none will be.**
+
+### The prospective test both passed and failed — which is the result worth having
+
+**Passed:** the envelope detector was tuned on the single December example and **fired on March without
+retuning.** That is the validation I wanted, and it is the one thing a detector fitted to n=1 could not be
+assumed to do.
+
+**Failed:** it flagged **15 of the 75 bars — under-bounding the merge fivefold.** The cause is structural,
+not a threshold: **envelope constancy assumes the merged instrument is not trending.** In March the
+underlying moved ~60 points across the roll window, so the high/low bands drift, the run breaks, and only
+the flattest stretches flag. December's merge sat on a flat stretch and hid the flaw.
+
+**Fixed with a drift-immune test.** A merge gaps at the *same spread* over and over, and a **difference** is
+immune to drift where a **level** is not. The new `gap_clusters()` bounds March at **2520–2590** against my
+hand estimate of 2517–2591.
+
+**And its first version produced a false positive — the third detector on this desk to need one.** At
+`min_gap=8.0` with no density requirement it flagged bars 2139–2283: four 9.5pt gaps spread over 145 bars,
+ordinary session boundaries. **The principled fix is density** — a merge gaps at the spread on a large
+*fraction* of its boundaries (March 20/71 = 28%, December 5/7 = 71%) while coincidental gaps do not
+(4/145 = 2.8%). That there have now been three detectors and three false-positive rounds is itself the
+finding: **I do not get a detector right first time, and every one has needed an adversarial pass.**
+
+### My scope estimate was badly wrong, and it matters more than the detector
+
+I told this record that each roll costs ~13 bars — *"~100 bars of ~11,287 — small in count"*. **March cost
+75.** If March is representative rather than December, the true figure is nearer **600 bars, 5.3% of the
+series**, not 1%. **So every MES 60m result measured across a roll week is measuring the calendar spread on
+five times more of the tape than I claimed**, and my earlier reassurance on that point is retracted.
+
+Six more rolls fall inside this series (Jun/Sep/Dec 2025, Mar/Jun/Sep 2026). The gap-cluster test will bound
+each as it arrives; the envelope test stays as a second opinion.
+
+**Stopped at:** cursor **2600/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades, nothing
+armed, thesis 5 retired.

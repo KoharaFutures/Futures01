@@ -8527,3 +8527,47 @@ string in a JSONL file.
 and I will treat it as such — the standard is two consecutive unanimous checks, not "MNQ is
 untradeable". Refusing a condition that does hold twice would be the discretionary veto N194 blamed
 for the morning miss, in the opposite direction.
+
+# N231 — the persistence test needs a NEW BAR, not a new check, and I registered CALL-0010 knowing it
+
+CALL-0010 is registered on MNQ's 15m 0-3 unanimity holding two consecutive checks, 21:10 and 21:12.
+**Both checks read the same 15m bars.** `fetch.py` reported no new and no revised 15m bar between them
+— newest `20:45` at both — so every component value was byte-identical: close 30493.75, EMA20
+30570.68, location 37.6%, structure on the same pivot pair.
+
+So the standard I set at 21:02 and enforced twice is weaker than I thought it was. "Held two
+consecutive checks" was meant to mean *the condition survived new information*. With a 2-minute
+cadence against a 15-minute bar grid and a 10-15 minute feed lag, **most pairs of consecutive checks
+see the same 15m bar**, so the test is usually satisfied by the clock rather than by the market. The
+repair the parent session needs is therefore two changes, not one:
+
+1. record the **tally** in `bias_history.jsonl`, not just the headline (N225);
+2. require the unanimity to hold across a **new or revised 15m bar**, not merely a later check.
+
+Without (2), (1) buys much less than it appears to: on this cadence a first-unanimous-bar call and a
+"two-check" call can be the same bar read twice.
+
+**Why I registered anyway.** The standard was stated publicly at 21:02, enforced against MNQ at 21:02
+and 21:10, and satisfied at 21:12. Refusing on a criterion I discovered in the same minute the stated
+one was met is retroactive goalpost-moving — the identical error to citing `reversal_setup()` against a
+continuation short at 20:46, which I had to correct in N226. A rule that tightens the instant it is
+about to permit something is not a rule. So (2) applies **forward**, and the weakness is invalidation
+(1) on the plan itself, in the journal's `known_weakness_at_registration`, and in DECISIONS row 32.
+
+**On the merits, separately from the gate.** MNQ's 15m bear read is materially firmer than the one
+CALL-0009 was built on: **76.93 points of trend margin** below a falling EMA20 against CALL-0009's
+1.28, structure bearish on lower highs *and* lower lows rather than one component, and the 5m 0-3
+unanimous. The entry is a retrace into the underside of the 30568.00 pivot it has just broken, which
+is a level rather than a hope, and 20.68 under the EMA so a fill does not require the trend component
+to die.
+
+**The largest piece of counter-evidence, stated rather than buried.** MNQ DAILY is 3-0 unanimously
+BULLISH and WEEKLY 2-1 BULLISH, and MES/MNQ daily are the **only roll-clean long series in this
+repository** — 7.40 years. This shorts against the one slow frame here permitted to hold an opinion.
+I am not treating that as a veto, because rule 2's z -4.09 makes alignment uninformative in *both*
+directions and converting disagreement into a veto is the inverted rule-2 reading N194 Cause 4 caught
+me making. But it is the single strongest argument against the trade and it belongs in the open.
+
+**Book posture.** Two PENDING shorts, $93.00 of the $120 discretionary cap, $27.00 spare. MGC and MNQ
+are different markets, so per CALLOUT.md these are two independent bets in the same direction — not a
+hedge and not one correlated position. Both filling and both stopping costs $93.00.

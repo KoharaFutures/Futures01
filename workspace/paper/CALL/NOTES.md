@@ -9477,3 +9477,34 @@ bullish gold read prints on **0.15× volume** — the thinnest of the session, a
 night. Three frames unanimous (1m, 5m, 15m all 3-0) on a fifteenth of normal participation is not
 confluence; under rule 1 it is not even a stronger reason, and the frames agreeing are the two rule 7
 measures as a graveyard plus the one that authorises.
+
+# N251 — the extension threshold flipped twice in five minutes on bar REVISIONS, with no new 15m bar at all
+
+Gold's `reversal_setup()` sigma across four consecutive checks: **+1.15** (23:32), **+1.32** (23:37),
+**+1.79** (23:40), **+1.39** (23:43). The |1.5| extension condition was failed, failed, **met**, failed.
+No 15m bar closed in any of that: the newest 15m bar is `23:15` at all four checks, and at 23:43
+`fetch.py` wrote **no 15m snapshot at all** — zero new and zero revised on the frame that authorises.
+The 15m bias panel at 23:43 is byte-identical to 23:40.
+
+So the condition crossed its threshold and came back on **5m revisions** to an already-published bar:
+MGC's 5m close was restated 4171.40 → 4169.00. Under N140 that is not a price move; it is the vendor
+correcting a bar I had already read.
+
+**Why this is worse than the same complaint about the gate.** N238/N239 caught `bias()` components
+flipping because a 40-bar range endpoint rolled out of the window, and N248 caught the persistence
+counter measuring invocations. Both are conditions on the *gate*. This is the `reversal_setup()`
+**sigma**, and sigma is the one condition MNQ can actually satisfy — gold can never clear the 2-of-3-HTF
+requirement at all (N250), so on the only symbol where `counter_trend()` can ever print QUALIFIES, the
+deciding number is revision-sensitive at the 0.4-sigma scale within five minutes.
+
+Concretely: **had I been willing to act on an extension reading, a vendor revision would have been the
+authorising event.** At 23:40 gold read extended enough to refuse a market long; at 23:43 it does not.
+Neither reading was caused by anything the market did between them.
+
+**What I do about it tonight:** nothing to the code — this is a threshold on an authorising condition and
+N8 plus DECISIONS row 6 keep me out of it with two plans live. What I stop doing is quoting a single
+sigma print as a state. The honest form is the series, as above: gold has read **+1.15 to +1.79 across
+four checks with no new 15m bar**, which describes a symbol drifting up on 0.15-0.31× volume near the
+top of its range, and does not describe a threshold being crossed. Filed for the parent session with
+N231/N238/N239/N248 as one problem: **every one of the desk's authorising conditions is currently
+satisfiable by something other than price.**

@@ -9555,3 +9555,23 @@ market order at the reclaim, which tonight would have cost $166.50 and did not f
 Filed with N231/N238/N239/N248/N251. Not changed: it is an authorising condition, two plans are live,
 and the honest version of this fix is a design decision about what the desk means by a reversal entry,
 not a threshold tweak I can make at 23:47 on a Monday.
+
+## N251 addendum, 23:49 — the threshold has now been crossed TWICE and un-crossed twice, and this check had no new bar on ANY frame that feeds it
+
+Gold's extension sigma, seven consecutive checks: **+1.15, +1.32, +1.79, +1.39, +1.11, +1.06, +1.51**.
+Against the |1.5| condition that is fail, fail, **MET**, fail, fail, fail, **MET**.
+
+This check `fetch.py` reported **5m +0 new / 1 revised and 15m +0 new / 1 revised** — not one new bar on
+either frame that `reversal_setup()` reads. The crossing came entirely from the vendor restating gold's
+already-published `23:35` 5m close **4167.70 → 4170.90**, a **+3.20** revision, which is **0.40× the
+whole 15m ATR** of 8.01. The same revision moved MGC's 15m location 65.9% → 74.8%.
+
+So the magnitude of a single revision to one 5m bar is comparable to the distance between a condition
+being met and not met. That is the measurable version of the complaint: this is not a threshold with a
+noise band around it, it is a threshold **inside** the noise band.
+
+One more consequence I should state plainly, since it is about my own reporting rather than the code: any
+number I quote from `reversal_setup()` on the current bar is provisional at roughly ±0.4 sigma until the
+bar settles. N39/N40 already require ATR to be re-measured from settled bars at registration. The same
+discipline has to apply to sigma, and it has not been — I have quoted it as a point estimate seven times
+tonight, including the +1.79 I reported to the owner as a first-time crossing.

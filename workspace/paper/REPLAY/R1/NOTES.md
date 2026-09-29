@@ -2165,3 +2165,36 @@ drift looks like when it is large.
 
 **Stopped at:** cursor **3000/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades, 20 trading
 theses / 297 desk-wide, nothing armed, thesis 5 retired.
+
+---
+
+## Burst 17 — bars 3000→3400. basis `28ed5bf`. Mode **1 AGENT [OPEN]**.
+
+400 bars (2025-04-16 → 2025-05-12), 1 callout, **0 trades**, equity unchanged **$50,688.86**. **No candidate
+at any of the 400**, and that is not inattention: thesis 5 retired, levels withdrawn, no replacement
+predicate — there is nothing I am entitled to trade. **No new merge**; both detectors still report only
+December 2024 and March 2025, so the June 2025 roll (~2025-06-20) is still ~800 bars ahead.
+
+**One structural note for the handover:** price recovered ~900 points off the 4909.25 April low, and ATR has
+fallen back from 21.59 at bar 3000 toward the pre-crash regime — which by burst 16's arithmetic returns the
+cost hurdle from **0.0365R toward 0.0756R**. **The cheapest window for trading this instrument has closed
+again, and I had nothing to put in it while it was open.**
+
+**Counterfactual (n=48):** always-long +0.299R vs control **+0.383R** (z +1.88), always-short +0.004R vs
+−0.024R (z −0.13), coin-flip +0.259R vs +0.290R (z +1.41). **Nothing above |z| 2, and the long arm's control
+exceeds the sample on all three.**
+
+### Added `SUMMARY.md` — the deliverable this record was missing
+
+`NOTES.md` is past 2,100 lines and the owner has been away for the whole of it. A journal that can only be
+read in full is a journal that will not be read, so there is now a **one-page `SUMMARY.md`** beside it: the
+result, the eight things actually established, everything retracted, and the bottom line. It states plainly
+that `NOTES.md` wins on any detail, and it leads with the fact that two winning trades out of two is not
+evidence of anything.
+
+Writing it surfaced nothing new — which is the right outcome for a summary, and a check on it. Every figure
+in it traces to a callout field, a bar in the tape, or a named agent's file, per the rule adopted after agent
+B's audit.
+
+**Stopped at:** cursor **3400/11287**, flat, equity **$50,688.86**, drawdown $0, 2 closed trades, 20 trading
+theses / 297 desk-wide, nothing armed, thesis 5 retired.

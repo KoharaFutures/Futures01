@@ -2777,3 +2777,69 @@ control — flat to three decimals.
 
 Cursor **5650**, flat, nothing armed, **~5,650 bars remaining**. Next objective is the pre-registered
 December 2025 window at **6700–6950**, about 1,050 bars ahead.
+
+---
+
+## Burst 23 — bars 5650 → 6050 (2025-09-30 → 2025-10-24). 0 trades. Equity $50,688.86.
+
+Solo (1 AGENT, OPEN, ET 12:44 Tue). Callout `R1-00057-b006050`, `LEAN:NONE`. Cursor **6050/11316**,
+flat, drawdown $0, 57 callouts. Prefix hash clean. **400 bars examined, 0 candidates.** Detectors
+unchanged — 4 envelope / 2 gap-cluster / 13 range-volume, newest still September's bar 5397.
+
+### 1. The cheapest friction window in 4,500 bars — and finding 4's standing hope is now closed
+
+ATR reached **27.50** around 2025-10-19, the loudest stretch since the April crash. At bar 5880 the friction
+floor was **0.0279R** on a 1.0-ATR stop — about **a third** of the median-regime cost. I walked it printing
+only headers, which is precisely the stretch my own findings say not to skim, so I went back and looked.
+
+**Finding 4 has been carrying this line: *"if this instrument is ever tradeable it is in high-ATR regimes —
+a cost claim, not an edge claim."*** The caveat was doing real work and I had never tested the premise.
+Tested now across **all 6,020 eligible bars**, bucketed by ATR quartile, 1.0-ATR stop / 2.0R target, engine
+rules:
+
+| bucket | mean ATR | friction (1 ATR) | \|c−o\|/range | always-LONG | always-SHORT | coin-flip | ≥1.5R either dir |
+|---|---|---|---|---|---|---|---|
+| Q1 | 7.15 | **0.1102R** | 0.439 | −0.113R | −0.053R | −0.092R | **57.9%** |
+| Q2 | 10.62 | 0.0742R | 0.436 | −0.076R | −0.047R | −0.043R | 52.3% |
+| Q3 | 15.21 | 0.0518R | 0.448 | **+0.045R** | −0.044R | −0.028R | 53.1% |
+| Q4 | 31.28 | **0.0252R** | 0.436 | +0.004R | −0.064R | −0.029R | **49.4%** |
+
+**Three things, and they point the same way.**
+
+1. **Friction falls 4.4×** from Q1 to Q4. Finding 4's cost claim is confirmed and if anything understated.
+2. **Directional efficiency does not move at all** — `|close−open| / range` sits at **0.436–0.448 in every
+   quartile**. High ATR buys more range and **no more direction per unit of range.**
+3. **Every honest arm is negative in every bucket**, and the reachability of the 2R target *falls* as ATR
+   rises (57.9% → 49.4%). Always-long is non-monotone with its best bucket **Q3, not Q4**, which is what
+   noise looks like.
+
+**Net of friction the coin-flip runs −0.202R in Q1 and −0.054R in Q4.** So waiting for volatility makes the
+loss *smaller*, not positive. **There is no positive gross in any bucket for cheaper friction to rescue.**
+
+**This closes the door finding 4 left open.** The honest statement is now: *high volatility reduces the rate
+at which this instrument loses money; it does not make it tradeable.* I have been treating "wait for high
+ATR" as the desk's one remaining route to a trade for about fifteen bursts. **It is not one.**
+
+**The window itself bears it out.** 2025-10-14 → 10-17 printed daily ranges of **129, 115, 119 and 147
+points** and moved about **7 points net across those four closes**. **Cheap R and directionless R arrived
+together** — which is not a coincidence in a tape whose returns are a random walk (finding 2). Volatility
+being predictable and direction not is exactly the shape that produces this table.
+
+**Search-width cost, recorded:** this adds ~13 test cells (4 buckets × 3 arms, plus the efficiency column).
+Desk-wide **297 → 310**, `free_t` **3.375 → 3.387**. Negligible, and paid anyway.
+
+### 2. 6,000-bar milestone and the counterfactual
+
+`score --id R1 --trials 21`: unchanged — **z +1.021**, `free_t(21)` 2.468, does not clear. Still the same
+two-trade comparison; per burst 21 §2 this is a harness liveness check, not accumulating evidence.
+
+Counterfactual at **n=54**, continuing to decay: always-LONG all-bar **+1.84** (from +2.09 at n=51), paired
+local **+1.43**; coin-flip +1.69 / +1.59; always-SHORT **−0.021R against its local control**. **Nothing near
+|z| 2 on any honest arm.** The hindsight arm has also fallen to +1.41 paired, which is worth noting only
+because it was +2.08 three bursts ago and it was never a result either.
+
+### 3. Where I stopped
+
+Cursor **6050**, flat, nothing armed. The pre-registered **December 2025 roll window (6700–6950)** is about
+**650 bars ahead**; all three detectors are on the record for it and the range/volume screen has never been
+tested out of sample.

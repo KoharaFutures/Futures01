@@ -2637,3 +2637,53 @@ minimum. **400 bars examined, 0 candidates** — and the reason is arithmetic, n
 Cursor **4850**, flat, nothing armed. The **pre-registered September 2025 roll test** (burst 19 §3) is
 **500–750 bars ahead: a merge must appear near bar 5450, window 5350–5600.** That prediction was written
 before those bars existed on my tape and it is the sensitivity test the detector has never had.
+
+---
+
+## Burst 21 — bars 4850 → 5250 (2025-08-11 → 2025-09-04). 0 trades. Equity $50,688.86.
+
+Solo (`mode.py`: 1 AGENT, OPEN, ET 08:44 Tue). Callout `R1-00055-b005250`, `LEAN:NONE`.
+Cursor **5250/11316**, flat, drawdown $0, 55 callouts. Prefix hash **clean**.
+**400 bars examined, 0 candidates.** ATR ran **7.23 → 23.95 (2025-09-02) → 9.86**; friction floor on a
+0.5-ATR stop ran **0.09R to 0.30R** across the window. Detectors unchanged — 4 envelope / 2 gap-cluster runs,
+newest still the June merge at 3963.
+
+### 1. The |z| 2 crossing did not hold, and that is the useful result
+
+Last burst the always-LONG arm crossed on two of three controls. **One additional stand-down moved two of
+them back:**
+
+| control | burst 20 (n=51) | burst 21 (n=52) |
+|---|---|---|
+| all-bar | +2.09 | **+2.01** |
+| ATR-matched | +2.06 | **+1.96** — now below the line |
+| paired local ±120 | +1.77 | +1.65 |
+
+**A statistic that moves this much on one observation is sitting on a null near a cut point, not detecting
+something.** I reported the crossing last burst because the brief requires reporting it; I said then it was
+not a finding on four structural grounds. **This is now the empirical version of the same conclusion, and it
+is better evidence than the argument was.** The arm stays in the register and stays unquoted as a result.
+
+### 2. A phrasing of mine that overstated the evidence, corrected
+
+The 5,000-bar `score` milestone is **identical** to the 4,000-bar one — z **+1.021**, `free_t(20)` 2.448,
+does not clear. It is identical because **no trade has closed since bar ~1400**, so the placebo comparison
+has had the same two observations in it the whole time.
+
+Burst 19 I wrote that the separation *"has now sat near z 1 for four consecutive milestones"*. **That reads
+as four independent confirmations and it is one observation reported four times.** The placebo statistic
+cannot move while I take no trades. Corrected here: **there is one measurement of placebo separation on this
+desk, n=2 versus n=2, and re-printing it at every milestone adds nothing.** Milestone scores will keep being
+run because the brief says so, but they are a liveness check on the harness, not accumulating evidence.
+
+### 3. Where I stopped, and why I did not push on
+
+Cursor **5250**. The **pre-registered September 2025 roll window (bars 5350–5600) is 100 bars ahead** — the
+single most valuable pending item on this desk, and the only out-of-sample test the merge detector has ever
+had. **I stopped at the 400-bar budget anyway.**
+
+**Burst 18 overran its budget to reach an objective, and burst 18 is the one in which I published a wrong
+finding.** The bars between here and the window still need decisions, and the failure mode there was exactly
+rushing them. The window will be there next burst, and the detector fires whenever those bars arrive
+regardless of how fast I walk. **Nothing is gained by arriving one burst sooner and something real was lost
+last time.**

@@ -9508,3 +9508,50 @@ four checks with no new 15m bar**, which describes a symbol drifting up on 0.15-
 top of its range, and does not describe a threshold being crossed. Filed for the parent session with
 N231/N238/N239/N248 as one problem: **every one of the desk's authorising conditions is currently
 satisfiable by something other than price.**
+
+# N252 — `reversal_setup()`'s extension and reclaim conditions are ANTI-CORRELATED BY CONSTRUCTION, so it can only qualify when the trade is not yet entrable
+
+Read the code rather than the docstring (`regime.py`, `reversal_setup`):
+
+    last   = bars5[-1]["c"]                       # current 5m close
+    win    = closes of the last 20 15m bars
+    sigma  = (last - mean(win)) / sd(win)
+    cand   = 5m swing highs ABOVE last (for a LONG); trigger = min(cand)
+
+For a LONG, condition 1 needs **sigma ≤ −1.5** — price well BELOW its 20-bar mean — and condition 3
+needs a reclaim level **above** price. Reclaiming that level means price rising toward the mean, and the
+20-bar 15m mean is far too slow to retreat at the speed of a bounce. **So every point of progress toward
+the reclaim destroys the extension that authorised the setup.** The two conditions fight each other
+arithmetically; it is not a latency accident, it is the formula.
+
+Tonight's numbers, one symbol, one evening:
+
+| time | MNQ price | trigger | sigma |
+|---|---|---|---|
+| ~21:30 (the 30430.00 low the owner caught) | 30430.00 | 30529.75 | **−2.80** |
+| 21:46 | — | 30508.25 | −2.04 |
+| 23:45 | 30466.75 | 30477.00 | −1.02 |
+| 23:47 | **30478.50** | 30479.25 | **−0.82** |
+
+A 48-point bounce took |sigma| from 2.80 to 0.82. Price is now **0.75 points** from the reclaim trigger —
+and the setup fails the extension condition by 0.68 sigma. The reclaim is arriving exactly on schedule
+and arriving worthless.
+
+**And the trigger is not a fixed level.** It is recomputed every check as the *nearest* 5m swing high
+above the current price, so as price rises the trigger walks DOWN to meet it: 30529.75 → 30508.25 →
+30477.00 → 30479.25. A level defined as "the closest swing high above price" is always close to price.
+What looks like price patiently approaching a decision level is largely the level descending.
+
+**What this actually says about the 30430.00 miss.** At 21:30 I wrote that the setup could not be taken
+because *"buying 30430 on a 2.75pt bounce is the 'buy every dip' failure condition 3 exists to stop"*,
+and at 21:46 that *"buying support is cheap; buying the reclaim of support is not."* N252 is the
+mechanism behind that second sentence. Condition 3 does **not** require the reclaim to have happened —
+only that a level exists above price — so `qualifies` turns true while price is still at the extreme,
+which is the only moment the trade is cheap. If I then wait for the reclaim as confirmation, I am
+waiting for the reading to expire. **`reversal_setup()` is a detector, not an entry rule**, and the
+entry it implies is a limit near the extreme with a stop through it — $20 of risk at 30435/30425 — not a
+market order at the reclaim, which tonight would have cost $166.50 and did not fit the book (N236).
+
+Filed with N231/N238/N239/N248/N251. Not changed: it is an authorising condition, two plans are live,
+and the honest version of this fix is a design decision about what the desk means by a reversal entry,
+not a threshold tweak I can make at 23:47 on a Monday.

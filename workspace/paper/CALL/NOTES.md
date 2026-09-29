@@ -8231,3 +8231,57 @@ state. Nothing realised since CALL-0006, so these are unchanged.
 0.00** — no win exists to size a payoff against, and quoting either alone breaches rule 3 in
 whichever direction flatters. Expectancy −1.021R. 0 ambiguous bars. CALL-0007 will make it n=2 when
 it resolves, whichever way it goes.
+
+---
+
+# N224 — HEAT: measuring how close each trade came to its stop, at the owner's instruction
+
+Owner, 20:09 ET: *"i want as you make these calls i want you to learn how close you were to your
+Stop losses as well."* Built `heat.py`. MAE, MFE, and **HEAT = MAE / stop distance**, the fraction
+of the stop a trade actually used.
+
+## The first reading, and it is not comfortable
+
+    CALL-0002  MGC SHORT  WIN  +1.566R   MAE   1.40pt   HEAT 0.14   MFE +1.61R   8.60pt of stop unused
+    CALL-0006  MNQ SHORT  LOSS -1.021R   MAE  66.00pt   HEAT 1.14   MFE +0.84R   stopped, overshot 8.00pt
+    CALL-0007  MGC SHORT  OPEN           MAE   2.70pt   HEAT 0.61   MFE +1.09R   1.70pt of stop left
+    CALL-0008  MNQ LONG   OPEN           MAE  20.00pt   HEAT 0.87   MFE +0.72R   3.00pt of stop left
+
+**CALL-0008 used 87% of its stop.** It came within **3.00 points** of a full −$46 loss and is now
+green. That is not a well-placed stop surviving a test; that is a trade that got away with it. If
+the desk accumulates winners at HEAT 0.87 the honest conclusion is that the stops are too tight for
+this feed's noise, not that the entries are good.
+
+**CALL-0007 used 61%**, with 1.70 points spare on a 4.40-point stop.
+
+**CALL-0006's MFE was +0.84R before it died.** It was 84% of the way to a 1R gain and gave all of it
+back. One observation proves nothing, but the shape to watch is a loser that was in profit first:
+that points at the exit, not the entry.
+
+No winner exists in the countable record yet, so there is nothing to measure stop adequacy against.
+Both open trades will supply the first real data points when they resolve.
+
+## Three bugs in ten minutes, and what actually caught them
+
+I wrote the tool and it was wrong three times. None of the fixes came from re-reading the code;
+all three came from asking what value the metric is **forbidden** to take.
+
+1. Excursion measured through to *now* for closed trades → a stopped-out trade reported
+   post-exit continuation. CALL-0006 read HEAT 2.79.
+2. Clipping at `exit_bar_ts` kept only the **first minute** of a 15m exit bar → CALL-0006 read
+   MAE **0.00**, for a trade that hit its stop. **Caught by the constraint that a stopped-out
+   trade must read HEAT ≥ 1.00.**
+3. Running to the end of the exit bar → MAE 162.00, of which 96 points occurred after the stop was
+   hit. Now clipped at the bar that breaches the exit price. HEAT 1.14.
+
+**The generalisable bit: give a metric a value it cannot legally take, and it will find its own
+bugs.** HEAT < 1.00 on a stopped-out trade is impossible; that one constraint found two of three.
+I have not applied that discipline to `regime.py` or `resolve.py` and should — noted for the parent.
+
+## The limit, stated because it bounds every number above
+
+MAE comes from 1m bars. Ticks inside a 1m bar exceed its high and low and there is no tick data in
+this environment, so **every MAE here is a lower bound and every HEAT is an underestimate.** A
+HEAT of 0.95 could have been a stop touch in reality. HEAT therefore never argues a stop was "not
+quite" hit — `resolve.py` decides that from bars and remains the only thing permitted to write an
+outcome.

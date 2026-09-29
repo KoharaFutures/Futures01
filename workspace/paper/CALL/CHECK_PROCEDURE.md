@@ -1018,3 +1018,46 @@ Before this, every check retyped both ATRs by hand into a command-line string. A
 today did that. One wrong digit would have put a veto level on the one artefact the owner reads
 that was never measured, and nothing in the pipeline would have caught it. Passing a literal string
 is still permitted for a genuinely one-off reason, but `--auto` is the default and the normal case.
+
+## HEAT — every check reports how close each trade came to its stop
+
+Owner, 2026-09-28 20:09 ET: *"i want as you make these calls i want you to learn how close you were
+to your Stop losses as well."*
+
+    python3 heat.py
+
+Reports per trade, open and closed:
+
+- **MAE** — maximum adverse excursion, the worst it ever looked, in points and dollars.
+- **HEAT** — MAE as a fraction of the stop distance. **How much of the stop the trade used.**
+  0.00 never went against me; 1.00 stopped out.
+- **MFE** — maximum favourable excursion, in points and R.
+- **stop had N left** — the unused margin at the worst moment.
+
+**The two readings that carry information.** A **winner with HEAT above ~0.70** paid, but one more
+tick of noise would have made it a full loss: a book of those is not good stops, it is tight stops
+getting away with it. A **loser with MFE well above 0** was in profit before it died, which points
+at the exit rather than the entry. Rule 4's ~0.5 ATR floor was measured on a population; HEAT is
+how this desk measures the same thing on its own trades.
+
+**MAE IS A LOWER BOUND AND MUST BE REPORTED AS ONE.** It comes from the finest bars available — 1m
+where the series has them — and ticks inside a 1m bar can exceed its high and low. There is no tick
+data here. A HEAT of 0.95 measured this way could have been a stop touch in reality, so HEAT never
+argues that a stop was "not quite" hit; `resolve.py` decides fills and exits from bars and remains
+the only thing permitted to.
+
+**Three bugs in this tool were found and fixed within ten minutes of writing it**, each caught by a
+definitional check rather than by reading the code:
+
+1. Excursion ran through to *now* for closed trades, so a stopped-out trade reported how far price
+   continued afterwards. Clipped to the exit.
+2. Clipping at `exit_bar_ts` truncated 1m bars to the **first minute** of a 15m exit bar, and
+   CALL-0006 read MAE 0.00 for a trade that demonstrably hit its stop. The check that caught it:
+   **a stopped-out trade must read HEAT ≥ 1.00 by definition** — if it does not, the window is
+   wrong, not the trade.
+3. Running to the end of the exit bar put CALL-0006 at MAE 162.00 / HEAT 2.79 — real movement, but
+   96 of those points happened *after* the stop was already hit. Now clipped at the bar that
+   breaches the exit price, giving HEAT 1.14.
+
+The lesson worth keeping: **a metric needs a value it cannot legally take.** HEAT below 1.00 on a
+stopped-out trade is impossible, and that single constraint found two of the three bugs.

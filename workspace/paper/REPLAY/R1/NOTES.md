@@ -2897,3 +2897,87 @@ Always-SHORT is **−0.033R against its local control**.
 Cursor **6450**, flat, nothing armed, ~4,870 bars left. The pre-registered **December 2025 roll window
 (6700–6950)** is now **250 bars ahead** — close enough that the next burst walks into it. All three
 detectors are on the record; the range/volume screen has never been tested out of sample.
+
+---
+
+## Burst 25 — bars 6450 → 6950 (2025-11-18 → 2025-12-21). 0 trades. Equity $50,688.86.
+
+**Owner override in force: run continuously for two hours with two temporary sub-agents, to be deleted
+afterwards with their data consolidated.** Window opened 2026-09-29 ~20:33 UTC. Solo on the cursor — the
+replay has one cursor and cannot be traded in parallel, so the temps do research only: **T1** a systematic
+predicate search with family-wise accounting, **T2** an adversarial audit of bursts 13–24. Their outputs land
+in `agents/T1_*`, `agents/T2_*` and are consolidated into this journal at the end of the window.
+Callout `R1-00059-b006950`, `LEAN:NONE`. Cursor **6950/11316**, flat, drawdown $0, 59 callouts.
+**500 bars examined** (the override supersedes the 400-bar per-burst aim), **0 candidates**.
+
+### 1. The pre-registered December 2025 roll test: CONFIRMED, and all three detectors fired
+
+**Predicted at bar 5650**, before those bars existed here: *a merge near bar 6829, window 6700–6950.*
+
+**The merge is bars 6864–6896** (2025-12-16 03:00 → 2025-12-17 12:00), about **33 bars** — inside the
+window, **35 bars from the point estimate.**
+
+| detector | what it caught | reach |
+|---|---|---|
+| envelope (`roll_flags`) | 6864–6867, mean range 73.88, bands 16.25/20.0, max-jump 58.0 | **4 of 33 bars — under-bounds it 8×**, exactly as in March |
+| gap-cluster | 6867–6896, **9 gaps near 55.75pt** | delimits it properly |
+| **range/volume (new)** | **19 bars**, 6864 → 6892 | first out-of-sample test |
+
+**The new screen's out-of-sample result is clean.** It went from 13 flags to 32 across this stretch: **all 19
+new flags are inside the December merge, and it fired zero times outside a merge across the 1,214 bars
+since I pre-registered it.** That is this desk's **first fully successful prospective test** — a prediction
+written down in advance, confirmed on arrival, with the untested instrument passing.
+
+**What it is not.** It is a **defect detector, not an edge.** It tells me which bars not to trade. It makes
+nothing tradeable, and one out-of-sample success is n=1.
+
+### 2. New and actionable: a merge poisons ATR for 14 bars downstream
+
+Raw ATR14 on the first bar after each merge, against an ATR computed from the nearest 14 merge-free bars:
+
+| roll | merge bars | raw ATR | clean ATR | inflation | contaminated for |
+|---|---|---|---|---|---|
+| Jun-25 | 4 | 25.73 | 17.30 | **+48.7%** | 13 more bars |
+| Sep-25 | 3 | 17.70 | 5.86 | **+202.1%** | 13 more bars |
+| Dec-25 | 33 | 72.00 | 14.27 | **+404.6%** | 14 more bars |
+| Mar-25 | 75 | 63.30 | 12.41 | **+410.1%** | 14 more bars |
+| Dec-24 | 13 | 79.36 | 6.34 | **+1151.8%** | 14 more bars |
+
+**The do-not-trade zone is the merge PLUS 14 bars**, because an ATR-sized stop set in that tail takes *both*
+its distance and its R denominator from synthetic range. **ATR14 printed 65.14 at bar 6900 — that number is
+an artefact of the merge, not volatility.** This is a concrete rule the owner can use that requires no edge:
+never size from ATR within 14 bars of a merge flag.
+
+### 3. Correction: my "~5% of this tape is calendar spread" was an overestimate
+
+I have written that figure repeatedly, extrapolated from March's 75 bars on the assumption every roll costs
+about the same. Measured across all five rolls: **128 merge bars of 6,950 = 1.8%**, or **~2.8% including the
+ATR tails**. **March was the outlier, not the rule** — June cost 4 bars and September 3.
+
+**5% is retracted. 1.8% is the measured figure and it is a lower bound**, since the envelope detector
+under-bounds every merge it catches and two of the five were found only by the other screens.
+
+### 4. A defect in my own counterfactual, found and fixed this burst
+
+`session_end()` scanned forward for the first bar whose hour is `"16"`. On a normal day that *is* the cycle
+end. But **67 of the tape's 355 ET dates have no 16:00 bar**, and four are **half-day sessions trading
+09:30–12:30** (2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28), with more around holidays. On those the scan
+ran past the early close to a **later day's** 16:00, so the counterfactual **held across a session boundary
+and through an overnight gap — up to 32 bars instead of 9** — while the report said "flat at the session
+close".
+
+Reach: **236 of 6,680 eligible bars (3.5%)** and **2 of 56 stand-downs** (bars 874, 1343). Fixed to *the bar
+before the next 18:00*, which equals the old answer on every normal day.
+
+**Effect of the fix: every figure moved by ≤0.003R and every z by ≤0.03.** Immaterial to every conclusion —
+**and that is not a defence.** The instrument was not doing what its own docstring said, on 3.5% of its
+sample, for twenty-five bursts.
+
+**Scope I cannot check:** whether the harness itself shares this half-day blind spot. Reading its source is
+outside this desk's whitelist, so it is **flagged for the owner** rather than assumed either way.
+
+### 5. Counterfactual, n=56, post-fix
+
+always-LONG +0.328R, all-bar gap +0.369R **z +1.94**, ATR-matched +0.370R **z +1.94**, paired local +0.280R
+**z +1.49**. always-SHORT **+0.000R against its local control** — flat to three decimals. coin-flip +1.79 /
++1.69. **Nothing reaches |z| 2 on any honest arm.**

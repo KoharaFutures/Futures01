@@ -28,7 +28,7 @@ import json, pathlib, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from chart import load, bias  # noqa: E402
+from chart import load, bias, swings  # noqa: E402
 from status_card import atr14, SPEC, PERMITTED, CAP  # noqa: E402
 
 PV = {"MGC": 10.0, "MNQ": 2.0}
@@ -43,14 +43,20 @@ def ema20(bars):
 
 
 def pivots(bars, k=2):
-    hi, lo = [], []
-    for i in range(k, len(bars) - k):
-        w = bars[i - k:i + k + 1]
-        if bars[i]["h"] == max(x["h"] for x in w):
-            hi.append(bars[i]["h"])
-        if bars[i]["l"] == min(x["l"] for x in w):
-            lo.append(bars[i]["l"])
-    return hi, lo
+    """N240: DELEGATES to chart.swings(), which is the authority.
+
+    This used to be its own 5-bar fractal detector, and it disagreed with
+    chart.swings() on the same 40 bars. On 2026-09-28 22:04 it read MGC's last two
+    swing highs as 4159.40 -> 4161.70 (HIGHER, so structure BULL) while
+    chart.swings() read 4160.80 -> 4158.70 (LOWER, so structure BEAR). watch.py
+    therefore printed "BULL: all three components already agree" against
+    regime.py's "15m is 2-1" on the frame that authorises trades.
+
+    Same class as N228: a display tool contradicting the authority it describes.
+    regime.py never reads watch.py, so this fix permits nothing and blocks nothing.
+    The k parameter is kept for call compatibility and is unused.
+    """
+    return swings(bars)
 
 
 def report(sym: str) -> None:

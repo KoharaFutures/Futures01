@@ -9023,3 +9023,42 @@ twice, which is exactly what rule 1 warns about in a different guise.
 **CONFLICTED 1-1** at 22:02: location fell from 60.6% to 55.5% of [4143.90, 4181.00] as price eased
 4166.40 → 4164.50, dropping back under the 60% bull boundary. Trend stays BULL with the EMA20 rising,
 which is still the one genuinely new structural fact about gold tonight.
+
+# N240 — `watch.py` had its own pivot detector and it disagreed with the authority; fixed
+
+Following up the discrepancy I flagged but did not chase in N238: `watch.py` printed **"BULL: all three
+components already agree"** for MGC while `regime.py` tallied the same frame **2-1**. Cause found, fixed.
+
+**`watch.py` carried its own `pivots()`** — a plain 5-bar fractal — instead of calling `chart.swings()`,
+which `chart.py` and `regime.py` both use. On the same 40 bars at 22:04 they returned different pivots:
+
+| detector | last two MGC swing highs | structure verdict |
+|---|---|---|
+| `watch.pivots()` | 4159.40 -> **4161.70** (higher) | BULL |
+| `chart.swings()` | 4160.80 -> **4158.70** (lower) | BEAR |
+
+`watch.pivots()` did not even contain 4160.80 or 4158.70 — the two most recent pivots the authority
+sees. The forward scanner was describing a different market structure from the gate that authorises
+trades.
+
+**Fixed by delegation:** `watch.pivots()` now returns `chart.swings(bars)`, with `k` kept for call
+compatibility and unused. Same class as N228 — a display tool contradicting the authority it describes —
+and the same safety argument: `regime.py` never reads `watch.py`, so this permits nothing and blocks
+nothing.
+
+**It was also wrong about MNQ, and I quoted that error for two hours.** The corrected scan gives MNQ's
+bull structure target as **30607.00**, not the **30613.25** I reported on every check from 20:34 to
+22:02. A 6.25-point error, far smaller than N228's ~22 points and never load-bearing — MNQ's bull
+structure was never within 100 points of either figure — but wrong every time, from the same root cause.
+
+**Three tool-versus-authority disagreements in one session**, all in the same file: the location
+thresholds (N228, 66/34 against chart's 60/40), the absent counter-trend scan (N234), and now the pivot
+detector. All three surfaced from noticing two of my own outputs saying incompatible things, not from
+reading code. **The lesson is not "check watch.py" — it is that a second implementation of an existing
+calculation is the defect.** `watch.py` should import every component from `chart.py` and compute
+nothing of its own; `ema20()` is still a local reimplementation and should be next.
+
+**No plan this check.** MGC 15m BULLISH 2-1, one check old, not unanimous — and with structure now
+correctly BEAR, bull needs the 4158.70 pivot taken out, which price at 4166.30 has already passed
+without `swings()` re-cutting (N102 again). MNQ still 0-3 unanimous on the N238/N239 window artifact and
+already carries CALL-0010.

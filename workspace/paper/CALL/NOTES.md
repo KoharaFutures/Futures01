@@ -9789,3 +9789,30 @@ a measured age than to a tally I could rationalise either way.
 Nothing else moved, because nothing could: every reading this check is identical to 00:01 and 00:03.
 `held` has now climbed **81 → 83 → 85** on MGC and **178 → 180 → 182** on MNQ across three checks and zero
 bars (N248).
+
+## N256 addendum 2, 00:12 — the stall is now ONE SYMBOL, so the blind threshold is per-symbol
+
+MGC's feed recovered this check: 5m newest **00:00**, lag 12.6m, `+1 new`, and its 1m advanced to 00:02.
+MNQ did not: still ending **22:15**, lag **117.6m**, `new=0 revised=0`, its 1m frozen at 23:58.
+
+| symbol | 1m newest | age | 5m newest | age |
+|---|---|---|---|---|
+| MGC | 00:02 | **10.8m** | 00:00 | 12.8m |
+| MNQ | 23:58 | **14.8m** | 23:50 | 22.8m |
+
+So the outage was never the vendor as a whole — it is per-contract, and MGC's recovery while MNQ stays
+frozen proves the two series are served independently. **The threshold I fixed at 00:03 therefore applies
+PER SYMBOL, and I am saying so now rather than discovering the ambiguity on a check where it decides
+something.** A plan lives on a symbol; being sighted on gold tells me nothing about whether I can see the
+index. If MNQ's 1m passes 20 minutes, MNQ is BLIND and nothing may be registered on MNQ — while MGC can
+remain fully live in the same breath, and vice versa.
+
+MNQ at 14.8m is degraded, 5.2 minutes from that line, and it is the symbol carrying CALL-0010.
+
+Also worth noting, because it is the first thing fresh data did: **MGC's counter-trend sigma collapsed
++0.87 → +0.36** the moment real bars arrived, on a close of 4163.40 against 4166.60 before. Nine of the ten
+gold sigma readings tonight were computed on a stale or provisional tail, which is the N251/N255 point
+compounding — a threshold inside the noise band, read off a bar the vendor had not finished writing.
+
+And the operational fact of this check: **gold is 2.40 above CALL-0011's 4161.00 limit**, the closest it has
+come since registration, on data 10.8 minutes old rather than 40.

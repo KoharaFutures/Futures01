@@ -212,7 +212,11 @@ def build(a) -> dict:
         "book_note": f"book before this plan: {labels or 'empty'}",
         "rth_note": f"{sym} RTH opens {RTH_OPEN.get(sym)} ET; outside it is unmeasured territory",
         "created_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
-        "created_bar_ts": last["ts"], "expires_bar_ts": exp.isoformat(),
+        # CALL-0013 (2026-09-29): created at 17:59 from data ending 15:15, so resolve.py filled it on a 15:45 bar
+        # that printed BEFORE the plan existed (look-ahead). The creation stamp is now the 15m bar containing
+        # "now", so only bars that open after the decision can fill it, however stale the local data is.
+        "created_bar_ts": max(last["ts"], datetime.now(ET).replace(minute=(datetime.now(ET).minute // 15) * 15,
+                              second=0, microsecond=0).isoformat()), "expires_bar_ts": exp.isoformat(),
         "expiry_basis": f"{a.expiry_bars} x 15m bars, never past 15:00 ET",
         "basis": basis, "as_of_at_creation": last["ts"], "paper": "PAPER - UNVALIDATED",
         "horizon": "INTRADAY",

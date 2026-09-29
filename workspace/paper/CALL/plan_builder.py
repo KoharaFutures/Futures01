@@ -164,6 +164,10 @@ def build(a) -> dict:
     busy = [l for l in labels if f" {sym} " in f" {l} "] + [p.get("call_id") for p in state.get("open", [])
                                                             if p.get("symbol") == sym]
     gate("G8 one per symbol", not busy, f"already on {sym}: {busy}" if busy else "symbol free")
+    dl = _mod("daily_loss")
+    day_r = dl.day_realized(state)
+    gate("G9 daily loss limit", day_r > -dl.DAILY_LOSS_LIMIT,
+         f"today's realized ${day_r:,.2f} vs -${dl.DAILY_LOSS_LIMIT:,.0f} (trading day from 18:00 ET)")
 
     regime = _mod("regime")
     tfs = regime.timeframe_bias(sym)

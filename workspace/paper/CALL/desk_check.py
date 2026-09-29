@@ -292,6 +292,11 @@ def main() -> int:
                     "expectancy_r": round(sum(rs) / len(rs), 4) if rs else None,
                     "equity": state.get("equity"), "drawdown": dd, "to_2800": round(2800 - dd, 2),
                     "note": "state.json basis; the desk's MEASURED record excludes CALL-0002 (N155)"}
+    dl = _mod("daily_loss")
+    day_r = dl.day_realized(state, now_utc)
+    st["daily_loss"] = {"realized_today": day_r, "limit": -dl.DAILY_LOSS_LIMIT, "hit": day_r <= -dl.DAILY_LOSS_LIMIT}
+    if st["daily_loss"]["hit"] and not prev.get("daily_loss", {}).get("hit"):
+        triggers.append("DAILY_LOSS_LIMIT")
     st["sizing"] = {"permitted": sc.PERMITTED, "cap_50pct": sc.CAP, "committed_open": round(open_risk, 2),
                     "committed_pending": round(pend_risk, 2), "room": round(sc.CAP - open_risk - pend_risk, 2)}
     if dd >= FLOOR:

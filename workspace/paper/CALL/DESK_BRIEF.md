@@ -48,6 +48,7 @@ Read `workspace/paper/CALL/desk_status.json` (`triggers`, `events`, `notes`, `on
 | `RULE_SIGNAL_READY` | A registered, walk-forward-tested rule fired **and** its draft passed every gate. Review the draft in `drafts/`, then commit it with `plan_builder.py --from-signal <file> --commit` or decline it in one line. (Refused rule signals are shadow-logged in `rule_signals.jsonl` automatically and never wake you) |
 | `DATA_STALE` | Say which symbol/frame is stale and since when. Never state a price as current |
 | `DRAWDOWN_FLOOR` | Drawdown ≥ $2,600: **stop all new plans** and tell the owner. The desk is closed until they reply |
+| `DAILY_LOSS_LIMIT` | Owner rule (2026-09-29): trades closed this trading day (18:00→18:00 ET) have lost ≥ $1,000 realized. **No new plans until 18:00 ET.** Say so once; plan_builder gate G9 enforces it |
 | `BRIEF_CHANGED` | Re-read this file and `CALLOUT.md`. If they conflict, CALLOUT.md wins; note it in one line |
 
 Then restart `desk_loop.sh` in the background and end the turn. Lead every message with the ET time.

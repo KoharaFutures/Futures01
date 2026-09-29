@@ -9575,3 +9575,43 @@ number I quote from `reversal_setup()` on the current bar is provisional at roug
 bar settles. N39/N40 already require ATR to be re-measured from settled bars at registration. The same
 discipline has to apply to sigma, and it has not been — I have quoted it as a point estimate seven times
 tonight, including the +1.79 I reported to the owner as a first-time crossing.
+
+## N252 addendum, 23:51 — I watched the reclaim trigger LEAPFROG the reclaim. It is not merely anti-correlated with extension; it can never be reached.
+
+Directly observed across two consecutive checks:
+
+| check | MNQ price | reclaim trigger | what happened |
+|---|---|---|---|
+| 23:49 | 30479.00 | **30479.25** | price 0.25 below the trigger |
+| 23:51 | **30489.25** | **30507.25** | price took 30479.25 back — and the trigger moved UP 28 points |
+
+The trigger was never reported as reclaimed. It cannot be. `cand` is rebuilt every call as the 5m swing
+highs **above the current price**, and `trigger = min(cand)` — so by construction the trigger is always
+above price, and the moment price passes it, the next swing high up becomes the new trigger. **The
+quantity named "reclaim trigger" is definitionally unreachable, and `reversal_setup()` has no state in
+which it says a reclaim occurred.**
+
+The same thing happened on gold in the same check, in the other direction: its trigger rose 4164.0 →
+4167.5 as price rose, because for a SHORT `cand` is the swing lows *below* price. So this is structural,
+not a quirk of one side.
+
+**This sharpens N252 rather than repeating it.** I wrote there that conditions 1 and 3 are
+anti-correlated. The stronger and simpler truth is that condition 3 is not a reclaim test at all — it is
+an existence test, *"is there a swing high above price"*, which on any normal tape is trivially true. The
+docstring says condition 3 stops *"buy the dip"* becoming *"buy every dip"*, and it does not: it passes
+at the extreme, passes during the bounce, and passes after. Nothing in the tool ever waits for anything.
+
+Which means the thing I told the owner at 21:30 — that MNQ's qualifying long *"triggers on a reclaim of
+30529.75, 97pt above market"* — described a behaviour the tool does not have. The number was real; the
+word "triggers" was mine, imported from how a reclaim entry normally works, and the tool never intended
+to wait for it. **That is the second time tonight I have attributed a rule to a tool by reading its
+docstring instead of its code** (the first was citing `reversal_setup` as a veto at 20:46, N226).
+
+For the parent session, the three parts of this are now separable and should be fixed separately:
+1. the trigger should be **latched** when the setup is detected, not recomputed against live price;
+2. `qualifies` should distinguish **"setup present"** from **"entry armed"** — the reclaim either has or
+   has not happened against the latched level;
+3. sigma should be measured from **settled** bars (N251 addendum), so neither part moves on revisions.
+
+Until then I state the tool's output as what it is — *an extension reading plus the nearest level on the
+far side* — and I do not use the word "trigger" for it.

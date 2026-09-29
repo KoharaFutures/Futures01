@@ -2687,3 +2687,93 @@ finding.** The bars between here and the window still need decisions, and the fa
 rushing them. The window will be there next burst, and the detector fires whenever those bars arrive
 regardless of how fast I walk. **Nothing is gained by arriving one burst sooner and something real was lost
 last time.**
+
+---
+
+## Burst 22 — bars 5250 → 5650 (2025-09-04 → 2025-09-30). 0 trades. Equity $50,688.86.
+
+Solo (1 AGENT, OPEN, ET 11:32 Tue). Callout `R1-00056-b005650`, `LEAN:NONE`. Cursor **5650/11316**,
+flat, drawdown $0, 56 callouts. Prefix hash clean. **400 bars examined, 0 candidates.**
+
+### 1. The pre-registered September roll test resolved — and it split
+
+**Predicted at bar 4450**, before those bars existed on my tape: a merge near **bar 5450, window 5350–5600**.
+
+**The data says yes.** Bars **5396–5398** (2025-09-15 06:00–08:00) — *inside the window, 54 bars from the
+point estimate*:
+
+```
+ [5395] 2025-09-15T05:00  o 6594.00 h 6594.75 l 6591.00 c 6594.50  range  3.75  v  2660
+ [5396] 2025-09-15T06:00  o 6594.50 h 6656.25 l 6593.75 c 6655.75  range 62.50  v 21650
+ [5397] 2025-09-15T07:00  o 6656.25 h 6659.75 l 6598.25 c 6602.00  range 61.50  v     0
+ [5398] 2025-09-15T08:00  o 6602.00 h 6667.00 l 6601.25 c 6666.75  range 65.75  v 42573
+ [5399] 2025-09-15T09:00  o 6666.75 h 6677.50 l 6664.00 c 6677.00  range 13.50  v 92160
+```
+
+Three bars at **8.4× the local median range (7.50)**, oscillating between a **6595–6602** band and a
+**6656–6667** band sixty points above, one of them on **zero volume** — and afterwards the tape stays
+permanently at the upper level. **That is the Sep→Dec contract switch.** Band geometry 17%/12% of mean
+range, against the confirmed June merge's 11%/7%.
+
+**The detector says no, and it is not buggy.** Two structural reasons:
+
+1. **`roll_flags` needs `k >= 4` consecutive bars. This run is three.**
+2. **It needs a boundary jump ≥50% of mean range. This run's internal gaps are +0.50 and +0.00** — because
+   here **the two contract bands appear *within* single bars rather than across their boundaries.** That
+   also blinds `gap_clusters`, which keys entirely on boundary gaps.
+
+Both parameters were set when the only known merges — December and March — happened to be long *and* to jump
+at boundaries. **The detectors encoded a picture of a merge drawn from two examples, and September is the
+same defect wearing a different shape.**
+
+**So: my hypothesis about the data was right and my instrument was wrong.** This is the sensitivity test I
+said at bar 4450 the detector had never had. **It has now had it, and it failed.**
+
+### 2. What I did about it, and what I deliberately did not do
+
+**I did not retune `k` or `jump_frac`.** `roll_flags`'s own docstring already records two tuning rounds
+against one positive example and says the overfitting caveat is "stronger, not weaker, for having been fixed
+twice". A third round — now with no independent test left anywhere on this tape — would be fitting the
+instrument to the answer.
+
+**Added a third, separate screen instead, on a physical argument rather than a fitted one.** A genuine
+60-point hour in a real market prints enormous volume: bar **5449** (the FOMC hour) is **75.75 points on
+350,024 contracts**. A merged bar is wide *because it spans two instruments*, so its width carries **no
+extra trade**. Range up, volume flat.
+
+```
+range/volume dissociation: 13 bar(s) over 5650 — range >= 4x local median, volume < 1.5x
+  1147 1151 1154 1157   (December)     2519 2520 2522 2527 2550  (March)
+  3963 3964 3965        (June)         5397                      (September)
+```
+
+**All 13 sit inside a merge region.** 167 bars have range ≥4× median; only these 15 also had flat volume,
+and the two that were not merges were both **18:00 ET bars — the hour whose volume field is already known
+broken (finding 7).**
+
+**Stated at full strength: this screen is IN-SAMPLE on all four merges.** It was built after seeing every
+one of them, and the 18:00 exclusion is itself a fitted parameter, not a free one. It is **a screen that
+makes me look, never a verdict** — it marks regions without delimiting them, catching **1 of September's 3
+bars and 4 of December's 13**.
+
+**PRE-REGISTERED at bar 5650, before those bars exist here:** the **December 2025 roll must show a merge
+near bar 6829, window 6700–6950** (Jun 16 → Sep 15 ran 1433 bars; the same step forward from 5396).
+**All three detectors are now on the record for it, and the new one has never been tested out of sample.**
+
+### 3. The long-arm crossing has fully decayed
+
+| n | 51 | 52 | **53** |
+|---|---|---|---|
+| all-bar | +2.09 | +2.01 | **+1.92** |
+| ATR-matched | +2.06 | +1.96 | — |
+| paired local ±120 | +1.77 | +1.65 | **+1.52** |
+
+**Three consecutive bursts of decline as n grows.** Burst 20 reported the crossing because the brief
+requires it and argued it was not a finding; bursts 21 and 22 have now watched it decay out of the region
+entirely. **Nothing reaches |z| 2 on any honest arm this burst.** The short arm is −0.002R against its local
+control — flat to three decimals.
+
+### 4. Where I stopped
+
+Cursor **5650**, flat, nothing armed, **~5,650 bars remaining**. Next objective is the pre-registered
+December 2025 window at **6700–6950**, about 1,050 bars ahead.

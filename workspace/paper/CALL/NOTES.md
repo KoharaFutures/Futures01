@@ -9224,3 +9224,50 @@ worth watching: if the 15m frame has genuinely stopped publishing rather than me
 reading in these reports is describing a bar that has been superseded by three 5m bars. The 5m shows
 4167.80 with a 4169.60 high, well above the 4166.16 gate threshold, so the 15m is the only thing holding
 the gate shut.
+
+# N245 — the session's first BULLISH gate fired on MGC, and I declined it for the same reason I declined four bearish ones
+
+At 22:48 `regime.py` printed, for the first time tonight in this direction:
+
+```
+>>> REVERSAL CALLED: BULLISH (was BEARISH), held 15 checks, agreeing frames [1, 5]
+```
+
+MGC's 15m is **BULLISH 3-0 unanimous** — trend BULL (4166.70 above a rising EMA20 4160.50), structure
+BULL (higher highs 4158.70 -> 4169.10 AND higher lows 4145.00 -> 4157.90), location BULL at **61.5% of
+[4143.90, 4181.00]**. The gate is open.
+
+**Declined: first-unanimous-bar.** MGC's 15m read **2-0** at 22:46, so the unanimity is one check old and
+`held 15` measures the headline string, not the tally. This is the fifth time tonight a gate has fired on
+a one-check unanimity (N230, N232, N238, N239 on MNQ; this on MGC) and the first in the bullish
+direction. At 22:30 I wrote, before the gate existed: *"A bullish gate on gold is not exempt because it is
+new or because the session has been short-only. Applying a rule only in the direction it has already been
+tested is how a standard becomes a preference."* This is that test, and the answer has to be the same.
+
+**A second, independent weakness in this particular firing.** Condition 4 is satisfied by **[1, 5] only**
+— the 1m and 5m. The 60m is BEARISH 0-2 and the 4h BEARISH 0-3 unanimous, so every frame **above** the
+signal disagrees. Rule 7 measures the 5m as a graveyard (11-16% of strategies profitable), and rule 2
+puts required alignment at z -4.09, so I cannot convert the fast-frame agreement into support either.
+The honest reading is that MGC's bull case exists on the 15m and below and nowhere above it.
+
+**What I will do if it holds.** Pre-stating the construction now so it is not invented under the pressure
+of a live gate:
+
+- **Entry must be a LIMIT BELOW market.** Displacement on the fast frames is up, so a buy-stop over the
+  4169.10 pivot high is precisely what N196 prohibits (z -2.61 to -4.72 in 4 of 4 cells, binding in both
+  directions). A pullback toward the rising EMA20 4160.50 is the only compliant entry.
+- **Stop below the 4157.90 higher low** — the low whose formation completed the structure component, so
+  through it the sequence producing the call is broken.
+- **Sizing at 1 contract**, and the arithmetic from N243 holds: room is **$68.00** with CALL-0010's $52
+  pending, which buys a **6.80-point** stop. An entry at 4162.50 with a stop at 4156.50 is 6.00 pt =
+  **$60.00** and fits; an entry at the market does not. Rule 4's floor is 0.5 x ATR 8.32 = **4.16 pt**,
+  so anything from ~4160.66 up is legal.
+- **The weaknesses to write into the plan**: every frame above 15m disagrees; the agreeing frames are the
+  two rule 7 calls a graveyard; MGC is outside its 08:20-13:30 pit session and N227 established that its
+  `rth_only=False` profile flag is ignored by the generation path, so evening gold is outside everything
+  measured; and the desk's own record is n=4 at expectancy -0.434R.
+
+**MNQ, meanwhile, is 5.00 points from its own bear gate** and still blocked by the same `swings()`
+artifact — bear needs the 30479.50 pivot low taken out, price is 30484.50, and the last two lows read
+30430.00 -> 30479.50 (higher). Its counter-trend long has fallen back below threshold at sigma -1.36 with
+volume **0.45x**, so N244's decline stands unchanged.

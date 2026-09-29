@@ -8987,3 +8987,39 @@ investigated this check; noted so it is not lost. No call either way: 2-1 is not
 held one check.
 
 MGC's range low also moved, 4143.00 → **4143.90**, so its location percentage carries the same caveat.
+
+# N239 — the two-check standard is satisfied by an artifact that lasts two checks
+
+MNQ's 15m held **0-3 unanimous for a second consecutive check** (22:00 and 22:02), which is the standard
+I set at 21:02 and used to authorise CALL-0010. So on its face the gate is registrable again. I am not
+registering, and the reason is worth stating because it exposes a limit in my own rule rather than in
+the tool.
+
+**The location component that completed the unanimity is still the window artifact from N238.** At
+22:00 the range low rose 30356.50 → 30405.00 as the session low aged out, dropping location from 37.3%
+to 27.8% on an 11.50-point price move. At 22:02 the window has **not rolled again**, so location reads
+31.4% of the same [30405.00, 30722.00] — still under 40%, still BEAR. Price actually rose 11.50 points
+between the two checks and the component did not care.
+
+So the persistence my standard measures is **the persistence of the window**, not of the market. A
+window-induced reading will satisfy "two consecutive checks" trivially, because a 40-bar window rolls
+about every 15 minutes and my checks are two minutes apart. N231 found that the standard can be
+satisfied by one bar read twice; this is the same hole from the other side — a *denominator* held
+across two checks.
+
+The repair list for the parent session now has three items that are one problem: the gate must require
+that a component's flip be accompanied by a price move large enough to have caused it. Record the
+tally (N225), require a new or revised bar (N231), and require the flip to survive a window roll or be
+attributable to price rather than to the range endpoints (N238/N239).
+
+**The second and independent reason not to register: MNQ already holds CALL-0010, a SHORT.** A second
+MNQ short is not a new call, it is doubling the existing one, and it would put $89.54 of the $120 cap
+on a single symbol. The 21:30 conflict rule addresses *opposing* plans on one symbol; it says nothing
+about stacking same-direction plans, and that gap is now visible. Concentrating the book on one symbol
+because the same gate fired twice is not diversification of evidence — it is the same evidence counted
+twice, which is exactly what rule 1 warns about in a different guise.
+
+**MGC's first bullish 15m headline lasted one check.** It read BULLISH 2-1 at 22:00 and is back to
+**CONFLICTED 1-1** at 22:02: location fell from 60.6% to 55.5% of [4143.90, 4181.00] as price eased
+4166.40 → 4164.50, dropping back under the 60% bull boundary. Trend stays BULL with the EMA20 rising,
+which is still the one genuinely new structural fact about gold tonight.

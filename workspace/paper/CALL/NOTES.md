@@ -9446,3 +9446,34 @@ same-direction stacking rule. That was true and incomplete: **capacity bars it t
 against $22.00 of room. Two independent refusals, and I was only aware of one. A pending limit is a
 commitment — it can fill unseen inside the 15-27 minute observation blind spot — and counting it as
 free room is how a desk breaches a cap while believing it has spare.
+
+# N250 — gold's extension reading crossed |1.5| while my own gold LONG sits pending 9.60 below, and that argues FOR the limit, not against it
+
+At 23:40 `counter_trend()` reads **MGC side SHORT, sigma +1.79** — the extension condition is met for
+the first time tonight on gold, having read +1.15 at 23:32 and +1.32 at 23:37. Price 4170.60 is now
+**74.0%** of [4143.90, 4180.00], up from 61.7% when CALL-0011 was registered and 67.3% five minutes ago.
+
+**The thing worth writing down is which way this cuts.** CALL-0011 is a BUY LIMIT at **4161.00**, now
+9.60 points BELOW the market. An extension reading on the long side is the standard reason to refuse a
+long — but it refuses a long *at market*. A limit that requires price to fall 9.60 points, back onto a
+rising EMA20 (4162.83) and the 38.2% retracement, is the instrument that survives exactly this
+condition. The plan was written at 22:50 to need a pullback, and gold extending is the pullback getting
+further away, not the plan getting worse. If I had registered a market long at 22:50 I would now be
+1.79 sigma extended and inside N196's prohibition; I am instead 9.60 points from a fill.
+
+The inverse is also true and is the operative constraint tonight: **no new gold long is registrable at
+this price** on extension grounds even before capacity refuses it.
+
+**A second, permanent fact that this check makes concrete.** MGC's `reversal_setup()` fails on *"only 1
+higher timeframe(s) bearish (4h), needs 2"* and that failure can **never** clear. The three HTFs the
+condition counts are 4h, DAILY and WEEKLY; MGC's DAILY and WEEKLY are NOT ELIGIBLE on the roll audit
+(p<0.0001), so the maximum score gold can ever achieve is **1 of 3**. `counter_trend()` is therefore a
+pure reporter on gold — it can tell me gold is extended and can never authorise a gold counter-trend
+entry. That is a defensible outcome of the roll audit rather than a bug, but it means the "QUALIFIES"
+flag is structurally MNQ-only, and I should never read gold's `no` as evidence the setup is absent.
+
+**Volume caveat, stated because it undercuts the reading I would rather have.** This 3-0 unanimous
+bullish gold read prints on **0.15× volume** — the thinnest of the session, at 23:40 ET on a Monday
+night. Three frames unanimous (1m, 5m, 15m all 3-0) on a fifteenth of normal participation is not
+confluence; under rule 1 it is not even a stronger reason, and the frames agreeing are the two rule 7
+measures as a graveyard plus the one that authorises.

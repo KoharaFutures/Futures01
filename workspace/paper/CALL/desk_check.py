@@ -342,6 +342,8 @@ def main() -> int:
                       and now_utc - datetime.fromisoformat(last_wake["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
             if recent:
                 notes.append(f"REVERSAL_REPEAT {sym} {setup.get('side')} (woke {last_wake['t']}, quiet)")
+            elif binding:  # AUTOMATE_NEXT #13: no plan is possible under a stand-down (plan_builder G1)
+                notes.append(f"REVERSAL_UNDER_STANDDOWN {sym} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:
                 triggers.append("REVERSAL_CALLED")
                 st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}

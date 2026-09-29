@@ -97,7 +97,9 @@ Paths are the ORIGINAL repo paths; the file now lives at `Archived_Do_Not_Reffer
 | `workspace/newstrats/w6_run_placebo.py` | Count-matched placebo: does ANY 1-in-24 entry filter beat no filter? | one-off driver/analysis; findings captured |
 | `workspace/newstrats/w6_store.py` | Incremental save for the ICT study. | one-off driver/analysis; findings captured |
 | `workspace/newstrats/walkforward.py` | Anchored walk-forward: does picking the best geometry arm in-sample help next period? | one-off driver/analysis; findings captured |
+| `workspace/paper/CALL/CONSOLIDATION.md` | CALL vs REPLAY cross-desk reconciliation 2026-09-29 00:45 ET: CALL has no placebo, fill-leak via moving entries, levels vs random, vol stand-down vs REPLAY cost view | stale (§1 predates CALL-0011 loss); content in DATA_HUB/sources/agent3_desks.md §1b, §6 |
 | `workspace/paper/CALL/DECISIONS.md` | 39 priced decisions (foreclosed/marginal/realized) incl. cron UTC bug, stand-down costs, owner stop | session decision log; lessons extracted |
+| `workspace/paper/CALL/FINDINGS_INDEX.md` | Generated index of CALL NOTES.md N-numbered findings N1-N264 | index of the archived CALL NOTES.md; findings in DATA_HUB/sources/agent3_desks.md §2 |
 | `workspace/paper/CALL/NOTES.md` | Chronological findings N1-N264 of the live CALL desk 2026-09-27..29 | session notes (10,325 lines); durable content extracted to DATA_HUB/_sweep/agent3_desks.md and FINDINGS_INDEX.md; keep as N-number source |
 | `workspace/paper/CALL/bias_history.jsonl` | 1,578 rows of per-frame headlines per check 2026-09-28..29 | runtime log appended per regime.py call; held-counter counts invocations (N248); regime.py works without it |
 | `workspace/paper/CALL/card_MGC_CALL-0002.png` | Callout cards CALL-0001,2,4,5,6,7,8,9,10,11, STATUS, blank LONG/SHORT | rendered card images (13 PNGs), regenerable by card_png.py/status_card.py |
@@ -116,6 +118,7 @@ Paths are the ORIGINAL repo paths; the file now lives at `Archived_Do_Not_Reffer
 | `workspace/paper/CALL/confluence.py` | evaluate plan vs 13 strategy families + levels() | early one-off 13-family disagreement tool; superseded |
 | `workspace/paper/CALL/data` | MGC/MNQ 1m(446 files each), 5m(474/470), 15m(414/411), 60m(101/100), 240m(46), 1440m(3); fetched 2026-09-27T18:15Z..2026-09-29T04:57Z; merged coverage 1m 09-20..09-29 00:47 ET, 15m 09-22..09-29 00:30, 60m 08-30..09-28 22:00 | raw fetch fragments: 2,960 delta snapshots (16MB) + fetch_manifest.json; deltas are the only copy of revisions, so archive whole dir, never prune |
 | `workspace/paper/CALL/feed_lag.jsonl` | 5,488 rows symbol/frame/newest bar/lag_minutes | raw per-fetch lag log; summarised in N7/N57/N60 (median 12.9 min at 5m) |
+| `workspace/paper/CALL/index_notes.py` | Builds FINDINGS_INDEX.md from CALL NOTES.md headers | generator for FINDINGS_INDEX.md; its input NOTES.md is archived |
 | `workspace/paper/CALL/standdown_cost.txt` | 'BOTH ATRs CLEAR - the vetoes are off...' | stale one-line status text read by status_card.py |
 | `workspace/paper/CALL/vol1.py` | pivot-bar volume vs forward direction, 200-draw placebo | one-off VOL-1 test (null, N221) |
 | `workspace/paper/REPLAY/R1/NO_TRADE.jsonl` | 1 NO TRADE row at bar 40 (2024-10-08 11:00) | dead: burst-1 hand-written stand-down, superseded by harness callout R1-00001 |
@@ -301,4 +304,5 @@ Paths are the ORIGINAL repo paths; the file now lives at `Archived_Do_Not_Reffer
 | `workspace/studies/BRIEF_STRUCTURE.md` | Structure-studies brief: full paired/OOS method; several priors in it measured backwards | one-off agent brief |
 | `workspace/studies/ORB_ICT_FINDINGS.md` | 6 ORB/ICT studies in full (firing rates, sham zones, sweep chain, kill zones, OTE alias); still carries unretracted 'nulls are real absence' and 'NQ=MNQ' lines | detail superseded by scan_reports/2026-09-24_ORB-and-ICT.md; captured |
 | `workspace/studies/RANKING_FINDINGS.md` | Top-10 ranking: 112-cell placebo counts, nested overlap, disjoint thirds, realised roll, worker 1/2 detail, MGC+MCL re-scope | detail superseded by scan_reports ranking report; captured |
+| `workspace/studies/STRUCTURE_FINDINGS.md` | Structure/swing studies: nested pullback IS +3.0 -> OOS -3.5 sign flip, lead-lag 60m->240m 8 bars with 78-81% false positives, MTF agreement hurts (z -4.09), swing depth worse than random discard, structural stop floor 0.5 ATR | findings folded into DATA_HUB (sources/agent2_research.md §8.10-8.11, §9) |
 | `workspace/studies/aggregate_studies.py` | Merges workspace/studies/out/*.json (gitignored, absent) into merged.json | one-off merger |

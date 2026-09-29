@@ -14,4 +14,5 @@ fi
 python3 DATA_HUB/tools/bounce_levels.py
 python3 DATA_HUB/tools/vp_levels.py
 python3 DATA_HUB/tools/level_consistency.py
+python3 DATA_HUB/tools/build_map.py
 echo "Hub refreshed. Levels: DATA_HUB/levels/<SYMBOL>_bounce.md  Profiles: DATA_HUB/levels/<SYMBOL>_volume_profile.md  Summary: DATA_HUB/levels/CONSISTENCY.md"

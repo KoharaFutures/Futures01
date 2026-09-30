@@ -1,21 +1,21 @@
 {
- "now_utc": "2026-09-30T21:51:23+00:00",
- "now_et": "2026-09-30 17:51 EDT",
+ "now_utc": "2026-09-30T21:53:38+00:00",
+ "now_et": "2026-09-30 17:53 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-09-30T16:55:00-04:00  c=4189.30 h=4191.30 l=4188.40  lag=56.4m  new=20 revised=1",
-  "MNQ 5m newest 2026-09-30T16:55:00-04:00  c=30726.25 h=30734.25 l=30715.75  lag=56.4m  new=20 revised=1",
-  "snapshots written: MGC 1m (+101 new, 1 revised), MGC 5m (+20 new, 1 revised), MGC 15m (+7 new, 0 revised), MGC 60m (+2 new, 0 revised), MGC 240m (+1 new, 0 revised), MNQ 1m (+101 new, 1 revised), MNQ 5m (+20 new, 1 revised), MNQ 15m (+7 new, 0 revised), MNQ 60m (+2 new, 0 revised), MNQ 240m (+1 new, 0 revised)"
+  "MGC 5m newest 2026-09-30T16:55:00-04:00  c=4189.30 h=4191.30 l=4188.40  lag=58.6m  new=0 revised=0",
+  "MNQ 5m newest 2026-09-30T16:55:00-04:00  c=30726.25 h=30734.25 l=30715.75  lag=58.6m  new=0 revised=0",
+  "snapshots written: none (nothing moved)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-09-30T16:55:00-04:00",
-   "lag_min": 51.4,
+   "lag_min": 53.6,
    "close": 4189.2998046875
   },
   "MNQ": {
    "newest_5m": "2026-09-30T16:55:00-04:00",
-   "lag_min": 51.4,
+   "lag_min": 53.6,
    "close": 30726.25
   }
  },
@@ -88,7 +88,7 @@
    "reversal_called": false,
    "reversal_reasons": [
     "15m is 0-2, not unanimous",
-    "held only 0 consecutive check(s), needs 2"
+    "held only 1 consecutive check(s), needs 2"
    ],
    "setup_qualifies": true,
    "setup_side": "LONG",
@@ -304,19 +304,14 @@
   "thesis": {}
  },
  "brief_hash": "4778b9f7b1b4839f",
- "cards": [],
+ "cards": [
+  "/home/user/Futures01/workspace/paper/CALL/card_STATUS.png"
+ ],
  "events": [],
  "triggers": [
-  "COUNTER_TREND_QUALIFIES",
   "DATA_STALE"
  ],
- "notes": [
-  "HUB_LEVEL_TOUCH MGC 60m P_RTH_H 4189.6 (hub bar 2026-09-29T16:00)",
-  "HUB_LEVEL_TOUCH MNQ 5m PDH 30725.25 (hub bar 2026-09-29T18:20)",
-  "HUB_LEVEL_TOUCH MNQ 5m P_RTH_H 30725.25 (hub bar 2026-09-29T18:20)",
-  "HUB_LEVEL_TOUCH MNQ 5m SWING_H@30725.25 30725.25 (hub bar 2026-09-29T18:20)",
-  "HUB_LEVEL_TOUCH MNQ 60m SWING_H@30725.25 30725.25 (hub bar 2026-09-29T16:00)"
- ],
+ "notes": [],
  "needs_attention": true,
- "one_line": "17:51 EDT \u00b7 MNQ 30726.25 MGC 4189.3 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 ATTENTION: COUNTER_TREND_QUALIFIES, DATA_STALE"
+ "one_line": "17:53 EDT \u00b7 MNQ 30726.25 MGC 4189.3 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 ATTENTION: DATA_STALE"
 }

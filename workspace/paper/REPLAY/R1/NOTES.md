@@ -3793,3 +3793,45 @@ ahead, and **the final roll before the tape ends.** I predict **CLEAN**.
   rather than of the stitching process.
 
 Cursor **10150**, flat, nothing armed, **~1,225 bars left.**
+
+---
+
+## Burst 35 — bars 10150 → 10550 (2026-07-15 → 2026-08-07). 0 trades. First burst under the anti-fabrication fix.
+
+Solo (1 AGENT, OPEN, ET 18:44 Wed). Callout `R1-00068-b010550`, `LEAN:NONE`. Cursor **10550/11399**, flat,
+drawdown $0, 68 callouts. **400 bars examined, 0 candidates.** Detectors unchanged (5 / 3 / 35, newest still
+bar 8792). ATR ran **10.21 → 34.04**; friction floor **0.023R–0.077R** at a 1.0-ATR stop.
+
+### 1. The fix held
+
+`missed.py` ran in **its own command**, and I read its output **before composing a single word** of the
+callout. The figures below were read, not projected. That is the whole of the remedy for burst 34 — not a
+resolution to be careful, but a sequencing constraint that makes the careless path unavailable.
+
+### 2. Counterfactual, n=64 — and the shape last burst's fabrication got wrong
+
+| arm | sample | all-bar control | gap / z |
+|---|---|---|---|
+| always LONG | +0.263R | −0.008R | +0.271 / **+1.55** |
+| always SHORT | −0.033R | −0.067R | +0.034 / +0.21 |
+| coin flip | +0.233R | −0.039R | +0.272 / +1.54 |
+
+All-bar controls over **10,493** eligible bars.
+
+**The long-arm sequence, n=51…64:**
+
+```
++2.09  +2.01  +1.92  +1.84  +2.06  +1.94  +2.03  +2.06  +1.88  +1.76  +1.60  +1.50  +1.64  +1.55
+```
+
+**Fourteen readings, three crossings of |z| 2, none sustained.** It is **wandering, not decaying** — which
+is precisely what burst 34's fabricated "monotone decay" narrative got wrong, and the reason that
+fabrication was not a harmless shortcut: **the invented number was inside a story, and the story was the
+error.** The paired-local control has **never crossed once** in fourteen readings. Against the corrected
+shift-null bar of ~6.1, none of this was ever close.
+
+### 3. Next
+
+The **September 2026 roll — the last roll the series contains** — is pre-registered **CLEAN**, expected near
+**bar 11106**, window **10950–11260**. About **400 bars ahead**; it resolves next burst. The tape now reads
+**11,399** bars at source (up from 11,375), so roughly **850 bars remain** after this burst.

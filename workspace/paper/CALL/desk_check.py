@@ -353,6 +353,8 @@ def main() -> int:
         if setup.get("qualifies") and not prev_r.get("setup_qualifies"):
             if 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:
                 notes.append(f"SETUP_AFTER_1500 {sym} {setup.get('side')} (no entries 15:00-18:00, quiet)")
+            elif st.get("sizing", {}).get("room", 999) < 25:   # #19: no book room -> plan_builder G6 must refuse
+                notes.append(f"SETUP_NO_ROOM {sym} {setup.get('side')} (room ${st['sizing']['room']:.2f}, quiet)")
             elif binding:    # AUTOMATE_NEXT #13: plan_builder G1 refuses any plan under a stand-down, so don't wake
                 notes.append(f"SETUP_UNDER_STANDDOWN {sym} {setup.get('side')} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:

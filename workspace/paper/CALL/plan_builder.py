@@ -168,6 +168,10 @@ def build(a) -> dict:
                                                             if p.get("symbol") == sym]
     # owner 2026-09-29 19:12 ET: "do 3 plans per symbol" (was 1). Pending + open both count.
     gate("G8 max 3 per symbol", len(busy) < MAX_PER_SYMBOL, f"{len(busy)} live on {sym}: {busy} (max {MAX_PER_SYMBOL})")
+    # G10 (CALL-0013 lesson, 2026-09-29): a plan built on stale bars "sees" an older market and fires before
+    # the real level is tested. Refuse unless the newest 15m bar started within 40 min (15m bar + feed lag).
+    age_min = (datetime.now(ET) - datetime.fromisoformat(last["ts"])).total_seconds() / 60
+    gate("G10 data fresh", age_min <= 40, f"newest 15m bar {last['ts'][11:16]} ET, {age_min:.0f} min old (max 40)")
     dl = _mod("daily_loss")
     day_r = dl.day_realized(state)
     gate("G9 daily loss limit", day_r > -dl.DAILY_LOSS_LIMIT,

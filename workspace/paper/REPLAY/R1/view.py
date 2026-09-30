@@ -232,6 +232,59 @@ def tape_integrity(rows):
     return back, dup, rev
 
 
+# --- FOURTH DEFECT CLASS: feed outage + backfill (added burst 31) ---------------
+# WHY. At bar 8792 the range/volume screen fired outside any roll window. I had
+# PRE-REGISTERED at bar 7350 that such lone flags would be holiday- or weekend-adjacent
+# thin bars. IT IS NOT: 2026-04-20 07:00, a Monday, mid-session, volume 0.98x median.
+# The prediction failed, and the failure found a class I had not posited:
+#
+#   bars 8789 -> 8790 skip from 02:00 to 05:00 - a THREE-HOUR HOLE inside the overnight
+#   session, with a 45.50pt price gap across it - and then bars 8790, 8791 and 8792 all
+#   report the IDENTICAL high 7161.50 (high-band 0% of a 37.00 mean range, tighter than
+#   any confirmed merge). A feed outage, followed by a backfill that stamped one session
+#   high onto three bars.
+#
+# Tape-wide there are exactly THREE intra-session holes that are not the normal
+# 16:00->18:00 daily halt: 2025-05-26 and 2025-06-19 (Memorial Day and Juneteenth early
+# closes, benign) and this one. And exactly TWO runs of >=3 bars sharing an identical
+# extreme at elevated range: bars 6687-6689 and 8790-8792.
+#
+# So this tape carries FOUR distinct defect families, not one: the contract merge, the
+# broken 18:00 volume field, the live re-emit/revise tail, and now outage-plus-backfill.
+# None of them was visible from the price series alone without asking a specific question
+# of it, which is the standing lesson of this desk.
+def feed_holes(rows, max_hole=6.5):
+    """Intra-session hour holes that are not the 16:00->18:00 halt, plus runs of >=3
+    bars sharing an identical high or low at >=2x the local median range. Returns
+    (holes, flat_runs). Both are backfill signatures, not market structure."""
+    holes = []
+    for i in range(1, len(rows)):
+        a, b = rows[i - 1]["ts"], rows[i]["ts"]
+        if a[:10] != b[:10]:
+            continue
+        ha, hb = int(a[11:13]), int(b[11:13])
+        if hb - ha <= 1 or (ha == 16 and hb == 18) or hb - ha > max_hole:
+            continue
+        holes.append((i, a[:16], b[:16], hb - ha, round(abs(rows[i]["o"] - rows[i - 1]["c"]), 2)))
+    runs = []
+    for i in range(120, len(rows) - 2):
+        med = sorted(r["h"] - r["l"] for r in rows[i - 100:i])[50]
+        for k in (3, 4, 5):
+            if i + k > len(rows):
+                break
+            seg = rows[i:i + k]
+            mr = sum(r["h"] - r["l"] for r in seg) / k
+            if mr < 2 * max(med, 0.25):
+                continue
+            if len({r["h"] for r in seg}) == 1 or len({r["l"] for r in seg}) == 1:
+                runs.append((i, i + k - 1, rows[i]["ts"][:16], round(mr, 2)))
+                break
+    return holes, runs
+
+
+_hh, _fr = feed_holes(rows)
+
+
 _ti = tape_integrity(rows)
 
 
@@ -249,6 +302,9 @@ if any(_ti):
           f"of which {_ti[2]} are REVISIONS  <- the source re-emits and revises; see tape_integrity()")
 else:
     print("TAPE INTEGRITY: monotonic, no duplicate timestamps")
+if _hh or _fr:
+    print(f"FEED ARTEFACTS: !! {len(_hh)} intra-session hour hole(s), {len(_fr)} flat-extreme run(s) "
+          f"<- outage + backfill, not market structure; see feed_holes()")
 print(f"visible {len(rows)} bars  |  {rows[0]['ts']} -> {rows[-1]['ts']}  |  ATR14 {atr():.2f}  (0.5 floor {atr()/2:.2f})")
 print(f"\nlast {sessions} ET dates:")
 for k, d in list(days.items())[-sessions:]:

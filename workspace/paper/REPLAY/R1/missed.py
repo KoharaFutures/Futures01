@@ -38,6 +38,37 @@ D = os.path.dirname(os.path.abspath(__file__))
 rows = [json.loads(l) for l in open(os.path.join(D, "visible.jsonl"))]
 calls = [json.loads(l) for l in open(os.path.join(D, "callouts.jsonl"))]
 
+# DUPLICATE-BAR GUARD (burst 29). The source re-served 17 bars it had already given:
+# bars 7333-7349 reappear at 7350-7366, two of the repeats carrying REVISED prices. See
+# view.py's tape_integrity(). visible.jsonl is left untouched on purpose - it is the
+# evidence the owner needs and this desk does not own the harness's write path - so the
+# correction belongs here, in the instrument.
+#
+# WHY THESE BARS ARE MARKED INELIGIBLE RATHER THAN DELETED. Deleting them would shift
+# every bar index above 7350 and silently break the mapping to callouts.jsonl's
+# `visible_bars`, which is how every journalled decision is tied to the bar it was made
+# on. A first attempt at this fix did exactly that and only failed because a regex
+# missed; the shifted-index version would have run clean and been wrong. So the rows stay
+# in place, keeping all indices valid, and the repeat occurrences are excluded from both
+# the sample and the control.
+#
+# FIRST OCCURRENCE WINS: it is what an agent standing at that bar actually saw. The
+# revised prices arrived AFTER the decision would have been made, so preferring them
+# would be a mild look-ahead - settled prices are not the prices you traded on.
+#
+# Burst 28 declined to quote this register at all because of the duplicates. That was the
+# wrong call: the fix is a dozen lines and the size of the error is itself a measurement.
+_seen, DUP_BARS = set(), set()
+for _i, _r in enumerate(rows):
+    if _r["ts"] in _seen:
+        DUP_BARS.add(_i)
+    else:
+        _seen.add(_r["ts"])
+if DUP_BARS:
+    print(f"DUPLICATE-BAR GUARD: {len(DUP_BARS)} repeat bar(s) excluded "
+          f"(indices {min(DUP_BARS)}-{max(DUP_BARS)}); indices left intact so "
+          f"callouts.jsonl visible_bars still resolves")
+
 TICK, STOP_ATR, RR, PIVOT_K = 0.25, 1.0, 2.0, 3
 
 
@@ -152,7 +183,7 @@ stand = [c for c in calls if c.get("confidence") == "NO_TRADE"]
 res, pending = [], 0
 for c in stand:
     f = c["visible_bars"]                    # the bar a fill would have landed on
-    if f >= len(rows) or session_end(f) is None:
+    if f >= len(rows) or f in DUP_BARS or session_end(f) is None:
         pending += 1
         continue
     e = evaluate(f)
@@ -162,7 +193,7 @@ for c in stand:
 # ---- the control: every eligible bar in the tape ---------------------------
 ctrl = []
 for f in range(20, len(rows)):
-    if session_end(f) is None:
+    if f in DUP_BARS or session_end(f) is None:
         continue
     e = evaluate(f)
     if e:

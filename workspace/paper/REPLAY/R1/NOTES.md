@@ -3423,3 +3423,65 @@ changed a mechanism. That is exactly the failure §1 catalogues four times over:
 `tape_integrity()` in line 1, not any sentence I wrote about being careful. **A rule I have to remember is
 not a fix.** Heredocs already avoid this — `cat << 'EOF'` does not substitute — and the two commands that
 broke are the two that passed prose through `-m`/`--why` instead.
+
+---
+
+## Burst 29 — bars 7750 → 8150 (2026-02-12 → 2026-03-10). 0 trades. Equity $50,688.86.
+
+Solo (1 AGENT, OPEN, ET 20:44). Callout `R1-00062-b008150`, `LEAN:NONE`. Cursor **8150/11375**, flat,
+drawdown $0, 62 callouts. **400 bars examined, 0 candidates.** Detectors unchanged.
+
+### 1. I fixed my own refusal from last burst
+
+Burst 28 §5 declined to quote the counterfactual **at all** because the tape carries 17 duplicate bars.
+**That was the wrong call.** The fix is a dozen lines in an instrument I own, and the size of the
+contamination is itself a measurement worth having. Refusing to measure is not the same as being careful.
+
+`missed.py` now marks repeat-timestamp bars **ineligible** rather than deleting them:
+
+```
+DUPLICATE-BAR GUARD: 17 repeat bar(s) excluded (indices 7350-7366);
+indices left intact so callouts.jsonl visible_bars still resolves
+```
+
+**Why ineligible and not deleted — and I nearly got this wrong.** My first attempt *did* delete them, by
+rebuilding `rows` from a deduplicated list. That would have **shifted every bar index above 7350 and
+silently broken the mapping to `visible_bars`**, the field that ties each journalled decision to the bar it
+was made on. **It only failed because a regex missed a nested paren.** The shifted-index version would have
+run clean, printed plausible numbers, and been wrong — the same defect family as the filter, `session_end`,
+the ATR maximum and the prefix hash. *Four of those I caught after publishing. This one I caught because a
+regex saved me, which is luck, not method.*
+
+**First occurrence wins**, because that is what an agent standing at the bar actually saw. The revised prices
+arrived *after* the decision would have been made, so preferring them would be a mild look-ahead — settled
+prices are not the prices you traded on.
+
+### 2. The contamination's effect, in the direction that needs stating
+
+| arm / control | with duplicates | **guarded** |
+|---|---|---|
+| always-LONG, all-bar | +0.366 / z +1.96 | **+0.387 / z +2.06** |
+| always-LONG, ATR-matched | +0.373 / z +2.00 | **+0.396 / z +2.10** |
+| always-LONG, paired local ±120 | +0.276 / z +1.50 | **+0.300 / z +1.61** |
+| n | 58 | **57** |
+
+**It moved every figure in my favour**, by about +0.10 in z. `n` fell because the callout whose fill bar was
+index **7350** is itself a re-print, so it is now correctly unscoreable. always-SHORT stays flat
+(**−0.016R** against its local control).
+
+**None of it is near the corrected bar of ~6.1** (`MATH.md` §4). The long arm continues to oscillate across
+|z| 2 — now `+2.09, +2.01, +1.92, +1.84, +2.06, +1.94, +2.03, +2.06` across n=51…57 — while the paired-local
+control has still never crossed.
+
+### 3. The tape stays untouched
+
+`visible.jsonl` keeps its 17 duplicates. It is the evidence the owner needs to fix the feed, and this desk
+does not own the harness's write path. **The correction belongs in the instrument, not in the data** — and
+`tape_integrity()` keeps announcing the fault in line 1 so no future burst can quote a contaminated figure
+without seeing why.
+
+### 4. Where I stopped — on the edge of the open prediction
+
+Cursor **8150** is the **lower bound of the pre-registered March 2026 roll window (8150–8450, point estimate
+8297)**, written down at bar 7350. **No new detector flag yet, which is what the prediction implies** — the
+roll week is still ahead. ATR ran 13.79–24.52 through this stretch. The next burst walks into the window.

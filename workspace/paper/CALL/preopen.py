@@ -61,8 +61,24 @@ def summarize(vol, step):
             if left > 1.5 * sm[k] and right > 1.5 * sm[k]:
                 lvns.append(k)
     mid = lambda k: round((k + 0.5) * step, 2)
+    # LVN DEPTH (owner lesson, MGC 4220 on 2026-09-29): the reversal zone was the DEEPEST valley between two
+    # heavy shelves (4205-07 value top and the 4228-30 HVN): valley volume 0.19x the smaller flanking peak,
+    # and the first LVN outside value. A shallow LVN (4210.5, 0.6x) got run through. Depth = valley volume /
+    # the smaller of the highest peaks within 25 bins on each side; lower = thinner = stronger rejection lean.
+    W = 25
+    scored = []
+    for k in lvns:
+        lp = max(sm.get(j, 0) for j in range(k - W, k))
+        rp = max(sm.get(j, 0) for j in range(k + 1, k + W + 1))
+        depth = sm[k] / max(1e-9, min(lp, rp))
+        side = "above value" if k > hi else ("below value" if k < lo else "inside value")
+        scored.append({"price": mid(k), "depth": round(depth, 2), "where": side})
+    outside = [x for x in scored if x["where"] != "inside value"]
+    first_up = min((x for x in outside if x["where"] == "above value"), key=lambda x: x["price"], default=None)
+    first_dn = max((x for x in outside if x["where"] == "below value"), key=lambda x: x["price"], default=None)
     return {"poc": mid(poc), "vah": round((hi + 1) * step, 2), "val": round(lo * step, 2),
-            "lvns": [mid(k) for k in lvns], "range": (round(ks[0] * step, 2), round((ks[-1] + 1) * step, 2))}
+            "lvns": [mid(k) for k in lvns], "lvn_scored": scored, "first_lvn_above": first_up,
+            "first_lvn_below": first_dn, "range": (round(ks[0] * step, 2), round((ks[-1] + 1) * step, 2))}
 
 
 def main():
@@ -78,6 +94,11 @@ def main():
             near = sorted(s["lvns"], key=lambda p: abs(p - last["c"]))[:4]
             out.append(f"- **{h}h** ({len(w)} bars, range {s['range'][0]}-{s['range'][1]}): POC {s['poc']} · "
                        f"VAH {s['vah']} · VAL {s['val']} · LVNs nearest price {near}")
+            deep = sorted([x for x in s["lvn_scored"] if abs(x["price"] - last["c"]) < 60 * BIN[sym]],
+                          key=lambda x: x["depth"])[:3]
+            out.append(f"  - deepest LVNs near price (depth = valley/flanking peak, lower = stronger): "
+                       + ", ".join(f"{x['price']} d{x['depth']} {x['where']}" for x in deep)
+                       + f" · first LVN above value {s['first_lvn_above']} · first below {s['first_lvn_below']}")
         out.append("")
     txt = "\n".join(out)
     d = HERE / "preopen"

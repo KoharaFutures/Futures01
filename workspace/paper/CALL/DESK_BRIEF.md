@@ -96,6 +96,13 @@ Full detail: `DATA_HUB/README.md` → `STRATEGIES_BY_SYMBOL.md`, `BOUNCE_AND_VOL
 - Prior-day VWAP / close as resistance, and prior-day or prior-RTH-high **sweep & reclaim → short**, are
   the best classic levels (still under the luck bar).
 - First touches are worse than retests. Prefer a level that has held once.
+- **Owner's lesson (MGC 4220, 2026-09-29): the reversal zone is the DEEPEST LVN, and the first one outside
+  value.** On the 48h profile, 4220 was the thinnest valley (0.19x the smaller flanking peak) between the
+  value-area top shelf (4205-07) and the next heavy node (4228-30). Price rose out of value into it and
+  was rejected twice (4220.0, 4219.5). The shallow LVN at 4210.5 (0.6x) got run straight through.
+  `preopen.py` now scores every LVN's depth and flags the first LVN above/below value: prefer deep
+  (< ~0.35) first-outside-value LVNs, approached from inside value. Hypothesis, not yet tested:
+  AUTOMATE_NEXT #17.
 - **MGC is the best market for profile levels** (value-area edge, POC reversion at 30m). MGC daily bars are a
   different contract: never mix them with intraday levels.
 

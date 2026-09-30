@@ -556,12 +556,15 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     # direction and SCALP/SWING to be larger. All four sit in the same 52..159 band so
     # STRATEGY below keeps its position - the band is set by the 92px symbol and the
     # grade box is built to that height rather than adding a new row.
-    gd.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=(*las, 210))
-    d.text((PAD, sc(52)), plan["symbol"], font=fsym, fill=WHITE)
+    # owner 2026-09-30: the symbol icon goes BEFORE the symbol, so the symbol text shifts right by its width
+    icw = icon_width(plan["symbol"])
+    symx = PAD + (icw + sc(20) if icw else 0)
+    gd.text((symx, sc(52)), plan["symbol"], font=fsym, fill=(*las, 210))
+    d.text((symx, sc(52)), plan["symbol"], font=fsym, fill=WHITE)
     symw = d.textlength(plan["symbol"], font=fsym)
 
     letter, gwhy = grade(plan, spec, fill, stop, tgts, risk)
-    gx = PAD + symw + sc(34)
+    gx = symx + symw + sc(34)
     glw = d.textlength(letter, font=fsym)
     gbw, gbh = int(glw) + sc(36), sc(104)
     gby = sc(50)
@@ -801,7 +804,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(sc(7))))
     card = Image.alpha_composite(img, ov)
-    card = add_symbol_icon(card, plan["symbol"], anchor=(tx + tw2, sc(254)))
+    card = add_symbol_icon(card, plan["symbol"], anchor=(tx + tw2, sc(254)), before_at=(PAD, sc(50)))
     card = card.convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
     card.save(out)
@@ -812,13 +815,30 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 # workspace/paper/CALL/icons/. ICON_MODE "corner" = small icon just above the top-right of the
 # TIMEFRAMES column; "watermark" = large faded icon behind the card; "off" = none. Missing file = no icon.
 ICON_DIR = HERE / "icons"
-ICON_MODE = "corner"
+ICON_MODE = "before"   # owner 2026-09-30: icon before the symbol (was "corner")
+ICON_H = 104           # px at SCALE 1: the height of the symbol/grade band
 WATERMARK_ALPHA = 0.22
 
 
-def add_symbol_icon(card, sym, anchor):
+def _icon_mode():
     import os
-    mode = os.environ.get("CARD_ICON_MODE", ICON_MODE)
+    return os.environ.get("CARD_ICON_MODE", ICON_MODE)
+
+
+def icon_width(sym):
+    """Width the icon will take before the symbol in "before" mode (0 when absent / other modes)."""
+    f = ICON_DIR / f"{sym}.png"
+    if _icon_mode() != "before" or not f.exists():
+        return 0
+    try:
+        with Image.open(f) as ic:
+            return int(ic.width * sc(ICON_H) / ic.height)
+    except Exception:
+        return 0
+
+
+def add_symbol_icon(card, sym, anchor, before_at=None):
+    mode = _icon_mode()
     f = ICON_DIR / f"{sym}.png"
     if mode == "off" or not f.exists():
         return card
@@ -835,9 +855,14 @@ def add_symbol_icon(card, sym, anchor):
         layer = Image.new("RGBA", card.size, (0, 0, 0, 0))
         layer.paste(ic, ((W - ic.width) // 2, (H - ic.height) // 2), ic)
         return Image.alpha_composite(card, layer)
-    h = sc(78)
-    ic = ic.resize((max(1, int(ic.width * h / ic.height)), h), Image.LANCZOS)
-    x, y = anchor[0] - ic.width, anchor[1] - h - sc(8)
+    if mode == "before" and before_at:
+        h = sc(ICON_H)
+        ic = ic.resize((max(1, int(ic.width * h / ic.height)), h), Image.LANCZOS)
+        x, y = before_at
+    else:
+        h = sc(78)
+        ic = ic.resize((max(1, int(ic.width * h / ic.height)), h), Image.LANCZOS)
+        x, y = anchor[0] - ic.width, anchor[1] - h - sc(8)
     layer = Image.new("RGBA", card.size, (0, 0, 0, 0))
     layer.paste(ic, (x, y), ic)
     return Image.alpha_composite(card, layer)

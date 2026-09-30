@@ -3485,3 +3485,83 @@ without seeing why.
 Cursor **8150** is the **lower bound of the pre-registered March 2026 roll window (8150–8450, point estimate
 8297)**, written down at bar 7350. **No new detector flag yet, which is what the prediction implies** — the
 roll week is still ahead. ATR ran 13.79–24.52 through this stretch. The next burst walks into the window.
+
+---
+
+## Burst 30 — bars 8150 → 8550 (2026-03-10 → 2026-04-02). 0 trades. **A pre-registered prediction failed.**
+
+Solo (1 AGENT, OPEN, ET 22:44). Callout `R1-00063-b008550`, `LEAN:NONE`. Cursor **8550/11375**, flat,
+drawdown $0, 63 callouts. **400 bars examined, 0 candidates.**
+
+### 1. The March 2026 prediction failed, and this time I audited the silence
+
+**Predicted at bar 7350:** a merge near **bar 8297, window 8150–8450.** I walked the whole window plus 100
+bars past it — 2026-03-10 → 2026-04-02, covering the **March 16–20 roll week** — and **no detector fired.**
+Counts unchanged: 5 envelope, 3 gap-cluster, 34 range/volume.
+
+**September taught me that silence can be wrong**, so I hand-audited bars 8200–8400 with four statistics,
+including the two that caught September:
+
+| test | result |
+|---|---|
+| envelope constancy, k=3 **and** k=4 | **none** |
+| boundary gaps ≥10pt | **2**, both Sunday 18:00 weekly opens (51.25, 12.50) |
+| zero-volume bars outside 18:00 ET | **0** |
+| permanent level shift across 200 bars | **−35.50** — none |
+| **volume on the wide bars** | **elevated on every one** |
+
+That last row is decisive and it runs the *opposite* way to a merge. Bar **8350** prints a **242-point range
+on 3.81× median volume**; bar 8215, 63 points on **7.49×**. A merged bar is wide *because it spans two
+instruments*, so its width carries no trade. These carry enormous trade. **The March 2026 roll is genuinely
+clean.**
+
+### 2. So the generalisation I adopted in burst 22 is falsified
+
+Burst 22 said the merges were *"the MES quarterly Z/H/M/U roll, not three accidents."* **Five consecutive
+rolls merged and the sixth did not:**
+
+```
+Dec-24  bars 1146-1158  2024-12-17  MERGED
+Mar-25  bars 2517-2591  2025-03-18  MERGED
+Jun-25  bars 3963-3966  2025-06-16  MERGED
+Sep-25  bars 5396-5398  2025-09-15  MERGED
+Dec-25  bars 6864-6896  2025-12-16  MERGED
+Mar-26  bars ~8240-8320 2026-03-18  CLEAN   <- prediction failed
+```
+
+**The merge is a property of how a particular span of this series was ASSEMBLED, not an inevitable feature
+of every roll.** That is a weaker and more accurate claim than the one I published, and the correction was
+forced by a prediction I wrote down in advance — which is the whole point of writing them down.
+
+### 3. A better hypothesis, and it is falsifiable in ~1,100 bars
+
+**The merges stop where the live-append region begins.** Burst 28 established that the tape's tail is a live
+feed that re-emits and revises bars (revisions at 7333–7366). **The last merge ends at bar 6896.** So the
+boundary between the historical bulk — assembled by some process that stitched contract months together at
+rolls — and the live tail lies **between bars 6896 and 7333**, and the March roll sits past it.
+
+**PRE-REGISTERED at bar 8550, replacing the failed prediction:** the **June 2026 roll near bar 9696, window
+9550–9850, will ALSO BE CLEAN.** *(Quarterly spacing measured 1,416 bars, Dec-25 → Mar-26.)*
+
+**This is the opposite of what I predicted last time.** If it merges, this hypothesis dies too and the
+"assembly artefact" story is wrong. Either way the tape answers in about 1,100 bars.
+
+**What survives regardless:** the five merges are real, they cost 128 bars, and the ATR contamination tail of
+13–14 bars after each is measured. The three detectors keep running — their job is to flag bars, not to
+predict rolls.
+
+### 4. Counterfactual, n=59, and the 8,000-bar milestone
+
+| arm | sample | all-bar gap / z |
+|---|---|---|
+| always LONG | +0.303R | +0.347 / **+1.88** |
+| always SHORT | −0.040R | **−0.000 / −0.00** |
+| coin flip | +0.270R | +0.315 / +1.70 |
+
+The long arm has drifted back below the line (+2.06 → **+1.88**), continuing the oscillation: `+2.09, +2.01,
++1.92, +1.84, +2.06, +1.94, +2.03, +2.06, +1.88` across n=51…59. **always-SHORT is now −0.000R against its
+all-bar control — flat to four decimals.**
+
+`score --trials 24`: **z +1.021**, `free_t(24)` 2.521 — unchanged, same two-trade comparison.
+
+Cursor **8550**, flat, nothing armed, ~2,800 bars left.

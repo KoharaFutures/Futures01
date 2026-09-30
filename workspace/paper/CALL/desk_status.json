@@ -1,21 +1,21 @@
 {
- "now_utc": "2026-09-30T03:59:28+00:00",
- "now_et": "2026-09-29 23:59 EDT",
+ "now_utc": "2026-09-30T04:01:48+00:00",
+ "now_et": "2026-09-30 00:01 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-09-29T23:50:00-04:00  c=4205.50 h=4206.10 l=4203.10  lag=9.5m  new=1 revised=2",
-  "MNQ 5m newest 2026-09-29T23:50:00-04:00  c=30640.75 h=30643.00 l=30632.25  lag=9.5m  new=1 revised=2",
-  "snapshots written: MGC 1m (+11 new, 2 revised), MGC 5m (+1 new, 2 revised), MGC 15m (+0 new, 1 revised), MGC 60m (+0 new, 1 revised), MNQ 1m (+11 new, 2 revised), MNQ 5m (+1 new, 2 revised), MNQ 15m (+0 new, 1 revised), MNQ 60m (+0 new, 1 revised)"
+  "MGC 5m newest 2026-09-29T23:40:00-04:00  c=4207.70 h=4209.30 l=4206.40  lag=21.8m  new=0 revised=0",
+  "MNQ 5m newest 2026-09-29T23:40:00-04:00  c=30638.00 h=30648.25 l=30636.75  lag=21.8m  new=0 revised=0",
+  "snapshots written: MGC 1m (+0 new, 3 revised), MGC 60m (+1 new, 0 revised), MGC 240m (+1 new, 0 revised), MGC 1440m (+1 new, 0 revised), MNQ 1m (+0 new, 2 revised), MNQ 60m (+1 new, 0 revised), MNQ 240m (+1 new, 0 revised), MNQ 1440m (+1 new, 0 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-09-29T23:50:00-04:00",
-   "lag_min": 4.5,
+   "lag_min": 6.8,
    "close": 4205.5
   },
   "MNQ": {
    "newest_5m": "2026-09-29T23:50:00-04:00",
-   "lag_min": 4.5,
+   "lag_min": 6.8,
    "close": 30640.75
   }
  },
@@ -80,8 +80,8 @@
     "1m": "BULLISH",
     "5m": "BULLISH",
     "15m": "CONFLICTED",
-    "60m": "CONFLICTED",
-    "4h": "CONFLICTED",
+    "60m": "BULLISH",
+    "4h": "BEARISH",
     "DAILY": "BULLISH",
     "WEEKLY": "BULLISH"
    },
@@ -89,7 +89,8 @@
    "reversal_reasons": [
     "15m headline is CONFLICTED, not directional",
     "15m is 0-0, not unanimous",
-    "held only 0 consecutive check(s), needs 2"
+    "held only 0 consecutive check(s), needs 2",
+    "no other timeframe agrees"
    ],
    "setup_qualifies": false,
    "setup_side": "LONG",
@@ -312,8 +313,8 @@
  },
  "rule_signals": [],
  "rule_seen": {
-  "OQ1_lvn_fade_1w60:MGC": "2026-09-29T22:00:00-04:00",
-  "OQ1_lvn_fade_1w60:MNQ": "2026-09-29T22:00:00-04:00"
+  "OQ1_lvn_fade_1w60:MGC": "2026-09-29T23:00:00-04:00",
+  "OQ1_lvn_fade_1w60:MNQ": "2026-09-29T23:00:00-04:00"
  },
  "book": {
   "pending": [
@@ -332,5 +333,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "23:59 EDT \u00b7 MNQ 30640.75 MGC 4205.5 \u00b7 pending CALL-0016 \u00b7 open 0 \u00b7 eq $49,919.60 dd $236.96 \u00b7 quiet"
+ "one_line": "00:01 EDT \u00b7 MNQ 30640.75 MGC 4205.5 \u00b7 pending CALL-0016 \u00b7 open 0 \u00b7 eq $49,919.60 dd $236.96 \u00b7 quiet"
 }

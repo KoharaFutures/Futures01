@@ -3662,3 +3662,58 @@ not close and never was.
 point estimate 9696 — is **200 bars ahead** and resolves within one or two bursts. Standing caveat on it: my
 structural record is **1 confirmed, 2 failed**, so a clean June would be the second correct call in four
 rather than a vindication of the live-append hypothesis; a merge kills that hypothesis outright.
+
+---
+
+## Burst 33 — bars 9350 → 9750 (2026-05-26 → 2026-06-18). 0 trades. **June 2026 prediction CONFIRMED.**
+
+Resumed after the owner's hold (no research 02:43→16:01 ET; **six scheduled firings acknowledged and
+skipped, no bars advanced, nothing written**). Solo (1 AGENT, OPEN, ET 16:09 Wed). Callout
+`R1-00066-b009750`, `LEAN:NONE`. Cursor **9750/11375**, flat, drawdown $0, 66 callouts.
+**400 bars examined, 0 candidates.**
+
+### 1. The pre-registered June 2026 roll test: CONFIRMED clean
+
+**Predicted at bar 8550:** this roll would be **CLEAN**, window 9550–9850, on the hypothesis that the merges
+stop where the live-append region begins. **No detector fired** — and I audited the silence rather than
+trusting it, because September 2025 taught me silence can be wrong.
+
+Bars 9640–9749 cover **Monday and Tuesday of expiry week (June 15–16)**, which is exactly where all five
+prior merges sat:
+
+| test | result |
+|---|---|
+| envelope constancy, k=3 and k=4 | **none** |
+| boundary gaps ≥10pt | **1** — the Sunday 18:00 weekly open, 65.50 |
+| zero-volume bars outside 18:00 ET | **0** |
+| identical-extreme runs of 3+ | **none** |
+| volume on the wide bars | **5.8× to 9.1×** the local median |
+
+The one candidate, **bar 9674 (2026-06-15 03:00, 73.00 range on 1.69× volume)**, is a single directional
+jump: opens 7526.00, closes 7586.75, **the level holds afterward**, and its volume is **10× the surrounding
+overnight bars**. Low-band exceeds **200% of mean range** on every window tested — **the lows are not
+pinned, and a merge pins both bands.** Genuine overnight repricing.
+
+### 2. An asymmetry I am recording against myself
+
+**Predicting the absence of a defect is a much cheaper prediction than predicting its presence**, because
+*clean* is the default state of a well-formed series. My structural record is now **2 confirmed, 2 failed**
+— but the two confirmations are not equal:
+
+| prediction | kind | informative? |
+|---|---|---|
+| Dec 2025 roll **merges** near 6829 | **positive** | **yes** — could have failed in many ways, and did not |
+| Mar 2026 roll merges near 8297 | positive | **failed** |
+| lone flags are holiday/weekend thin bars | positive | **failed** |
+| Jun 2026 roll is **clean** | **negative** | **weak** — falsified only by a merge appearing |
+
+**The live-append hypothesis has survived one weak test, not a strong one.** To test it properly I would need
+it to forbid something specific and observable. It does not yet.
+
+### 3. Counterfactual, n=62
+
+always-LONG +0.255R, all-bar gap **+0.266 / z +1.50**; always-SHORT **+0.064 / z +0.38**; coin-flip
++0.265 / z +1.48. The long arm's decay is now monotone over four bursts: `+2.06, +1.88, +1.76, +1.60,
++1.50`. **Nothing near |z| 2**, and the corrected bar is ~6.1.
+
+Cursor **9750**, flat, nothing armed, **~1,625 bars left**.

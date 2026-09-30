@@ -1,7 +1,7 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `MATH.md` is the consolidated arithmetic with every formula; `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
-Written at cursor **9350/11375**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+Written at cursor **9750/11375**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -21,7 +21,7 @@ Written at cursor **9350/11375**, 2026-09-29 (the source series is live-appendin
 
 | | |
 |---|---|
-| bars traded forward | **9,350** of 11,375 (2024-10-06 → 2026-05-26) — 17 are duplicates, now excluded from every statistic |
+| bars traded forward | **9,750** of 11,375 (2024-10-06 → 2026-06-18) — 17 are duplicates, now excluded from every statistic |
 | decisions journalled | **60 rows, 59 distinct** (2 trades, 58 stand-downs) — `callouts.jsonl` has two rows at `visible_bars` 1613, so every callout total from burst 12 on double-counts that bar |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
@@ -111,8 +111,12 @@ says anything else.** What follows is why.
    predicted at bar 7350 and FAILED — that roll is genuinely clean, verified by hand audit, so the "quarterly
    feature" generalisation is retracted: five consecutive rolls merged (Dec-24 → Dec-25) and the sixth did
    not. Better hypothesis, pre-registered at bar 8550: the merges stop where the live-append region begins
-   (last merge ends 6896; revisions seen at 7333–7366), so the June 2026 roll near bar 9696 will also be
-   CLEAN — the opposite of the earlier prediction, falsifiable in ~1,100 bars.** `SERIES_AUDIT.md` passes MES 60m as eligible and is blind to
+   (last merge ends 6896; revisions seen at 7333–7366), so the June 2026 roll near bar 9696 would also be
+   CLEAN. **CONFIRMED at bar 9750** by hand audit of expiry week: no envelope constancy, one weekly-open gap,
+   no zero-volume bars, and every wide bar on 5.8-9.1x volume. **Record: 2 confirmed, 2 failed — and the two
+   confirmations are not equal.** Predicting the ABSENCE of a defect is cheap, because clean is a series'
+   default state; only the December 2025 call (predicting a merge WOULD appear) was strongly informative.
+   The live-append hypothesis has survived one weak test.** `SERIES_AUDIT.md` passes MES 60m as eligible and is blind to
    all of this.
 7. **The 18:00 ET bar has no volume on Mon–Thu** (56 of 60 zero-volume bars, 79% of that hour) **while being
    the widest overnight hour** (z +4.30). A missing field, not a thin market — and it is the first bar of your

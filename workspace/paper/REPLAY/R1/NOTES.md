@@ -3633,3 +3633,32 @@ The long arm continues to decay: `+2.09, +2.01, +1.92, +1.84, +2.06, +1.94, +2.0
 across n=51…60. **Nothing above |z| 2 on any honest arm**, and the corrected bar is ~6.1.
 
 Cursor **8950**, flat, nothing armed, ~2,400 bars left.
+
+---
+
+## Burst 32 — bars 8950 → 9350 (2026-04-29 → 2026-05-26). 0 trades. Uneventful, and the entry says so.
+
+Solo (1 AGENT, OPEN, ET 02:44 Wed). Callout `R1-00065-b009350`, `LEAN:NONE`. Cursor **9350/11375**, flat,
+drawdown $0, 65 callouts. **400 bars examined, 0 candidates.**
+
+**No new detector flag** (5 envelope / 3 gap-cluster / 35 range-volume, unchanged), **no integrity change**,
+3 feed holes and 2 flat-extreme runs as before. ATR ran **7.68 → 24.27**; friction floor **0.032R–0.103R**
+at a 1.0-ATR stop. Nothing met a predicate, for the same reason as the last twenty bursts: **no predicate
+exists that clears its own bar.**
+
+**This entry is deliberately short.** `NOTES.md` is past 3,500 lines and restating settled findings at length
+because a burst produced nothing would make the record worse, not more thorough. When a burst is uneventful
+the honest write-up is brief.
+
+**9,000-bar score milestone:** `z +1.021`, `free_t(24)` 2.521 — unchanged, same two-trade comparison.
+
+**Counterfactual n=61:** always-LONG +0.276R, all-bar gap **+0.288 / z +1.60**; always-SHORT **+0.058 /
+z +0.34**; coin-flip +0.285 / z +1.58. The long arm's decay continues: `+2.09, +2.01, +1.92, +1.84, +2.06,
++1.94, +2.03, +2.06, +1.88, +1.76, +1.60` across n=51…61. **Eleven readings, three crossings of |z| 2, none
+sustained, and the paired-local control has never crossed once.** Against the corrected bar of ~6.1 this is
+not close and never was.
+
+**Next:** the pre-registered **June 2026 roll test** — predicted **CLEAN** at bar 8550, window 9550–9850,
+point estimate 9696 — is **200 bars ahead** and resolves within one or two bursts. Standing caveat on it: my
+structural record is **1 confirmed, 2 failed**, so a clean June would be the second correct call in four
+rather than a vindication of the live-append hypothesis; a merge kills that hypothesis outright.

@@ -345,6 +345,8 @@ def main() -> int:
                 notes.append(f"REVERSAL_REPEAT {sym} {setup.get('side')} (woke {last_wake['t']}, quiet)")
             elif 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:  # plan_builder G2: no new entries 15:00-18:00 ET, so no plan is possible
                 notes.append(f"REVERSAL_AFTER_1500 {sym} (no entries 15:00-18:00, quiet)")
+            elif st.get("sizing", {}).get("room", 999) < 25:   # #19: no book room
+                notes.append(f"REVERSAL_NO_ROOM {sym} (room ${st['sizing']['room']:.2f}, quiet)")
             elif binding:  # AUTOMATE_NEXT #13: no plan is possible under a stand-down (plan_builder G1)
                 notes.append(f"REVERSAL_UNDER_STANDDOWN {sym} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:

@@ -695,3 +695,4 @@
 {"t": "2026-09-30T17:16:23+00:00", "triggers": [], "events": [], "notes": []}
 {"t": "2026-09-30T17:18:43+00:00", "triggers": [], "events": [], "notes": []}
 {"t": "2026-09-30T17:21:03+00:00", "triggers": [], "events": [], "notes": []}
+{"t": "2026-09-30T17:23:22+00:00", "triggers": ["PLAN_EVENT"], "events": [{"kind": "TRIGGERED", "id": "CALL-0019", "detail": {"call_id": "CALL-0019", "symbol": "MNQ", "side": "LONG", "bar_minutes": 15, "entry_price": 30840.0, "entry_bar_ts": "2026-09-30T13:00:00-04:00", "initial_stop": 30797.25, "stop": 30797.25, "risk_points": 42.75, "contracts": 2, "remaining": 2, "tps": [{"label": "TP1", "r": 1.8, "fraction": 1.0, "price": 30917.0, "hit": false}], "risk_dollars": 171.0, "realized": 0.0, "triggered_at_utc": "2026-09-30T17:23:22+00:00", "basis_at_trigger": "0419350", "entry_fill_note": "resting limit filled at its price, no slippage charged"}}, {"kind": "PLAN_TRIGGERED", "id": "CALL-0019"}], "notes": []}

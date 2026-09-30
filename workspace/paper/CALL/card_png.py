@@ -813,7 +813,7 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
 # TIMEFRAMES column; "watermark" = large faded icon behind the card; "off" = none. Missing file = no icon.
 ICON_DIR = HERE / "icons"
 ICON_MODE = "corner"
-WATERMARK_ALPHA = 0.14
+WATERMARK_ALPHA = 0.22
 
 
 def add_symbol_icon(card, sym, anchor):

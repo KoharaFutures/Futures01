@@ -1,9 +1,9 @@
 {
   "starting_equity": 50000.0,
-  "equity": 49919.6,
+  "equity": 49687.28,
   "peak_equity": 50156.56,
-  "drawdown": 236.96,
-  "realized_pnl": -80.4,
+  "drawdown": 469.28,
+  "realized_pnl": -312.72,
   "open": [],
   "closed": [
     {
@@ -325,6 +325,41 @@
       "closed_at_utc": "2026-09-30T00:04:09+00:00",
       "net": -180.88,
       "r_multiple": -1.04,
+      "result": "LOSS"
+    },
+    {
+      "call_id": "CALL-0018",
+      "symbol": "MGC",
+      "side": "SHORT",
+      "bar_minutes": 15,
+      "entry_price": 4226.4,
+      "entry_bar_ts": "2026-09-30T03:15:00-04:00",
+      "initial_stop": 4233.8,
+      "stop": 4233.8,
+      "risk_points": 7.4,
+      "contracts": 3,
+      "remaining": 0,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.8,
+          "fraction": 1.0,
+          "price": 4213.1,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 222.0,
+      "realized": -232.32000000001636,
+      "triggered_at_utc": "2026-09-30T12:24:05+00:00",
+      "basis_at_trigger": "f3933a9",
+      "entry_fill_note": "limit filled at the bar open, better than the limit price",
+      "exit_price": 4233.8,
+      "exit_bar_ts": "2026-09-30T04:30:00-04:00",
+      "exit_reason": "STOP",
+      "ambiguous": false,
+      "closed_at_utc": "2026-09-30T12:24:05+00:00",
+      "net": -232.32,
+      "r_multiple": -1.046,
       "result": "LOSS"
     }
   ]

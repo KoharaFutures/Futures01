@@ -3565,3 +3565,71 @@ all-bar control — flat to four decimals.**
 `score --trials 24`: **z +1.021**, `free_t(24)` 2.521 — unchanged, same two-trade comparison.
 
 Cursor **8550**, flat, nothing armed, ~2,800 bars left.
+
+---
+
+## Burst 31 — bars 8550 → 8950 (2026-04-02 → 2026-04-29). 0 trades. **A second prediction failed.**
+
+Solo (1 AGENT, OPEN, ET 00:44 Wed). Callout `R1-00064-b008950`, `LEAN:NONE`. Cursor **8950/11375**, flat,
+drawdown $0, 64 callouts. **400 bars examined, 0 candidates.**
+
+### 1. The failure, and the fourth defect class it found
+
+**Predicted at bar 7350:** lone range/volume flags outside a roll window would be **holiday- or
+weekend-adjacent thin bars.** Bar **8792** fired and **it is not**: 2026-04-20 **07:00, a Monday,
+mid-session, volume 0.98× median.**
+
+What it actually is:
+
+```
+ [8789] 2026-04-20T02:00  o 7114.00 h 7116.00 l 7113.50 c 7116.00  range  2.50  v    706
+ [8790] 2026-04-20T05:00  o 7161.50 h 7161.50 l 7127.00 c 7128.25  range 34.50  v  65722   gap +45.50
+ [8791] 2026-04-20T06:00  o 7128.25 h 7161.50 l 7125.50 c 7126.25  range 36.00  v  12145
+ [8792] 2026-04-20T07:00  o 7126.25 h 7161.50 l 7121.00 c 7129.25  range 40.50  v  16386   <- FLAGGED
+```
+
+**Hours 03:00 and 04:00 are missing** — a three-hour hole inside the overnight session with a **45.50-point
+gap** across it — and then **all three bars report the identical high 7161.50**: a high-band of **0%** on a
+37.00 mean range, **tighter than any confirmed merge** (Jun-25 was 11%, Sep-25 17%). **A feed outage,
+followed by a backfill that stamped one session high onto three bars.**
+
+Tape-wide, measured: exactly **three** intra-session hour holes that are not the normal 16:00→18:00 halt —
+2025-05-26 and 2025-06-19 (**Memorial Day and Juneteenth early closes, benign**) and this one — and exactly
+**two** runs of ≥3 bars sharing an identical extreme at elevated range (6687–6689 and 8790–8792).
+
+**So this tape carries four distinct defect families, not one:** the contract merge, the broken 18:00 volume
+field, the live re-emit/revise tail, and now **outage-plus-backfill.** `feed_holes()` added to `view.py`,
+printing in line 1 beside the other two.
+
+### 2. My predictive record on this tape's structure: 1 confirmed, 2 failed
+
+| prediction | written at | outcome |
+|---|---|---|
+| December 2025 roll merges near bar 6829 | bar 5650 | **CONFIRMED** (bars 6864–6896) |
+| March 2026 roll merges near bar 8297 | bar 7350 | **FAILED** — roll is genuinely clean |
+| lone flags outside a roll window are holiday/weekend thin bars | bar 7350 | **FAILED** — this one is a Monday outage |
+
+**I am recording the ratio, not only the win.** One confirmed prediction earlier in this journal was written
+up as the desk's "first fully successful prospective test"; two failures since put that in proportion. **My
+stories about *why* this tape misbehaves are worse than my ability to detect *that* it misbehaves.**
+
+**What keeps being right is the weaker claim.** The screen's printed instruction is `LOOK BEFORE TRADING`,
+and on both failures it flagged a bar that was genuinely untradeable while my explanation was wrong.
+**Operationally correct, taxonomically wrong — twice.** That is an argument for keeping screens that make me
+look and distrusting the narratives I attach to them.
+
+**The June 2026 prediction (bar 9696, window 9550–9850, predicted CLEAN) stands unaltered** — ~600 bars
+ahead. Given the record above, I would not bet on it.
+
+### 3. Counterfactual, n=60
+
+| arm | sample | all-bar gap / z |
+|---|---|---|
+| always LONG | +0.297R | +0.319 / **+1.76** |
+| always SHORT | −0.040R | **+0.020 / +0.12** |
+| coin flip | +0.265R | +0.308 / +1.69 |
+
+The long arm continues to decay: `+2.09, +2.01, +1.92, +1.84, +2.06, +1.94, +2.03, +2.06, +1.88, +1.76`
+across n=51…60. **Nothing above |z| 2 on any honest arm**, and the corrected bar is ~6.1.
+
+Cursor **8950**, flat, nothing armed, ~2,400 bars left.

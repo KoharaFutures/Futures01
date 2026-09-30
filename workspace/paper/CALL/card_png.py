@@ -800,10 +800,47 @@ def render(plan: dict, out: pathlib.Path) -> pathlib.Path:
     d.text((rx, by), conf, font=fmeta, fill=(*las, 195))
 
     img = Image.alpha_composite(img, glow.filter(ImageFilter.GaussianBlur(sc(7))))
-    card = Image.alpha_composite(img, ov).convert("RGB")
+    card = Image.alpha_composite(img, ov)
+    card = add_symbol_icon(card, plan["symbol"], anchor=(tx + tw2, sc(254)))
+    card = card.convert("RGB")
     out.parent.mkdir(parents=True, exist_ok=True)
     card.save(out)
     return out
+
+
+# Symbol icons (owner, 2026-09-30): drop <SYM>.png (transparent PNG preferred) into
+# workspace/paper/CALL/icons/. ICON_MODE "corner" = small icon just above the top-right of the
+# TIMEFRAMES column; "watermark" = large faded icon behind the card; "off" = none. Missing file = no icon.
+ICON_DIR = HERE / "icons"
+ICON_MODE = "corner"
+WATERMARK_ALPHA = 0.10
+
+
+def add_symbol_icon(card, sym, anchor):
+    import os
+    mode = os.environ.get("CARD_ICON_MODE", ICON_MODE)
+    f = ICON_DIR / f"{sym}.png"
+    if mode == "off" or not f.exists():
+        return card
+    try:
+        ic = Image.open(f).convert("RGBA")
+    except Exception:
+        return card
+    W, H = card.size
+    if mode == "watermark":
+        h = int(H * 0.8)
+        ic = ic.resize((max(1, int(ic.width * h / ic.height)), h), Image.LANCZOS)
+        a = ic.getchannel("A").point(lambda v: int(v * WATERMARK_ALPHA))
+        ic.putalpha(a)
+        layer = Image.new("RGBA", card.size, (0, 0, 0, 0))
+        layer.paste(ic, ((W - ic.width) // 2, (H - ic.height) // 2), ic)
+        return Image.alpha_composite(card, layer)
+    h = sc(78)
+    ic = ic.resize((max(1, int(ic.width * h / ic.height)), h), Image.LANCZOS)
+    x, y = anchor[0] - ic.width, anchor[1] - h - sc(8)
+    layer = Image.new("RGBA", card.size, (0, 0, 0, 0))
+    layer.paste(ic, (x, y), ic)
+    return Image.alpha_composite(card, layer)
 
 
 def main() -> int:

@@ -28,7 +28,8 @@ SYMS = ("MES", "MNQ", "MGC", "MCL")
 RTH_HOURS = {"MES": range(9, 16), "MNQ": range(9, 16), "MGC": range(8, 14), "MCL": range(9, 15)}
 STOP_ATR = 0.5          # stop sits 0.5 ATR + 1 tick beyond the level
 TARGET_R = 1.5          # one target geometry for every arm
-HOLD = 12               # time exit, in 60m bars
+HOLD = 12               # time exit, in bars
+BE_TRIGGER = 0.8        # PERSYM1 track A: move the stop to breakeven at +0.8R
 IS_FRAC = 0.60          # in-sample = first 60% of bars
 N_PLACEBO_SEEDS = 10
 N_SHIFTS = 200
@@ -54,18 +55,33 @@ class Tape:
     min_stop: float
     bin_w: float
     is_end: int          # first OOS index
+    tf: int = 60
+    hold: int = HOLD
 
     def __len__(self):
         return len(self.bars)
 
 
-def tape(sym: str) -> Tape:
-    bars = load(sym, 60)
+def tape(sym: str, tf: int = 60) -> Tape:
+    """tf 60 or 240 = intraday (RTH gating applies). tf 1440 = daily: every bar is its own
+    session, so there is no 'last RTH hour' and no intraday session exit."""
+    bars = load(sym, tf)
     atr = atr_series(bars)
-    hours = RTH_HOURS[sym]
-    day = [tday(b.ts) for b in bars]
-    rth = [b.ts.hour in hours for b in bars]
     spec = get_contract(sym)
+    day = [tday(b.ts) for b in bars]
+    if tf >= 240:
+        # swing timeframes: no intraday gating, no session exit (HYPOTHESES_PERSYM1.md 5b)
+        rth = [True] * len(bars)
+        bin_ticks = max(1, round(0.02 * spec.typical_atr_points / spec.tick_size))
+        return Tape(sym=sym, bars=bars, atr=atr, day=day, rth=rth,
+                    close_bar=[False] * len(bars), last_rth=[False] * len(bars), spec=spec,
+                    tick=spec.tick_size,
+                    cost_pts=2 * (spec.commission_per_side + spec.exchange_fee_per_side) / spec.point_value,
+                    min_stop=spec.min_stop_ticks * spec.tick_size,
+                    bin_w=bin_ticks * spec.tick_size, is_end=int(IS_FRAC * len(bars)),
+                    tf=tf, hold=(10 if tf >= 1440 else HOLD))
+    hours = RTH_HOURS[sym]
+    rth = [b.ts.hour in hours for b in bars]
     # last RTH bar of each trading day, and the final RTH hour of each trading day
     last_idx: dict = {}
     for i, b in enumerate(bars):
@@ -83,7 +99,7 @@ def tape(sym: str) -> Tape:
                 cost_pts=2 * (spec.commission_per_side + spec.exchange_fee_per_side) / spec.point_value,
                 min_stop=spec.min_stop_ticks * spec.tick_size,
                 bin_w=bin_ticks * spec.tick_size,
-                is_end=int(IS_FRAC * len(bars)))
+                is_end=int(IS_FRAC * len(bars)), tf=tf, hold=HOLD)
 
 
 def sessions(t: Tape) -> list[tuple]:
@@ -152,34 +168,60 @@ class Book:
 
 
 def _walk(t: Tape, i: int, side: int, level: float,
-          stop_px: float | None = None, target_px: float | None = None) -> Trade | None:
+          stop_px: float | None = None, target_px: float | None = None,
+          policy: str = "base", target_r: float = TARGET_R,
+          limit_px: float | None = None, limit_bars: int = 0,
+          stop_atr: float = STOP_ATR) -> Trade | None:
     """Enter at bar i+1's open +- 1 adverse tick. Default geometry: stop is `level` displaced
     STOP_ATR*ATR + 1 tick, target 1.5R. `stop_px`/`target_px` override it (used only by the
     pre-registered naked-POC magnet arm, whose target IS the level)."""
     j = i + 1
     if j >= len(t.bars) or t.atr[i] is None:
         return None
-    fill = t.bars[j].o + side * t.tick
-    off = STOP_ATR * t.atr[i] + t.tick
+    if limit_px is not None:
+        # a resting limit: filled only if a later bar trades through it, within limit_bars
+        hit = None
+        for k in range(j, min(j + max(1, limit_bars), len(t.bars))):
+            b = t.bars[k]
+            if (side > 0 and b.l <= limit_px) or (side < 0 and b.h >= limit_px):
+                hit = k
+                break
+            if t.close_bar[k]:
+                break
+        if hit is None:
+            return None
+        j = hit
+        fill = limit_px          # a resting limit pays no adverse tick; it pays non-fills instead
+    else:
+        fill = t.bars[j].o + side * t.tick
+    off = stop_atr * t.atr[i] + t.tick
     stop = (level - side * off) if stop_px is None else stop_px
     risk = abs(fill - stop)
     if risk < t.min_stop:
         risk = t.min_stop
         stop = fill - side * risk
-    target = (fill + side * TARGET_R * risk) if target_px is None else target_px
+    if policy == "x08":
+        target_r = BE_TRIGGER
+    target = (fill + side * target_r * risk) if target_px is None else target_px
     if side * (target - fill) <= 0:
         return None
-    for k in range(j, min(j + HOLD, len(t.bars))):
+    be_level = fill + side * BE_TRIGGER * risk
+    armed = False
+    for k in range(j, min(j + t.hold, len(t.bars))):
         b = t.bars[k]
         hit_s = (b.l <= stop) if side > 0 else (b.h >= stop)
         hit_t = (b.h >= target) if side > 0 else (b.l <= target)
         if hit_s:                               # the stop wins a same-bar tie
-            return _mk(t, i, side, fill, stop, risk, k, stop, "stop")
+            return _mk(t, i, side, fill, stop, risk, k, stop, "be" if armed else "stop")
         if hit_t:
             return _mk(t, i, side, fill, stop, risk, k, target, "target")
         if t.close_bar[k]:
             return _mk(t, i, side, fill, stop, risk, k, b.c, "session")
-    k = min(j + HOLD, len(t.bars)) - 1
+        if policy == "be08" and not armed:
+            # arm only on a bar that reached +0.8R without touching the stop; effective next bar
+            if (b.h >= be_level) if side > 0 else (b.l <= be_level):
+                armed, stop = True, fill
+    k = min(j + t.hold, len(t.bars)) - 1
     return _mk(t, i, side, fill, stop, risk, k, t.bars[k].c, "time")
 
 
@@ -188,7 +230,10 @@ def _mk(t, i, side, fill, stop, risk, k, px, why) -> Trade:
     return Trade(i, side, fill, stop, risk, k, px, why, r)
 
 
-def score(t: Tape, signals, lo: int, hi: int, one_at_a_time: bool = True) -> Book:
+def score(t: Tape, signals, lo: int, hi: int, one_at_a_time: bool = True,
+          policy: str = "base", target_r: float = TARGET_R,
+          limit: bool = False, limit_bars: int = 0,
+          stop_atr: float = STOP_ATR) -> Book:
     """signals: iterable of (bar_index, side, level, tag), scored on bars [lo, hi)."""
     bk = Book()
     free = -1
@@ -205,7 +250,8 @@ def score(t: Tape, signals, lo: int, hi: int, one_at_a_time: bool = True) -> Boo
         if one_at_a_time and i <= free:
             bk.skipped_overlap += 1
             continue
-        tr = _walk(t, i, side, level, stop_px, target_px)
+        tr = _walk(t, i, side, level, stop_px, target_px, policy, target_r,
+                   (level if limit else None), limit_bars, stop_atr)
         if tr is None:
             bk.skipped_nodata += 1
             continue

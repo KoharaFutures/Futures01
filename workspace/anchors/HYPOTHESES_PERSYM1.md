@@ -77,6 +77,23 @@ here is mechanical: *does the limit entry make the stop fundable, and at what co
 Any expectancy figure it produces is quoted as in-sample-contaminated and needs new bars.
 Also reported: the 0.786-only split (`OPEN_QUESTIONS` #9) under the same caveat.
 
+## 5b. AMENDMENT, made before any PERSYM1 arm was scored
+
+On wiring the harness I found that applying ANCH1's intraday session gating to 240m bars leaves
+**one eligible entry bar per session** (a 240m bar labelled 08:00 spans 08:00–12:00, so for MES only
+the 08:00 and 12:00 bars touch RTH, and the "no entry in the final session bar" rule removes the
+second), and the session-exit rule closes every 240m trade at the first session-close bar — so a
+12-bar hold could never run. That makes Tracks B and C unmeasurable for mechanical reasons rather
+than market ones.
+
+**Amendment:** for **tf ≥ 240m** there is no intraday session gating and no session exit. Those are
+swing timeframes — a 240m bar is 4 hours and a 12-bar hold is 2 trading days — so trades end on the
+stop, the target, or the time exit only. 60m keeps ANCH1's gating unchanged, because that is the
+timeframe on which this project's session rules were measured.
+
+No PERSYM1 result had been computed when this was written; the only thing I had seen was the bar
+census in §0 and the eligible-bar counts above.
+
 ## 6. Trial count and the bar
 
 New confirmation tests, each run once on its out-of-sample slice:

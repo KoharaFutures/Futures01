@@ -1,22 +1,22 @@
 {
- "now_utc": "2026-10-01T07:12:32+00:00",
- "now_et": "2026-10-01 03:12 EDT",
+ "now_utc": "2026-10-01T07:14:39+00:00",
+ "now_et": "2026-10-01 03:14 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T03:00:00-04:00  c=4210.20 h=4213.60 l=4209.70  lag=12.5m  new=0 revised=1",
-  "MNQ 5m newest 2026-10-01T03:00:00-04:00  c=31019.50 h=31043.25 l=31013.50  lag=12.5m  new=0 revised=1",
+  "MGC 5m newest 2026-10-01T03:00:00-04:00  c=4210.00 h=4213.60 l=4209.40  lag=14.7m  new=0 revised=1",
+  "MNQ 5m newest 2026-10-01T03:00:00-04:00  c=31021.00 h=31043.25 l=31011.25  lag=14.7m  new=0 revised=1",
   "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T03:00:00-04:00",
-   "lag_min": 7.5,
-   "close": 4210.2001953125
+   "lag_min": 9.7,
+   "close": 4210.0
   },
   "MNQ": {
    "newest_5m": "2026-10-01T03:00:00-04:00",
-   "lag_min": 7.5,
-   "close": 31019.5
+   "lag_min": 9.7,
+   "close": 31021.0
   }
  },
  "resolve_log": [],
@@ -109,84 +109,84 @@
    {
     "level": "60m P_RTH_H",
     "price": 4210.7,
-    "dist_atr": 0.08,
+    "dist_atr": 0.12,
     "state": "near",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m SWING_H@4207.30",
     "price": 4207.3,
-    "dist_atr": 0.48,
+    "dist_atr": 0.45,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m PDC",
     "price": 4215.0,
-    "dist_atr": 0.79,
+    "dist_atr": 0.83,
     "state": "near",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m SWING_H@4203.80",
     "price": 4203.8,
-    "dist_atr": 1.06,
+    "dist_atr": 1.02,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m PDH",
     "price": 4218.0,
-    "dist_atr": 1.29,
+    "dist_atr": 1.32,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "VAH 3-day",
     "price": 4219.5,
-    "dist_atr": 1.54,
+    "dist_atr": 1.57,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
-    "level": "60m SWING_H@4220.00",
-    "price": 4220.0,
-    "dist_atr": 1.62,
-    "state": "armed",
-    "hub_asof": "2026-09-30T16:00:00-04:00"
-   },
-   {
     "level": "5m ROUND1",
     "price": 4200.0,
-    "dist_atr": 1.68,
+    "dist_atr": 1.65,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m ROUND0",
     "price": 4200.0,
-    "dist_atr": 1.68,
+    "dist_atr": 1.65,
+    "state": "armed",
+    "hub_asof": "2026-09-30T16:00:00-04:00"
+   },
+   {
+    "level": "60m SWING_H@4220.00",
+    "price": 4220.0,
+    "dist_atr": 1.65,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "5m SWING_L@4198.60",
     "price": 4198.6,
-    "dist_atr": 1.92,
+    "dist_atr": 1.88,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m SWING_L@4198.60",
     "price": 4198.6,
-    "dist_atr": 1.92,
+    "dist_atr": 1.88,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "5m SWING_L@4197.60",
     "price": 4197.6,
-    "dist_atr": 2.08,
+    "dist_atr": 2.05,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    }
@@ -195,21 +195,21 @@
    {
     "level": "60m PWH",
     "price": 31094.75,
-    "dist_atr": 1.73,
+    "dist_atr": 1.7,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "VAH 2-week",
     "price": 30932.0,
-    "dist_atr": 2.02,
+    "dist_atr": 2.05,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m SWING_H@30906.00",
     "price": 30906.0,
-    "dist_atr": 2.61,
+    "dist_atr": 2.65,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    }
@@ -223,9 +223,9 @@
    "60m SWING_H@4203.80@4203.8": "armed",
    "60m PDH@4218.0": "armed",
    "VAH 3-day@4219.5": "armed",
-   "60m SWING_H@4220.00@4220.0": "armed",
    "5m ROUND1@4200.0": "armed",
    "60m ROUND0@4200.0": "armed",
+   "60m SWING_H@4220.00@4220.0": "armed",
    "5m SWING_L@4198.60@4198.6": "armed",
    "60m SWING_L@4198.60@4198.6": "armed",
    "5m SWING_L@4197.60@4197.6": "armed"
@@ -254,5 +254,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "03:12 EDT \u00b7 MNQ 31019.5 MGC 4210.2 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
+ "one_line": "03:14 EDT \u00b7 MNQ 31021.0 MGC 4210.0 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
 }

@@ -17,7 +17,8 @@ when a pre-registered trigger actually fires.
 
 | exit | meaning | the routine should |
 |---|---|---|
-| **0** | quiet — no trigger armed, nothing resolved | say nothing at all |
+| **0** | quiet, inside an entry window — no trigger armed, nothing resolved | say nothing at all |
+| **3** | dormant — no window open, nothing waiting to resolve | sleep 10 min |
 | **10** | an armed trigger, a resolved trade, a size refusal, a drawdown alert, or a failed fetch | report, and use judgment |
 | **2** | the desk could not form a view | report the failure |
 
@@ -31,7 +32,8 @@ Every cycle appends one line to `desk_events.jsonl` whether it wakes anyone or n
 | `plan.py` | callouts: trigger, limit, stop, target, sizing, budget refusals |
 | `resolve.py` | resolves fills through the same engine that measured each prior |
 | `status.py` | account state and each arm's running record next to its measured prior |
-| `desk_check.py` | the gated mechanical turn; exit 0/10/2 decides whether to wake an LLM |
+| `desk_check.py` | the gated mechanical turn; exit 0/3/10/2 decides whether to wake an LLM |
+| `desk_loop.sh` | runs the check every 2 min, exits only when a decision is needed |
 | `desk_events.jsonl` | one line per cycle, woken or not |
 | `selftest.py` | 4 checks: levels, triggers, the quoted priors, and the fill-bar rule |
 | `callouts.jsonl` | append-only. A callout is never edited after it is posted |
@@ -49,9 +51,28 @@ Every cycle appends one line to `desk_events.jsonl` whether it wakes anyone or n
   nothing; a full exit at 0.8R is worse on 8 of 8 arms.
 - **Nothing here clears its luck bar.** It is a forward test.
 
+## Running it continuously
+
+```bash
+bash workspace/paper/LVNFIB/desk_loop.sh        # every 2 minutes; exits only when a decision is needed
+bash workspace/paper/LVNFIB/desk_loop.sh 300    # a slower cadence
+```
+
+The loop runs `desk_check.py` every 120 s and **exits** on 10 (attention) or 2 (three consecutive
+failures), so the agent that launched it in the background is woken for judgment and never for a
+routine check. On exit 3 (dormant — no entry window open and nothing waiting to resolve) it sleeps
+10 minutes at a time, so it is safe to leave running across the 15:30–18:00 break and the weekend.
+
+The loop lives inside a session and dies when the worker restarts, which is why the hourly routine
+is a **backstop**: it checks whether the loop is alive and restarts it if not.
+
+**What the 2-minute cadence does and does not buy:** arm A's trigger needs a 60m bar to *close*,
+so a new trigger can only appear once an hour. The fast cadence catches a resting limit's fill, the
+newest bar settling after revision, and drawdown or budget changes. It cannot find a trigger that
+does not exist yet. The feed is throttled to 300 s separately — see `CHARTER.md` §4.
+
 ## Before you believe any price it prints
 
-`yfinance` is not installed in this container, so the desk reads `data/archive/` and the newest bar
-is **2026-09-30**. Run `pip install yfinance` then
-`python3 DATA_HUB/tools/refresh_archive.py --fetch` to bring it current. Until then no level the
-desk prints is a current price, and `status.py` says so on every run.
+The feed is live as of 2026-10-01. But Yahoo lags a median **13 min at 5m** and ~23 min at 15m, and
+the **newest 1–2 bars revise for ~28 min** — so a level touched on an unsettled bar is not touched.
+Every level the engine emits carries its source bar's timestamp; quote it.

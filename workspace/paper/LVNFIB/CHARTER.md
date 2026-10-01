@@ -71,10 +71,22 @@ structure is the losing side of it on gold. Arm A is the inverse.
 
 ## 4. Known limits of this desk, stated up front
 
-- **No live feed in this container.** `yfinance` is not installed, so `levels.py` reads
-  `data/archive/` and stamps every level with its source bar. Until someone runs
-  `pip install yfinance && python3 DATA_HUB/tools/refresh_archive.py --fetch`, the newest bar is
-  **2026-09-30** and the desk must not describe any level as current.
+- **The feed is live as of 2026-10-01** (`yfinance` installed, fetch verified: MGC/MNQ 15m and 60m
+  pulled to 2026-10-01). Every level still carries the timestamp of the bar it came from, and the
+  vendor's own limits still bind: a median **13 min lag at 5m** and ~23 min at 15m, and the
+  **newest 1–2 bars revise for ~28 min**, so a level "touched" on an unsettled bar is not touched.
+  `desk_check.py` wakes on a newest bar more than 2.5 h old during an entry window.
+- **Checking every 2 minutes does not make this desk faster than its rule.** Arm A's trigger is
+  *a 60m bar trades into the level and closes against the prior week* — it can only become true
+  when a 60m bar closes, once an hour. The 2-minute cadence (`desk_loop.sh`) buys three real
+  things and no fourth: a resting limit's **fill** is seen sooner, the **newest bar settling**
+  after revision is picked up sooner, and **drawdown or budget** changes are caught between
+  hours. It cannot find a trigger that does not exist yet. The feed is throttled separately to
+  300 s inside `desk_check.py`, because 15m bars close four times an hour and 60m bars once, so
+  polling the vendor every 2 minutes would be 720 requests a day for no new information.
+  If you want genuinely 2-minute opportunities, the rule has to be *defined* on 5m or 15m bars —
+  and the archive holds only ~2 months of those, which `LVN1718` already showed is too short to
+  establish anything. That is a data problem, not a cadence problem.
 - **Arm A produced 33 triggers in two years on MGC** — roughly 1.4 a month, of which the budget
   funds about 60%. This desk will be quiet. Quiet is the correct behaviour, not a malfunction.
 - **One position at a time per symbol**, and open plus pending both count against the budget. The

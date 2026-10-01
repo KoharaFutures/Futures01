@@ -5,7 +5,8 @@ Doctrine is DATA_HUB/AUTOMATION.md: a script does the repeating work every cycle
 woken only when a pre-registered trigger actually fires. Arm A fires about 1.4 times a month, so
 almost every cycle here should be silent, and silence must cost nothing.
 
-    exit 0   quiet - nothing happened, do not wake anyone
+    exit 0   quiet, inside an entry window - nothing happened, do not wake anyone
+    exit 3   dormant - outside every entry window with nothing open; the loop sleeps long
     exit 10  attention - something a human or an LLM should see (printed as WAKE: lines)
     exit 2   data failure - the desk could not form a view
 
@@ -32,6 +33,11 @@ import plan as planner                         # noqa: E402
 
 ET = ZoneInfo("America/New_York")
 EVENTS = HERE / "desk_events.jsonl"
+FETCH_STAMP = HERE / ".last_fetch"
+# The check may run every 2 minutes, but the FEED cannot. Yahoo lags a median 13 min at 5m and
+# ~23 min at 15m, 15m bars close four times an hour and 60m bars once, and the newest 1-2 bars
+# revise for ~28 min. Fetching faster than this buys nothing and risks being rate-limited.
+FETCH_MIN_SECONDS = 300
 DD_ALERT = 2_600.0            # RULES_AND_PITFALLS: operate as if the floor is $2,600
 # The desk's own entry windows, ET. Outside these it still resolves, but it arms nothing.
 WINDOW = {"MGC": (8, 13), "MNQ": (9, 15)}
@@ -49,12 +55,19 @@ def try_refresh():
         import yfinance  # noqa: F401
     except ModuleNotFoundError:
         return False, False, "no live feed (yfinance absent) - running off data/archive/"
+    if FETCH_STAMP.exists():
+        age = (datetime.now(ET) - datetime.fromisoformat(FETCH_STAMP.read_text().strip())).total_seconds()
+        if age < FETCH_MIN_SECONDS:
+            return False, True, (f"feed throttled: last fetch {age:.0f}s ago, minimum "
+                                 f"{FETCH_MIN_SECONDS}s (15m bars close 4x/hour, 60m once)")
     try:
         r = subprocess.run([sys.executable, str(ROOT / "DATA_HUB/tools/refresh_archive.py"),
                             "--fetch", "--symbols", "MGC", "MNQ", "--frames", "15", "60"],
                            capture_output=True, text=True, timeout=600)
-        return True, r.returncode == 0, (r.stdout or r.stderr).strip().splitlines()[-1:] and \
-            (r.stdout or r.stderr).strip().splitlines()[-1] or "fetch returned no output"
+        if r.returncode == 0:
+            FETCH_STAMP.write_text(datetime.now(ET).isoformat())
+        lines = (r.stdout or r.stderr).strip().splitlines()
+        return True, r.returncode == 0, (lines[-1] if lines else "fetch returned no output")
     except Exception as e:                                    # noqa: BLE001
         return True, False, f"fetch failed: {type(e).__name__}: {e}"
 
@@ -78,6 +91,7 @@ def main():
 
     # --- levels and triggers -------------------------------------------------
     active = in_window(now)
+    feed_live = attempted or (FETCH_STAMP.exists())
     posted = []
     try:
         rows = [r for s in engine.SYMS for r in planner.build(s, st, a.dry)]
@@ -121,9 +135,16 @@ def main():
                 wake.append("RESOLVED " + line.strip())
         notes.append(out.splitlines()[-1] if out else "resolve.py produced no output")
 
-    snap_line = "; ".join(
-        f"{s} close {engine.snapshot(s)['newest_close']:.2f} @ "
-        f"{engine.snapshot(s)['newest_bar'][:16]}" for s in engine.SYMS)
+    snaps = {s: engine.snapshot(s) for s in engine.SYMS}
+    snap_line = "; ".join(f"{s} close {v['newest_close']:.2f} @ {v['newest_bar'][:16]}"
+                          for s, v in snaps.items())
+    # With a live feed, a stale newest bar during an entry window is a fault, not a fact of life.
+    if feed_live and active:
+        for s, v in snaps.items():
+            age_h = (now - datetime.fromisoformat(v["newest_bar"])).total_seconds() / 3600.0
+            if age_h > 2.5:
+                wake.append(f"STALE {s}: newest bar {v['newest_bar'][:16]} is {age_h:.1f}h old "
+                            f"during an entry window - the feed is not keeping up")
     rec = {"ts": now.isoformat(), "et": now.strftime("%Y-%m-%d %H:%M %Z"),
            "active_window": active, "posted": len(posted), "resolved": resolved,
            "equity": st["equity"], "drawdown": round(dd, 2),
@@ -144,6 +165,14 @@ def main():
             print(f"  WAKE: {w}")
         print("exit 10 - attention needed")
         return 10
+    # Dormant only when no window is open AND nothing is waiting to resolve.
+    resolved_ids = {json.loads(l)["id"] for l in
+                    (HERE / "resolutions.jsonl").read_text().splitlines()
+                    if l.strip()} if (HERE / "resolutions.jsonl").exists() else set()
+    open_armed = [r for r in rows if r["status"] == "PENDING" and r["id"] not in resolved_ids]
+    if not active and not open_armed:
+        print("exit 3 - dormant (no entry window open, nothing waiting to resolve)")
+        return 3
     print("exit 0 - quiet, nothing to report")
     return 0
 

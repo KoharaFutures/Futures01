@@ -59,6 +59,24 @@ the only clean out-of-sample data left is the future.
 - `selftest.py` — proves the desk's live logic is the backtest's logic
 - `desk.sh` — one turn: refresh (if a feed exists), plan, resolve, status
 
+### How it is wired (2026-10-01)
+
+| what | id / value |
+|---|---|
+| session | `session_01U7cfC71Ua4XdUkGbBQDJFS` — dedicated, like the CALL desk's |
+| routine | `trig_01VfMVU8zZFygW7iMeDnYWns` "LVNFIB desk hourly check" |
+| cadence | `CRON_TZ=America/New_York 53 8-13,16 * * 1-5` — hourly across MGC's entry window plus one post-close resolution pass |
+| gate | `desk_check.py` exit 0 = emit nothing, 10 = report, 2 = data failure |
+
+The minute is jittered off the hour on purpose: most schedules run at :00, so a run placed there
+gets delayed by server traffic. **EDT→EST on 2026-11-01 does not break this** — the cron carries
+`CRON_TZ`, unlike the old CALL desk jobs that were written in bare UTC and fired a closed desk
+every two minutes.
+
+The replay routine `trig_01JEYGTTbgAk4wkHHHRPqnAR` was **disabled** the same day: the series
+finished at 11399/11399 and it had been firing no-ops every two hours. Disabled rather than
+deleted, so its run history survives.
+
 **One arm is armed: MGC Fibonacci trend-failure at the prior week's golden pocket, entered on a
 resting limit** (OOS n=24, +0.2379R, t +1.027; median stop $106 against the $120 budget). MNQ is
 instrumented but **not traded** — the same rule measures −0.2390R (t −1.932) there, and the

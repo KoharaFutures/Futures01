@@ -1,21 +1,21 @@
 {
- "now_utc": "2026-10-01T21:50:58+00:00",
- "now_et": "2026-10-01 17:50 EDT",
+ "now_utc": "2026-10-01T21:58:31+00:00",
+ "now_et": "2026-10-01 17:58 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T16:55:00-04:00  c=4207.60 h=4207.90 l=4206.60  lag=56.0m  new=20 revised=1",
-  "MNQ 5m newest 2026-10-01T16:55:00-04:00  c=30770.50 h=30775.25 l=30762.00  lag=56.0m  new=20 revised=1",
-  "snapshots written: MGC 1m (+102 new, 1 revised), MGC 5m (+20 new, 1 revised), MGC 15m (+7 new, 0 revised), MGC 60m (+2 new, 0 revised), MGC 240m (+1 new, 0 revised), MNQ 1m (+102 new, 1 revised), MNQ 5m (+20 new, 1 revised), MNQ 15m (+7 new, 0 revised), MNQ 60m (+2 new, 0 revised), MNQ 240m (+1 new, 0 revised)"
+  "MGC 5m newest 2026-10-01T16:55:00-04:00  c=4207.60 h=4207.90 l=4206.60  lag=63.5m  new=0 revised=0",
+  "MNQ 5m newest 2026-10-01T16:55:00-04:00  c=30770.50 h=30775.25 l=30762.00  lag=63.5m  new=0 revised=0",
+  "snapshots written: none (nothing moved)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T16:55:00-04:00",
-   "lag_min": 51.0,
+   "lag_min": 58.5,
    "close": 4207.60009765625
   },
   "MNQ": {
    "newest_5m": "2026-10-01T16:55:00-04:00",
-   "lag_min": 51.0,
+   "lag_min": 58.5,
    "close": 30770.5
   }
  },
@@ -89,7 +89,7 @@
    "reversal_reasons": [
     "15m headline is CONFLICTED, not directional",
     "15m is 1-1, not unanimous",
-    "held only 0 consecutive check(s), needs 2",
+    "held only 1 consecutive check(s), needs 2",
     "no other timeframe agrees"
    ],
    "setup_qualifies": false,
@@ -328,14 +328,14 @@
   "thesis": {}
  },
  "brief_hash": "d73d11a51e161d59",
- "cards": [],
+ "cards": [
+  "/home/user/Futures01/workspace/paper/CALL/card_STATUS.png"
+ ],
  "events": [],
  "triggers": [
   "DATA_STALE"
  ],
- "notes": [
-  "STANDDOWN_CHANGE MNQ -> lifted"
- ],
+ "notes": [],
  "needs_attention": true,
- "one_line": "17:50 EDT \u00b7 MNQ 30770.5 MGC 4207.6 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 ATTENTION: DATA_STALE"
+ "one_line": "17:58 EDT \u00b7 MNQ 30770.5 MGC 4207.6 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 ATTENTION: DATA_STALE"
 }

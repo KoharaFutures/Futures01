@@ -1,7 +1,9 @@
 # R1 — MES 60m walk-forward replay: what it established
 
 **One page, for the account owner. `MATH.md` is the consolidated arithmetic with every formula; `NOTES.md` is the full journal (2,700+ lines) and wins on any detail.**
-Written at cursor **10950/11399**, 2026-09-29 (the source series is live-appending — 11287 → 11316 between firings, so the denominator is provisional). **PAPER — UNVALIDATED throughout.**
+**COMPLETE — cursor 11399/11399, the full series walked**, 2024-10-06 to 2026-09-30. Written 2026-10-01.
+The source was live-appending throughout (11,287 → 11,399 across the run), and its last bar is the day this
+was written. **PAPER — UNVALIDATED throughout. Nothing here is an edge.**
 
 > **One thing needs your ruling, not mine.** The branch's head commit is a CALL-desk stop — *"stop your call
 > outs for now"* — which deleted that desk's crons. It says nothing about REPLAY, and it was said in a CALL
@@ -21,10 +23,12 @@ Written at cursor **10950/11399**, 2026-09-29 (the source series is live-appendi
 
 | | |
 |---|---|
-| bars traded forward | **10,950** of 11,399 (2024-10-06 → 2026-09-01) — 17 are duplicates, now excluded from every statistic |
-| decisions journalled | **60 rows, 59 distinct** (2 trades, 58 stand-downs) — `callouts.jsonl` has two rows at `visible_bars` 1613, so every callout total from burst 12 on double-counts that bar |
+| bars traded forward | **11,399 of 11,399 — ALL OF IT** (2024-10-06 → 2026-09-30) |
+| bars of tape, 17 of which are source duplicates | excluded from every statistic |
+| decisions journalled | **70** (2 trades, 68 stand-downs; 69 distinct bars — bar 1613 double-counted) |
 | trades taken | **2 — both winners, +1.895R and +1.854R** |
 | equity | **$50,000 → $50,688.86** (+1.38%), peak = current, **drawdown $0** |
+| trades taken | **2 — both winners, +1.895R and +1.854R** |
 | placebo separation | **z +1.021** vs a 4.5 stop-condition and `free_t(20)` 2.448 — **does not clear**, and it is **one** measurement (n=2 vs n=2), unchanged since bar ~1400, not a repeated confirmation |
 
 **Two winning trades out of two is not evidence of anything, and the record says so in more detail than it

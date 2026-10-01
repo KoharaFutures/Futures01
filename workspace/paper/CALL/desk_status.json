@@ -1,22 +1,22 @@
 {
- "now_utc": "2026-10-01T04:32:08+00:00",
- "now_et": "2026-10-01 00:32 EDT",
+ "now_utc": "2026-10-01T04:34:14+00:00",
+ "now_et": "2026-10-01 00:34 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T00:20:00-04:00  c=4201.80 h=4202.70 l=4200.70  lag=12.1m  new=0 revised=1",
-  "MNQ 5m newest 2026-10-01T00:20:00-04:00  c=30932.75 h=30935.25 l=30923.25  lag=12.1m  new=0 revised=1",
+  "MGC 5m newest 2026-10-01T00:20:00-04:00  c=4201.80 h=4203.20 l=4200.70  lag=14.2m  new=0 revised=1",
+  "MNQ 5m newest 2026-10-01T00:20:00-04:00  c=30927.50 h=30935.25 l=30923.25  lag=14.2m  new=0 revised=1",
   "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+0 new, 1 revised), MGC 15m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+0 new, 1 revised), MNQ 15m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T00:20:00-04:00",
-   "lag_min": 7.1,
+   "lag_min": 9.2,
    "close": 4201.7998046875
   },
   "MNQ": {
    "newest_5m": "2026-10-01T00:20:00-04:00",
-   "lag_min": 7.1,
-   "close": 30932.75
+   "lag_min": 9.2,
+   "close": 30927.5
   }
  },
  "resolve_log": [],
@@ -191,28 +191,28 @@
    {
     "level": "VAH 2-week",
     "price": 30932.0,
-    "dist_atr": 0.02,
+    "dist_atr": 0.14,
     "state": "near",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m SWING_H@30906.00",
     "price": 30906.0,
-    "dist_atr": 0.8,
+    "dist_atr": 0.65,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "VAH 1-week",
     "price": 30846.0,
-    "dist_atr": 2.6,
+    "dist_atr": 2.45,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "5m PD_POC",
     "price": 30842.0,
-    "dist_atr": 2.72,
+    "dist_atr": 2.57,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    }
@@ -258,5 +258,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "00:32 EDT \u00b7 MNQ 30932.75 MGC 4201.8 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
+ "one_line": "00:34 EDT \u00b7 MNQ 30927.5 MGC 4201.8 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
 }

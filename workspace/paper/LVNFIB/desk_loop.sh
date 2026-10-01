@@ -4,6 +4,13 @@
 # for a routine check.
 #
 #   exit 10 = attention needed    exit 2 = three consecutive data failures
+#   exit 4  = arm A's prior no longer reproduces, so the desk has no prior: stop
+#
+# It runs cycle.sh, not desk_check.py directly. desk_check.py calls the shared
+# refresh_archive.py --fetch, which overwrites any bar Yahoo re-serves differently;
+# one fetch rewrote 1321 MGC 60m bars back to 2024-11 and moved arm A's measured
+# prior from +0.2379R (t +1.027, payoff 1.58) to +0.1827R (t +0.811, payoff 1.44).
+# cycle.sh holds the archive append-only and asserts the prior every cycle.
 #
 # Outside every entry window with nothing waiting to resolve, desk_check exits 3 and the loop sleeps
 # 10 minutes at a time, so it is safe to leave running across the 15:30-18:00 break and the weekend.
@@ -18,9 +25,11 @@ INTERVAL="${1:-120}"
 fails=0
 echo "LVNFIB_LOOP: starting, interval ${INTERVAL}s, pid $$"
 while true; do
-  python3 workspace/paper/LVNFIB/desk_check.py
+  bash workspace/paper/LVNFIB/cycle.sh
   rc=$?
   case "$rc" in
+    4)  echo "LVNFIB_LOOP: arm A's prior no longer reproduces - desk has no prior, stopping"
+        exit 4 ;;
     0)  fails=0; sleep "$INTERVAL" ;;
     3)  fails=0; sleep 600 ;;
     10) echo "LVNFIB_LOOP: attention -> see the WAKE lines above and desk_events.jsonl"

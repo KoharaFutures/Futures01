@@ -26,7 +26,21 @@ fi
 
 python3 workspace/roundtable/check_ownership.py LVNFIB | tail -1
 
-if [[ -n "$(git status --porcelain)" ]]; then
+# Commit/push cadence is deliberately slower than the check cadence: the check is
+# every 120s, but a dormant cycle only appends one event line, and several desks
+# share this branch. Push when something real happened, or every PUSH_EVERY seconds.
+PUSH_EVERY="${LVNFIB_PUSH_EVERY:-600}"
+stamp=workspace/paper/LVNFIB/.push_stamp
+now=$(date +%s)
+last=$(cat "$stamp" 2>/dev/null || echo 0)
+due=no
+[[ $desk -eq 10 || $desk -eq 2 ]] && due=yes
+[[ $(( now - last )) -ge $PUSH_EVERY ]] && due=yes
+
+if [[ "$due" == no ]]; then
+  echo "CYCLE: holding $(git status --porcelain | wc -l | tr -d ' ') change(s), next push in $(( PUSH_EVERY - (now - last) ))s"
+elif [[ -n "$(git status --porcelain)" ]]; then
+  echo "$now" > "$stamp"
   git add -A data/archive workspace/paper/LVNFIB
   git commit -q -F - <<MSG
 LVNFIB cycle $(TZ=America/New_York date '+%Y-%m-%d %H:%M ET') — desk exit ${desk}

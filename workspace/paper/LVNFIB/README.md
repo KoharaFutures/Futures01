@@ -4,10 +4,25 @@ Paper desk on **MGC** and **MNQ**. Read `CHARTER.md` first — it states every r
 that decides which of them may risk the account.
 
 ```bash
-bash workspace/paper/LVNFIB/desk.sh            # plan (dry run), resolve, status
-bash workspace/paper/LVNFIB/desk.sh --post     # also post the new callouts
+bash workspace/paper/LVNFIB/desk.sh            # the gated turn: 0 quiet / 10 attention / 2 data failure
+bash workspace/paper/LVNFIB/desk.sh --manual   # plan, resolve and full status, for a human
 python3 workspace/paper/LVNFIB/selftest.py     # prove the live logic == the backtested logic
 ```
+
+## How it is scheduled
+
+`desk_check.py` is the mechanical turn and it decides whether anyone needs waking, following
+`DATA_HUB/AUTOMATION.md`: the script does the repeating work every cycle, an LLM is woken only
+when a pre-registered trigger actually fires.
+
+| exit | meaning | the routine should |
+|---|---|---|
+| **0** | quiet — no trigger armed, nothing resolved | say nothing at all |
+| **10** | an armed trigger, a resolved trade, a size refusal, a drawdown alert, or a failed fetch | report, and use judgment |
+| **2** | the desk could not form a view | report the failure |
+
+Arm A fires roughly **1.4 times a month**, so almost every cycle is a 0 and must cost nothing.
+Every cycle appends one line to `desk_events.jsonl` whether it wakes anyone or not.
 
 | file | what it is |
 |---|---|
@@ -16,6 +31,8 @@ python3 workspace/paper/LVNFIB/selftest.py     # prove the live logic == the bac
 | `plan.py` | callouts: trigger, limit, stop, target, sizing, budget refusals |
 | `resolve.py` | resolves fills through the same engine that measured each prior |
 | `status.py` | account state and each arm's running record next to its measured prior |
+| `desk_check.py` | the gated mechanical turn; exit 0/10/2 decides whether to wake an LLM |
+| `desk_events.jsonl` | one line per cycle, woken or not |
 | `selftest.py` | 4 checks: levels, triggers, the quoted priors, and the fill-bar rule |
 | `callouts.jsonl` | append-only. A callout is never edited after it is posted |
 | `resolutions.jsonl` | append-only outcomes |

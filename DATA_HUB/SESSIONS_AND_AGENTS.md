@@ -64,9 +64,24 @@ the only clean out-of-sample data left is the future.
 | what | id / value |
 |---|---|
 | session | `session_01U7cfC71Ua4XdUkGbBQDJFS` — dedicated, like the CALL desk's |
-| routine | `trig_01VfMVU8zZFygW7iMeDnYWns` "LVNFIB desk hourly check" |
-| cadence | `CRON_TZ=America/New_York 53 8-13,16 * * 1-5` — hourly across MGC's entry window plus one post-close resolution pass |
-| gate | `desk_check.py` exit 0 = emit nothing, 10 = report, 2 = data failure |
+| continuous loop | `desk_loop.sh` — runs `desk_check.py` every **120 s** inside the session, exits only when a decision is needed |
+| routine | `trig_01DMzSxA65NtNiXvMH5Po3Vj` "LVNFIB desk — hourly loop keepalive" |
+| cadence | `CRON_TZ=America/New_York 53 * * * 0-5` — hourly, and its job is to restart the loop if it died, not to check the desk |
+| gate | `desk_check.py` exit 0 = quiet in-window, 3 = dormant (sleep 600 s), 10 = report, 2 = data failure |
+| feed | live since 2026-10-01 (`yfinance` installed, fetch verified). Throttled to 300 s inside `desk_check.py` |
+
+The loop lives inside a session and dies when the worker restarts, which is why the routine is a
+keepalive rather than a checker — the same split the CALL desk uses (`desk_loop.sh` plus an hourly
+backstop). The three append-only `*.jsonl` logs are `merge=union` in `.gitattributes`, because a
+loop writing while another worker pushes conflicted on the first try.
+
+**What the 2-minute cadence buys, and what it does not.** Arm A's trigger is *a 60m bar trades into
+the level and closes against the prior week*, so a new trigger can only appear when a 60m bar
+closes — once an hour. The fast cadence catches a resting limit's **fill**, the **newest bar
+settling** after revision (~28 min), and **drawdown or budget** changes between hours. It cannot
+find a trigger that does not exist yet. Genuinely 2-minute opportunities would need the rule
+*defined* on 5m or 15m bars, and the archive holds ~2 months of those — which `LVN1718` already
+showed is too short to establish anything. That is a data problem, not a cadence problem.
 
 The minute is jittered off the hour on purpose: most schedules run at :00, so a run placed there
 gets delayed by server traffic. **EDT→EST on 2026-11-01 does not break this** — the cron carries

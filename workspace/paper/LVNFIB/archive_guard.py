@@ -24,8 +24,18 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 ARCH = ROOT / "data" / "archive"
 
 
+BASELINE = (pathlib.Path(__file__).resolve().parent / "ARCHIVE_BASELINE").read_text().strip()
+
+
 def committed(rel: str) -> dict | None:
-    r = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=ROOT,
+    """Values as of ARCHIVE_BASELINE, not HEAD.
+
+    HEAD is not a safe baseline: another desk on this branch also runs the shared
+    --fetch and has committed Yahoo's rewritten 60m history to it, which silently
+    poisons the reference. ARCHIVE_BASELINE pins the commit at which arm A's prior
+    provably reproduced (n=24 +0.2379R, 164/164 triggers).
+    """
+    r = subprocess.run(["git", "show", f"{BASELINE}:{rel}"], cwd=ROOT,
                        capture_output=True, text=True)
     if r.returncode != 0:
         return None

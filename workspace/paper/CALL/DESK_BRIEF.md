@@ -64,6 +64,16 @@ reclaim LOSES (B60: 610 trades, 33.6% wins x payoff 1.51, -0.17R, t -3.21; B15: 
 or not. So TEST trades are NOT taken on sweep/reclaim setups; they apply only to deep-LVN fades (#17),
 which had too few trades (5-10) to judge.
 
+**OWNER OVERRIDE (2026-10-01 19:20 ET, "option 2"): stacked-level TEST trades.** The owner saw a full day of
+zero trades (every trigger declined; 4 stacked-level declines were right, 2 were missed bounces: MNQ 30800
+03:39 ET, MNQ 30605 10:29 ET). From now on a REVERSAL_CALLED / COUNTER_TREND_QUALIFIES / level setup that is
+declined ONLY because its level is stacked (#23, 2+ levels within 1/4 ATR) is taken as a 1-contract TEST
+(`plan_builder.py --test`), in addition to the deep-LVN (#17) TESTs above. Unchanged: every hard gate, the
+hard don'ts, stand-down, and the sweep & reclaim exclusion (a measured loser). Pre-registered
+(`research/PREREG_2026-10-01_stacked_test.md`): stacked-level TESTs are expected to LOSE (H0: expectancy
+<= 0R); judge only after 20 closed TESTs, against the B60 sweep/reclaim baseline (-0.17R) and a placebo of
+the same fade at a random price 0.5-1.5 ATR away; luck bar sqrt(2 ln N) over every variant tried.
+
 ## 3. Making a plan: `plan_builder.py` only, never by hand
 
 ```bash

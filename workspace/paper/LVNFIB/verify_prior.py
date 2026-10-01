@@ -20,7 +20,7 @@ r = subprocess.run([sys.executable, str(HERE / "selftest.py")],
 out = r.stdout
 if r.returncode != 0:
     print(f"VERIFY FAIL: selftest crashed rc={r.returncode}\n{r.stderr[-800:]}")
-    sys.exit(3)
+    sys.exit(4)
 
 fail = []
 m = re.search(r"levels: (\d+) trading days checked, (\d+) mismatch", out)
@@ -48,7 +48,7 @@ if fail:
     for f in fail:
         print(f"  - {f}")
     print(out)
-    sys.exit(3)
+    sys.exit(4)
 print("verify_prior: OK - arm A reproduces n=24 +0.2379R t +1.027 win 50.0% payoff 1.58; "
       "164/164 triggers, symdiff 0, 0 look-ahead targets")
 sys.exit(0)

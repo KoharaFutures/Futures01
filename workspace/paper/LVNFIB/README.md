@@ -35,7 +35,10 @@ Every cycle appends one line to `desk_events.jsonl` whether it wakes anyone or n
 | `desk_check.py` | the gated mechanical turn; exit 0/3/10/2 decides whether to wake an LLM |
 | `desk_loop.sh` | runs the check every 2 min, exits only when a decision is needed |
 | `desk_events.jsonl` | one line per cycle, woken or not |
-| `selftest.py` | 4 checks: levels, triggers, the quoted priors, and the fill-bar rule |
+| `selftest.py` | 4 checks: levels, triggers, the quoted priors, and the fill-bar rule. It **prints**; it does not assert, so its exit code is not a verdict — use `verify_prior.py` |
+| `verify_prior.py` | asserts the quoted prior and exits 4 if it moved |
+| `archive_guard.py` | holds `data/archive/` append-only against the shared fetch's rewrites |
+| `cycle.sh` | one monitored cycle: merge, desk turn, guard, assert prior, commit+push |
 | `callouts.jsonl` | append-only. A callout is never edited after it is posted |
 | `resolutions.jsonl` | append-only outcomes |
 | `state.json` | equity, peak, max drawdown, closed count |

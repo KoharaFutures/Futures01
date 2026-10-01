@@ -171,7 +171,12 @@ def rule_signals(sym: str, prev_seen: dict) -> list[dict]:
     for path in sorted((ROOT / "DATA_HUB" / "tools" / "rules").glob("*.py")):
         if WF.file_sha(path) not in shas:
             continue                                    # unregistered or edited: not allowed to trade
-        rule = WF.load_rule(path)
+        try:
+            rule = WF.load_rule(path)
+        except Exception:                               # a broken rule file must never stop the desk
+            continue
+        if not hasattr(rule, "decide"):                 # research-only rules (e.g. LVN1718 driver rules)
+            continue
         tf = getattr(rule, "TF", 60)
         bars = resolve.load_bars(sym, tf)
         if len(bars) <= getattr(rule, "WARMUP", 0) + 2:

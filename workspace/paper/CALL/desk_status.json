@@ -1,22 +1,22 @@
 {
- "now_utc": "2026-10-01T05:01:39+00:00",
- "now_et": "2026-10-01 01:01 EDT",
+ "now_utc": "2026-10-01T05:03:48+00:00",
+ "now_et": "2026-10-01 01:03 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T00:50:00-04:00  c=4207.50 h=4208.50 l=4207.10  lag=11.7m  new=1 revised=1",
-  "MNQ 5m newest 2026-10-01T00:50:00-04:00  c=30965.50 h=30973.25 l=30964.25  lag=11.7m  new=1 revised=1",
-  "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+1 new, 1 revised), MGC 15m (+1 new, 0 revised), MGC 60m (+1 new, 1 revised), MGC 240m (+1 new, 0 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+1 new, 1 revised), MNQ 15m (+1 new, 0 revised), MNQ 60m (+1 new, 1 revised), MNQ 240m (+1 new, 0 revised)"
+  "MGC 5m newest 2026-10-01T00:50:00-04:00  c=4207.50 h=4208.60 l=4207.10  lag=13.8m  new=0 revised=1",
+  "MNQ 5m newest 2026-10-01T00:50:00-04:00  c=30981.25 h=30983.50 l=30964.25  lag=13.8m  new=0 revised=1",
+  "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+0 new, 1 revised), MGC 15m (+0 new, 1 revised), MGC 60m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+0 new, 1 revised), MNQ 15m (+0 new, 1 revised), MNQ 60m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T00:50:00-04:00",
-   "lag_min": 6.7,
+   "lag_min": 8.8,
    "close": 4207.5
   },
   "MNQ": {
    "newest_5m": "2026-10-01T00:50:00-04:00",
-   "lag_min": 6.7,
-   "close": 30965.5
+   "lag_min": 8.8,
+   "close": 30981.25
   }
  },
  "resolve_log": [],
@@ -51,7 +51,7 @@
    "binding": false
   },
   "MNQ": {
-   "atr14_15m": 30.29,
+   "atr14_15m": 30.91,
    "line": 80.0,
    "binding": false
   }
@@ -191,14 +191,14 @@
    {
     "level": "VAH 2-week",
     "price": 30932.0,
-    "dist_atr": 1.11,
+    "dist_atr": 1.59,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m SWING_H@30906.00",
     "price": 30906.0,
-    "dist_atr": 1.96,
+    "dist_atr": 2.43,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    }
@@ -242,5 +242,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "01:01 EDT \u00b7 MNQ 30965.5 MGC 4207.5 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
+ "one_line": "01:03 EDT \u00b7 MNQ 30981.25 MGC 4207.5 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
 }

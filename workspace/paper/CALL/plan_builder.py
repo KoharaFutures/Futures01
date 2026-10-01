@@ -160,6 +160,14 @@ def build(a) -> dict:
     room = sc.CAP - open_r - pend_r
     per = stop_pts * spec.point_value
     n = int(room // per) if per > 0 else 0
+    # owner 2026-09-30 21:37 ET (option 3): TEST trades take the stacked/borderline level setups the desk
+    # otherwise skips, at 1 contract, labelled confidence=TEST so they can be excluded from the measured record.
+    if a.test:
+        a.max_contracts = 1
+        a.confidence = "TEST"
+        a.strategy = "TEST: " + a.strategy
+    if a.max_contracts is not None:
+        n = min(n, a.max_contracts)
     gate("G6 book room", n >= 1, f"one contract risks ${per:,.2f}; room ${room:,.2f} of the ${sc.CAP:.2f} "
          f"50% cap (open ${open_r:.2f} + pending ${pend_r:.2f})")
     state = json.loads((HERE / "state.json").read_text())
@@ -253,6 +261,8 @@ def main() -> int:
     ap.add_argument("--from-signal", help="JSON written by desk_check.py for a rule signal")
     ap.add_argument("--now")
     ap.add_argument("--commit", action="store_true")
+    ap.add_argument("--max-contracts", type=int, help="cap the size (default: as many as book room allows)")
+    ap.add_argument("--test", action="store_true", help="owner 2026-09-30: 1-contract TEST trade, confidence=TEST")
     a = ap.parse_args()
     if a.from_signal:
         s = json.loads(pathlib.Path(a.from_signal).read_text())

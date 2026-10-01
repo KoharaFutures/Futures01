@@ -53,6 +53,14 @@ Read `workspace/paper/CALL/desk_status.json` (`triggers`, `events`, `notes`, `on
 
 Then restart `desk_loop.sh` in the background and end the turn. Lead every message with the ET time.
 
+**OWNER OVERRIDE (2026-09-30 21:37 ET, "option 3"): TEST trades.** When a REVERSAL/COUNTER_TREND/level setup
+would otherwise be skipped only because of the soft lessons (#22 borderline 15m close, #23 stacked levels /
+coin-flip LVN history), take it as a 1-contract TEST: add `--test` to plan_builder (sets confidence=TEST,
+strategy "TEST: ..."). Every hard gate still applies (stand-down, G2, G3, R:R, room, floors, daily loss).
+Hard "don'ts" (breakout chasing, fading the first 60m bar after 09:30, gold overnight-sweep fades) are NOT
+overridden. Report TEST trades separately from the measured record. In parallel the deep-LVN fade (#17) and
+reclaim entry (#18) are being pre-registered and walk-forward tested: results in `research/`.
+
 ## 3. Making a plan: `plan_builder.py` only, never by hand
 
 ```bash

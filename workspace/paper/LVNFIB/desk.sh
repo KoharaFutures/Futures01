@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 # LVN/FIB AGENT — one turn of the desk.
-#   bash workspace/paper/LVNFIB/desk.sh          plan dry-run, then resolve + status
-#   bash workspace/paper/LVNFIB/desk.sh --post   also post new callouts
-set -euo pipefail
+#   bash desk.sh              the gated mechanical turn (what the routine runs)
+#   bash desk.sh --manual     plan dry-run + resolve + full status, for a human
+# Exit codes from the gated turn: 0 quiet, 10 attention needed, 2 data failure.
+set -uo pipefail
 cd "$(dirname "$0")"
-echo "--- refresh (optional; needs pip install yfinance) ---"
-python3 ../../../DATA_HUB/tools/refresh_archive.py --fetch --symbols MGC MNQ --frames 15 60 2>&1 | tail -4 || \
-  echo "  no live feed available - running off data/archive/ (see CHARTER.md §4)"
-echo
-echo "--- plan ---"
-python3 plan.py ${1:-}
-echo
-echo "--- resolve ---"
-python3 resolve.py
-echo
-python3 status.py
+if [[ "${1:-}" == "--manual" ]]; then
+  python3 plan.py; echo; python3 resolve.py; echo; python3 status.py; exit 0
+fi
+python3 desk_check.py
+code=$?
+if [[ $code -eq 10 ]]; then echo; python3 status.py; fi
+exit $code

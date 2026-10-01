@@ -211,6 +211,12 @@ def _walk(t: Tape, i: int, side: int, level: float,
         b = t.bars[k]
         hit_s = (b.l <= stop) if side > 0 else (b.h >= stop)
         hit_t = (b.h >= target) if side > 0 else (b.l <= target)
+        if limit_px is not None and k == j:
+            # A resting limit fills mid-bar and an OHLC bar does not say whether the high came
+            # before or after the low. Crediting the target on the fill bar assumes the favourable
+            # ordering; 50.3% of trades took it that way and it was worth ~0.4R of pure artefact.
+            # Allow only the adverse outcome on the fill bar.
+            hit_t = False
         if hit_s:                               # the stop wins a same-bar tie
             return _mk(t, i, side, fill, stop, risk, k, stop, "be" if armed else "stop")
         if hit_t:

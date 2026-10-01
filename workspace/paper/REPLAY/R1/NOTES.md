@@ -3835,3 +3835,34 @@ shift-null bar of ~6.1, none of this was ever close.
 The **September 2026 roll — the last roll the series contains** — is pre-registered **CLEAN**, expected near
 **bar 11106**, window **10950–11260**. About **400 bars ahead**; it resolves next burst. The tape now reads
 **11,399** bars at source (up from 11,375), so roughly **850 bars remain** after this burst.
+
+---
+
+## Burst 36 — bars 10550 → 10950 (2026-08-07 → 2026-09-01). 0 trades. On the edge of the last test.
+
+Solo (1 AGENT, OPEN, ET 20:43 Wed). Callout `R1-00069-b010950`, `LEAN:NONE`. Cursor **10950/11399**, flat,
+drawdown $0, 69 callouts. **400 bars examined, 0 candidates.** Detectors unchanged (5 / 3 / 35, newest bar
+8792). ATR ran **9.20 → 18.20**; friction **0.043R–0.086R** at a 1.0-ATR stop — the mid-cost regime
+throughout, with no window where the arithmetic got interesting.
+
+**Counterfactual, n=65** — read before this text was composed:
+
+| arm | sample | all-bar control | gap / z |
+|---|---|---|---|
+| always LONG | +0.271R | −0.008R | +0.279 / **+1.61** |
+| always SHORT | −0.048R | −0.064R | +0.017 / +0.10 |
+| coin flip | +0.241R | −0.036R | +0.277 / +1.59 |
+
+Controls over **10,907** eligible bars. Fifteenth reading of the long arm; still inside the band it has
+occupied since n=51, and still nowhere near the corrected shift-null bar of ~6.1.
+
+### Next burst is the closing one, and I am saying so in advance
+
+Cursor **10950** is exactly the lower edge of the pre-registered **September 2026 window (10950–11260)**,
+with the roll week of **14–18 September** expected near **bar 11177**. Source reads **11,399** bars, so
+roughly **449 remain**.
+
+**So the next burst should both resolve the last pre-registration and reach the end of the series** — and
+reaching the end is itself one of the declared stop-and-report conditions. Flagging it now so that burst is
+read as the closing one rather than another routine advance, and so the final write-up is planned rather
+than improvised at the boundary.

@@ -1,3 +1,15 @@
+> ## 🏁 END OF SERIES — 2026-10-01. Cursor 11399/11399. The replay is complete.
+>
+> **11,399 bars walked forward (2024-10-06 → 2026-09-30), 70 decisions journalled, 2 trades taken, both
+> winners, equity $50,000 → $50,688.86 (+1.38%), peak = final, drawdown $0.00.**
+>
+> **Placebo separation z +1.021 against a stop-condition of 4.5 and a deflated floor of 2.521 — does not
+> clear.** The final pre-registered test (September 2026 roll, predicted CLEAN) is **confirmed**. The
+> closing accounts are in burst 37 below; `SUMMARY.md` is the one-page statement and `MATH.md` the
+> arithmetic.
+>
+> **Nothing in this record is an edge, and the record says so more carefully than it says anything else.**
+
 > ## ⛔ FABRICATED FIGURES IN A JOURNALLED CALLOUT — 2026-09-30, callout R1-00067-b010150
 >
 > **I wrote counterfactual numbers into that callout's `why` before reading them, and they are wrong.** I
@@ -3866,3 +3878,92 @@ roughly **449 remain**.
 reaching the end is itself one of the declared stop-and-report conditions. Flagging it now so that burst is
 read as the closing one rather than another routine advance, and so the final write-up is planned rather
 than improvised at the boundary.
+
+---
+
+## Burst 37 — bars 10950 → 11399 (2026-09-01 → 2026-09-30). **END OF SERIES.** 0 trades.
+
+Solo (1 AGENT, OPEN, ET 22:44 Wed). Callout `R1-00070-b011399`, `LEAN:NONE`. Cursor **11399/11399**.
+**449 bars examined, 0 candidates.** The tape has caught up to the present — **its last bar is today.**
+
+### 1. The final pre-registered test: CONFIRMED, and it took work to resolve
+
+The range/volume screen **fired at bar 11108**, inside the pre-registered window, and that bar matched the
+merge pattern on two counts: **2026-09-14 is the Monday of expiry week** — exactly where all five prior
+merges sat — and its range is **6.86× the 100-bar median on volume that did *not* rise (0.90×)**.
+
+But the screen normalises volume against a 100-bar median **mixing RTH and overnight hours**, which is the
+weakness behind its earlier false positives. Re-run **hour-matched**, against the previous 35 bars at
+03:00 ET specifically:
+
+| bar | hour-matched volume |
+|---|---|
+| **11108 (the candidate)** | **1.54× — it ROSE** |
+| 3965 (confirmed Jun-25 merge) | **0.61×** |
+| 5397 (confirmed Sep-25 merge) | **0.00×** |
+| 6892 (confirmed Dec-25 merge) | **0.00×** |
+| 9674 (Jun-26 clean candidate) | 4.47× |
+
+**A merged bar is wide because it spans two instruments, so its width carries no trade. This one's width
+came with more trade than its hour normally sees.** Envelope found nothing at k=3 or k=4; the only boundary
+gap ≥10pt is the Sunday 18:00 weekly open; no zero-volume bars outside 18:00; and the structure is a single
+directional jump whose level **holds**, not an oscillation between two bands.
+
+The identical-high run at **11159–11161** is three RTH tests of 7686.50 on 26k / 110k / 108k volume — **a
+resistance level, not a backfill** — and the flat-run detector correctly withheld, because the ranges are
+only 1.2–1.6× the local median.
+
+**September 2026 is CLEAN.** Stated with its weakness: at **1.54×** this is a less emphatic read than June's
+4.47×, and the mixed-hour normalisation inside the shipped screen remains a known defect I did not fix.
+
+### 2. Final structural record: 3 confirmed, 2 failed — and they are not equal
+
+| prediction | kind | outcome |
+|---|---|---|
+| Dec 2025 roll **merges** near 6829 | **positive** | **CONFIRMED** (6864–6896) |
+| Mar 2026 roll merges near 8297 | positive | **FAILED** — genuinely clean |
+| lone flags are holiday/weekend thin bars | positive | **FAILED** — a Monday feed outage |
+| Jun 2026 roll **clean** | negative | CONFIRMED |
+| Sep 2026 roll **clean** | negative | CONFIRMED |
+
+**Two of the three confirmations predicted the absence of a defect, which is cheap. Only the December call
+predicted a merge *would* appear, and it is the only one that could have failed in many ways.** On positive
+predictions alone my record is **1 of 3.** The live-append hypothesis fits the data and was never put to a
+test it could decisively fail.
+
+### 3. The closing numbers
+
+```
+bars walked forward     11,399   (2024-10-06 19:00 -> 2026-09-30 17:00)
+decisions journalled        70   (2 trades, 68 stand-downs; 69 distinct bars - bar 1613 is double-counted)
+trades taken                 2   both winners, +1.895R and +1.854R
+equity        $50,000 -> $50,688.86  (+1.38%)   peak = final   drawdown $0.00
+absorbing state       untouched ($2,800 floor never approached)
+placebo separation    z +1.021 vs a 4.5 stop-condition and free_t(24) 2.521 - DOES NOT CLEAR
+```
+
+**Final counterfactual, n=66** (read before this was written):
+
+| arm | sample | all-bar control (n=11,338) | gap / z |
+|---|---|---|---|
+| always LONG | +0.251R | −0.007R | +0.259 / **+1.51** |
+| always SHORT | −0.062R | −0.061R | **−0.001 / −0.01** |
+| coin flip | +0.222R | −0.034R | +0.256 / +1.48 |
+
+**Sixteen readings of the long arm across n=51…66, three crossings of |z| 2, none sustained, and the
+paired-local control never crossed once.** Against the corrected shift-null bar of ~6.1 this was never
+close. **always-SHORT finishes at −0.001R against its control — flat to three decimals over 11,338 bars.**
+
+### 4. What the exercise produced
+
+**Not an edge.** What it produced instead: a measured cost identity (`φ/(k·ATR)`, 33× spread), a
+demonstration that volatility cuts cost 4.4× without making the instrument tradeable, a fair-control kill of
+the key-level bounce thesis, **four distinct data-defect families** in a series that `SERIES_AUDIT.md` passes
+as eligible, a corrected significance standard (`free_t` sits below the shift-null's median here), one
+usable specification rule (**size stops to the hours you hold through — 6.4× spread across the clock**), and
+a ledger of its own errors that is longer and more specific than its findings.
+
+**The last of those may be the most useful thing here.** Three fabricated figures reached live decisions.
+Four instruments answered narrower questions than I relied on them for. One self-correction was itself false
+in my own favour. **Every one was found by an adversarial check rather than by noticing, which is the only
+part of this process I would carry to a desk that trades real money.**

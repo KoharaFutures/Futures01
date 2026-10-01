@@ -1,6 +1,9 @@
 # R1 — the mathematical record
 
-**Every figure here was re-derived from `visible.jsonl` on 2026-09-29 at cursor 7350/11316**, not quoted from
+**Figures re-derived from `visible.jsonl` at cursor 7350/11316 (2026-09-29); the replay has since COMPLETED at
+11,399/11,399.** Closing figures are in `NOTES.md` burst 37. Nothing below changed sign as the tape finished:
+the long counterfactual arm ended at **z +1.51**, always-SHORT at **−0.001R** against its control, and placebo
+separation at **z +1.021**. **The originals here were re-derived**, not quoted from
 the journal. `NOTES.md` is the narrative and wins on history; this page is the arithmetic.
 **PAPER — UNVALIDATED. Nothing below is an edge.**
 

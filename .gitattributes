@@ -1,0 +1,5 @@
+# Append-only desk logs: both sides' lines are wanted, so union-merge them instead of
+# raising a conflict every time a loop writes while another worker pushes.
+workspace/paper/LVNFIB/desk_events.jsonl merge=union
+workspace/paper/LVNFIB/callouts.jsonl merge=union
+workspace/paper/LVNFIB/resolutions.jsonl merge=union

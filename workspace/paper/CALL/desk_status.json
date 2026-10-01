@@ -1,22 +1,22 @@
 {
- "now_utc": "2026-10-01T06:51:19+00:00",
- "now_et": "2026-10-01 02:51 EDT",
+ "now_utc": "2026-10-01T06:53:26+00:00",
+ "now_et": "2026-10-01 02:53 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T02:40:00-04:00  c=4212.40 h=4215.00 l=4211.40  lag=11.3m  new=1 revised=1",
-  "MNQ 5m newest 2026-10-01T02:40:00-04:00  c=31042.00 h=31057.75 l=31037.00  lag=11.3m  new=1 revised=1",
-  "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+1 new, 1 revised), MGC 15m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+1 new, 1 revised), MNQ 15m (+0 new, 1 revised)"
+  "MGC 5m newest 2026-10-01T02:40:00-04:00  c=4212.30 h=4215.00 l=4210.70  lag=13.4m  new=0 revised=1",
+  "MNQ 5m newest 2026-10-01T02:40:00-04:00  c=31044.00 h=31057.75 l=31037.00  lag=13.4m  new=0 revised=1",
+  "snapshots written: MGC 1m (+2 new, 2 revised), MGC 5m (+0 new, 1 revised), MGC 15m (+0 new, 1 revised), MNQ 1m (+2 new, 2 revised), MNQ 5m (+0 new, 1 revised), MNQ 15m (+0 new, 1 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T02:40:00-04:00",
-   "lag_min": 6.3,
-   "close": 4212.39990234375
+   "lag_min": 8.4,
+   "close": 4212.2998046875
   },
   "MNQ": {
    "newest_5m": "2026-10-01T02:40:00-04:00",
-   "lag_min": 6.3,
-   "close": 31042.0
+   "lag_min": 8.4,
+   "close": 31044.0
   }
  },
  "resolve_log": [],
@@ -46,7 +46,7 @@
  },
  "standdown": {
   "MGC": {
-   "atr14_15m": 5.99,
+   "atr14_15m": 6.04,
    "line": 10.0,
    "binding": false
   },
@@ -107,21 +107,21 @@
    {
     "level": "60m P_RTH_H",
     "price": 4210.7,
-    "dist_atr": 0.28,
+    "dist_atr": 0.27,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m PDC",
     "price": 4215.0,
-    "dist_atr": 0.43,
+    "dist_atr": 0.45,
     "state": "near",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m SWING_H@4207.30",
     "price": 4207.3,
-    "dist_atr": 0.85,
+    "dist_atr": 0.83,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
@@ -142,49 +142,49 @@
    {
     "level": "60m SWING_H@4220.00",
     "price": 4220.0,
-    "dist_atr": 1.27,
+    "dist_atr": 1.28,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m SWING_H@4203.80",
     "price": 4203.8,
-    "dist_atr": 1.44,
+    "dist_atr": 1.41,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "5m ROUND1",
     "price": 4200.0,
-    "dist_atr": 2.07,
+    "dist_atr": 2.04,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m ROUND0",
     "price": 4200.0,
-    "dist_atr": 2.07,
+    "dist_atr": 2.04,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "60m ROUND1",
     "price": 4225.0,
-    "dist_atr": 2.11,
+    "dist_atr": 2.1,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "5m SWING_L@4198.60",
     "price": 4198.6,
-    "dist_atr": 2.31,
+    "dist_atr": 2.27,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    },
    {
     "level": "60m SWING_L@4198.60",
     "price": 4198.6,
-    "dist_atr": 2.31,
+    "dist_atr": 2.27,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    }
@@ -193,14 +193,14 @@
    {
     "level": "60m PWH",
     "price": 31094.75,
-    "dist_atr": 1.28,
+    "dist_atr": 1.23,
     "state": "armed",
     "hub_asof": "2026-09-30T16:00:00-04:00"
    },
    {
     "level": "VAH 2-week",
     "price": 30932.0,
-    "dist_atr": 2.66,
+    "dist_atr": 2.71,
     "state": "armed",
     "hub_asof": "2026-09-30T18:20:00-04:00"
    }
@@ -244,5 +244,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "02:51 EDT \u00b7 MNQ 31042.0 MGC 4212.4 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
+ "one_line": "02:53 EDT \u00b7 MNQ 31044.0 MGC 4212.3 \u00b7 pending none \u00b7 open 0 \u00b7 eq $49,511.40 dd $645.16 \u00b7 quiet"
 }

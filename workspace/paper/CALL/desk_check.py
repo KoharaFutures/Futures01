@@ -356,7 +356,13 @@ def main() -> int:
                 notes.append(f"REVERSAL_UNDER_STANDDOWN {sym} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:
                 triggers.append("REVERSAL_CALLED")
-                st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
+                # AUTOMATE_NEXT #29: "side" is the counter-trend SETUP side, NOT the reversal's direction.
+                # "reversal_to" is the new 15m headline (BULLISH = favours LONG); plan off that.
+                st["reversal_woke"][sym] = {"side": setup.get("side"), "reversal_to": rv.get("headline"),
+                                            "t": now_utc.isoformat(timespec="seconds")}
+                notes.append(f"REVERSAL_DIRECTION {sym} 15m {rv.get('prior')} -> {rv.get('headline')} "
+                             f"(favours {'LONG' if rv.get('headline') == 'BULLISH' else 'SHORT'}; "
+                             f"setup side {setup.get('side')} is the counter-trend fade, not the call)")
         # AUTOMATE_NEXT #28: the counter-trend setup flaps the same way (MNQ LONG woke 03:39, 03:52, 04:30, 04:35
         # ET 2026-10-01 at the same level); same (symbol, side) wakes at most once per REVERSAL_REARM_MIN.
         last_setup = prev.get("setup_woke", {}).get(sym, {})

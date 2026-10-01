@@ -357,8 +357,16 @@ def main() -> int:
             else:
                 triggers.append("REVERSAL_CALLED")
                 st["reversal_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
+        # AUTOMATE_NEXT #28: the counter-trend setup flaps the same way (MNQ LONG woke 03:39, 03:52, 04:30, 04:35
+        # ET 2026-10-01 at the same level); same (symbol, side) wakes at most once per REVERSAL_REARM_MIN.
+        last_setup = prev.get("setup_woke", {}).get(sym, {})
+        st.setdefault("setup_woke", dict(prev.get("setup_woke", {})))
         if setup.get("qualifies") and not prev_r.get("setup_qualifies"):
-            if 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:
+            recent = (last_setup.get("side") == setup.get("side") and last_setup.get("t")
+                      and now_utc - datetime.fromisoformat(last_setup["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
+            if recent:
+                notes.append(f"SETUP_REPEAT {sym} {setup.get('side')} (woke {last_setup['t']}, quiet)")
+            elif 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:
                 notes.append(f"SETUP_AFTER_1500 {sym} {setup.get('side')} (no entries 15:00-18:00, quiet)")
             elif st.get("sizing", {}).get("room", 999) < 25:   # #19: no book room -> plan_builder G6 must refuse
                 notes.append(f"SETUP_NO_ROOM {sym} {setup.get('side')} (room ${st['sizing']['room']:.2f}, quiet)")
@@ -366,6 +374,7 @@ def main() -> int:
                 notes.append(f"SETUP_UNDER_STANDDOWN {sym} {setup.get('side')} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:
                 triggers.append("COUNTER_TREND_QUALIFIES")
+                st["setup_woke"][sym] = {"side": setup.get("side"), "t": now_utc.isoformat(timespec="seconds")}
         st["regime"][sym] = {"frames": {regime.label(t["frame"]): t["headline"] for t in tfs},
                              "reversal_called": bool(rv.get("called")), "reversal_reasons": rv.get("reasons"),
                              "setup_qualifies": bool(setup.get("qualifies")), "setup_side": setup.get("side"),

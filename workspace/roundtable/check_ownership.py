@@ -94,6 +94,8 @@ RULES: list[tuple[str, str]] = [
     # else writes there - the same one-writer-per-file rule as every other lane.
     ("workspace/paper/CALL/*", "CALL"),
     ("workspace/paper/REPLAY/*", "REPLAY"),
+    # The anchored-structures study (ANCH1): pre-registration, shared harness, per-symbol runs.
+    ("workspace/anchors/*", "ANCH"),
 ]
 
 

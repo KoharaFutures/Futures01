@@ -31,6 +31,7 @@ the filesystem. It is enforced two other ways, both of which actually work:
 | `lib/*` | **parent** | read, and import |
 | `workspace/studies/DEFECTS.md` | **parent** writes; **manager** allocates the ids | read |
 | `workspace/studies/*`, `workspace/chrono/*` | **parent** | read |
+| `workspace/anchors/*` (the ANCH1 anchored-structures study) | **ANCH** | read |
 | `research/<agent>/SCOPE.md` | **that researcher** | read |
 | `research/<agent>/findings.md` | **that researcher** | read |
 | `research/<agent>/REQUESTS.md` | **that researcher** | read |

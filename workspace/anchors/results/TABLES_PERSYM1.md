@@ -99,13 +99,13 @@ The parked claim was *97% of observations positive, t 2.97*. Rule: close beyond 
 
 | entry | trades | median stop (pts) | median stop ($) | vs $120 cap | funded | refused | end equity | avg R (contaminated) |
 |---|---|---|---|---|---|---|---|---|
-| `golden_limit2` | 26 | 10.38 | $104 | **under** | 16 | 10 | $50,784.46 | +0.6060 |
-| `golden_limit4` | 26 | 10.38 | $104 | **under** | 16 | 10 | $50,547.35 | +0.5098 |
-| `golden_limit8` | 26 | 10.38 | $104 | **under** | 16 | 10 | $50,547.35 | +0.5098 |
+| `golden_limit2` | 24 | 10.63 | $106 | **under** | 14 | 10 | $49,827.96 | +0.2379 |
+| `golden_limit4` | 24 | 10.63 | $106 | **under** | 14 | 10 | $49,648.91 | +0.1589 |
+| `golden_limit8` | 24 | 10.63 | $106 | **under** | 14 | 10 | $49,648.91 | +0.1589 |
 | `golden_market` | 33 | 20.41 | $204 | over | 6 | 27 | $50,392.17 | +0.4324 |
-| `only_0786_limit2` | 9 | 13.31 | $133 | over | 3 | 6 | $50,383.43 | +1.1016 |
-| `only_0786_limit4` | 9 | 13.31 | $133 | over | 3 | 6 | $50,146.32 | +0.8238 |
-| `only_0786_limit8` | 9 | 13.31 | $133 | over | 3 | 6 | $50,146.32 | +0.8238 |
+| `only_0786_limit2` | 9 | 13.31 | $133 | over | 3 | 6 | $50,324.60 | +1.0332 |
+| `only_0786_limit4` | 9 | 13.31 | $133 | over | 3 | 6 | $50,145.54 | +0.8226 |
+| `only_0786_limit8` | 9 | 13.31 | $133 | over | 3 | 6 | $50,145.54 | +0.8226 |
 | `only_0786_market` | 14 | 17.68 | $177 | over | 2 | 12 | $50,170.12 | +0.6541 |
 
 The 2-bar and 4-bar limit windows differ by exactly one trade (bar 11306 fills only at the wider window and then blocks bar 11309 under one-position-at-a-time); every shared trade is identical, and nothing fills beyond 4 bars. So the gap between those rows is one trade in 26, not a window effect.
@@ -122,7 +122,7 @@ The 2-bar and 4-bar limit windows differ by exactly one trade (bar 11306 fills o
 | MCL momentum 60m | 174 | 137 |
 | MGC value-area edge | 91 | 26 |
 | MGC fib, market entry | 33 | 6 |
-| MGC fib, resting limit | 26 | 16 |
+| MGC fib, resting limit | 24 | 14 |
 
 Daily index trend-following totals **1 of 252** trades fundable.
 

@@ -1,3 +1,30 @@
+# CORRECTION, 2026-10-01, same day
+
+**A fill-bar look-ahead in the limit-entry path inflated every expectancy figure in §3.2 and
+Track E. It is fixed and those numbers are restated below; nothing else in this report used
+that path.**
+
+A resting limit fills mid-bar, and a 60m OHLC bar does not say whether the high came before or
+after the low. The engine was crediting the 1.5R target on the fill bar itself, which silently
+assumed the favourable ordering. On a test arm, **153 of 304 trades (50.3%) were booking their
+target on the very bar the limit filled.** The fill bar now allows only the adverse outcome
+(`lib/core.py`, `_walk`). Restated:
+
+| arm | as first published | corrected |
+|---|---|---|
+| MGC prior-week golden, limit, OOS | +0.6060R, t +2.88 | **+0.2379R, t +1.027**, n=24 |
+| MGC fib funded trades | 16 of 26 | **14 of 24** |
+| MGC median stop under a limit | $104 | **$106** |
+
+**The funding conclusion is unchanged** — median stop $204 under a market order vs **$106**
+under a resting limit, fundable trades **6 of 33 → 14 of 24** — because those are geometry, not
+path. **What changed is the direction of the trade-off:** the limit makes the rule affordable
+and *weaker per unit of risk* (OOS t +1.027 vs +2.705 for the market order), where I had
+reported it as affordable and stronger. Everything in §0, §1, §2, §3.1, §3.3 and §4 used
+market entries and is untouched.
+
+---
+
 # PERSYM1 — per-symbol strategy report
 
 Pre-registration: `HYPOTHESES_PERSYM1.md`, including the §5b amendment made before any arm was
@@ -158,13 +185,14 @@ level**:
 | entry | trades | median stop | vs $120 cap | funded | refused |
 |---|---|---|---|---|---|
 | market, next open ±1 tick | 33 | 20.41 pts = **$204** | over | **6** | 27 |
-| resting limit at the level | 26 | 10.38 pts = **$104** | **under** | **16** | 10 |
+| resting limit at the level | 24 | 10.63 pts = **$106** | **under** | **14** | 10 |
 
-The limit **halves the stop, brings it inside the budget, and raises fundable trades from 6 to 16**,
-at the cost of 18 signals expiring unfilled (26 fills against 33 market trades). The expectancy
-figures this produces are *in-sample-contaminated* — the rule was chosen using these very bars, so
-re-scoring them proves nothing about edge — and I am quoting only the risk and funding columns as
-evidence. That was the whole point of the exercise, and it worked.
+The limit **halves the stop, brings it inside the budget, and raises fundable trades from 6 to 14**,
+at the cost of signals that expire unfilled (24 fills against 33 market trades). Its expectancy is
+also *lower*: OOS +0.2379R at t +1.027 against +0.4324R at t +2.705 for the market order. So the
+limit buys affordability and pays for it in edge — the opposite of what I first reported, before the
+fill-bar look-ahead was closed (see the correction at the top). Those expectancy figures remain
+in-sample-contaminated in any case, since the rule was chosen using these very bars.
 
 ### 3.3 Exit management
 

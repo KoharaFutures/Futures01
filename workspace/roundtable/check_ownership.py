@@ -96,6 +96,8 @@ RULES: list[tuple[str, str]] = [
     ("workspace/paper/REPLAY/*", "REPLAY"),
     # The anchored-structures study (ANCH1): pre-registration, shared harness, per-symbol runs.
     ("workspace/anchors/*", "ANCH"),
+    # The LVN/FIB AGENT paper desk (MGC armed, MNQ instrumented).
+    ("workspace/paper/LVNFIB/*", "LVNFIB"),
 ]
 
 

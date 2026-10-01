@@ -43,3 +43,24 @@ What that team taught, in one line each:
 3. **Pre-registration tester:** takes one hypothesis at a time from `OPEN_QUESTIONS.md`,
    writes it down *first*, tests it once against a placebo, and reports against t ≥ 1.18.
 4. **Risk / journal:** sizing, the drawdown floor, and a scored record of every call.
+
+## LVN/FIB AGENT (added 2026-10-01)
+
+A paper desk on **MGC and MNQ**, lane `workspace/paper/LVNFIB/`, writer `LVNFIB`. It exists to
+generate forward callouts on rules that are already pre-registered and already measured, because
+the only clean out-of-sample data left is the future.
+
+- `CHARTER.md` — the rules, and the gate that decides which may risk the account
+- `engine.py` — today's levels per arm, every one stamped with its source bar
+- `plan.py` — callouts with sizing and the budget gate (`--post` to write)
+- `resolve.py` — resolves through `workspace/anchors/lib/core.py`, the same engine that measured
+  each prior, so the desk cannot flatter itself with friendlier fills
+- `status.py` — account, per-arm running record, each arm's measured prior side by side
+- `selftest.py` — proves the desk's live logic is the backtest's logic
+- `desk.sh` — one turn: refresh (if a feed exists), plan, resolve, status
+
+**One arm is armed: MGC Fibonacci trend-failure at the prior week's golden pocket, entered on a
+resting limit** (OOS n=24, +0.2379R, t +1.027; median stop $106 against the $120 budget). MNQ is
+instrumented but **not traded** — the same rule measures −0.2390R (t −1.932) there, and the
+overnight-range variant is a null at −0.0240R. Arms B, C and D log, resolve and accumulate at zero
+risk. Nothing on this desk clears its luck bar; it is a forward test, not an edge claim.

@@ -59,7 +59,10 @@ coin-flip LVN history), take it as a 1-contract TEST: add `--test` to plan_build
 strategy "TEST: ..."). Every hard gate still applies (stand-down, G2, G3, R:R, room, floors, daily loss).
 Hard "don'ts" (breakout chasing, fading the first 60m bar after 09:30, gold overnight-sweep fades) are NOT
 overridden. Report TEST trades separately from the measured record. In parallel the deep-LVN fade (#17) and
-reclaim entry (#18) are being pre-registered and walk-forward tested: results in `research/`.
+reclaim entry (#18) were walk-forward tested 2026-09-30 (`research/RESULTS_2026-09-30_lvn.md`): sweep &
+reclaim LOSES (B60: 610 trades, 33.6% wins x payoff 1.51, -0.17R, t -3.21; B15: 269 trades, -0.18R), stacked
+or not. So TEST trades are NOT taken on sweep/reclaim setups; they apply only to deep-LVN fades (#17),
+which had too few trades (5-10) to judge.
 
 ## 3. Making a plan: `plan_builder.py` only, never by hand
 

@@ -83,3 +83,11 @@ when it is within one tick). Each variant is reported for all / stacked / not st
 
 A cell is an edge candidate only if: N ≥ 30, t ≥ luck bar, z vs P1 ≥ luck bar, and real average R
 beats the level placebo in ≥ 9 of 10 seeds. Anything else is "no edge shown".
+
+## Addendum 2026-09-30 21:55 ET (before any result was produced)
+
+The first run crashed inside the verbatim `preopen.summarize` (KeyError when the 72 h profile has an
+empty price bin, e.g. a weekend gap). Fix: empty bins inside the profile's range are filled with zero
+volume before `summarize`. No trade or statistic had been produced. The fixed rule file has a new sha
+and is registered again, so the ledger now counts 90 + 30 + 90 = 210 trials for family LVN1718; the
+stricter ledger bar √(2·ln 210) = 3.27 replaces 3.09 in the pass rule.

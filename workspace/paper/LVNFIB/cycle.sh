@@ -4,8 +4,10 @@
 #   merge -> desk turn (fetches live) -> hold the archive append-only -> assert the
 #   prior still reproduces -> commit+push whatever the turn wrote.
 #
-# Exit: 0 quiet, 10 the desk wants attention, 2 the desk could not form a view,
-#       3 the prior no longer reproduces (STOP - do not trade).
+# Exit: passes through desk_check.py's own code - 0 quiet, 3 dormant, 10 attention,
+#       2 data failure - EXCEPT 4, which is this wrapper's own: the prior no longer
+#       reproduces, so the desk is not tradeable (STOP). 4 deliberately avoids 3,
+#       which desk_check.py already uses for the benign dormant case.
 set -uo pipefail
 cd "$(dirname "$0")/../../.."
 
@@ -19,7 +21,7 @@ python3 workspace/paper/LVNFIB/archive_guard.py | tail -1
 
 if ! python3 workspace/paper/LVNFIB/verify_prior.py; then
   echo "CYCLE: prior broken - desk is NOT tradeable this cycle"
-  exit 3
+  exit 4
 fi
 
 python3 workspace/roundtable/check_ownership.py LVNFIB | tail -1

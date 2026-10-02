@@ -24,6 +24,11 @@ if ! python3 workspace/paper/LVNFIB/verify_prior.py; then
   exit 4
 fi
 
+# Render a PNG card for any callout that does not have one yet. Cheap (only new ids
+# render) and it means an armed trigger always arrives with a card rather than a
+# promise of one. Cards are a rendering of the record, never a second source of truth.
+python3 workspace/paper/LVNFIB/card_png.py --new 2>/dev/null | tail -3
+
 python3 workspace/roundtable/check_ownership.py LVNFIB | tail -1
 
 # Push every cycle by default. A slower push cadence leaves the event log sitting

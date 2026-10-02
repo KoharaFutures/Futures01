@@ -58,7 +58,21 @@ def blend(a, b, t):
     return tuple(int(round(a[i] + (b[i] - a[i]) * t)) for i in range(3))
 
 
+_BACKDROP_CACHE: dict = {}
+
+
 def backdrop(W, H, las, deep):
+    """Deep gradient behind the card.
+
+    Cached: this is a pure per-pixel loop in Python and it dominated render cost (~1.5s a
+    card), but it depends only on (W, H, hue, base) and there are three variants in total
+    - LONG, SHORT and the grey observe-only card. Rendering a backlog of 90 callouts was
+    taking minutes and would have stalled a 2-minute cycle. The copy is essential: callers
+    composite onto it.
+    """
+    key = (W, H, las, deep)
+    if key in _BACKDROP_CACHE:
+        return _BACKDROP_CACHE[key].copy()
     img = Image.new("RGB", (W, H))
     px = img.load()
     for y in range(H):
@@ -71,7 +85,8 @@ def backdrop(W, H, las, deep):
             for k in range(sc(3)):
                 if x + k < W:
                     px[x + k, y] = c
-    return img
+    _BACKDROP_CACHE[key] = img
+    return img.copy()
 
 
 def hud_frame(d, box, colour, gd=None, img=None, thick=None):
@@ -311,6 +326,10 @@ def main() -> int:
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--latest", nargs="?", type=int, const=1)
     ap.add_argument("--armed", action="store_true")
+    ap.add_argument("--new", action="store_true",
+                    help="callouts with no card on disk yet (what the cycle runs)")
+    ap.add_argument("--max", type=int, default=12,
+                    help="cap for --new, newest first: a backlog must never stall a cycle")
     ap.add_argument("--scale", type=float, default=1.0)
     ap.add_argument("--outdir", default=str(HERE / "cards"))
     a = ap.parse_args()
@@ -324,8 +343,18 @@ def main() -> int:
         picked += [c for c in calls if gate(c)[2]]
     if a.latest:
         picked += calls[-a.latest:]
+    if a.new:
+        od = pathlib.Path(a.outdir)
+        missing = [c for c in calls
+                   if not (od / f"card_{c['symbol']}_{c['arm']}_{c['id']}.png").exists()]
+        # Armed callouts first, then newest: if the cap bites, the ones that can risk the
+        # account are the ones that get drawn.
+        missing.sort(key=lambda c: (not gate(c)[2],))
+        picked += missing[:a.max]
     if not picked:
-        print("no callouts selected (use ids, --latest N or --armed)")
+        if a.new:                       # nothing new is the normal quiet case
+            return 0
+        print("no callouts selected (use ids, --latest N, --armed or --new)")
         return 1
 
     outdir = pathlib.Path(a.outdir)

@@ -164,6 +164,7 @@ exit 2 = data failure. Quiet checks never wake the agent. Supersedes the 2026-09
 Alert routing (same override): this session is the silent BACKGROUND DESK. User-facing alerts go to the MAIN
 ALERT AGENT, cloud session session_01XBjSVKLwzVuz65rGAvZAaE ("CALL desk – trade alerts (main)"). On each real
 event (new plan, fill, close, expiry/void/withdrawal, data failure, stand-down that blocks a live plan), commit +
-push first, then SendMessage it a message starting "CALLOUT <ET time>:" with the facts (symbol, side, entry,
+push first, then call fire_trigger on trig_01UWCrKitzmRj9TFDaNYt3kC (the callout relay routine bound to that
+session; SendMessage cannot reach cloud sessions from here) with text starting "CALLOUT <ET time>:" with the facts (symbol, side, entry,
 stop, target, risk $, result R and $, equity, drawdown) and the card path. Declined triggers and quiet checks:
 no message to anyone.

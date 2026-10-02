@@ -1,38 +1,10 @@
 {
   "starting_equity": 50000.0,
-  "equity": 49663.08,
+  "equity": 49571.64,
   "peak_equity": 50156.56,
-  "drawdown": 493.48,
-  "realized_pnl": -336.92,
-  "open": [
-    {
-      "call_id": "CALL-0026",
-      "symbol": "MGC",
-      "side": "LONG",
-      "bar_minutes": 15,
-      "entry_price": 4215.3,
-      "entry_bar_ts": "2026-10-02T04:30:00-04:00",
-      "initial_stop": 4206.5,
-      "stop": 4206.5,
-      "risk_points": 8.8,
-      "contracts": 1,
-      "remaining": 1,
-      "tps": [
-        {
-          "label": "TP1",
-          "r": 1.8,
-          "fraction": 1.0,
-          "price": 4231.1,
-          "hit": false
-        }
-      ],
-      "risk_dollars": 88.0,
-      "realized": 0.0,
-      "triggered_at_utc": "2026-10-02T08:46:19+00:00",
-      "basis_at_trigger": "0fd3b50",
-      "entry_fill_note": "limit filled at the bar open, better than the limit price"
-    }
-  ],
+  "drawdown": 584.92,
+  "realized_pnl": -428.36,
+  "open": [],
   "closed": [
     {
       "call_id": "CALL-0002",
@@ -533,6 +505,41 @@
       "net": 94.56,
       "r_multiple": 1.751,
       "result": "WIN"
+    },
+    {
+      "call_id": "CALL-0026",
+      "symbol": "MGC",
+      "side": "LONG",
+      "bar_minutes": 15,
+      "entry_price": 4215.3,
+      "entry_bar_ts": "2026-10-02T04:30:00-04:00",
+      "initial_stop": 4206.5,
+      "stop": 4206.5,
+      "risk_points": 8.8,
+      "contracts": 1,
+      "remaining": 0,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.8,
+          "fraction": 1.0,
+          "price": 4231.1,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 88.0,
+      "realized": -91.44000000000182,
+      "triggered_at_utc": "2026-10-02T08:46:19+00:00",
+      "basis_at_trigger": "0fd3b50",
+      "entry_fill_note": "limit filled at the bar open, better than the limit price",
+      "exit_price": 4206.5,
+      "exit_bar_ts": "2026-10-02T06:00:00-04:00",
+      "exit_reason": "STOP",
+      "ambiguous": false,
+      "closed_at_utc": "2026-10-02T10:20:05+00:00",
+      "net": -91.44,
+      "r_multiple": -1.039,
+      "result": "LOSS"
     }
   ]
 }

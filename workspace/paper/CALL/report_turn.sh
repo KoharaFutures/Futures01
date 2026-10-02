@@ -19,4 +19,12 @@ Claude-Session: https://claude.ai/code/session_013793BxAYNNtb18hb5zFxy1" >/dev/n
 git fetch -q origin claude/admiring-heisenberg-doycyh claude/intelligent-feynman-ongyjw 2>/dev/null
 git merge -q --no-edit origin/claude/admiring-heisenberg-doycyh >/dev/null 2>&1
 git merge -q --no-edit origin/claude/intelligent-feynman-ongyjw >/dev/null 2>&1
-git push -q origin claude/intelligent-feynman-ongyjw 2>&1 | tail -1
+# AUTOMATE_NEXT #30: another session (LVNFIB) pushes to this branch too; on a rejected push,
+# re-fetch, merge and retry (up to 3 times, never force).
+for _try in 1 2 3; do
+  git push -q origin claude/intelligent-feynman-ongyjw 2>/dev/null && break
+  [ "$_try" = 3 ] && echo "PUSH_FAILED after 3 tries" && break
+  sleep 2
+  git fetch -q origin claude/intelligent-feynman-ongyjw 2>/dev/null
+  git merge -q --no-edit origin/claude/intelligent-feynman-ongyjw >/dev/null 2>&1
+done

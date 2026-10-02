@@ -347,7 +347,8 @@ def main() -> int:
             recent = (last_wake.get("side") == setup.get("side") and last_wake.get("t")
                       and now_utc - datetime.fromisoformat(last_wake["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
             if recent:
-                notes.append(f"REVERSAL_REPEAT {sym} {setup.get('side')} (woke {last_wake['t']}, quiet)")
+                notes.append(f"REVERSAL_REPEAT {sym} 15m -> {rv.get('headline')} (setup side {setup.get('side')}; "
+                             f"woke {last_wake['t']}, quiet)")
             elif 15 * 60 <= now_et.hour * 60 + now_et.minute < 17 * 60 + 50:  # plan_builder G2: no new entries 15:00-18:00 ET, so no plan is possible
                 notes.append(f"REVERSAL_AFTER_1500 {sym} (no entries 15:00-18:00, quiet)")
             elif st.get("sizing", {}).get("room", 999) < 25:   # #19: no book room

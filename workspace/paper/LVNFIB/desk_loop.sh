@@ -28,17 +28,32 @@ PIDFILE=workspace/paper/LVNFIB/.loop_pid
 # pgrep's own command line contains the pattern, so it reports a match even when no
 # loop is running. That false positive hid a 58-minute outage on 2026-10-01.
 #   bash desk_loop.sh --status   ->  0 if a loop is genuinely alive, 1 if not
+# `kill -0` alone is NOT enough either: pids are reused. On 2026-10-02 at 12:53 ET the
+# pidfile still held 475 from the previous hour, that pid had been handed to an unrelated
+# short-lived process, so the guard below refused to restart a loop that had been dead for
+# 55 minutes. A pid is only this loop's if /proc says its command line is this script.
+alive() {
+  local pid
+  [ -f "$PIDFILE" ] || return 1
+  pid="$(cat "$PIDFILE" 2>/dev/null)" || return 1
+  case "$pid" in ''|*[!0-9]*) return 1 ;; esac
+  kill -0 "$pid" 2>/dev/null || return 1
+  tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -q 'desk_loop\.sh' || return 1
+  return 0
+}
+
 if [ "${1:-}" = "--status" ]; then
-  if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  if alive; then
     echo "LVNFIB_LOOP: alive, pid $(cat "$PIDFILE")"; exit 0
   fi
   echo "LVNFIB_LOOP: not running"; exit 1
 fi
 
-if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+if alive; then
   echo "LVNFIB_LOOP: already running as pid $(cat "$PIDFILE") - refusing to start a second"
   exit 0
 fi
+[ -f "$PIDFILE" ] && echo "LVNFIB_LOOP: clearing stale pidfile (pid $(cat "$PIDFILE") is not this loop)"
 echo $$ > "$PIDFILE"
 trap 'rm -f "$PIDFILE"' EXIT INT TERM
 fails=0

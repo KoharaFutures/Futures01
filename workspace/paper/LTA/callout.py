@@ -7,20 +7,21 @@
         --why "PD VAH retest holding after break of PWC; 60m HH/HL" [--post]
 
 Without --post it prints the card and writes nothing. With --post it appends one line to
-callouts.jsonl (append-only). Every gate below comes from the book or from this repo's rules;
-each refusal says which (CHARTER.md).
+callouts.jsonl (append-only).
+
+THIS DESK TRADES THE LTA BOOK ONLY. It deliberately does not import the other desks' rules
+(LVNFIB arms, CALL desk filters, hub stand-downs). Its gates are the book's, plus the account
+rules every desk shares (CLAUDE.md #6: paper, $50,000, $2,800 floor; the owner's session window).
 
 Gates, in order:
-  data      the war map's newest bar must be < 2.5 h old inside the session (else STALE)
-  time      no entries 15:00-18:00 ET (repo rule 5 + nothing held 16:00-18:00);
-            not in the last 10 min of a 30m/60m candle (book p73: wait for the close)
-  2/2/2 #1  target must be >= 2R (default target = exactly 2R)        [book ch.33]
+  data      the war map's newest bar must be < 2.5 h old (else STALE)          [CLAUDE.md #4]
+  time      flat by 16:00 ET, nothing opened 15:30-18:00, weekend closed      [owner's window]
+            not in the last 10 min of a 30m/60m candle                        [book p73]
+  2/2/2 #1  target must be >= 2R (default target = exactly 2R)                [book p219]
   2/2/2 #2  risk budget: full = min(0.5% equity, 10% of room to the $2,800 floor);
-            half for CONTRARIAN / counter-trend / unconfirmed           [book ch.33, ch.37]
-  2/2/2 #3  two losses in a row today (and the day not green) -> HALT  [book ch.33]
-  stop      never tighter than 0.5 ATR of the entry timeframe          [repo rule 4]
-  obstacle  a key level inside the first 1R of the path -> NO TRADE    [book p79]
-  stacked   entry level within 0.25 ATR of another -> warn: expect a sweep first [repo]
+            half for CONTRARIAN / counter-trend / unconfirmed                 [book p221, p236]
+  2/2/2 #3  two losses in a row today (and the day not green) -> HALT         [book p222]
+  obstacle  a key level inside the first 1R of the path -> NO TRADE          [book p79]
 """
 from __future__ import annotations
 
@@ -56,8 +57,8 @@ def risk_budget(acct, half):
 
 def time_gate(t):
     hm = t.hour * 60 + t.minute
-    if 15 * 60 <= hm < 18 * 60:
-        return "NO ENTRIES 15:00-18:00 ET (repo rule 5: 15:00-16:00 measured z -4.43; flat 16:00-18:00)"
+    if 15 * 60 + 30 <= hm < 18 * 60:
+        return "NO ENTRIES 15:30-18:00 ET (owner's window: flat by 16:00, nothing held 16:00-18:00)"
     if t.weekday() == 5 or (t.weekday() == 4 and hm >= 17 * 60) or (t.weekday() == 6 and hm < 18 * 60):
         return "MARKET CLOSED (weekend)"
     m30 = t.minute % 30
@@ -76,11 +77,13 @@ def obstacles(m, side, entry, risk, target):
     return sorted(hits, key=lambda h: h["r_from_entry"])
 
 
-def build(a):
+def build(a, m=None, t=None, closed_bar=False):
+    """`m` = a war map already built this cycle; `t` = decision time; `closed_bar` = the
+    decision is taken on a just-closed bar (the scanner), so the candle-close wait is met."""
     sym = a.symbol.upper()
     spec = get_contract(sym)
-    m = war_map(sym)
-    t = now_et()
+    m = m or war_map(sym)
+    t = t or now_et()
     side = a.side.upper()
     sgn = 1 if side == "LONG" else -1
     risk = abs(a.entry - a.stop)
@@ -110,6 +113,8 @@ def build(a):
         refusals.append(f"STALE DATA: newest bar {m['newest_bar']} is {age_h:.1f} h old — refresh "
                         "(DATA_HUB/tools/refresh_archive.py --fetch) or pass --price-given if the owner quoted the price")
     tg = time_gate(t)
+    if tg and tg.startswith("WAIT") and closed_bar:
+        tg = None
     if tg:
         (warnings if tg.startswith("WAIT") else refusals).append(tg)
     if rr < 2 - 1e-9:
@@ -122,27 +127,17 @@ def build(a):
         refusals.append(f"risk budget ${full} < ${MIN_RISK_USD}: the account cannot size a trade (absorbing state)")
     elif contracts < 1:
         refusals.append(f"SIZE: one contract risks ${per_contract:.2f} > budget ${budget} ({'half' if half else 'full'} risk)")
-    atr_tf = None
-    tfm = int(a.tf.rstrip("m"))
-    if tfm in (30, 60):
-        from lta_levels import load, atr_series
-        atr_tf = next((x for x in reversed(atr_series(load(sym, tfm))) if x), None)
-    if atr_tf and risk < 0.5 * atr_tf:
-        refusals.append(f"STOP TOO TIGHT: {risk:.4g} pts < 0.5 x ATR{tfm}m ({0.5 * atr_tf:.4g}) — repo rule 4")
     obs = obstacles(m, side, a.entry, risk, target)
     if obs and obs[0]["r_from_entry"] < 1.0 and not a.accept_obstacle:
         refusals.append(f"OBSTACLE: {obs[0]['name']} {obs[0]['price']} sits {obs[0]['r_from_entry']}R into the path "
                         "(book p79: skip when a key level blocks the target)")
     lv = next((x for x in m["levels"] if a.level and x["name"].upper() == a.level.upper()), None)
     if lv and lv["stacked_with"]:
-        warnings.append(f"STACKED level ({a.level} with {', '.join(lv['stacked_with'])}): repo z -5.1 — expect a "
-                        "sweep through it first; prefer EM3 (sweep & reclaim) over a resting order")
+        warnings.append(f"CONFLUENCE: {a.level} lines up with {', '.join(lv['stacked_with'])} (book p48: a confluence zone)")
     corr = set(correlated_symbols(sym)) | {sym}
     if day["last_loss"] and day["last_loss"]["symbol"] in corr and day["last_loss"]["side"] == side:
         warnings.append(f"CORRELATED follow-up: today's last loss was {day['last_loss']['symbol']} {side} — "
                         "book p222: a second correlated bet is the same trade twice")
-    if m.get("vol_standdown"):
-        refusals.append(f"VOLATILITY STAND-DOWN: ATR14(15m) {m['atr14_15m']} above the {sym} limit")
     if a.news_within_min is not None and a.news_within_min <= 60:
         warnings.append(f"RED-FOLDER NEWS in {a.news_within_min} min — book: conservative risk, close before the release")
     wc = m["weekly_cycle"]["day"]
@@ -152,16 +147,16 @@ def build(a):
     verdict = "NO_TRADE" if refusals else side
     mgmt = []
     if archetype == "CONTRARIAN":
-        mgmt.append("move stop to breakeven at +1R (book p229, contrarian). Repo note: BE at +0.8R measured "
-                    "no effect over ~8,000 paired trades — kept because it is the book's rule, tracked separately")
+        mgmt.append("move stop to breakeven at +1R (book p229, contrarian)")
     else:
         mgmt.append("no breakeven move — momentum trades get room (book p229)")
-    mgmt.append("flat by 16:00 ET; no new entries 15:00-16:00")
+    mgmt.append("flat by 16:00 ET")
     if t.hour < 9 or (t.hour == 9 and t.minute < 30):
         mgmt.append("if not in profit by 09:25 ET, exit before the NY open (book p230)")
     mgmt.append("late NY with no progress: close it — volume dries up (book p230)")
 
     card = {
+        "id": f"LTA-{sym}-{t:%Y%m%d-%H%M}-{a.model}-{side[0]}",
         "ts": datetime.utcnow().isoformat(timespec="seconds") + "Z", "ts_et": t.isoformat(timespec="seconds"),
         "writer": "LTA", "symbol": sym, "side": side, "verdict": verdict,
         "entry_price": a.entry, "initial_stop": a.stop, "target": target, "rr": round(rr, 2),
@@ -174,7 +169,7 @@ def build(a):
         "intraday_trend_60m": tr60, "intraday_trend_30m": (m.get("trend_30m") or {}).get("trend"),
         "vs_PW_range": m.get("vs_PW_range"), "vs_PD_value": m.get("vs_PD_value"), "weekly_cycle": wc,
         "obstacles": obs[:4], "management": mgmt, "refusals": refusals, "warnings": warnings,
-        "confidence": "DISCRETIONARY", "basis": "LTA Concepts 2.0 layered read; no measured edge in this repo",
+        "confidence": "DISCRETIONARY", "basis": "LTA Concepts 2.0 layered read; not yet tested (CHARTER §5)",
         "as_of_bar": m["newest_bar"], "price_given_by_owner": bool(a.price_given),
         "account": acct, "why": a.why, "session": session_of(t),
     }

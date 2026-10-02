@@ -93,7 +93,7 @@ def resolve_all():
             continue
         r = resolve_one(c)
         if r:
-            r.update(key=_key(c), symbol=c["symbol"], side=c["side"], model=c.get("model"),
+            r.update(key=_key(c), id=c.get("id"), symbol=c["symbol"], side=c["side"], model=c.get("model"),
                      archetype=c.get("archetype"), session_day=str(tday(datetime.fromisoformat(c["ts_et"]))),
                      resolved_utc=datetime.utcnow().isoformat(timespec="seconds") + "Z")
             new.append(r)

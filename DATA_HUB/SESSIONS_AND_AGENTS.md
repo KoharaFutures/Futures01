@@ -113,5 +113,8 @@ A paper callout desk that applies the owner's **LTA Concepts 2.0** e-book (diges
 - `desk.sh`: one full turn
 
 The book's 2% / 1% risk is mapped to **min(0.5% equity, 10% of room to the $2,800 floor)** / half.
-Nothing on the desk has a measured edge. Every card is `DISCRETIONARY` and paper. No dedicated session
-or routine is wired yet. Run it on demand, or ask for a session + keepalive routine like the LVNFIB desk's.
+Nothing on the desk has a measured edge. Every card is `DISCRETIONARY` and paper. **It is a separate
+strategy from the other desks:** it shares none of their rules, lanes, journals or branch
+(`claude/zealous-sagan-n7jnmn`). It runs `cycle.sh` (`scan.py`) every 2 minutes from session
+`session_01FsjMu3FuXfDBstj3dv52X7` through a session cron, and sends a PNG card (`card_png.py`) for each
+new position and each outcome.

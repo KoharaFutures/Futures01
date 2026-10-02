@@ -7,6 +7,7 @@ for the concepts. The agent definition is [`.claude/agents/lta-concept-callouts.
 
 ```bash
 pip install yfinance                                   # once per container
+bash workspace/paper/LTA/cycle.sh                      # the 2-minute scan (what the schedule runs)
 bash workspace/paper/LTA/desk.sh                       # fetch → macro → war map → resolve → status
 bash workspace/paper/LTA/desk.sh --no-fetch MGC        # archive only (levels are NOT live)
 python3 workspace/paper/LTA/lta_levels.py --symbols MNQ      # the LTA level map + entry-model candidates
@@ -25,6 +26,9 @@ python3 workspace/paper/LTA/ledger.py                  # resolve posted callouts
 | `callout.py` | builds the card, applies every gate, sizes, renders blue/orange/grey, `--post` journals |
 | `ledger.py` | resolves journaled callouts on 5m bars, keeps equity / drawdown / two-strike state, win rate with payoff |
 | `fetch.py` | pulls fresh 5/15/30/60m bars into `live/` (git-ignored). **Never writes `data/archive/`**: the shared refresh rewrites committed history (see `LVNFIB/archive_guard.py`) |
-| `desk.sh` | one full turn |
+| `desk.sh` | one full turn, for a human |
+| `scan.py` | **the 2-minute scan**: the book's filters on each freshly closed 30m/60m bar, posts callouts, resolves positions, exit 10 = notify |
+| `cycle.sh` | what the 2-minute schedule runs: `scan.py`, then commit + push this desk's branch when something happened |
+| `card_png.py` | the PNG callout card (same visual language as the other desks' cards, LTA content) → `cards/` |
 | `callouts.jsonl`, `resolutions.jsonl` | append-only journals (created on first `--post`) |
 | `levels/` | last written war maps (`desk.sh` writes them) |

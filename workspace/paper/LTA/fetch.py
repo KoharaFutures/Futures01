@@ -26,28 +26,44 @@ ET = ZoneInfo("America/New_York")
 PERIOD = {5: "5d", 15: "5d", 30: "10d", 60: "1mo"}
 
 
-def fetch(sym: str, tf: int) -> str:
-    import yfinance as yf
-    d = yf.download(f"{sym}=F", period=PERIOD[tf], interval=f"{tf}m", progress=False,
-                    auto_adjust=False, prepost=True)
-    if d is None or d.empty:
-        return f"{sym} {tf:>2}m  EMPTY (vendor returned nothing)"
-    if hasattr(d.columns, "levels"):
-        d.columns = [c[0] for c in d.columns]
-    now = datetime.now(ET)
+def _rows(d, tf, now):
     rows = []
     for ix, r in d.iterrows():
         ts = ix.to_pydatetime().astimezone(ET)
         if ts + timedelta(minutes=tf) > now:          # still forming
             continue
-        v = float(r.get("Volume", 0) or 0)
-        o, h, l, c = (float(r[k]) for k in ("Open", "High", "Low", "Close"))
-        if v == 0 and h == l:                         # vendor stub
+        try:
+            v = float(r.get("Volume", 0) or 0)
+            o, h, l, c = (float(r[k]) for k in ("Open", "High", "Low", "Close"))
+        except (TypeError, ValueError):
+            continue
+        if c != c or (v == 0 and h == l):             # NaN or vendor stub
             continue
         rows.append({"ts": ts.isoformat(), "o": o, "h": h, "l": l, "c": c, "v": v})
+    return rows
+
+
+def fetch_frame(syms, tf) -> list[str]:
+    """One vendor call per timeframe for all symbols (fewer calls = fewer HTTP 429s)."""
+    import yfinance as yf
+    tick = [f"{s}=F" for s in syms]
+    d = yf.download(tick, period=PERIOD[tf], interval=f"{tf}m", progress=False,
+                    auto_adjust=False, prepost=True, group_by="ticker", threads=False)
+    now = datetime.now(ET)
     LIVE.mkdir(exist_ok=True)
-    (LIVE / f"{sym}_{tf}m.jsonl").write_text("".join(json.dumps(x) + "\n" for x in rows))
-    return f"{sym} {tf:>2}m  {len(rows):>5} bars, newest {rows[-1]['ts'] if rows else '—'}"
+    out = []
+    for s, t in zip(syms, tick):
+        try:
+            sub = d[t] if d is not None and not d.empty else None
+        except KeyError:
+            sub = None
+        rows = _rows(sub.dropna(how="all"), tf, now) if sub is not None else []
+        if not rows:
+            out.append(f"{s} {tf:>2}m  EMPTY (vendor returned nothing) — cache left as it was")
+            continue
+        (LIVE / f"{s}_{tf}m.jsonl").write_text("".join(json.dumps(x) + "\n" for x in rows))
+        out.append(f"{s} {tf:>2}m  {len(rows):>5} bars, newest {rows[-1]['ts']}")
+    return out
 
 
 def main():
@@ -56,13 +72,14 @@ def main():
     ap.add_argument("--frames", nargs="+", type=int, default=[5, 15, 30, 60])
     a = ap.parse_args()
     ok = True
-    for s in a.symbols:
-        for tf in a.frames:
-            try:
-                print("fetch " + fetch(s, tf))
-            except Exception as e:
-                ok = False
-                print(f"fetch {s} {tf}m FAILED: {type(e).__name__}: {e}")
+    for tf in a.frames:
+        try:
+            for line in fetch_frame(a.symbols, tf):
+                ok = ok and "EMPTY" not in line
+                print("fetch " + line)
+        except Exception as e:
+            ok = False
+            print(f"fetch {tf}m FAILED: {type(e).__name__}: {e}")
     raise SystemExit(0 if ok else 2)
 
 

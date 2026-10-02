@@ -3,6 +3,13 @@
 **Paper only. $50,000 account, $2,800 drawdown floor.** Lane `workspace/paper/LTA/**`, writer `LTA`.
 Symbols: MNQ, MES, MGC, MCL. MES and MNQ are one index complex, so a callout on both counts as one bet.
 
+**This desk trades the LTA book and nothing else.** It is separate from the other desks
+(LVNFIB, CALL, REPLAY): it shares none of their rules, levels, state, journals or branch.
+The only rules in common are the account rules every desk follows (CLAUDE.md #6: paper,
+$50,000, $2,800 floor; the owner's session window: flat by 16:00 ET, nothing held 16:00–18:00).
+What other desks measured is kept in `DATA_HUB/LTA_CONCEPTS.md` §10 as background reading only.
+It is never a gate here.
+
 This desk calls out trades the way the *LTA Concepts 2.0* book does: layered top-down, executed
 on volume-profile levels with four entry models, managed with the 2/2/2 rule. The concepts are in
 [`DATA_HUB/LTA_CONCEPTS.md`](../../../DATA_HUB/LTA_CONCEPTS.md). **Nothing on this desk has a
@@ -37,15 +44,14 @@ measured edge.** Every card says `PAPER — UNVALIDATED` and `confidence DISCRET
 | gate | rule | source |
 |---|---|---|
 | stale data | newest bar > 2.5 h old → refuse unless the owner quoted the price | CLAUDE.md #4 |
-| time | no entries 15:00–18:00 ET; weekend closed; last 10 min of a 30m/60m candle → WAIT | repo rule 5; book p73 |
+| session window | nothing opened 15:30–18:00 ET, flat by 16:00, weekend closed | owner's window (all desks) |
+| candle close | not in the last 10 min of a 30m/60m candle (the scanner acts on closed bars) | book p73 |
 | reward | target ≥ 2R (default exactly 2R) | book 2/2/2 #1, p219 |
-| risk budget | **full = min(0.5% equity, 10% of room to the floor)**; **half** for contrarian or unconfirmed | book 2/2/2 #2 mapped to this account (§3) |
+| risk budget | **full = min(0.5% equity, 10% of room to the floor)**; **half** for contrarian or unconfirmed | book 2/2/2 #2, mapped to this account (§3) |
 | two strikes | two losses in a row today and the day not green → HALT for the day | book 2/2/2 #3, p222 |
-| floor | no trade at or below the $2,800 drawdown floor, or below $25 of budget | CLAUDE.md #6; absorbing state |
-| stop | never tighter than 0.5 ATR of the entry timeframe | repo rule 4 |
-| obstacle | a key level within the first 1R of the path → NO TRADE (override `--accept-obstacle`) | book p79 |
-| volatility | ATR14(15m) above 58 (MNQ) or 10 (MGC) → stand down | RULES_AND_PITFALLS |
-| warnings | STACKED level, correlated follow-up after a loss, news within 60 min, Mon/Tue trap risk | repo z −5.1; book p222, p73, p43 |
+| floor | no trade at or below the $2,800 drawdown floor | CLAUDE.md #6 |
+| obstacle | a key level within the first 1R of the path → NO TRADE | book p79 |
+| notes | CONFLUENCE (levels lining up), correlated follow-up after a loss, news within 60 min, Mon/Tue trap risk | book p48, p222, p73, p43 |
 
 ## 3. Why the book's 2% became 0.5%
 
@@ -89,3 +95,32 @@ payoff, n, mean R, t, and the luck bar, in code output (`walkforward.py` style),
   own pre-registered stand-ins. The book gives no numbers for them.
 - `ledger.py` resolves pessimistically (a bar touching both stop and target counts as the stop) and
   assumes the quoted entry was fillable.
+
+## 7. The 2-minute scan (`scan.py`, run by `cycle.sh`)
+
+Every 2 minutes the desk runs the book's process on MNQ, MES, MGC and MCL by itself:
+
+1. **Dormant** on the weekend, and from 16:00 to 18:00 ET when nothing is open (no fetch). Exit 3.
+2. **Fetch** fresh 5/15/30/60m bars into `live/` (at most every 100 s). It never writes `data/archive/`.
+3. **Macro bias** per symbol (refreshed hourly): valuation (with the macro trend and the correlation
+   gate), seasonality, and the owner's COT read from `cot_inputs.json`.
+4. **War map**, then the entry-model candidates (EM1/EM3/EM4) that completed on the **bar that just
+   closed** (30m or 60m). Each one must pass the book's filters:
+   - **F1** the level is a book execution level: PD/EPD/PW/EPW/CW/Swing POC, VAH or VAL, SO or PSO [p66–p80]
+   - **F2** the side agrees with the 60m or 30m two-touch intraday trend [p180–p182]
+   - **F3** Asia session (18:00–02:00 ET) is low volume, so only 60m confirmations count [p73]
+   - **F4** one position per symbol, and MES/MNQ count as one bet [p222]
+
+   Then every §2 gate applies. Archetype and risk come from the macro bias:
+   - macro bias agrees with the side → MOMENTUM, full risk
+   - macro bias is NONE or against the side → CONTRARIAN, half risk, BE at +1R
+5. **Post** passing callouts to `callouts.jsonl` and draw a **PNG card** in `cards/`. Setups that were
+   filtered or refused are logged in `scan_events.jsonl` (local) and are not sent.
+6. **Resolve** open positions on 5m bars and draw the outcome card.
+
+Exit codes: 0 quiet · 3 dormant · **10 notify** (each `CARD <path>` line is a PNG to send the owner) · 2 data failure.
+On exit 10, `cycle.sh` commits the lane and pushes this desk's branch.
+
+**Known limit:** while COT is `UNKNOWN`, the macro bias is mostly NONE, so most scanned trades are
+CONTRARIAN at half risk ($125). On MNQ a 60m stop usually costs more than that, so MNQ/MES
+callouts are often refused for size. That is the book's rule applied to this account, and it is not a fault.

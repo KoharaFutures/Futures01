@@ -12,15 +12,14 @@ each stamped with the bar it came from:
   swing    the profile of the latest 60m swing leg (Swing POC/VAH/VAL, book ch.7)
   context  the weekly-cycle phase, where price sits against PD value and the PW range,
            the intraday trend from two touch points on 60m and 30m (book ch.27), ATR,
-           and STACKED flags (levels within 0.25 ATR of each other)
+           and CONFLUENCE flags (levels within 0.25 ATR of each other, book p48)
   setups   entry-model candidates EM1 / EM3 / EM4 on closed 30m and 60m bars at those levels
 
     python3 workspace/paper/LTA/lta_levels.py                 # MNQ MES MGC MCL, markdown
     python3 workspace/paper/LTA/lta_levels.py --symbols MGC --json
 
 Nothing here is a signal with a measured edge. The detectors only say "the book's pattern is
-present at the book's level"; DATA_HUB measured those levels as no better than random prices on
-their own. Read-only on data/archive/.
+present at the book's level". Read-only on data/archive/.
 """
 from __future__ import annotations
 
@@ -40,10 +39,9 @@ from futures_agents.config import get_contract              # noqa: E402
 
 SYMS = ("MNQ", "MES", "MGC", "MCL")
 LIVE = pathlib.Path(__file__).resolve().parent / "live"
-STACK_ATR = 0.25          # repo finding: stacked levels are the worst place to fade (z -5.1)
+STACK_ATR = 0.25          # levels this close count as one confluence zone (book p48)
 NEAR_ATR = 3.0            # list levels within this many 60m ATRs of price
 TOUCH_TICKS = 2           # a bar "touches" a level if it trades within this many ticks of it
-VOL_STANDDOWN = {"MGC": 10.0, "MNQ": 58.0}   # ATR14 on 15m (RULES_AND_PITFALLS)
 WEEKDAY_PHASE = {
     0: ("MON", "trap-prone: early-week fakeouts, wait for confirmation (book ch.3)"),
     1: ("TUE", "trap-prone: early-week fakeouts, wait for confirmation (book ch.3)"),
@@ -164,7 +162,6 @@ def war_map(sym: str) -> dict:
            "trading_day": str(cur_day), "atr14_60m": a60 and round(a60, 4),
            "atr14_15m": a15 and round(a15, 4), "tick": tick, "point_value": spec.point_value,
            "profile_source_tf": 5 if src is b5 else 30 if src is b30 else 60}
-    out["vol_standdown"] = bool(sym in VOL_STANDDOWN and a15 and a15 > VOL_STANDDOWN[sym])
 
     # ---- daily: PD / EPD
     pd = done[-1] if done else None
@@ -364,7 +361,7 @@ def to_md(m: dict) -> str:
     L.append("")
     L.append(f"*NOT live unless fetched this turn. Trading day {m['trading_day']} · 60m ATR "
              f"{m['atr14_60m']} · 15m ATR {m['atr14_15m']} · profiles from {m['profile_source_tf']}m bars"
-             + (" · **VOLATILITY STAND-DOWN**" if m['vol_standdown'] else "") + "*")
+             + "*")
     L.append("")
     wc = m["weekly_cycle"]
     L.append(f"- **Weekly cycle:** {wc['day']}: {wc['note']}")
@@ -415,7 +412,7 @@ def to_md(m: dict) -> str:
         for s in m["setups"]:
             fl = []
             if s["stacked_with"]:
-                fl.append("STACKED")
+                fl.append("CONFLUENCE")
             if s["stop_too_tight"]:
                 fl.append("STOP<0.5ATR")
             if s["unsettled"]:

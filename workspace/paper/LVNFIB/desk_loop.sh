@@ -51,8 +51,17 @@ while true; do
         exit 4 ;;
     0)  fails=0; sleep "$INTERVAL" ;;
     3)  fails=0; sleep "$INTERVAL" ;;   # was 600: the owner asked for a 2-minute cadence
-    10) echo "LVNFIB_LOOP: attention -> see the WAKE lines above and desk_events.jsonl"
-        exit 10 ;;
+    10) # Attention. In BACKGROUND mode this desk reports to nobody: a separate agent
+        # reads the logs and notifies the owner, so stopping here would silence the
+        # desk until the hourly keepalive restarted it - up to an hour of missed
+        # cycles inside an entry window. Record it and keep cycling instead.
+        if [ "${LVNFIB_BACKGROUND:-0}" = "1" ]; then
+          printf '{"ts":"%s","exit":10}\n' "$(date -Is)" >> workspace/paper/LVNFIB/attention.jsonl
+          fails=0; sleep "$INTERVAL"
+        else
+          echo "LVNFIB_LOOP: attention -> see the WAKE lines above and desk_events.jsonl"
+          exit 10
+        fi ;;
     *)  fails=$((fails + 1)); echo "LVNFIB_LOOP: desk_check exit $rc (failure $fails of 3)"
         if [ "$fails" -ge 3 ]; then echo "LVNFIB_LOOP: 3 consecutive failures"; exit 2; fi
         sleep "$INTERVAL" ;;

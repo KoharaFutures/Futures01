@@ -26,10 +26,12 @@ fi
 
 python3 workspace/roundtable/check_ownership.py LVNFIB | tail -1
 
-# Commit/push cadence is deliberately slower than the check cadence: the check is
-# every 120s, but a dormant cycle only appends one event line, and several desks
-# share this branch. Push when something real happened, or every PUSH_EVERY seconds.
-PUSH_EVERY="${LVNFIB_PUSH_EVERY:-600}"
+# Push every cycle by default. A slower push cadence leaves the event log sitting
+# uncommitted between pushes, which trips the repo's stop hook ("there are uncommitted
+# changes"); a clean tree is worth more than the saved commits. The union-merge
+# .gitattributes and the re-merge retry below make per-cycle pushes safe on a branch
+# several desks share. Set LVNFIB_PUSH_EVERY=<seconds> to throttle it again.
+PUSH_EVERY="${LVNFIB_PUSH_EVERY:-0}"
 stamp=workspace/paper/LVNFIB/.push_stamp
 now=$(date +%s)
 last=$(cat "$stamp" 2>/dev/null || echo 0)

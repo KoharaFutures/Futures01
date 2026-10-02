@@ -116,9 +116,10 @@ def account():
 
 def today_record(day):
     rs = [r for r in _read(RESOLVED) if r.get("session_day") == str(day) and r["outcome"] != "EXPIRED"]
+    rs = sorted(rs, key=lambda r: r["bar"])          # in the order the trades actually closed
     net = sum(r["pnl"] for r in rs)
-    last2 = rs[-2:]
-    two = len(last2) == 2 and all(r["r"] < 0 for r in last2)
+    # book p222: two losses in a row ends the day; a later win does not reopen it
+    two = any(a["r"] < 0 and b["r"] < 0 for a, b in zip(rs, rs[1:]))
     last_loss = next(({"symbol": r["symbol"], "side": r["side"]} for r in reversed(rs) if r["r"] < 0), None)
     return {"trades": len(rs), "net": round(net, 2), "halt": bool(two and net <= 0),
             "why": "last two resolved trades today both lost and the day is not green" if two and net <= 0 else "",

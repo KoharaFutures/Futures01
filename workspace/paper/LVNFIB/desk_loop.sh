@@ -50,7 +50,7 @@ while true; do
     4)  echo "LVNFIB_LOOP: arm A's prior no longer reproduces - desk has no prior, stopping"
         exit 4 ;;
     0)  fails=0; sleep "$INTERVAL" ;;
-    3)  fails=0; sleep 600 ;;
+    3)  fails=0; sleep "$INTERVAL" ;;   # was 600: the owner asked for a 2-minute cadence
     10) echo "LVNFIB_LOOP: attention -> see the WAKE lines above and desk_events.jsonl"
         exit 10 ;;
     *)  fails=$((fails + 1)); echo "LVNFIB_LOOP: desk_check exit $rc (failure $fails of 3)"

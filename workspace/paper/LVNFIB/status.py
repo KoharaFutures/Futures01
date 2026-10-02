@@ -26,6 +26,26 @@ def load(n):
     return [json.loads(l) for l in p.read_text().splitlines() if l.strip()] if p.exists() else []
 
 
+def _newest_bar():
+    """Newest 60m bar across the desk's symbols, and its age in minutes."""
+    import datetime as _dt
+    newest = None
+    for sym in ("MGC", "MNQ"):
+        try:
+            t = core.tape(sym, 60)
+        except Exception:                                  # noqa: BLE001
+            continue
+        ts = t.bars[-1].ts
+        if newest is None or ts > newest:
+            newest = ts
+    if newest is None:
+        return "unknown", None
+    # Age from the bar's CLOSE, not its start: a 60m bar stamped 19:00 covers
+    # 19:00-20:00, so measuring from the stamp makes a current bar look an hour stale.
+    age = (_dt.datetime.now(newest.tzinfo) - newest).total_seconds() / 60 - 60
+    return newest.isoformat(), max(age, 0.0)
+
+
 def main():
     calls, res = load("callouts.jsonl"), load("resolutions.jsonl")
     s = (json.loads((HERE / "state.json").read_text()) if (HERE / "state.json").exists()
@@ -64,8 +84,24 @@ def main():
         for c in open_c:
             print(f"  {c['id']} {c['symbol']} arm {c['arm']} {c['side']} "
                   f"limit {c['limit_entry']} stop {c['stop']} target {c['target']} x{c['contracts']}")
-    print("\nNOTE: no live feed in this container (yfinance absent). Levels come from "
-          "data/archive/\n      and are stamped with their source bar. Nothing here is a current price.")
+    # This note used to be unconditional, so it claimed "yfinance absent" in the same
+    # breath as a fetch that had just appended a bar. Report what is actually true.
+    try:
+        import yfinance  # noqa: F401
+        feed = True
+    except ModuleNotFoundError:
+        feed = False
+    newest, age_min = _newest_bar()
+    if not feed:
+        print("\nNOTE: no live feed in this container (yfinance absent). Levels come from "
+              "data/archive/\n      and are stamped with their source bar. Nothing here is "
+              "a current price.")
+    else:
+        print(f"\nNOTE: live feed on (yfinance). Newest closed 60m bar stamped {newest}"
+              f"{'' if age_min is None else f' (closed {age_min:.0f} min ago)'}.")
+        print("      Yahoo lags ~13 min at 5m and ~23 min at 15m and the newest 1-2 bars "
+              "revise for\n      ~28 min, so a level is stamped with its source bar and is "
+              "still not a live quote.")
 
 
 if __name__ == "__main__":

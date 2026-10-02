@@ -34,7 +34,9 @@ def main():
     ev.sort(key=lambda r: r["ts"])
     calls, res = jsonl("callouts.jsonl"), jsonl("resolutions.jsonl")
 
-    # loop liveness, by pidfile - never by pgrep (its own command line matches)
+    # desk_loop.sh liveness, by pidfile - never by pgrep (its own command line matches).
+    # The cron drives cycle.sh now, so "not running" is the intended state, not a fault;
+    # what matters is whether a cycle ran recently. See NOTES_MECHANISM.md.
     pid_f = HERE / ".loop_pid"
     alive = False
     if pid_f.exists():
@@ -61,8 +63,12 @@ def main():
     open_c = [c for c in calls if c.get("contracts", 0) > 0 and c["id"] not in resolved_ids
               and c["status"] in ("PENDING", "OBSERVE")]
 
-    print(f"LVNFIB {now.strftime('%Y-%m-%d %H:%M:%S %Z')}  loop={'alive' if alive else 'DOWN'}"
-          f"  last cycle {('%.1f min ago' % age) if age is not None else 'never'}")
+    # Health is "did a cycle run recently", whichever mechanism ran it.
+    fresh = age is not None and age <= 5
+    driver = "desk_loop" if alive else "cron"
+    print(f"LVNFIB {now.strftime('%Y-%m-%d %H:%M:%S %Z')}  driver={driver}  "
+          f"{'OK' if fresh else 'STALE'}: last cycle "
+          f"{('%.1f min ago' % age) if age is not None else 'never'}")
     print(f"  window: {win if win else 'closed'}   bars: {'; '.join(bars)} (source bars, not quotes)")
     print(f"  equity ${eq:,.2f}  drawdown ${dd:,.2f}  room to floor ${2800 - dd:,.2f}"
           f"  closed {st.get('closed', 0)}")

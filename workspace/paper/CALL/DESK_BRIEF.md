@@ -154,3 +154,10 @@ don't say anything." Supersedes the one-line-every-check rule: on a wake with no
 close, expiry, void), no new plan and no data problem, run the routine and restart the loop but post nothing.
 Speak only for triggers, plan events, new/declined plans, data failures, routine notices that need action, and
 owner questions.
+
+**OWNER OVERRIDE (2026-10-02 09:41 ET): background desk, quiet loop.** "You will be the background agent and
+there will be another main agent that will notify me of the callouts ... right now I'm just being spammed with
+notifications when there is no change." Run `bash workspace/paper/CALL/desk_loop.sh` WITHOUT
+`DESK_REPORT_EVERY=1`: it checks every 2 minutes and exits (code 10) only when desk_check raises a trigger
+(PLAN_EVENT fill/close/expiry, REVERSAL_CALLED, COUNTER_TREND_QUALIFIES, DATA_STALE, DRAWDOWN_FLOOR, ...);
+exit 2 = data failure. Quiet checks never wake the agent. Supersedes the 2026-09-29 "report mode" override.

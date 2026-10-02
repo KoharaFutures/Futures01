@@ -148,3 +148,9 @@ covered — the trigger was the problem".
 If you do the same reasoning twice, it belongs in a script. Append the idea to `AUTOMATE_NEXT.md` with
 the trigger and the rule. Pre-register any new signal as a rule file under `DATA_HUB/tools/rules/`. Run it
 through `walkforward.py`, and it joins the live shadow signals automatically once it's in the ledger.
+
+**OWNER OVERRIDE (2026-10-02 01:54 ET): silent quiet checks.** "If you have nothing new to report then just
+don't say anything." Supersedes the one-line-every-check rule: on a wake with no trigger, no plan event (fill,
+close, expiry, void), no new plan and no data problem, run the routine and restart the loop but post nothing.
+Speak only for triggers, plan events, new/declined plans, data failures, routine notices that need action, and
+owner questions.

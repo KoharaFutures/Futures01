@@ -97,3 +97,21 @@ resting limit** (OOS n=24, +0.2379R, t +1.027; median stop $106 against the $120
 instrumented but **not traded** — the same rule measures −0.2390R (t −1.932) there, and the
 overnight-range variant is a null at −0.0240R. Arms B, C and D log, resolve and accumulate at zero
 risk. Nothing on this desk clears its luck bar; it is a forward test, not an edge claim.
+
+## LTA CONCEPT CALLOUTS (added 2026-10-02)
+
+A paper callout desk that applies the owner's **LTA Concepts 2.0** e-book (digested in
+[`LTA_CONCEPTS.md`](LTA_CONCEPTS.md)) to MNQ, MES, MGC and MCL. Lane `workspace/paper/LTA/`, writer
+`LTA`; agent definition `.claude/agents/lta-concept-callouts.md`.
+
+- `CHARTER.md`: the top-down procedure (macro bias → HTF zone → intraday trend → volume-profile
+  level + entry model → 2/2/2 risk), the binding gates, and the pre-registered tests LTA-H1…H5
+- `lta_levels.py`: Sunday Open, PD/EPD, PW/EPW/CW and swing profiles, intraday trend, STACKED flags,
+  EM1/EM3/EM4 candidates, each level stamped with its source bar
+- `macro.py`: valuation vs DXY/ZB, correlation gate, seasonality, COT from the owner (cftc.gov is blocked)
+- `callout.py` / `ledger.py`: gated, sized, journaled cards and their resolution
+- `desk.sh`: one full turn
+
+The book's 2% / 1% risk is mapped to **min(0.5% equity, 10% of room to the $2,800 floor)** / half.
+Nothing on the desk has a measured edge. Every card is `DISCRETIONARY` and paper. No dedicated session
+or routine is wired yet. Run it on demand, or ask for a session + keepalive routine like the LVNFIB desk's.

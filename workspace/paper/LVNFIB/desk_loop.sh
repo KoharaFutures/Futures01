@@ -22,6 +22,25 @@
 set -u
 cd "$(dirname "$0")/../../.."
 INTERVAL="${1:-120}"
+PIDFILE=workspace/paper/LVNFIB/.loop_pid
+
+# A pidfile, because `pgrep -af desk_loop.sh` is not a usable liveness check: the
+# pgrep's own command line contains the pattern, so it reports a match even when no
+# loop is running. That false positive hid a 58-minute outage on 2026-10-01.
+#   bash desk_loop.sh --status   ->  0 if a loop is genuinely alive, 1 if not
+if [ "${1:-}" = "--status" ]; then
+  if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+    echo "LVNFIB_LOOP: alive, pid $(cat "$PIDFILE")"; exit 0
+  fi
+  echo "LVNFIB_LOOP: not running"; exit 1
+fi
+
+if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  echo "LVNFIB_LOOP: already running as pid $(cat "$PIDFILE") - refusing to start a second"
+  exit 0
+fi
+echo $$ > "$PIDFILE"
+trap 'rm -f "$PIDFILE"' EXIT INT TERM
 fails=0
 echo "LVNFIB_LOOP: starting, interval ${INTERVAL}s, pid $$"
 while true; do

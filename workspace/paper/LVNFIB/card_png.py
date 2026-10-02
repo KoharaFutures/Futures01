@@ -311,6 +311,8 @@ def main() -> int:
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--latest", nargs="?", type=int, const=1)
     ap.add_argument("--armed", action="store_true")
+    ap.add_argument("--new", action="store_true",
+                    help="every callout with no card on disk yet (what the cycle runs)")
     ap.add_argument("--scale", type=float, default=1.0)
     ap.add_argument("--outdir", default=str(HERE / "cards"))
     a = ap.parse_args()
@@ -324,8 +326,14 @@ def main() -> int:
         picked += [c for c in calls if gate(c)[2]]
     if a.latest:
         picked += calls[-a.latest:]
+    if a.new:
+        od = pathlib.Path(a.outdir)
+        picked += [c for c in calls
+                   if not (od / f"card_{c['symbol']}_{c['arm']}_{c['id']}.png").exists()]
     if not picked:
-        print("no callouts selected (use ids, --latest N or --armed)")
+        if a.new:                       # nothing new is the normal quiet case
+            return 0
+        print("no callouts selected (use ids, --latest N, --armed or --new)")
         return 1
 
     outdir = pathlib.Path(a.outdir)

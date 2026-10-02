@@ -161,3 +161,9 @@ notifications when there is no change." Run `bash workspace/paper/CALL/desk_loop
 `DESK_REPORT_EVERY=1`: it checks every 2 minutes and exits (code 10) only when desk_check raises a trigger
 (PLAN_EVENT fill/close/expiry, REVERSAL_CALLED, COUNTER_TREND_QUALIFIES, DATA_STALE, DRAWDOWN_FLOOR, ...);
 exit 2 = data failure. Quiet checks never wake the agent. Supersedes the 2026-09-29 "report mode" override.
+Alert routing (same override): this session is the silent BACKGROUND DESK. User-facing alerts go to the MAIN
+ALERT AGENT, cloud session session_01XBjSVKLwzVuz65rGAvZAaE ("CALL desk – trade alerts (main)"). On each real
+event (new plan, fill, close, expiry/void/withdrawal, data failure, stand-down that blocks a live plan), commit +
+push first, then SendMessage it a message starting "CALLOUT <ET time>:" with the facts (symbol, side, entry,
+stop, target, risk $, result R and $, equity, drawdown) and the card path. Declined triggers and quiet checks:
+no message to anyone.

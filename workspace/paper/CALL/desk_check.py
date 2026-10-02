@@ -344,7 +344,10 @@ def main() -> int:
         last_wake = prev.get("reversal_woke", {}).get(sym, {})
         st.setdefault("reversal_woke", dict(prev.get("reversal_woke", {})))
         if rv.get("called") and not prev_r.get("reversal_called"):
-            recent = (last_wake.get("side") == setup.get("side") and last_wake.get("t")
+            # #33: key the rearm on the reversal's direction (15m headline), not the setup side, which flips
+            same_dir = (last_wake.get("reversal_to") == rv.get("headline")) if last_wake.get("reversal_to") \
+                else (last_wake.get("side") == setup.get("side"))
+            recent = (same_dir and last_wake.get("t")
                       and now_utc - datetime.fromisoformat(last_wake["t"]) < timedelta(minutes=REVERSAL_REARM_MIN))
             if recent:
                 notes.append(f"REVERSAL_REPEAT {sym} 15m -> {rv.get('headline')} (setup side {setup.get('side')}; "
@@ -353,6 +356,8 @@ def main() -> int:
                 notes.append(f"REVERSAL_AFTER_1500 {sym} (no entries 15:00-18:00, quiet)")
             elif st.get("sizing", {}).get("room", 999) < 25:   # #19: no book room
                 notes.append(f"REVERSAL_NO_ROOM {sym} (room ${st['sizing']['room']:.2f}, quiet)")
+                st["reversal_woke"][sym] = {"side": setup.get("side"), "reversal_to": rv.get("headline"),
+                                            "t": now_utc.isoformat(timespec="seconds")}
             elif binding:  # AUTOMATE_NEXT #13: no plan is possible under a stand-down (plan_builder G1)
                 notes.append(f"REVERSAL_UNDER_STANDDOWN {sym} (ATR {atr:.2f} > {STANDDOWN[sym]}, quiet)")
             else:

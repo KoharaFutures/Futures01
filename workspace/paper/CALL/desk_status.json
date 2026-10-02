@@ -1,21 +1,21 @@
 {
- "now_utc": "2026-10-02T04:01:32+00:00",
- "now_et": "2026-10-02 00:01 EDT",
+ "now_utc": "2026-10-02T04:03:58+00:00",
+ "now_et": "2026-10-02 00:03 EDT",
  "mode": "live",
  "fetch_log": [
-  "MGC 5m newest 2026-10-01T21:35:00-04:00  c=4175.60 h=4177.60 l=4175.30  lag=146.5m  new=0 revised=1",
-  "MNQ 5m newest 2026-10-01T21:35:00-04:00  c=30806.00 h=30816.00 l=30790.75  lag=146.5m  new=0 revised=0",
-  "snapshots written: MGC 1m (+0 new, 3 revised), MGC 5m (+0 new, 1 revised), MGC 15m (+0 new, 1 revised), MGC 60m (+0 new, 1 revised), MGC 1440m (+1 new, 0 revised), MNQ 1m (+0 new, 2 revised), MNQ 15m (+0 new, 1 revised), MNQ 60m (+0 new, 1 revised), MNQ 1440m (+1 new, 0 revised)"
+  "MGC 5m newest 2026-10-01T21:35:00-04:00  c=4175.60 h=4177.60 l=4175.30  lag=149.0m  new=0 revised=0",
+  "MNQ 5m newest 2026-10-01T21:35:00-04:00  c=30806.00 h=30816.00 l=30790.75  lag=149.0m  new=0 revised=0",
+  "snapshots written: MGC 1m (+0 new, 2 revised), MNQ 1m (+0 new, 2 revised)"
  ],
  "data": {
   "MGC": {
    "newest_5m": "2026-10-01T23:50:00-04:00",
-   "lag_min": 6.5,
+   "lag_min": 9.0,
    "close": 4203.60009765625
   },
   "MNQ": {
    "newest_5m": "2026-10-01T23:50:00-04:00",
-   "lag_min": 6.5,
+   "lag_min": 9.0,
    "close": 30875.75
   }
  },
@@ -336,5 +336,5 @@
  "triggers": [],
  "notes": [],
  "needs_attention": false,
- "one_line": "00:01 EDT \u00b7 MNQ 30875.75 MGC 4203.6 \u00b7 pending CALL-0023 \u00b7 open 0 \u00b7 eq $49,568.52 dd $588.04 \u00b7 quiet"
+ "one_line": "00:03 EDT \u00b7 MNQ 30875.75 MGC 4203.6 \u00b7 pending CALL-0023 \u00b7 open 0 \u00b7 eq $49,568.52 dd $588.04 \u00b7 quiet"
 }

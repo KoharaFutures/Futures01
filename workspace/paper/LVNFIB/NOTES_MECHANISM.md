@@ -29,3 +29,46 @@ instead. The reason, and the evidence:
 600s, so it is correct if anyone starts it. It is simply not the mechanism in use. If the
 owner wants the keepalive's single-loop design restored, stop the cron and start the loop —
 both are one command, and nothing else about the desk changes.
+
+## 2026-10-02 — background-only: this desk notifies nobody
+
+The owner split the job: **this desk runs silently in the background; a separate main
+agent reads its output and does the notifying.** The 2-minute cron that posted a line
+per tick is deleted — it was reporting "nothing changed" every two minutes, which is
+exactly the spam the split is meant to end.
+
+Running mechanism now:
+
+    LVNFIB_BACKGROUND=1 bash workspace/paper/LVNFIB/desk_loop.sh
+
+`desk_loop.sh` runs `cycle.sh` every 120 s. `LVNFIB_BACKGROUND=1` changes one thing:
+on exit 10 (attention) the loop appends to `attention.jsonl` and KEEPS CYCLING rather
+than exiting. Without it the desk would stop on the first resolution and stay stopped
+until the hourly keepalive noticed — up to an hour of missed cycles, which inside an
+08:00-12:00 ET entry window is the difference between catching a trigger and not.
+
+### Where the notifying agent should read
+
+Everything is pushed to `claude/intelligent-feynman-ongyjw` on every cycle:
+
+| file | what it carries |
+|---|---|
+| `callouts.jsonl` | append-only; every callout with its levels, sizing, gate notes, source bar |
+| `resolutions.jsonl` | append-only outcomes: `outcome`, `r`, `contracts`, `pnl_usd`, `exit_bar` |
+| `attention.jsonl` | one line per exit-10 cycle, so a poller can find them without diffing |
+| `state.json` | equity, peak, max drawdown, closed count |
+| `desk_events.jsonl` | one line per cycle, woken or not — use it to tell a live desk from a dead one |
+
+Cards are **not** in git (`cards/` is gitignored, ~215 KB each). Render on demand:
+
+    python3 workspace/paper/LVNFIB/card_png.py <callout_id>
+
+### What the notifying agent must not get wrong
+
+- **Only MGC arm A can risk the account.** Everything else is `contracts: 0`; a
+  resolution with `pnl_usd: 0.0` did not make or lose money and must not be presented
+  as a trade result.
+- **Win rate and payoff travel together.** A no-fill has no `r` and belongs in no average.
+- **No price from these logs is current.** Every callout carries `as_of_bar`; quote it.
+- **Nothing here clears its luck bar.** Arm A's prior is n=24 +0.2379R t +1.027,
+  win 50.0% at payoff 1.58, against a 2.327 bar. It is a forward test, not an edge.

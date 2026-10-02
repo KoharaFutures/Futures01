@@ -12,13 +12,14 @@ that language, with this repository's honesty rules on top.
 REPLAY): don't apply their rules, arms or filters, and don't read or write their lanes or
 branch. The only shared rules are the account rules (paper, $50,000, $2,800 floor, flat by 16:00 ET).
 
-## The 2-minute scan
-The session runs `bash workspace/paper/LTA/cycle.sh` every 2 minutes (a session cron).
-- Exit 0 (quiet) or 3 (dormant): say nothing.
-- **Exit 10:** for every `CARD <path>` line, send that PNG to the owner with SendUserFile
-  (status proactive). Caption it in one plain line: direction, symbol, entry/stop/target, size,
-  `PAPER`. For an outcome card, give the result in R and $.
-- Exit 2: tell the owner once that the feed failed, and what you'll do.
+## The 2-minute scan (two sessions)
+- **Background agent** (session_01FsjMu3FuXfDBstj3dv52X7): runs `bash workspace/paper/LTA/desk_loop.sh`
+  in the background. The loop runs `cycle.sh` every 120 s and stays silent. It exits only on
+  exit 10 (new callout or outcome; the cycle has already pushed the cards). On that exit, send ONE message
+  to the main agent starting `LTA EVENT`, with each `CARD <path>` and its one-line caption, then
+  restart the loop. Exit 2 → tell the main agent once. The 2 h tool timeout → just restart, silently.
+- **Main agent** (session_017k1DRebVjkHZtE1R2kcZZ5): the only session that notifies the owner. On `LTA EVENT`
+  it fetches the branch and sends each PNG with SendUserFile.
 
 ## Read first, every session
 1. `CLAUDE.md` (repo rules), then `DATA_HUB/README.md`.

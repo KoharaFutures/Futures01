@@ -103,10 +103,23 @@ def build(sym, st, dry):
                 "measured_prior": {"A": "OOS n=24 +0.2379R t +1.027 (under its 2.327 bar)",
                                    "B": "OOS n=108 -0.0240R t -0.213 (null)"}[arm],
                 "notes": reasons,
-                "feed_warning": ("NOT CURRENT: newest archive bar is "
-                                 f"{snap['newest_bar']}; no live feed in this container"),
+                # Was hardcoded "no live feed in this container", which became false the
+                # moment yfinance was installed: callouts stamped with a live bar still
+                # claimed the feed was absent. State the bar and the lag, not a guess.
+                "feed_warning": ("newest bar " + str(snap["newest_bar"])
+                                 + ("; live feed on, but Yahoo lags and the newest 1-2 bars "
+                                    "revise for ~28 min" if _feed_on()
+                                    else "; NO LIVE FEED (yfinance absent) - reading data/archive/")),
             })
     return out
+
+
+def _feed_on() -> bool:
+    try:
+        import yfinance  # noqa: F401
+        return True
+    except ModuleNotFoundError:
+        return False
 
 
 def main():

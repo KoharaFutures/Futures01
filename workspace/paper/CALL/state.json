@@ -4,7 +4,35 @@
   "peak_equity": 50156.56,
   "drawdown": 645.16,
   "realized_pnl": -488.6,
-  "open": [],
+  "open": [
+    {
+      "call_id": "CALL-0021",
+      "symbol": "MNQ",
+      "side": "LONG",
+      "bar_minutes": 15,
+      "entry_price": 30804.5,
+      "entry_bar_ts": "2026-10-01T21:15:00-04:00",
+      "initial_stop": 30774.0,
+      "stop": 30774.0,
+      "risk_points": 30.5,
+      "contracts": 1,
+      "remaining": 1,
+      "tps": [
+        {
+          "label": "TP1",
+          "r": 1.8,
+          "fraction": 1.0,
+          "price": 30859.5,
+          "hit": false
+        }
+      ],
+      "risk_dollars": 61.0,
+      "realized": 0.0,
+      "triggered_at_utc": "2026-10-02T01:34:23+00:00",
+      "basis_at_trigger": "c5352ad",
+      "entry_fill_note": "resting limit filled at its price, no slippage charged"
+    }
+  ],
   "closed": [
     {
       "call_id": "CALL-0002",

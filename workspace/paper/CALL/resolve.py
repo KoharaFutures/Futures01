@@ -78,7 +78,30 @@ def load_bars(symbol: str, minutes: int) -> list[dict]:
             if is_stub(bar):
                 continue
             merged[bar["ts"]] = bar
+    if minutes == 15 and merged:
+        _fill_15m_gaps_from_5m(symbol, merged)
     return [merged[k] for k in sorted(merged)]
+
+
+def _fill_15m_gaps_from_5m(symbol: str, merged: dict[str, dict]) -> None:
+    """AUTOMATE_NEXT #31: the Yahoo 15m feed can drop a whole bar at the midnight-ET rollover
+    (MNQ 23:45 ET 2026-10-01 never arrived while its 5m bars did). A missing 15m slot that a
+    LATER 15m bar proves closed is rebuilt from the 5m bars inside it, flagged derived_from_5m."""
+    last15 = max(merged)
+    slots: dict[str, list[dict]] = {}
+    for b in load_bars(symbol, 5):
+        t = datetime.fromisoformat(b["ts"])
+        slot = t.replace(minute=t.minute - t.minute % 15, second=0, microsecond=0).isoformat()
+        slots.setdefault(slot, []).append(b)
+    first15 = min(merged)
+    for slot, bars in slots.items():
+        if slot in merged or slot < first15 or slot >= last15:
+            continue
+        bars.sort(key=lambda x: x["ts"])
+        merged[slot] = {"ts": slot, "o": bars[0]["o"], "h": max(x["h"] for x in bars),
+                        "l": min(x["l"] for x in bars), "c": bars[-1]["c"],
+                        "v": sum(x.get("v", 0) or 0 for x in bars),
+                        "derived_from_5m": len(bars)}
 
 
 def costs_per_contract(symbol: str) -> float:

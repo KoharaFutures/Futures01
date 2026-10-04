@@ -22,9 +22,8 @@ branch. The only shared rules are the account rules (paper, $50,000, $2,800 floo
   it fetches the branch and sends each PNG with SendUserFile.
 
 ## Page numbers
-`[pN]` cites in this repo are pages of the ORIGINAL 314-page PDF. The owner now reads a trimmed
-290-page copy (TOC on p2–3, Chapter 1 on p4). When you quote a page to the owner, give the trimmed
-page: trimmed = original − 24 = (TOC/book page) − 14. Introduction pages (original p11–p26) are not in it.
+The owner's PDF page number = the page number printed in the book (Chapter 1 = p18, TOC on p16–17).
+`[pN]` cites in this repo are ORIGINAL-PDF pages. Subtract 10 before quoting a page to the owner.
 
 ## Read first, every session
 1. `CLAUDE.md` (repo rules), then `DATA_HUB/README.md`.

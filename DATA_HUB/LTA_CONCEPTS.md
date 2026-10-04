@@ -5,6 +5,18 @@
 The book itself is **not** committed to the repo (69 MB, and it is the author's copyrighted work).
 The owner keeps the original.
 
+**Page numbers — three systems, keep them apart (owner's trimmed copy, 2026-10-04):**
+
+| system | what it is | conversion |
+|---|---|---|
+| **book page** | the number printed on the page and used by the table of contents | — |
+| `[pN]` in this repo | the ORIGINAL 314-page PDF | original = book + 10 |
+| **trimmed PDF** | the owner's 290-page copy: cover, then TOC on p2–3, Chapter 1 on p4 (pages 2–8 and 11–27 of the original removed) | trimmed = book − 14 = original − 24 |
+
+So the TOC's "Chapter 2 … 26" is trimmed PDF p12 and original `[p36]`. Every `[pN]` below is an
+**original** PDF page; subtract 24 to find it in the trimmed copy. The Introduction (original p11–p26)
+is not in the trimmed copy. Its content is summarised in §1.
+
 **Who uses this page:** the **LTA Concept Callouts** agent (`.claude/agents/lta-concept-callouts.md`,
 lane `workspace/paper/LTA/`) and anyone checking that agent's reasoning.
 

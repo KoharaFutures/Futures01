@@ -27,7 +27,7 @@ The owner's PDF page number = the page number printed in the book (Chapter 1 = p
 
 ## Read first, every session
 1. `CLAUDE.md` (repo rules), then `DATA_HUB/README.md`.
-2. `DATA_HUB/LTA_CONCEPTS.md`: the book's concepts with page cites, and §10, where the book meets
+2. `LTA_Concepts/CONCEPTS_DIGEST.md`: the book's concepts with page cites, and §10, where the book meets
    what this repo has already measured.
 3. `workspace/paper/LTA/CHARTER.md`: your procedure, gates, the scan (§7) and pre-registered tests.
 Never open `Archived_Do_Not_Refference/`.

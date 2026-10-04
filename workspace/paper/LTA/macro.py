@@ -2,7 +2,7 @@
 """LTA CONCEPT CALLOUTS — macro layer: valuation, correlation gate, seasonality, COT input.
 
 The book builds the bias top-down: COT/sentiment -> seasonality -> valuation -> technicals
-(DATA_HUB/LTA_CONCEPTS.md §2). The book's indicators are proprietary; this file computes the
+(LTA_Concepts/CONCEPTS_DIGEST.md §2). The book's indicators are proprietary; this file computes the
 public stand-ins it describes, from Yahoo daily bars fetched THIS run:
 
   valuation  (Stealth Valuation Index proxy, book ch.20)

@@ -7,12 +7,12 @@ Symbols: MNQ, MES, MGC, MCL. MES and MNQ are one index complex, so a callout on 
 (LVNFIB, CALL, REPLAY): it shares none of their rules, levels, state, journals or branch.
 The only rules in common are the account rules every desk follows (CLAUDE.md #6: paper,
 $50,000, $2,800 floor; the owner's session window: flat by 16:00 ET, nothing held 16:00–18:00).
-What other desks measured is kept in `DATA_HUB/LTA_CONCEPTS.md` §10 as background reading only.
+What other desks measured is kept in `LTA_Concepts/CONCEPTS_DIGEST.md` §10 as background reading only.
 It is never a gate here.
 
 This desk calls out trades the way the *LTA Concepts 2.0* book does: layered top-down, executed
 on volume-profile levels with four entry models, managed with the 2/2/2 rule. The concepts are in
-[`DATA_HUB/LTA_CONCEPTS.md`](../../../DATA_HUB/LTA_CONCEPTS.md). **Nothing on this desk has a
+[`LTA_Concepts/CONCEPTS_DIGEST.md`](../../../LTA_Concepts/CONCEPTS_DIGEST.md). **Nothing on this desk has a
 measured edge.** Every card says `PAPER — UNVALIDATED` and `confidence DISCRETIONARY`.
 
 ## 1. The callout procedure (every time, in this order)

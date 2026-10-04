@@ -34,7 +34,7 @@ the old material sits in `Archived_Do_Not_Refference/` with an index. **Don't re
 | [`BOUNCE_AND_VOLUME_PROFILE_PLAYBOOK.md`](BOUNCE_AND_VOLUME_PROFILE_PLAYBOOK.md) | **Your style:** bounce levels, multi-timeframe volume profile, LVNs, continuation vs bounce, *why* a level holds, and today's levels |
 | [`RULES_AND_PITFALLS.md`](RULES_AND_PITFALLS.md) | Risk rules, session rules, data traps that already cost earlier agents |
 | [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md) | What to test next, in priority order, and the obligations left open |
-| [`LTA_CONCEPTS.md`](LTA_CONCEPTS.md) | **The LTA Concepts 2.0 e-book, digested:** volume-profile levels (PD/EPD/PW/EPW/CW, Sunday Open, fixed & swing), entry models EM1–EM4, COT/valuation/seasonal bias, supply & demand, 2/2/2 risk, and how each claim lines up with what this repo measured. Used by the **LTA Concept Callouts** desk (`workspace/paper/LTA/`) |
+| [`../LTA_Concepts/`](../LTA_Concepts/README.md) | **Separate study area for the LTA Concepts 2.0 e-book.** Kept apart from the hub research on purpose. Not part of the hub findings |
 | [`AUTOMATION.md`](AUTOMATION.md) | **What now runs without an LLM:** desk check script, walk-forward engine, daily data refresh, and the first pre-registered test of your LVN idea |
 | [`MAP.md`](MAP.md) | **Every live file in the repo, one line each** (generated) |
 | [`SESSIONS_AND_AGENTS.md`](SESSIONS_AND_AGENTS.md) | Who did what before, where their data went, which sessions are archived or paused |

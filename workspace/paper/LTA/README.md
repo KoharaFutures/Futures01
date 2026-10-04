@@ -2,7 +2,7 @@
 
 Paper callout desk that applies the **LTA Concepts 2.0** framework (macro bias → higher-timeframe
 zone → intraday trend → volume-profile level + entry model → 2/2/2 risk) to MNQ, MES, MGC and MCL.
-Read [`CHARTER.md`](CHARTER.md) for the rules and [`DATA_HUB/LTA_CONCEPTS.md`](../../../DATA_HUB/LTA_CONCEPTS.md)
+Read [`CHARTER.md`](CHARTER.md) for the rules and [`LTA_Concepts/CONCEPTS_DIGEST.md`](../../../LTA_Concepts/CONCEPTS_DIGEST.md)
 for the concepts. The agent definition is [`.claude/agents/lta-concept-callouts.md`](../../../.claude/agents/lta-concept-callouts.md).
 
 ```bash

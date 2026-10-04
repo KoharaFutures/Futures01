@@ -2,7 +2,7 @@
 """LTA CONCEPT CALLOUTS — the 2-minute scan. One mechanical turn of the LTA strategy.
 
 Runs the book's process on every symbol and decides whether the owner needs to hear anything.
-It applies ONLY the LTA book's rules (DATA_HUB/LTA_CONCEPTS.md). It shares no rule, level or
+It applies ONLY the LTA book's rules (LTA_Concepts/CONCEPTS_DIGEST.md). It shares no rule, level or
 state with the other desks (LVNFIB, CALL); the only things in common are the account rules
 every desk must follow (paper, $50,000, $2,800 floor, flat by 16:00 ET).
 

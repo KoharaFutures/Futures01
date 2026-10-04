@@ -11,6 +11,8 @@ glossary = p294–303). The `[pN]` cites below are from the ORIGINAL 314-page PD
 book/PDF page the owner sees, e.g. `[p36]` → page 26. The Introduction (book pages 1–16) isn't in the
 owner's copy. Its content is summarised in §1.
 
+**Where this lives:** `LTA_Concepts/`, the separate LTA study area (see its README).
+
 **Who uses this page:** the **LTA Concept Callouts** agent (`.claude/agents/lta-concept-callouts.md`,
 lane `workspace/paper/LTA/`) and anyone checking that agent's reasoning.
 

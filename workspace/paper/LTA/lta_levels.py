@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """LTA CONCEPT CALLOUTS — level engine. The LTA "war map" for one symbol, from data/archive only.
 
-Builds every key level the LTA Concepts 2.0 framework trades from (DATA_HUB/LTA_CONCEPTS.md),
+Builds every key level the LTA Concepts 2.0 framework trades from (LTA_Concepts/CONCEPTS_DIGEST.md),
 each stamped with the bar it came from:
 
   weekly   Sunday Open (SO) and previous SO, prior week high/low/close (PWH/PWL/PWC),

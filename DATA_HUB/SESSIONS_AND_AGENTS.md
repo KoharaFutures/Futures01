@@ -101,7 +101,7 @@ risk. Nothing on this desk clears its luck bar; it is a forward test, not an edg
 ## LTA CONCEPT CALLOUTS (added 2026-10-02)
 
 A paper callout desk that applies the owner's **LTA Concepts 2.0** e-book (digested in
-[`LTA_CONCEPTS.md`](LTA_CONCEPTS.md)) to MNQ, MES, MGC and MCL. Lane `workspace/paper/LTA/`, writer
+[`../LTA_Concepts/CONCEPTS_DIGEST.md`](../LTA_Concepts/CONCEPTS_DIGEST.md)) to MNQ, MES, MGC and MCL. Lane `workspace/paper/LTA/`, writer
 `LTA`; agent definition `.claude/agents/lta-concept-callouts.md`.
 
 - `CHARTER.md`: the top-down procedure (macro bias → HTF zone → intraday trend → volume-profile

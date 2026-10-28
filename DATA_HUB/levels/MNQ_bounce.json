@@ -3,9 +3,9 @@
   "symbol": "MNQ",
   "tf": 5,
   "stop_atr": 1.0,
-  "bars": 16993,
+  "bars": 17267,
   "first": "2026-07-29T19:20:00-04:00",
-  "last": "2026-10-26T21:20:00-04:00",
+  "last": "2026-10-27T21:15:00-04:00",
   "modes": {
    "touch": {
     "n_cells": 41,
@@ -13,33 +13,33 @@
     "targets": {
      "1.0": {
       "real": {
-       "n": 2744,
-       "win": 0.476,
-       "expR": -0.098,
+       "n": 2790,
+       "win": 0.475,
+       "expR": -0.099,
        "sd": 1.009
       },
       "placebo": {
-       "n": 13581,
-       "win": 0.472,
+       "n": 13803,
+       "win": 0.473,
        "expR": -0.103,
-       "sd": 1.021
+       "sd": 1.02
       },
-      "z": 0.24
+      "z": 0.19
      },
      "2.0": {
       "real": {
-       "n": 2744,
+       "n": 2790,
        "win": 0.347,
        "expR": -0.017,
        "sd": 1.428
       },
       "placebo": {
-       "n": 13581,
-       "win": 0.333,
-       "expR": -0.065,
+       "n": 13803,
+       "win": 0.334,
+       "expR": -0.063,
        "sd": 1.419
       },
-      "z": 1.61
+      "z": 1.55
      }
     },
     "by_type": [
@@ -62,18 +62,18 @@
      {
       "bucket": "ONH RESISTANCE",
       "real": {
-       "n": 33,
-       "win": 0.394,
-       "expR": -0.243,
-       "sd": 0.992
+       "n": 35,
+       "win": 0.371,
+       "expR": -0.288,
+       "sd": 0.98
       },
       "placebo": {
-       "n": 161,
-       "win": 0.484,
-       "expR": -0.06,
-       "sd": 1.004
+       "n": 170,
+       "win": 0.471,
+       "expR": -0.087,
+       "sd": 1.002
       },
-      "z": -0.96
+      "z": -1.1
      },
      {
       "bucket": "ONL SUPPORT",
@@ -110,66 +110,66 @@
      {
       "bucket": "PDC SUPPORT",
       "real": {
-       "n": 125,
-       "win": 0.48,
-       "expR": -0.089,
-       "sd": 1.011
+       "n": 128,
+       "win": 0.484,
+       "expR": -0.081,
+       "sd": 1.013
       },
       "placebo": {
-       "n": 613,
-       "win": 0.476,
-       "expR": -0.095,
-       "sd": 1.001
+       "n": 624,
+       "win": 0.473,
+       "expR": -0.102,
+       "sd": 1.0
       },
-      "z": 0.06
+      "z": 0.21
      },
      {
       "bucket": "PDC RESISTANCE",
       "real": {
-       "n": 108,
+       "n": 110,
        "win": 0.509,
        "expR": -0.026,
        "sd": 1.006
       },
       "placebo": {
-       "n": 529,
+       "n": 539,
        "win": 0.44,
-       "expR": -0.166,
+       "expR": -0.167,
        "sd": 0.994
       },
-      "z": 1.32
+      "z": 1.34
      },
      {
       "bucket": "PDH SUPPORT",
       "real": {
-       "n": 43,
-       "win": 0.395,
-       "expR": -0.269,
-       "sd": 1.016
+       "n": 45,
+       "win": 0.378,
+       "expR": -0.303,
+       "sd": 1.006
       },
       "placebo": {
-       "n": 273,
-       "win": 0.473,
-       "expR": -0.109,
+       "n": 278,
+       "win": 0.471,
+       "expR": -0.111,
        "sd": 1.019
       },
-      "z": -0.96
+      "z": -1.19
      },
      {
       "bucket": "PDH RESISTANCE",
       "real": {
-       "n": 76,
-       "win": 0.487,
-       "expR": -0.087,
-       "sd": 1.027
+       "n": 77,
+       "win": 0.481,
+       "expR": -0.099,
+       "sd": 1.026
       },
       "placebo": {
-       "n": 384,
-       "win": 0.438,
-       "expR": -0.206,
-       "sd": 1.194
+       "n": 402,
+       "win": 0.435,
+       "expR": -0.208,
+       "sd": 1.185
       },
-      "z": 0.9
+      "z": 0.83
      },
      {
       "bucket": "PDL SUPPORT",
@@ -206,50 +206,50 @@
      {
       "bucket": "PD_POC SUPPORT",
       "real": {
-       "n": 104,
+       "n": 106,
        "win": 0.481,
-       "expR": -0.084,
+       "expR": -0.083,
        "sd": 1.002
       },
       "placebo": {
-       "n": 512,
+       "n": 519,
        "win": 0.449,
        "expR": -0.153,
        "sd": 1.004
       },
-      "z": 0.64
+      "z": 0.66
      },
      {
       "bucket": "PD_POC RESISTANCE",
       "real": {
-       "n": 94,
-       "win": 0.521,
-       "expR": -0.001,
-       "sd": 1.006
+       "n": 95,
+       "win": 0.516,
+       "expR": -0.012,
+       "sd": 1.007
       },
       "placebo": {
-       "n": 426,
-       "win": 0.458,
-       "expR": -0.165,
-       "sd": 1.192
+       "n": 437,
+       "win": 0.46,
+       "expR": -0.16,
+       "sd": 1.188
       },
-      "z": 1.38
+      "z": 1.26
      },
      {
       "bucket": "PD_VWAP SUPPORT",
       "real": {
-       "n": 82,
-       "win": 0.512,
-       "expR": -0.023,
+       "n": 83,
+       "win": 0.506,
+       "expR": -0.035,
        "sd": 1.004
       },
       "placebo": {
-       "n": 376,
-       "win": 0.465,
-       "expR": -0.117,
+       "n": 380,
+       "win": 0.466,
+       "expR": -0.116,
        "sd": 1.001
       },
-      "z": 0.77
+      "z": 0.67
      },
      {
       "bucket": "PD_VWAP RESISTANCE",
@@ -260,8 +260,8 @@
        "sd": 1.003
       },
       "placebo": {
-       "n": 324,
-       "win": 0.478,
+       "n": 326,
+       "win": 0.479,
        "expR": -0.089,
        "sd": 1.002
       },
@@ -334,34 +334,34 @@
      {
       "bucket": "P_RTH_H SUPPORT",
       "real": {
-       "n": 49,
-       "win": 0.347,
-       "expR": -0.367,
-       "sd": 0.987
+       "n": 51,
+       "win": 0.333,
+       "expR": -0.393,
+       "sd": 0.976
       },
       "placebo": {
-       "n": 266,
-       "win": 0.414,
-       "expR": -0.217,
-       "sd": 0.987
+       "n": 276,
+       "win": 0.428,
+       "expR": -0.189,
+       "sd": 0.992
       },
-      "z": -0.98
+      "z": -1.37
      },
      {
       "bucket": "P_RTH_H RESISTANCE",
       "real": {
-       "n": 87,
-       "win": 0.517,
-       "expR": -0.027,
+       "n": 88,
+       "win": 0.511,
+       "expR": -0.038,
        "sd": 1.028
       },
       "placebo": {
-       "n": 410,
-       "win": 0.478,
-       "expR": -0.092,
+       "n": 423,
+       "win": 0.475,
+       "expR": -0.097,
        "sd": 1.002
       },
-      "z": 0.54
+      "z": 0.49
      },
      {
       "bucket": "P_RTH_L SUPPORT",
@@ -398,63 +398,63 @@
      {
       "bucket": "ROUND SUPPORT",
       "real": {
-       "n": 338,
-       "win": 0.444,
-       "expR": -0.171,
-       "sd": 1.026
+       "n": 346,
+       "win": 0.454,
+       "expR": -0.15,
+       "sd": 1.028
       },
       "placebo": {
-       "n": 1610,
+       "n": 1645,
        "win": 0.503,
-       "expR": -0.038,
+       "expR": -0.039,
        "sd": 1.003
       },
-      "z": -2.17
+      "z": -1.83
      },
      {
       "bucket": "ROUND RESISTANCE",
       "real": {
-       "n": 326,
+       "n": 334,
        "win": 0.494,
-       "expR": -0.062,
+       "expR": -0.061,
        "sd": 1.011
       },
       "placebo": {
-       "n": 1517,
-       "win": 0.461,
-       "expR": -0.132,
-       "sd": 1.051
+       "n": 1540,
+       "win": 0.46,
+       "expR": -0.134,
+       "sd": 1.05
       },
-      "z": 1.13
+      "z": 1.19
      },
      {
       "bucket": "SWING SUPPORT",
       "real": {
-       "n": 422,
-       "win": 0.488,
-       "expR": -0.069,
-       "sd": 1.003
-      },
-      "placebo": {
-       "n": 2309,
-       "win": 0.469,
-       "expR": -0.106,
+       "n": 429,
+       "win": 0.485,
+       "expR": -0.076,
        "sd": 1.002
       },
-      "z": 0.7
+      "placebo": {
+       "n": 2336,
+       "win": 0.472,
+       "expR": -0.101,
+       "sd": 1.003
+      },
+      "z": 0.47
      },
      {
       "bucket": "SWING RESISTANCE",
       "real": {
-       "n": 432,
-       "win": 0.465,
-       "expR": -0.121,
-       "sd": 1.015
+       "n": 438,
+       "win": 0.466,
+       "expR": -0.12,
+       "sd": 1.014
       },
       "placebo": {
-       "n": 2102,
+       "n": 2139,
        "win": 0.48,
-       "expR": -0.088,
+       "expR": -0.087,
        "sd": 1.006
       },
       "z": -0.62
@@ -464,242 +464,242 @@
      {
       "bucket": "all",
       "real": {
-       "n": 2744,
-       "win": 0.476,
-       "expR": -0.098,
+       "n": 2790,
+       "win": 0.475,
+       "expR": -0.099,
        "sd": 1.009
       },
       "placebo": {
-       "n": 13581,
-       "win": 0.472,
+       "n": 13803,
+       "win": 0.473,
        "expR": -0.103,
-       "sd": 1.021
+       "sd": 1.02
       },
-      "z": 0.24
+      "z": 0.19
      },
      {
       "bucket": "first_touch",
       "real": {
-       "n": 559,
-       "win": 0.44,
-       "expR": -0.175,
+       "n": 564,
+       "win": 0.441,
+       "expR": -0.172,
        "sd": 1.007
       },
       "placebo": {
-       "n": 4664,
-       "win": 0.471,
-       "expR": -0.107,
+       "n": 4719,
+       "win": 0.473,
+       "expR": -0.103,
        "sd": 1.002
       },
-      "z": -1.51
+      "z": -1.54
      },
      {
       "bucket": "retest(2+)",
       "real": {
-       "n": 2185,
-       "win": 0.485,
-       "expR": -0.078,
+       "n": 2226,
+       "win": 0.483,
+       "expR": -0.081,
        "sd": 1.009
       },
       "placebo": {
-       "n": 8917,
-       "win": 0.473,
-       "expR": -0.101,
+       "n": 9084,
+       "win": 0.472,
+       "expR": -0.103,
        "sd": 1.03
       },
-      "z": 0.95
+      "z": 0.92
      },
      {
       "bucket": "confluence>=2",
       "real": {
-       "n": 650,
-       "win": 0.457,
-       "expR": -0.134,
-       "sd": 1.01
+       "n": 659,
+       "win": 0.451,
+       "expR": -0.146,
+       "sd": 1.009
       },
       "placebo": {
-       "n": 1278,
+       "n": 1299,
        "win": 0.46,
-       "expR": -0.111,
+       "expR": -0.112,
        "sd": 0.997
       },
-      "z": -0.47
+      "z": -0.71
      },
      {
       "bucket": "confluence=0",
       "real": {
-       "n": 1524,
-       "win": 0.492,
-       "expR": -0.069,
+       "n": 1551,
+       "win": 0.493,
+       "expR": -0.067,
        "sd": 1.014
       },
       "placebo": {
-       "n": 8699,
+       "n": 8836,
        "win": 0.479,
        "expR": -0.093,
        "sd": 1.022
       },
-      "z": 0.85
+      "z": 0.93
      },
      {
       "bucket": "with_trend",
       "real": {
-       "n": 879,
-       "win": 0.463,
-       "expR": -0.123,
-       "sd": 1.01
+       "n": 894,
+       "win": 0.461,
+       "expR": -0.127,
+       "sd": 1.009
       },
       "placebo": {
-       "n": 4480,
-       "win": 0.465,
-       "expR": -0.123,
-       "sd": 1.054
+       "n": 4551,
+       "win": 0.467,
+       "expR": -0.118,
+       "sd": 1.053
       },
-      "z": 0.0
+      "z": -0.24
      },
      {
       "bucket": "counter_trend",
       "real": {
-       "n": 1865,
+       "n": 1896,
        "win": 0.482,
        "expR": -0.086,
        "sd": 1.009
       },
       "placebo": {
-       "n": 9101,
-       "win": 0.476,
-       "expR": -0.094,
+       "n": 9252,
+       "win": 0.475,
+       "expR": -0.096,
        "sd": 1.004
       },
-      "z": 0.31
+      "z": 0.39
      },
      {
       "bucket": "RTH",
       "real": {
-       "n": 930,
-       "win": 0.46,
-       "expR": -0.113,
-       "sd": 1.004
+       "n": 940,
+       "win": 0.457,
+       "expR": -0.118,
+       "sd": 1.003
       },
       "placebo": {
-       "n": 4683,
-       "win": 0.465,
-       "expR": -0.102,
+       "n": 4734,
+       "win": 0.462,
+       "expR": -0.106,
        "sd": 0.999
       },
-      "z": -0.31
+      "z": -0.34
      },
      {
       "bucket": "overnight",
       "real": {
-       "n": 1814,
-       "win": 0.483,
-       "expR": -0.09,
+       "n": 1850,
+       "win": 0.484,
+       "expR": -0.089,
        "sd": 1.012
       },
       "placebo": {
-       "n": 8898,
-       "win": 0.477,
-       "expR": -0.104,
-       "sd": 1.032
+       "n": 9069,
+       "win": 0.478,
+       "expR": -0.101,
+       "sd": 1.031
       },
-      "z": 0.54
+      "z": 0.46
      },
      {
       "bucket": "slow_approach",
       "real": {
-       "n": 2021,
-       "win": 0.469,
-       "expR": -0.111,
+       "n": 2048,
+       "win": 0.468,
+       "expR": -0.113,
        "sd": 1.007
       },
       "placebo": {
-       "n": 9990,
+       "n": 10144,
        "win": 0.47,
-       "expR": -0.11,
+       "expR": -0.111,
        "sd": 1.028
       },
-      "z": -0.04
+      "z": -0.08
      },
      {
       "bucket": "fast_approach",
       "real": {
-       "n": 723,
-       "win": 0.494,
-       "expR": -0.061,
+       "n": 742,
+       "win": 0.493,
+       "expR": -0.062,
        "sd": 1.015
       },
       "placebo": {
-       "n": 3591,
-       "win": 0.478,
-       "expR": -0.085,
+       "n": 3659,
+       "win": 0.48,
+       "expR": -0.081,
        "sd": 1.0
       },
-      "z": 0.58
+      "z": 0.47
      },
      {
       "bucket": "low_vol",
       "real": {
-       "n": 1227,
-       "win": 0.504,
-       "expR": -0.055,
+       "n": 1252,
+       "win": 0.503,
+       "expR": -0.057,
        "sd": 1.013
       },
       "placebo": {
-       "n": 6068,
-       "win": 0.477,
-       "expR": -0.112,
+       "n": 6189,
+       "win": 0.478,
+       "expR": -0.11,
        "sd": 1.045
       },
-      "z": 1.79
+      "z": 1.68
      },
      {
       "bucket": "high_vol",
       "real": {
-       "n": 1517,
+       "n": 1538,
        "win": 0.452,
-       "expR": -0.133,
+       "expR": -0.134,
        "sd": 1.005
       },
       "placebo": {
-       "n": 7513,
-       "win": 0.469,
-       "expR": -0.096,
-       "sd": 1.001
+       "n": 7614,
+       "win": 0.468,
+       "expR": -0.098,
+       "sd": 1.0
       },
-      "z": -1.31
+      "z": -1.28
      },
      {
       "bucket": "support",
       "real": {
-       "n": 1380,
+       "n": 1405,
        "win": 0.469,
-       "expR": -0.112,
+       "expR": -0.111,
        "sd": 1.009
       },
       "placebo": {
-       "n": 7028,
-       "win": 0.473,
-       "expR": -0.099,
+       "n": 7127,
+       "win": 0.474,
+       "expR": -0.097,
        "sd": 1.003
       },
-      "z": -0.44
+      "z": -0.48
      },
      {
       "bucket": "resistance",
       "real": {
-       "n": 1364,
-       "win": 0.482,
-       "expR": -0.084,
-       "sd": 1.01
+       "n": 1385,
+       "win": 0.481,
+       "expR": -0.087,
+       "sd": 1.009
       },
       "placebo": {
-       "n": 6553,
-       "win": 0.472,
-       "expR": -0.108,
-       "sd": 1.04
+       "n": 6676,
+       "win": 0.471,
+       "expR": -0.11,
+       "sd": 1.039
       },
-      "z": 0.79
+      "z": 0.77
      }
     ]
    },
@@ -709,33 +709,33 @@
     "targets": {
      "1.0": {
       "real": {
-       "n": 1876,
-       "win": 0.422,
-       "expR": -0.222,
-       "sd": 0.995
-      },
-      "placebo": {
-       "n": 9203,
-       "win": 0.411,
-       "expR": -0.247,
+       "n": 1903,
+       "win": 0.425,
+       "expR": -0.216,
        "sd": 0.996
       },
-      "z": 0.99
+      "placebo": {
+       "n": 9331,
+       "win": 0.411,
+       "expR": -0.246,
+       "sd": 0.996
+      },
+      "z": 1.2
      },
      "2.0": {
       "real": {
-       "n": 1876,
-       "win": 0.321,
-       "expR": -0.123,
-       "sd": 1.383
+       "n": 1903,
+       "win": 0.323,
+       "expR": -0.118,
+       "sd": 1.385
       },
       "placebo": {
-       "n": 9203,
+       "n": 9331,
        "win": 0.304,
-       "expR": -0.173,
-       "sd": 1.367
+       "expR": -0.174,
+       "sd": 1.366
       },
-      "z": 1.43
+      "z": 1.61
      }
     },
     "by_type": [
@@ -764,12 +764,12 @@
        "sd": 1.016
       },
       "placebo": {
-       "n": 117,
-       "win": 0.436,
-       "expR": -0.178,
+       "n": 121,
+       "win": 0.438,
+       "expR": -0.173,
        "sd": 1.013
       },
-      "z": 0.39
+      "z": 0.37
      },
      {
       "bucket": "ONL SUPPORT",
@@ -806,50 +806,50 @@
      {
       "bucket": "PDC SUPPORT",
       "real": {
-       "n": 92,
-       "win": 0.37,
-       "expR": -0.334,
-       "sd": 0.985
+       "n": 95,
+       "win": 0.379,
+       "expR": -0.315,
+       "sd": 0.99
       },
       "placebo": {
-       "n": 431,
-       "win": 0.415,
-       "expR": -0.24,
-       "sd": 0.992
+       "n": 440,
+       "win": 0.418,
+       "expR": -0.235,
+       "sd": 0.993
       },
-      "z": -0.83
+      "z": -0.71
      },
      {
       "bucket": "PDC RESISTANCE",
       "real": {
-       "n": 72,
-       "win": 0.403,
-       "expR": -0.269,
-       "sd": 0.991
+       "n": 73,
+       "win": 0.411,
+       "expR": -0.253,
+       "sd": 0.994
       },
       "placebo": {
-       "n": 340,
-       "win": 0.394,
-       "expR": -0.286,
-       "sd": 0.989
+       "n": 346,
+       "win": 0.393,
+       "expR": -0.288,
+       "sd": 0.988
       },
-      "z": 0.13
+      "z": 0.27
      },
      {
       "bucket": "PDH SUPPORT",
       "real": {
-       "n": 28,
-       "win": 0.536,
-       "expR": 0.009,
-       "sd": 1.028
+       "n": 29,
+       "win": 0.517,
+       "expR": -0.026,
+       "sd": 1.027
       },
       "placebo": {
-       "n": 192,
-       "win": 0.391,
-       "expR": -0.271,
-       "sd": 0.985
+       "n": 196,
+       "win": 0.383,
+       "expR": -0.287,
+       "sd": 0.981
       },
-      "z": 1.35
+      "z": 1.28
      },
      {
       "bucket": "PDH RESISTANCE",
@@ -860,12 +860,12 @@
        "sd": 1.003
       },
       "placebo": {
-       "n": 253,
-       "win": 0.435,
-       "expR": -0.207,
-       "sd": 1.013
+       "n": 260,
+       "win": 0.446,
+       "expR": -0.184,
+       "sd": 1.015
       },
-      "z": 1.98
+      "z": 1.83
      },
      {
       "bucket": "PDL SUPPORT",
@@ -902,18 +902,18 @@
      {
       "bucket": "PD_POC SUPPORT",
       "real": {
-       "n": 79,
-       "win": 0.38,
-       "expR": -0.306,
-       "sd": 0.979
+       "n": 81,
+       "win": 0.395,
+       "expR": -0.275,
+       "sd": 0.987
       },
       "placebo": {
-       "n": 338,
-       "win": 0.388,
-       "expR": -0.294,
-       "sd": 0.98
+       "n": 344,
+       "win": 0.387,
+       "expR": -0.296,
+       "sd": 0.979
       },
-      "z": -0.1
+      "z": 0.17
      },
      {
       "bucket": "PD_POC RESISTANCE",
@@ -924,28 +924,28 @@
        "sd": 0.978
       },
       "placebo": {
-       "n": 267,
-       "win": 0.378,
-       "expR": -0.312,
-       "sd": 0.972
+       "n": 273,
+       "win": 0.381,
+       "expR": -0.307,
+       "sd": 0.974
       },
-      "z": -0.34
+      "z": -0.38
      },
      {
       "bucket": "PD_VWAP SUPPORT",
       "real": {
-       "n": 56,
-       "win": 0.429,
-       "expR": -0.209,
+       "n": 57,
+       "win": 0.421,
+       "expR": -0.226,
        "sd": 1.0
       },
       "placebo": {
-       "n": 261,
+       "n": 264,
        "win": 0.402,
-       "expR": -0.259,
+       "expR": -0.261,
        "sd": 0.988
       },
-      "z": 0.34
+      "z": 0.24
      },
      {
       "bucket": "PD_VWAP RESISTANCE",
@@ -956,12 +956,12 @@
        "sd": 0.996
       },
       "placebo": {
-       "n": 219,
-       "win": 0.461,
-       "expR": -0.146,
-       "sd": 1.01
+       "n": 221,
+       "win": 0.457,
+       "expR": -0.154,
+       "sd": 1.009
       },
-      "z": -0.86
+      "z": -0.81
      },
      {
       "bucket": "PWH SUPPORT",
@@ -1030,18 +1030,18 @@
      {
       "bucket": "P_RTH_H SUPPORT",
       "real": {
-       "n": 31,
-       "win": 0.452,
-       "expR": -0.152,
-       "sd": 1.028
+       "n": 32,
+       "win": 0.438,
+       "expR": -0.179,
+       "sd": 1.022
       },
       "placebo": {
-       "n": 172,
-       "win": 0.424,
-       "expR": -0.215,
+       "n": 182,
+       "win": 0.423,
+       "expR": -0.217,
        "sd": 0.99
       },
-      "z": 0.32
+      "z": 0.19
      },
      {
       "bucket": "P_RTH_H RESISTANCE",
@@ -1052,12 +1052,12 @@
        "sd": 1.01
       },
       "placebo": {
-       "n": 290,
-       "win": 0.472,
-       "expR": -0.145,
+       "n": 295,
+       "win": 0.478,
+       "expR": -0.134,
        "sd": 1.048
       },
-      "z": 1.27
+      "z": 1.2
      },
      {
       "bucket": "P_RTH_L SUPPORT",
@@ -1094,751 +1094,345 @@
      {
       "bucket": "ROUND SUPPORT",
       "real": {
-       "n": 232,
-       "win": 0.379,
-       "expR": -0.296,
-       "sd": 0.979
+       "n": 240,
+       "win": 0.396,
+       "expR": -0.263,
+       "sd": 0.987
       },
       "placebo": {
-       "n": 1153,
-       "win": 0.405,
-       "expR": -0.249,
+       "n": 1178,
+       "win": 0.404,
+       "expR": -0.251,
        "sd": 0.988
       },
-      "z": -0.67
+      "z": -0.17
      },
      {
       "bucket": "ROUND RESISTANCE",
       "real": {
-       "n": 213,
-       "win": 0.441,
-       "expR": -0.185,
-       "sd": 1.002
+       "n": 217,
+       "win": 0.447,
+       "expR": -0.174,
+       "sd": 1.003
       },
       "placebo": {
-       "n": 1053,
-       "win": 0.411,
-       "expR": -0.257,
+       "n": 1061,
+       "win": 0.41,
+       "expR": -0.259,
        "sd": 1.014
       },
-      "z": 0.95
+      "z": 1.14
      },
      {
       "bucket": "SWING SUPPORT",
       "real": {
-       "n": 289,
-       "win": 0.436,
-       "expR": -0.188,
-       "sd": 1.0
+       "n": 293,
+       "win": 0.433,
+       "expR": -0.193,
+       "sd": 0.999
       },
       "placebo": {
-       "n": 1511,
-       "win": 0.404,
-       "expR": -0.25,
+       "n": 1533,
+       "win": 0.405,
+       "expR": -0.248,
        "sd": 0.986
       },
-      "z": 0.97
+      "z": 0.87
      },
      {
       "bucket": "SWING RESISTANCE",
       "real": {
-       "n": 283,
-       "win": 0.431,
-       "expR": -0.203,
+       "n": 285,
+       "win": 0.432,
+       "expR": -0.201,
        "sd": 0.998
       },
       "placebo": {
-       "n": 1354,
+       "n": 1365,
        "win": 0.4,
        "expR": -0.276,
-       "sd": 0.998
+       "sd": 0.997
       },
-      "z": 1.12
+      "z": 1.15
      }
     ],
     "by_feature": [
      {
       "bucket": "all",
       "real": {
-       "n": 1876,
-       "win": 0.422,
-       "expR": -0.222,
-       "sd": 0.995
-      },
-      "placebo": {
-       "n": 9203,
-       "win": 0.411,
-       "expR": -0.247,
+       "n": 1903,
+       "win": 0.425,
+       "expR": -0.216,
        "sd": 0.996
       },
-      "z": 0.99
+      "placebo": {
+       "n": 9331,
+       "win": 0.411,
+       "expR": -0.246,
+       "sd": 0.996
+      },
+      "z": 1.2
      },
      {
       "bucket": "first_touch",
       "real": {
-       "n": 353,
-       "win": 0.428,
-       "expR": -0.206,
+       "n": 356,
+       "win": 0.427,
+       "expR": -0.208,
        "sd": 1.0
       },
       "placebo": {
-       "n": 3019,
-       "win": 0.405,
-       "expR": -0.258,
-       "sd": 0.991
+       "n": 3050,
+       "win": 0.408,
+       "expR": -0.253,
+       "sd": 0.992
       },
-      "z": 0.93
+      "z": 0.8
      },
      {
       "bucket": "retest(2+)",
       "real": {
-       "n": 1523,
-       "win": 0.42,
-       "expR": -0.225,
-       "sd": 0.994
+       "n": 1547,
+       "win": 0.424,
+       "expR": -0.217,
+       "sd": 0.995
       },
       "placebo": {
-       "n": 6184,
-       "win": 0.413,
-       "expR": -0.242,
-       "sd": 0.999
-      },
-      "z": 0.6
-     },
-     {
-      "bucket": "confluence>=2",
-      "real": {
-       "n": 462,
-       "win": 0.463,
-       "expR": -0.141,
-       "sd": 1.007
-      },
-      "placebo": {
-       "n": 932,
-       "win": 0.391,
-       "expR": -0.27,
-       "sd": 0.981
-      },
-      "z": 2.27
-     },
-     {
-      "bucket": "confluence=0",
-      "real": {
-       "n": 1041,
+       "n": 6281,
        "win": 0.412,
-       "expR": -0.241,
-       "sd": 0.991
-      },
-      "placebo": {
-       "n": 5874,
-       "win": 0.406,
-       "expR": -0.259,
-       "sd": 0.995
-      },
-      "z": 0.54
-     },
-     {
-      "bucket": "with_trend",
-      "real": {
-       "n": 572,
-       "win": 0.448,
-       "expR": -0.178,
-       "sd": 1.003
-      },
-      "placebo": {
-       "n": 2875,
-       "win": 0.422,
-       "expR": -0.226,
-       "sd": 0.995
-      },
-      "z": 1.05
-     },
-     {
-      "bucket": "counter_trend",
-      "real": {
-       "n": 1304,
-       "win": 0.41,
-       "expR": -0.241,
-       "sd": 0.991
-      },
-      "placebo": {
-       "n": 6328,
-       "win": 0.405,
-       "expR": -0.256,
-       "sd": 0.997
-      },
-      "z": 0.5
-     },
-     {
-      "bucket": "RTH",
-      "real": {
-       "n": 653,
-       "win": 0.43,
-       "expR": -0.189,
-       "sd": 0.993
-      },
-      "placebo": {
-       "n": 3297,
-       "win": 0.404,
        "expR": -0.243,
-       "sd": 0.997
-      },
-      "z": 1.27
-     },
-     {
-      "bucket": "overnight",
-      "real": {
-       "n": 1223,
-       "win": 0.417,
-       "expR": -0.239,
-       "sd": 0.996
-      },
-      "placebo": {
-       "n": 5906,
-       "win": 0.414,
-       "expR": -0.249,
-       "sd": 0.996
-      },
-      "z": 0.32
-     },
-     {
-      "bucket": "slow_approach",
-      "real": {
-       "n": 1347,
-       "win": 0.428,
-       "expR": -0.215,
-       "sd": 0.998
-      },
-      "placebo": {
-       "n": 6650,
-       "win": 0.41,
-       "expR": -0.25,
-       "sd": 0.992
-      },
-      "z": 1.17
-     },
-     {
-      "bucket": "fast_approach",
-      "real": {
-       "n": 529,
-       "win": 0.406,
-       "expR": -0.238,
-       "sd": 0.987
-      },
-      "placebo": {
-       "n": 2553,
-       "win": 0.412,
-       "expR": -0.24,
-       "sd": 1.008
-      },
-      "z": 0.04
-     },
-     {
-      "bucket": "low_vol",
-      "real": {
-       "n": 827,
-       "win": 0.416,
-       "expR": -0.247,
-       "sd": 0.996
-      },
-      "placebo": {
-       "n": 3941,
-       "win": 0.411,
-       "expR": -0.265,
-       "sd": 1.007
-      },
-      "z": 0.47
-     },
-     {
-      "bucket": "high_vol",
-      "real": {
-       "n": 1049,
-       "win": 0.426,
-       "expR": -0.202,
-       "sd": 0.994
-      },
-      "placebo": {
-       "n": 5262,
-       "win": 0.41,
-       "expR": -0.233,
-       "sd": 0.989
+       "sd": 0.999
       },
       "z": 0.92
      },
      {
-      "bucket": "support",
+      "bucket": "confluence>=2",
       "real": {
-       "n": 956,
-       "win": 0.402,
-       "expR": -0.259,
-       "sd": 0.988
+       "n": 465,
+       "win": 0.46,
+       "expR": -0.147,
+       "sd": 1.006
       },
       "placebo": {
-       "n": 4796,
-       "win": 0.405,
-       "expR": -0.252,
+       "n": 946,
+       "win": 0.385,
+       "expR": -0.281,
+       "sd": 0.978
+      },
+      "z": 2.37
+     },
+     {
+      "bucket": "confluence=0",
+      "real": {
+       "n": 1058,
+       "win": 0.415,
+       "expR": -0.235,
+       "sd": 0.992
+      },
+      "placebo": {
+       "n": 5947,
+       "win": 0.408,
+       "expR": -0.255,
+       "sd": 0.996
+      },
+      "z": 0.6
+     },
+     {
+      "bucket": "with_trend",
+      "real": {
+       "n": 582,
+       "win": 0.452,
+       "expR": -0.169,
+       "sd": 1.004
+      },
+      "placebo": {
+       "n": 2933,
+       "win": 0.42,
+       "expR": -0.23,
+       "sd": 0.994
+      },
+      "z": 1.34
+     },
+     {
+      "bucket": "counter_trend",
+      "real": {
+       "n": 1321,
+       "win": 0.413,
+       "expR": -0.236,
+       "sd": 0.992
+      },
+      "placebo": {
+       "n": 6398,
+       "win": 0.406,
+       "expR": -0.254,
+       "sd": 0.997
+      },
+      "z": 0.6
+     },
+     {
+      "bucket": "RTH",
+      "real": {
+       "n": 658,
+       "win": 0.43,
+       "expR": -0.189,
+       "sd": 0.992
+      },
+      "placebo": {
+       "n": 3323,
+       "win": 0.402,
+       "expR": -0.248,
+       "sd": 0.996
+      },
+      "z": 1.39
+     },
+     {
+      "bucket": "overnight",
+      "real": {
+       "n": 1245,
+       "win": 0.422,
+       "expR": -0.23,
+       "sd": 0.998
+      },
+      "placebo": {
+       "n": 6008,
+       "win": 0.415,
+       "expR": -0.246,
+       "sd": 0.997
+      },
+      "z": 0.51
+     },
+     {
+      "bucket": "slow_approach",
+      "real": {
+       "n": 1363,
+       "win": 0.431,
+       "expR": -0.208,
+       "sd": 1.0
+      },
+      "placebo": {
+       "n": 6740,
+       "win": 0.41,
+       "expR": -0.25,
+       "sd": 0.992
+      },
+      "z": 1.42
+     },
+     {
+      "bucket": "fast_approach",
+      "real": {
+       "n": 540,
+       "win": 0.407,
+       "expR": -0.236,
        "sd": 0.987
       },
-      "z": -0.2
+      "placebo": {
+       "n": 2591,
+       "win": 0.413,
+       "expR": -0.239,
+       "sd": 1.007
+      },
+      "z": 0.06
+     },
+     {
+      "bucket": "low_vol",
+      "real": {
+       "n": 843,
+       "win": 0.42,
+       "expR": -0.238,
+       "sd": 0.998
+      },
+      "placebo": {
+       "n": 4013,
+       "win": 0.413,
+       "expR": -0.26,
+       "sd": 1.007
+      },
+      "z": 0.58
+     },
+     {
+      "bucket": "high_vol",
+      "real": {
+       "n": 1060,
+       "win": 0.428,
+       "expR": -0.198,
+       "sd": 0.994
+      },
+      "placebo": {
+       "n": 5318,
+       "win": 0.409,
+       "expR": -0.236,
+       "sd": 0.988
+      },
+      "z": 1.14
+     },
+     {
+      "bucket": "support",
+      "real": {
+       "n": 976,
+       "win": 0.406,
+       "expR": -0.25,
+       "sd": 0.99
+      },
+      "placebo": {
+       "n": 4875,
+       "win": 0.404,
+       "expR": -0.253,
+       "sd": 0.987
+      },
+      "z": 0.09
      },
      {
       "bucket": "resistance",
       "real": {
-       "n": 920,
-       "win": 0.442,
-       "expR": -0.183,
+       "n": 927,
+       "win": 0.444,
+       "expR": -0.179,
        "sd": 1.001
       },
       "placebo": {
-       "n": 4407,
-       "win": 0.417,
-       "expR": -0.241,
+       "n": 4456,
+       "win": 0.418,
+       "expR": -0.24,
        "sd": 1.006
       },
-      "z": 1.6
+      "z": 1.69
      }
     ]
    }
   },
   "current": {
-   "asof": "2026-10-26T21:20:00-04:00",
-   "close": 29484.5,
-   "atr": 29.964,
-   "ema50": 29512.489,
+   "asof": "2026-10-27T21:15:00-04:00",
+   "close": 29848.5,
+   "atr": 27.768,
+   "ema50": 29824.638,
    "levels": [
-    {
-     "level": "PD_POC",
-     "type": "PD_POC",
-     "price": 29496.5,
-     "side": "RESISTANCE",
-     "dist_atr": 0.4,
-     "confluence": [
-      "ROUND1"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "PD_POC RESISTANCE",
-       "real": {
-        "n": 94,
-        "win": 0.521,
-        "expR": -0.001,
-        "sd": 1.006
-       },
-       "placebo": {
-        "n": 426,
-        "win": 0.458,
-        "expR": -0.165,
-        "sd": 1.192
-       },
-       "z": 1.38
-      },
-      "reclaim": {
-       "bucket": "PD_POC RESISTANCE",
-       "real": {
-        "n": 67,
-        "win": 0.358,
-        "expR": -0.357,
-        "sd": 0.978
-       },
-       "placebo": {
-        "n": 267,
-        "win": 0.378,
-        "expR": -0.312,
-        "sd": 0.972
-       },
-       "z": -0.34
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
-        },
-        "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
-        },
-        "z": 0.0
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
-        },
-        "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
-        },
-        "z": 1.05
-       }
-      }
-     },
-     "reasons": [
-      "confluence with ROUND1",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "ROUND1",
-     "type": "ROUND",
-     "price": 29500.0,
-     "side": "RESISTANCE",
-     "dist_atr": 0.52,
-     "confluence": [
-      "PD_POC"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "ROUND RESISTANCE",
-       "real": {
-        "n": 326,
-        "win": 0.494,
-        "expR": -0.062,
-        "sd": 1.011
-       },
-       "placebo": {
-        "n": 1517,
-        "win": 0.461,
-        "expR": -0.132,
-        "sd": 1.051
-       },
-       "z": 1.13
-      },
-      "reclaim": {
-       "bucket": "ROUND RESISTANCE",
-       "real": {
-        "n": 213,
-        "win": 0.441,
-        "expR": -0.185,
-        "sd": 1.002
-       },
-       "placebo": {
-        "n": 1053,
-        "win": 0.411,
-        "expR": -0.257,
-        "sd": 1.014
-       },
-       "z": 0.95
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
-        },
-        "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
-        },
-        "z": 0.0
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
-        },
-        "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
-        },
-        "z": 1.05
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PD_POC",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PDC",
-     "type": "PDC",
-     "price": 29466.75,
-     "side": "SUPPORT",
-     "dist_atr": 0.59,
-     "confluence": [],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "PDC SUPPORT",
-       "real": {
-        "n": 125,
-        "win": 0.48,
-        "expR": -0.089,
-        "sd": 1.011
-       },
-       "placebo": {
-        "n": 613,
-        "win": 0.476,
-        "expR": -0.095,
-        "sd": 1.001
-       },
-       "z": 0.06
-      },
-      "reclaim": {
-       "bucket": "PDC SUPPORT",
-       "real": {
-        "n": 92,
-        "win": 0.37,
-        "expR": -0.334,
-        "sd": 0.985
-       },
-       "placebo": {
-        "n": 431,
-        "win": 0.415,
-        "expR": -0.24,
-        "sd": 0.992
-       },
-       "z": -0.83
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
-         "sd": 1.014
-        },
-        "placebo": {
-         "n": 8699,
-         "win": 0.479,
-         "expR": -0.093,
-         "sd": 1.022
-        },
-        "z": 0.85
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1865,
-         "win": 0.482,
-         "expR": -0.086,
-         "sd": 1.009
-        },
-        "placebo": {
-         "n": 9101,
-         "win": 0.476,
-         "expR": -0.094,
-         "sd": 1.004
-        },
-        "z": 0.31
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
-        },
-        "z": 0.54
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1304,
-         "win": 0.41,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 6328,
-         "win": 0.405,
-         "expR": -0.256,
-         "sd": 0.997
-        },
-        "z": 0.5
-       }
-      }
-     },
-     "reasons": [
-      "COUNTER-trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "ROUND0",
-     "type": "ROUND",
-     "price": 29400.0,
-     "side": "SUPPORT",
-     "dist_atr": 2.82,
-     "confluence": [],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 338,
-        "win": 0.444,
-        "expR": -0.171,
-        "sd": 1.026
-       },
-       "placebo": {
-        "n": 1610,
-        "win": 0.503,
-        "expR": -0.038,
-        "sd": 1.003
-       },
-       "z": -2.17
-      },
-      "reclaim": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 232,
-        "win": 0.379,
-        "expR": -0.296,
-        "sd": 0.979
-       },
-       "placebo": {
-        "n": 1153,
-        "win": 0.405,
-        "expR": -0.249,
-        "sd": 0.988
-       },
-       "z": -0.67
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
-         "sd": 1.014
-        },
-        "placebo": {
-         "n": 8699,
-         "win": 0.479,
-         "expR": -0.093,
-         "sd": 1.022
-        },
-        "z": 0.85
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1865,
-         "win": 0.482,
-         "expR": -0.086,
-         "sd": 1.009
-        },
-        "placebo": {
-         "n": 9101,
-         "win": 0.476,
-         "expR": -0.094,
-         "sd": 1.004
-        },
-        "z": 0.31
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
-        },
-        "z": 0.54
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1304,
-         "win": 0.41,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 6328,
-         "win": 0.405,
-         "expR": -0.256,
-         "sd": 0.997
-        },
-        "z": 0.5
-       }
-      }
-     },
-     "reasons": [
-      "COUNTER-trend (price vs EMA50)"
-     ]
-    },
     {
      "level": "PDH",
      "type": "PDH",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 2.91,
+     "dist_atr": 1.19,
      "confluence": [
       "P_RTH_H",
-      "SWING_H@29571.75"
+      "SWING_H@29881.50"
      ],
-     "aligned": true,
+     "aligned": false,
      "history": {
       "touch": {
        "bucket": "PDH RESISTANCE",
        "real": {
-        "n": 76,
-        "win": 0.487,
-        "expR": -0.087,
-        "sd": 1.027
+        "n": 77,
+        "win": 0.481,
+        "expR": -0.099,
+        "sd": 1.026
        },
        "placebo": {
-        "n": 384,
-        "win": 0.438,
-        "expR": -0.206,
-        "sd": 1.194
+        "n": 402,
+        "win": 0.435,
+        "expR": -0.208,
+        "sd": 1.185
        },
-       "z": 0.9
+       "z": 0.83
       },
       "reclaim": {
        "bucket": "PDH RESISTANCE",
@@ -1849,12 +1443,12 @@
         "sd": 1.003
        },
        "placebo": {
-        "n": 253,
-        "win": 0.435,
-        "expR": -0.207,
-        "sd": 1.013
+        "n": 260,
+        "win": 0.446,
+        "expR": -0.184,
+        "sd": 1.015
        },
-       "z": 1.98
+       "z": 1.83
       }
      },
      "feature_history": {
@@ -1862,103 +1456,103 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 650,
-         "win": 0.457,
-         "expR": -0.134,
-         "sd": 1.01
+         "n": 659,
+         "win": 0.451,
+         "expR": -0.146,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 1278,
+         "n": 1299,
          "win": 0.46,
-         "expR": -0.111,
+         "expR": -0.112,
          "sd": 0.997
         },
-        "z": -0.47
+        "z": -0.71
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
+         "n": 1896,
+         "win": 0.482,
+         "expR": -0.086,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
+         "n": 9252,
+         "win": 0.475,
+         "expR": -0.096,
+         "sd": 1.004
         },
-        "z": 0.0
+        "z": 0.39
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 462,
-         "win": 0.463,
-         "expR": -0.141,
-         "sd": 1.007
+         "n": 465,
+         "win": 0.46,
+         "expR": -0.147,
+         "sd": 1.006
         },
         "placebo": {
-         "n": 932,
-         "win": 0.391,
-         "expR": -0.27,
-         "sd": 0.981
+         "n": 946,
+         "win": 0.385,
+         "expR": -0.281,
+         "sd": 0.978
         },
-        "z": 2.27
+        "z": 2.37
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
+         "n": 1321,
+         "win": 0.413,
+         "expR": -0.236,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
+         "n": 6398,
+         "win": 0.406,
+         "expR": -0.254,
+         "sd": 0.997
         },
-        "z": 1.05
+        "z": 0.6
        }
       }
      },
      "reasons": [
-      "confluence with P_RTH_H, SWING_H@29571.75",
-      "with the trend (price vs EMA50)"
+      "confluence with P_RTH_H, SWING_H@29881.50",
+      "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
      "level": "P_RTH_H",
      "type": "P_RTH_H",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 2.91,
+     "dist_atr": 1.19,
      "confluence": [
       "PDH",
-      "SWING_H@29571.75"
+      "SWING_H@29881.50"
      ],
-     "aligned": true,
+     "aligned": false,
      "history": {
       "touch": {
        "bucket": "P_RTH_H RESISTANCE",
        "real": {
-        "n": 87,
-        "win": 0.517,
-        "expR": -0.027,
+        "n": 88,
+        "win": 0.511,
+        "expR": -0.038,
         "sd": 1.028
        },
        "placebo": {
-        "n": 410,
-        "win": 0.478,
-        "expR": -0.092,
+        "n": 423,
+        "win": 0.475,
+        "expR": -0.097,
         "sd": 1.002
        },
-       "z": 0.54
+       "z": 0.49
       },
       "reclaim": {
        "bucket": "P_RTH_H RESISTANCE",
@@ -1969,12 +1563,12 @@
         "sd": 1.01
        },
        "placebo": {
-        "n": 290,
-        "win": 0.472,
-        "expR": -0.145,
+        "n": 295,
+        "win": 0.478,
+        "expR": -0.134,
         "sd": 1.048
        },
-       "z": 1.27
+       "z": 1.2
       }
      },
      "feature_history": {
@@ -1982,100 +1576,100 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 650,
-         "win": 0.457,
-         "expR": -0.134,
-         "sd": 1.01
+         "n": 659,
+         "win": 0.451,
+         "expR": -0.146,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 1278,
+         "n": 1299,
          "win": 0.46,
-         "expR": -0.111,
+         "expR": -0.112,
          "sd": 0.997
         },
-        "z": -0.47
+        "z": -0.71
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
+         "n": 1896,
+         "win": 0.482,
+         "expR": -0.086,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
+         "n": 9252,
+         "win": 0.475,
+         "expR": -0.096,
+         "sd": 1.004
         },
-        "z": 0.0
+        "z": 0.39
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 462,
-         "win": 0.463,
-         "expR": -0.141,
-         "sd": 1.007
+         "n": 465,
+         "win": 0.46,
+         "expR": -0.147,
+         "sd": 1.006
         },
         "placebo": {
-         "n": 932,
-         "win": 0.391,
-         "expR": -0.27,
-         "sd": 0.981
+         "n": 946,
+         "win": 0.385,
+         "expR": -0.281,
+         "sd": 0.978
         },
-        "z": 2.27
+        "z": 2.37
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
+         "n": 1321,
+         "win": 0.413,
+         "expR": -0.236,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
+         "n": 6398,
+         "win": 0.406,
+         "expR": -0.254,
+         "sd": 0.997
         },
-        "z": 1.05
+        "z": 0.6
        }
       }
      },
      "reasons": [
-      "confluence with PDH, SWING_H@29571.75",
-      "with the trend (price vs EMA50)"
+      "confluence with PDH, SWING_H@29881.50",
+      "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
-     "level": "SWING_H@29571.75",
+     "level": "SWING_H@29881.50",
      "type": "SWING",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 2.91,
+     "dist_atr": 1.19,
      "confluence": [
       "PDH",
       "P_RTH_H"
      ],
-     "aligned": true,
+     "aligned": false,
      "history": {
       "touch": {
        "bucket": "SWING RESISTANCE",
        "real": {
-        "n": 432,
-        "win": 0.465,
-        "expR": -0.121,
-        "sd": 1.015
+        "n": 438,
+        "win": 0.466,
+        "expR": -0.12,
+        "sd": 1.014
        },
        "placebo": {
-        "n": 2102,
+        "n": 2139,
         "win": 0.48,
-        "expR": -0.088,
+        "expR": -0.087,
         "sd": 1.006
        },
        "z": -0.62
@@ -2083,18 +1677,18 @@
       "reclaim": {
        "bucket": "SWING RESISTANCE",
        "real": {
-        "n": 283,
-        "win": 0.431,
-        "expR": -0.203,
+        "n": 285,
+        "win": 0.432,
+        "expR": -0.201,
         "sd": 0.998
        },
        "placebo": {
-        "n": 1354,
+        "n": 1365,
         "win": 0.4,
         "expR": -0.276,
-        "sd": 0.998
+        "sd": 0.997
        },
-       "z": 1.12
+       "z": 1.15
       }
      },
      "feature_history": {
@@ -2102,116 +1696,290 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 650,
-         "win": 0.457,
-         "expR": -0.134,
-         "sd": 1.01
+         "n": 659,
+         "win": 0.451,
+         "expR": -0.146,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 1278,
+         "n": 1299,
          "win": 0.46,
-         "expR": -0.111,
+         "expR": -0.112,
          "sd": 0.997
         },
-        "z": -0.47
+        "z": -0.71
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
+         "n": 1896,
+         "win": 0.482,
+         "expR": -0.086,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
+         "n": 9252,
+         "win": 0.475,
+         "expR": -0.096,
+         "sd": 1.004
         },
-        "z": 0.0
+        "z": 0.39
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 462,
-         "win": 0.463,
-         "expR": -0.141,
-         "sd": 1.007
+         "n": 465,
+         "win": 0.46,
+         "expR": -0.147,
+         "sd": 1.006
         },
         "placebo": {
-         "n": 932,
-         "win": 0.391,
-         "expR": -0.27,
-         "sd": 0.981
+         "n": 946,
+         "win": 0.385,
+         "expR": -0.281,
+         "sd": 0.978
         },
-        "z": 2.27
+        "z": 2.37
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
+         "n": 1321,
+         "win": 0.413,
+         "expR": -0.236,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
+         "n": 6398,
+         "win": 0.406,
+         "expR": -0.254,
+         "sd": 0.997
         },
-        "z": 1.05
+        "z": 0.6
        }
       }
      },
      "reasons": [
       "confluence with PDH, P_RTH_H",
+      "COUNTER-trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "PDC",
+     "type": "PDC",
+     "price": 29804.0,
+     "side": "SUPPORT",
+     "dist_atr": 1.6,
+     "confluence": [
+      "ROUND0"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "PDC SUPPORT",
+       "real": {
+        "n": 128,
+        "win": 0.484,
+        "expR": -0.081,
+        "sd": 1.013
+       },
+       "placebo": {
+        "n": 624,
+        "win": 0.473,
+        "expR": -0.102,
+        "sd": 1.0
+       },
+       "z": 0.21
+      },
+      "reclaim": {
+       "bucket": "PDC SUPPORT",
+       "real": {
+        "n": 95,
+        "win": 0.379,
+        "expR": -0.315,
+        "sd": 0.99
+       },
+       "placebo": {
+        "n": 440,
+        "win": 0.418,
+        "expR": -0.235,
+        "sd": 0.993
+       },
+       "z": -0.71
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 894,
+         "win": 0.461,
+         "expR": -0.127,
+         "sd": 1.009
+        },
+        "placebo": {
+         "n": 4551,
+         "win": 0.467,
+         "expR": -0.118,
+         "sd": 1.053
+        },
+        "z": -0.24
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 582,
+         "win": 0.452,
+         "expR": -0.169,
+         "sd": 1.004
+        },
+        "placebo": {
+         "n": 2933,
+         "win": 0.42,
+         "expR": -0.23,
+         "sd": 0.994
+        },
+        "z": 1.34
+       }
+      }
+     },
+     "reasons": [
+      "confluence with ROUND0",
       "with the trend (price vs EMA50)"
      ]
     },
     {
-     "level": "SWING_H@29589.75",
-     "type": "SWING",
-     "price": 29589.75,
-     "side": "RESISTANCE",
-     "dist_atr": 3.51,
-     "confluence": [],
+     "level": "ROUND0",
+     "type": "ROUND",
+     "price": 29800.0,
+     "side": "SUPPORT",
+     "dist_atr": 1.75,
+     "confluence": [
+      "PDC"
+     ],
      "aligned": true,
      "history": {
       "touch": {
-       "bucket": "SWING RESISTANCE",
+       "bucket": "ROUND SUPPORT",
        "real": {
-        "n": 432,
-        "win": 0.465,
-        "expR": -0.121,
-        "sd": 1.015
+        "n": 346,
+        "win": 0.454,
+        "expR": -0.15,
+        "sd": 1.028
        },
        "placebo": {
-        "n": 2102,
-        "win": 0.48,
-        "expR": -0.088,
-        "sd": 1.006
+        "n": 1645,
+        "win": 0.503,
+        "expR": -0.039,
+        "sd": 1.003
        },
-       "z": -0.62
+       "z": -1.83
       },
       "reclaim": {
-       "bucket": "SWING RESISTANCE",
+       "bucket": "ROUND SUPPORT",
        "real": {
-        "n": 283,
-        "win": 0.431,
-        "expR": -0.203,
-        "sd": 0.998
+        "n": 240,
+        "win": 0.396,
+        "expR": -0.263,
+        "sd": 0.987
        },
        "placebo": {
-        "n": 1354,
-        "win": 0.4,
-        "expR": -0.276,
-        "sd": 0.998
+        "n": 1178,
+        "win": 0.404,
+        "expR": -0.251,
+        "sd": 0.988
        },
-       "z": 1.12
+       "z": -0.17
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 894,
+         "win": 0.461,
+         "expR": -0.127,
+         "sd": 1.009
+        },
+        "placebo": {
+         "n": 4551,
+         "win": 0.467,
+         "expR": -0.118,
+         "sd": 1.053
+        },
+        "z": -0.24
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 582,
+         "win": 0.452,
+         "expR": -0.169,
+         "sd": 1.004
+        },
+        "placebo": {
+         "n": 2933,
+         "win": 0.42,
+         "expR": -0.23,
+         "sd": 0.994
+        },
+        "z": 1.34
+       }
+      }
+     },
+     "reasons": [
+      "confluence with PDC",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "ROUND1",
+     "type": "ROUND",
+     "price": 29900.0,
+     "side": "RESISTANCE",
+     "dist_atr": 1.85,
+     "confluence": [],
+     "aligned": false,
+     "history": {
+      "touch": {
+       "bucket": "ROUND RESISTANCE",
+       "real": {
+        "n": 334,
+        "win": 0.494,
+        "expR": -0.061,
+        "sd": 1.011
+       },
+       "placebo": {
+        "n": 1540,
+        "win": 0.46,
+        "expR": -0.134,
+        "sd": 1.05
+       },
+       "z": 1.19
+      },
+      "reclaim": {
+       "bucket": "ROUND RESISTANCE",
+       "real": {
+        "n": 217,
+        "win": 0.447,
+        "expR": -0.174,
+        "sd": 1.003
+       },
+       "placebo": {
+        "n": 1061,
+        "win": 0.41,
+        "expR": -0.259,
+        "sd": 1.014
+       },
+       "z": 1.14
       }
      },
      "feature_history": {
@@ -2219,68 +1987,184 @@
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
+         "n": 1551,
+         "win": 0.493,
+         "expR": -0.067,
          "sd": 1.014
         },
         "placebo": {
-         "n": 8699,
+         "n": 8836,
          "win": 0.479,
          "expR": -0.093,
          "sd": 1.022
         },
-        "z": 0.85
+        "z": 0.93
        },
-       "with_trend": {
-        "bucket": "with_trend",
+       "counter_trend": {
+        "bucket": "counter_trend",
         "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
+         "n": 1896,
+         "win": 0.482,
+         "expR": -0.086,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
+         "n": 9252,
+         "win": 0.475,
+         "expR": -0.096,
+         "sd": 1.004
         },
-        "z": 0.0
+        "z": 0.39
        }
       },
       "reclaim": {
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
+         "n": 1058,
+         "win": 0.415,
+         "expR": -0.235,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
+         "n": 5947,
+         "win": 0.408,
+         "expR": -0.255,
+         "sd": 0.996
         },
-        "z": 0.54
+        "z": 0.6
+       },
+       "counter_trend": {
+        "bucket": "counter_trend",
+        "real": {
+         "n": 1321,
+         "win": 0.413,
+         "expR": -0.236,
+         "sd": 0.992
+        },
+        "placebo": {
+         "n": 6398,
+         "win": 0.406,
+         "expR": -0.254,
+         "sd": 0.997
+        },
+        "z": 0.6
+       }
+      }
+     },
+     "reasons": [
+      "COUNTER-trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "ROUND-1",
+     "type": "ROUND",
+     "price": 29700.0,
+     "side": "SUPPORT",
+     "dist_atr": 5.35,
+     "confluence": [],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "ROUND SUPPORT",
+       "real": {
+        "n": 346,
+        "win": 0.454,
+        "expR": -0.15,
+        "sd": 1.028
+       },
+       "placebo": {
+        "n": 1645,
+        "win": 0.503,
+        "expR": -0.039,
+        "sd": 1.003
+       },
+       "z": -1.83
+      },
+      "reclaim": {
+       "bucket": "ROUND SUPPORT",
+       "real": {
+        "n": 240,
+        "win": 0.396,
+        "expR": -0.263,
+        "sd": 0.987
+       },
+       "placebo": {
+        "n": 1178,
+        "win": 0.404,
+        "expR": -0.251,
+        "sd": 0.988
+       },
+       "z": -0.17
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 1551,
+         "win": 0.493,
+         "expR": -0.067,
+         "sd": 1.014
+        },
+        "placebo": {
+         "n": 8836,
+         "win": 0.479,
+         "expR": -0.093,
+         "sd": 1.022
+        },
+        "z": 0.93
        },
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
+         "n": 894,
+         "win": 0.461,
+         "expR": -0.127,
+         "sd": 1.009
         },
         "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
+         "n": 4551,
+         "win": 0.467,
+         "expR": -0.118,
+         "sd": 1.053
         },
-        "z": 1.05
+        "z": -0.24
+       }
+      },
+      "reclaim": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 1058,
+         "win": 0.415,
+         "expR": -0.235,
+         "sd": 0.992
+        },
+        "placebo": {
+         "n": 5947,
+         "win": 0.408,
+         "expR": -0.255,
+         "sd": 0.996
+        },
+        "z": 0.6
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 582,
+         "win": 0.452,
+         "expR": -0.169,
+         "sd": 1.004
+        },
+        "placebo": {
+         "n": 2933,
+         "win": 0.42,
+         "expR": -0.23,
+         "sd": 0.994
+        },
+        "z": 1.34
        }
       }
      },
@@ -2291,43 +2175,43 @@
     {
      "level": "ROUND2",
      "type": "ROUND",
-     "price": 29600.0,
+     "price": 30000.0,
      "side": "RESISTANCE",
-     "dist_atr": 3.85,
+     "dist_atr": 5.46,
      "confluence": [],
-     "aligned": true,
+     "aligned": false,
      "history": {
       "touch": {
        "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 326,
+        "n": 334,
         "win": 0.494,
-        "expR": -0.062,
+        "expR": -0.061,
         "sd": 1.011
        },
        "placebo": {
-        "n": 1517,
-        "win": 0.461,
-        "expR": -0.132,
-        "sd": 1.051
+        "n": 1540,
+        "win": 0.46,
+        "expR": -0.134,
+        "sd": 1.05
        },
-       "z": 1.13
+       "z": 1.19
       },
       "reclaim": {
        "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 213,
-        "win": 0.441,
-        "expR": -0.185,
-        "sd": 1.002
+        "n": 217,
+        "win": 0.447,
+        "expR": -0.174,
+        "sd": 1.003
        },
        "placebo": {
-        "n": 1053,
-        "win": 0.411,
-        "expR": -0.257,
+        "n": 1061,
+        "win": 0.41,
+        "expR": -0.259,
         "sd": 1.014
        },
-       "z": 0.95
+       "z": 1.14
       }
      },
      "feature_history": {
@@ -2335,416 +2219,68 @@
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
+         "n": 1551,
+         "win": 0.493,
+         "expR": -0.067,
          "sd": 1.014
         },
         "placebo": {
-         "n": 8699,
+         "n": 8836,
          "win": 0.479,
          "expR": -0.093,
          "sd": 1.022
         },
-        "z": 0.85
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 879,
-         "win": 0.463,
-         "expR": -0.123,
-         "sd": 1.01
-        },
-        "placebo": {
-         "n": 4480,
-         "win": 0.465,
-         "expR": -0.123,
-         "sd": 1.054
-        },
-        "z": 0.0
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
-        },
-        "z": 0.54
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 572,
-         "win": 0.448,
-         "expR": -0.178,
-         "sd": 1.003
-        },
-        "placebo": {
-         "n": 2875,
-         "win": 0.422,
-         "expR": -0.226,
-         "sd": 0.995
-        },
-        "z": 1.05
-       }
-      }
-     },
-     "reasons": [
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29345.25",
-     "type": "SWING",
-     "price": 29345.25,
-     "side": "SUPPORT",
-     "dist_atr": 4.65,
-     "confluence": [],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 422,
-        "win": 0.488,
-        "expR": -0.069,
-        "sd": 1.003
-       },
-       "placebo": {
-        "n": 2309,
-        "win": 0.469,
-        "expR": -0.106,
-        "sd": 1.002
-       },
-       "z": 0.7
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 289,
-        "win": 0.436,
-        "expR": -0.188,
-        "sd": 1.0
-       },
-       "placebo": {
-        "n": 1511,
-        "win": 0.404,
-        "expR": -0.25,
-        "sd": 0.986
-       },
-       "z": 0.97
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
-         "sd": 1.014
-        },
-        "placebo": {
-         "n": 8699,
-         "win": 0.479,
-         "expR": -0.093,
-         "sd": 1.022
-        },
-        "z": 0.85
+        "z": 0.93
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 1865,
+         "n": 1896,
          "win": 0.482,
          "expR": -0.086,
          "sd": 1.009
         },
         "placebo": {
-         "n": 9101,
-         "win": 0.476,
-         "expR": -0.094,
+         "n": 9252,
+         "win": 0.475,
+         "expR": -0.096,
          "sd": 1.004
         },
-        "z": 0.31
+        "z": 0.39
        }
       },
       "reclaim": {
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
+         "n": 1058,
+         "win": 0.415,
+         "expR": -0.235,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
+         "n": 5947,
+         "win": 0.408,
+         "expR": -0.255,
+         "sd": 0.996
         },
-        "z": 0.54
+        "z": 0.6
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 1304,
-         "win": 0.41,
-         "expR": -0.241,
-         "sd": 0.991
+         "n": 1321,
+         "win": 0.413,
+         "expR": -0.236,
+         "sd": 0.992
         },
         "placebo": {
-         "n": 6328,
-         "win": 0.405,
-         "expR": -0.256,
+         "n": 6398,
+         "win": 0.406,
+         "expR": -0.254,
          "sd": 0.997
         },
-        "z": 0.5
-       }
-      }
-     },
-     "reasons": [
-      "COUNTER-trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29325.75",
-     "type": "SWING",
-     "price": 29325.75,
-     "side": "SUPPORT",
-     "dist_atr": 5.3,
-     "confluence": [],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 422,
-        "win": 0.488,
-        "expR": -0.069,
-        "sd": 1.003
-       },
-       "placebo": {
-        "n": 2309,
-        "win": 0.469,
-        "expR": -0.106,
-        "sd": 1.002
-       },
-       "z": 0.7
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 289,
-        "win": 0.436,
-        "expR": -0.188,
-        "sd": 1.0
-       },
-       "placebo": {
-        "n": 1511,
-        "win": 0.404,
-        "expR": -0.25,
-        "sd": 0.986
-       },
-       "z": 0.97
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
-         "sd": 1.014
-        },
-        "placebo": {
-         "n": 8699,
-         "win": 0.479,
-         "expR": -0.093,
-         "sd": 1.022
-        },
-        "z": 0.85
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1865,
-         "win": 0.482,
-         "expR": -0.086,
-         "sd": 1.009
-        },
-        "placebo": {
-         "n": 9101,
-         "win": 0.476,
-         "expR": -0.094,
-         "sd": 1.004
-        },
-        "z": 0.31
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
-        },
-        "z": 0.54
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1304,
-         "win": 0.41,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 6328,
-         "win": 0.405,
-         "expR": -0.256,
-         "sd": 0.997
-        },
-        "z": 0.5
-       }
-      }
-     },
-     "reasons": [
-      "COUNTER-trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PD_VWAP",
-     "type": "PD_VWAP",
-     "price": 29317.0,
-     "side": "SUPPORT",
-     "dist_atr": 5.59,
-     "confluence": [],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "PD_VWAP SUPPORT",
-       "real": {
-        "n": 82,
-        "win": 0.512,
-        "expR": -0.023,
-        "sd": 1.004
-       },
-       "placebo": {
-        "n": 376,
-        "win": 0.465,
-        "expR": -0.117,
-        "sd": 1.001
-       },
-       "z": 0.77
-      },
-      "reclaim": {
-       "bucket": "PD_VWAP SUPPORT",
-       "real": {
-        "n": 56,
-        "win": 0.429,
-        "expR": -0.209,
-        "sd": 1.0
-       },
-       "placebo": {
-        "n": 261,
-        "win": 0.402,
-        "expR": -0.259,
-        "sd": 0.988
-       },
-       "z": 0.34
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1524,
-         "win": 0.492,
-         "expR": -0.069,
-         "sd": 1.014
-        },
-        "placebo": {
-         "n": 8699,
-         "win": 0.479,
-         "expR": -0.093,
-         "sd": 1.022
-        },
-        "z": 0.85
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1865,
-         "win": 0.482,
-         "expR": -0.086,
-         "sd": 1.009
-        },
-        "placebo": {
-         "n": 9101,
-         "win": 0.476,
-         "expR": -0.094,
-         "sd": 1.004
-        },
-        "z": 0.31
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1041,
-         "win": 0.412,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5874,
-         "win": 0.406,
-         "expR": -0.259,
-         "sd": 0.995
-        },
-        "z": 0.54
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 1304,
-         "win": 0.41,
-         "expR": -0.241,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 6328,
-         "win": 0.405,
-         "expR": -0.256,
-         "sd": 0.997
-        },
-        "z": 0.5
+        "z": 0.6
        }
       }
      },
@@ -2759,9 +2295,9 @@
   "symbol": "MNQ",
   "tf": 60,
   "stop_atr": 1.0,
-  "bars": 11818,
+  "bars": 11841,
   "first": "2024-10-06T19:00:00-04:00",
-  "last": "2026-10-26T20:00:00-04:00",
+  "last": "2026-10-27T20:00:00-04:00",
   "modes": {
    "touch": {
     "n_cells": 41,
@@ -2769,33 +2305,33 @@
     "targets": {
      "1.0": {
       "real": {
-       "n": 5947,
+       "n": 5959,
        "win": 0.416,
        "expR": -0.186,
        "sd": 0.99
       },
       "placebo": {
-       "n": 25820,
+       "n": 25870,
        "win": 0.413,
-       "expR": -0.194,
-       "sd": 0.989
+       "expR": -0.193,
+       "sd": 0.99
       },
-      "z": 0.56
+      "z": 0.49
      },
      "2.0": {
       "real": {
-       "n": 5947,
+       "n": 5959,
        "win": 0.298,
        "expR": -0.133,
        "sd": 1.371
       },
       "placebo": {
-       "n": 25820,
-       "win": 0.299,
-       "expR": -0.132,
+       "n": 25870,
+       "win": 0.298,
+       "expR": -0.133,
        "sd": 1.371
       },
-      "z": -0.05
+      "z": 0.0
      }
     },
     "by_type": [
@@ -2882,18 +2418,18 @@
      {
       "bucket": "PDC RESISTANCE",
       "real": {
-       "n": 125,
-       "win": 0.488,
-       "expR": -0.041,
+       "n": 126,
+       "win": 0.484,
+       "expR": -0.048,
        "sd": 1.006
       },
       "placebo": {
-       "n": 681,
+       "n": 684,
        "win": 0.389,
        "expR": -0.24,
        "sd": 0.978
       },
-      "z": 2.04
+      "z": 1.98
      },
      {
       "bucket": "PDH SUPPORT",
@@ -2904,28 +2440,28 @@
        "sd": 0.975
       },
       "placebo": {
-       "n": 444,
-       "win": 0.421,
-       "expR": -0.176,
-       "sd": 0.99
+       "n": 445,
+       "win": 0.422,
+       "expR": -0.174,
+       "sd": 0.991
       },
-      "z": -0.68
+      "z": -0.69
      },
      {
       "bucket": "PDH RESISTANCE",
       "real": {
-       "n": 211,
-       "win": 0.417,
-       "expR": -0.184,
-       "sd": 0.99
+       "n": 212,
+       "win": 0.415,
+       "expR": -0.188,
+       "sd": 0.989
       },
       "placebo": {
-       "n": 628,
-       "win": 0.42,
-       "expR": -0.176,
-       "sd": 0.988
+       "n": 631,
+       "win": 0.422,
+       "expR": -0.173,
+       "sd": 0.989
       },
-      "z": -0.1
+      "z": -0.19
      },
      {
       "bucket": "PDL SUPPORT",
@@ -2936,12 +2472,12 @@
        "sd": 0.963
       },
       "placebo": {
-       "n": 694,
-       "win": 0.406,
-       "expR": -0.205,
-       "sd": 0.987
+       "n": 695,
+       "win": 0.407,
+       "expR": -0.203,
+       "sd": 0.988
       },
-      "z": -1.15
+      "z": -1.18
      },
      {
       "bucket": "PDL RESISTANCE",
@@ -2968,12 +2504,12 @@
        "sd": 1.014
       },
       "placebo": {
-       "n": 657,
-       "win": 0.405,
-       "expR": -0.207,
-       "sd": 0.983
+       "n": 658,
+       "win": 0.406,
+       "expR": -0.205,
+       "sd": 0.984
       },
-      "z": -0.33
+      "z": -0.36
      },
      {
       "bucket": "PD_POC RESISTANCE",
@@ -2984,20 +2520,20 @@
        "sd": 1.002
       },
       "placebo": {
-       "n": 606,
-       "win": 0.396,
-       "expR": -0.226,
-       "sd": 0.982
+       "n": 608,
+       "win": 0.398,
+       "expR": -0.223,
+       "sd": 0.984
       },
-      "z": 1.17
+      "z": 1.14
      },
      {
       "bucket": "PD_VWAP SUPPORT",
       "real": {
-       "n": 173,
-       "win": 0.434,
-       "expR": -0.152,
-       "sd": 0.994
+       "n": 174,
+       "win": 0.437,
+       "expR": -0.146,
+       "sd": 0.995
       },
       "placebo": {
        "n": 654,
@@ -3005,7 +2541,7 @@
        "expR": -0.224,
        "sd": 0.982
       },
-      "z": 0.85
+      "z": 0.92
      },
      {
       "bucket": "PD_VWAP RESISTANCE",
@@ -3016,7 +2552,7 @@
        "sd": 0.995
       },
       "placebo": {
-       "n": 600,
+       "n": 602,
        "win": 0.422,
        "expR": -0.174,
        "sd": 0.991
@@ -3064,12 +2600,12 @@
        "sd": 0.979
       },
       "placebo": {
-       "n": 324,
-       "win": 0.435,
-       "expR": -0.142,
+       "n": 325,
+       "win": 0.437,
+       "expR": -0.139,
        "sd": 0.994
       },
-      "z": -2.42
+      "z": -2.44
      },
      {
       "bucket": "PWL RESISTANCE",
@@ -3106,18 +2642,18 @@
      {
       "bucket": "P_RTH_H RESISTANCE",
       "real": {
-       "n": 218,
-       "win": 0.394,
-       "expR": -0.232,
-       "sd": 0.984
+       "n": 219,
+       "win": 0.393,
+       "expR": -0.236,
+       "sd": 0.983
       },
       "placebo": {
-       "n": 650,
-       "win": 0.425,
-       "expR": -0.168,
-       "sd": 0.99
+       "n": 651,
+       "win": 0.427,
+       "expR": -0.165,
+       "sd": 0.992
       },
-      "z": -0.83
+      "z": -0.92
      },
      {
       "bucket": "P_RTH_L SUPPORT",
@@ -3128,12 +2664,12 @@
        "sd": 0.984
       },
       "placebo": {
-       "n": 701,
-       "win": 0.394,
-       "expR": -0.233,
+       "n": 703,
+       "win": 0.395,
+       "expR": -0.23,
        "sd": 0.988
       },
-      "z": 0.26
+      "z": 0.22
      },
      {
       "bucket": "P_RTH_L RESISTANCE",
@@ -3144,121 +2680,121 @@
        "sd": 1.011
       },
       "placebo": {
-       "n": 427,
-       "win": 0.44,
-       "expR": -0.137,
+       "n": 428,
+       "win": 0.439,
+       "expR": -0.139,
        "sd": 0.997
       },
-      "z": 1.05
+      "z": 1.06
      },
      {
       "bucket": "ROUND SUPPORT",
       "real": {
-       "n": 840,
-       "win": 0.445,
-       "expR": -0.125,
-       "sd": 0.995
+       "n": 843,
+       "win": 0.446,
+       "expR": -0.123,
+       "sd": 0.996
       },
       "placebo": {
-       "n": 2502,
+       "n": 2503,
        "win": 0.41,
        "expR": -0.199,
        "sd": 0.988
       },
-      "z": 1.87
+      "z": 1.92
      },
      {
       "bucket": "ROUND RESISTANCE",
       "real": {
-       "n": 783,
-       "win": 0.43,
-       "expR": -0.154,
-       "sd": 0.993
+       "n": 785,
+       "win": 0.429,
+       "expR": -0.156,
+       "sd": 0.992
       },
       "placebo": {
-       "n": 2422,
-       "win": 0.413,
-       "expR": -0.192,
+       "n": 2430,
+       "win": 0.412,
+       "expR": -0.193,
        "sd": 0.987
       },
-      "z": 0.93
+      "z": 0.91
      },
      {
       "bucket": "SWING SUPPORT",
       "real": {
-       "n": 1054,
+       "n": 1055,
        "win": 0.392,
-       "expR": -0.235,
-       "sd": 0.98
+       "expR": -0.234,
+       "sd": 0.981
       },
       "placebo": {
-       "n": 5643,
-       "win": 0.41,
+       "n": 5645,
+       "win": 0.409,
        "expR": -0.2,
        "sd": 0.992
       },
-      "z": -1.06
+      "z": -1.03
      },
      {
       "bucket": "SWING RESISTANCE",
       "real": {
-       "n": 995,
-       "win": 0.417,
-       "expR": -0.184,
+       "n": 997,
+       "win": 0.416,
+       "expR": -0.185,
        "sd": 0.988
       },
       "placebo": {
-       "n": 5154,
+       "n": 5175,
        "win": 0.425,
-       "expR": -0.17,
+       "expR": -0.169,
        "sd": 0.993
       },
-      "z": -0.41
+      "z": -0.47
      }
     ],
     "by_feature": [
      {
       "bucket": "all",
       "real": {
-       "n": 5947,
+       "n": 5959,
        "win": 0.416,
        "expR": -0.186,
        "sd": 0.99
       },
       "placebo": {
-       "n": 25820,
+       "n": 25870,
        "win": 0.413,
-       "expR": -0.194,
-       "sd": 0.989
+       "expR": -0.193,
+       "sd": 0.99
       },
-      "z": 0.56
+      "z": 0.49
      },
      {
       "bucket": "first_touch",
       "real": {
-       "n": 3368,
-       "win": 0.404,
-       "expR": -0.212,
+       "n": 3374,
+       "win": 0.403,
+       "expR": -0.213,
        "sd": 0.986
       },
       "placebo": {
-       "n": 22747,
+       "n": 22793,
        "win": 0.413,
        "expR": -0.193,
        "sd": 0.989
       },
-      "z": -1.04
+      "z": -1.1
      },
      {
       "bucket": "retest(2+)",
       "real": {
-       "n": 2579,
+       "n": 2585,
        "win": 0.433,
        "expR": -0.151,
        "sd": 0.994
       },
       "placebo": {
-       "n": 3073,
+       "n": 3077,
        "win": 0.411,
        "expR": -0.196,
        "sd": 0.994
@@ -3268,31 +2804,31 @@
      {
       "bucket": "confluence>=2",
       "real": {
-       "n": 2571,
+       "n": 2577,
        "win": 0.427,
        "expR": -0.162,
        "sd": 0.991
       },
       "placebo": {
-       "n": 5363,
+       "n": 5368,
        "win": 0.441,
-       "expR": -0.134,
-       "sd": 0.996
+       "expR": -0.133,
+       "sd": 0.997
       },
-      "z": -1.18
+      "z": -1.22
      },
      {
       "bucket": "confluence=0",
       "real": {
-       "n": 1624,
-       "win": 0.407,
-       "expR": -0.207,
+       "n": 1627,
+       "win": 0.406,
+       "expR": -0.208,
        "sd": 0.99
       },
       "placebo": {
-       "n": 11684,
+       "n": 11710,
        "win": 0.397,
-       "expR": -0.225,
+       "expR": -0.226,
        "sd": 0.984
       },
       "z": 0.69
@@ -3300,34 +2836,34 @@
      {
       "bucket": "with_trend",
       "real": {
-       "n": 2774,
+       "n": 2778,
        "win": 0.415,
-       "expR": -0.188,
+       "expR": -0.187,
        "sd": 0.987
       },
       "placebo": {
-       "n": 10600,
-       "win": 0.396,
-       "expR": -0.226,
-       "sd": 0.981
+       "n": 10608,
+       "win": 0.397,
+       "expR": -0.225,
+       "sd": 0.982
       },
       "z": 1.81
      },
      {
       "bucket": "counter_trend",
       "real": {
-       "n": 3173,
-       "win": 0.418,
-       "expR": -0.184,
+       "n": 3181,
+       "win": 0.417,
+       "expR": -0.185,
        "sd": 0.993
       },
       "placebo": {
-       "n": 15220,
+       "n": 15262,
        "win": 0.424,
        "expR": -0.171,
-       "sd": 0.995
+       "sd": 0.994
       },
-      "z": -0.67
+      "z": -0.72
      },
      {
       "bucket": "RTH",
@@ -3338,71 +2874,71 @@
        "sd": 1.003
       },
       "placebo": {
-       "n": 9973,
-       "win": 0.435,
-       "expR": -0.149,
+       "n": 9993,
+       "win": 0.436,
+       "expR": -0.148,
        "sd": 1.0
       },
-      "z": 0.42
+      "z": 0.38
      },
      {
       "bucket": "overnight",
       "real": {
-       "n": 3816,
-       "win": 0.403,
-       "expR": -0.212,
-       "sd": 0.982
-      },
-      "placebo": {
-       "n": 15847,
-       "win": 0.398,
-       "expR": -0.222,
-       "sd": 0.982
-      },
-      "z": 0.56
-     },
-     {
-      "bucket": "slow_approach",
-      "real": {
-       "n": 4799,
-       "win": 0.42,
-       "expR": -0.179,
-       "sd": 0.992
-      },
-      "placebo": {
-       "n": 19064,
-       "win": 0.413,
-       "expR": -0.194,
-       "sd": 0.99
-      },
-      "z": 0.94
-     },
-     {
-      "bucket": "fast_approach",
-      "real": {
-       "n": 1148,
+       "n": 3828,
        "win": 0.402,
        "expR": -0.213,
        "sd": 0.982
       },
       "placebo": {
-       "n": 6756,
-       "win": 0.413,
-       "expR": -0.192,
-       "sd": 0.987
+       "n": 15877,
+       "win": 0.398,
+       "expR": -0.221,
+       "sd": 0.982
       },
-      "z": -0.67
+      "z": 0.45
+     },
+     {
+      "bucket": "slow_approach",
+      "real": {
+       "n": 4810,
+       "win": 0.42,
+       "expR": -0.18,
+       "sd": 0.992
+      },
+      "placebo": {
+       "n": 19086,
+       "win": 0.413,
+       "expR": -0.194,
+       "sd": 0.991
+      },
+      "z": 0.87
+     },
+     {
+      "bucket": "fast_approach",
+      "real": {
+       "n": 1149,
+       "win": 0.402,
+       "expR": -0.212,
+       "sd": 0.982
+      },
+      "placebo": {
+       "n": 6784,
+       "win": 0.412,
+       "expR": -0.192,
+       "sd": 0.986
+      },
+      "z": -0.64
      },
      {
       "bucket": "low_vol",
       "real": {
-       "n": 3598,
+       "n": 3610,
        "win": 0.387,
        "expR": -0.247,
        "sd": 0.975
       },
       "placebo": {
-       "n": 15395,
+       "n": 15444,
        "win": 0.379,
        "expR": -0.263,
        "sd": 0.974
@@ -3413,49 +2949,49 @@
       "bucket": "high_vol",
       "real": {
        "n": 2349,
-       "win": 0.462,
-       "expR": -0.092,
+       "win": 0.461,
+       "expR": -0.093,
        "sd": 1.006
       },
       "placebo": {
-       "n": 10425,
-       "win": 0.461,
-       "expR": -0.092,
-       "sd": 1.003
+       "n": 10426,
+       "win": 0.462,
+       "expR": -0.09,
+       "sd": 1.004
       },
-      "z": 0.0
+      "z": -0.13
      },
      {
       "bucket": "support",
       "real": {
-       "n": 3069,
-       "win": 0.402,
-       "expR": -0.216,
+       "n": 3074,
+       "win": 0.403,
+       "expR": -0.214,
        "sd": 0.987
       },
       "placebo": {
-       "n": 13507,
+       "n": 13516,
        "win": 0.407,
-       "expR": -0.206,
+       "expR": -0.205,
        "sd": 0.989
       },
-      "z": -0.51
+      "z": -0.46
      },
      {
       "bucket": "resistance",
       "real": {
-       "n": 2878,
-       "win": 0.432,
-       "expR": -0.154,
+       "n": 2885,
+       "win": 0.431,
+       "expR": -0.156,
        "sd": 0.993
       },
       "placebo": {
-       "n": 12313,
+       "n": 12354,
        "win": 0.419,
        "expR": -0.18,
        "sd": 0.99
       },
-      "z": 1.27
+      "z": 1.17
      }
     ]
    },
@@ -3465,30 +3001,30 @@
     "targets": {
      "1.0": {
       "real": {
-       "n": 3749,
-       "win": 0.382,
-       "expR": -0.266,
+       "n": 3759,
+       "win": 0.381,
+       "expR": -0.267,
        "sd": 0.992
       },
       "placebo": {
-       "n": 14871,
+       "n": 14898,
        "win": 0.395,
-       "expR": -0.239,
+       "expR": -0.24,
        "sd": 0.991
       },
       "z": -1.49
      },
      "2.0": {
       "real": {
-       "n": 3749,
+       "n": 3759,
        "win": 0.294,
-       "expR": -0.169,
-       "sd": 1.355
+       "expR": -0.17,
+       "sd": 1.354
       },
       "placebo": {
-       "n": 14871,
+       "n": 14898,
        "win": 0.309,
-       "expR": -0.128,
+       "expR": -0.129,
        "sd": 1.374
       },
       "z": -1.65
@@ -3584,12 +3120,12 @@
        "sd": 1.008
       },
       "placebo": {
-       "n": 427,
-       "win": 0.379,
-       "expR": -0.267,
-       "sd": 0.985
+       "n": 430,
+       "win": 0.377,
+       "expR": -0.272,
+       "sd": 0.984
       },
-      "z": 1.19
+      "z": 1.23
      },
      {
       "bucket": "PDH SUPPORT",
@@ -3600,28 +3136,28 @@
        "sd": 0.946
       },
       "placebo": {
-       "n": 273,
-       "win": 0.418,
-       "expR": -0.209,
+       "n": 274,
+       "win": 0.42,
+       "expR": -0.205,
        "sd": 1.065
       },
-      "z": -1.38
+      "z": -1.4
      },
      {
       "bucket": "PDH RESISTANCE",
       "real": {
-       "n": 132,
-       "win": 0.424,
-       "expR": -0.169,
-       "sd": 0.995
+       "n": 133,
+       "win": 0.421,
+       "expR": -0.175,
+       "sd": 0.994
       },
       "placebo": {
-       "n": 392,
-       "win": 0.352,
-       "expR": -0.32,
-       "sd": 0.963
+       "n": 394,
+       "win": 0.35,
+       "expR": -0.324,
+       "sd": 0.962
       },
-      "z": 1.52
+      "z": 1.51
      },
      {
       "bucket": "PDL SUPPORT",
@@ -3632,12 +3168,12 @@
        "sd": 0.964
       },
       "placebo": {
-       "n": 447,
-       "win": 0.407,
-       "expR": -0.214,
+       "n": 448,
+       "win": 0.406,
+       "expR": -0.216,
        "sd": 0.984
       },
-      "z": -0.78
+      "z": -0.76
      },
      {
       "bucket": "PDL RESISTANCE",
@@ -3664,12 +3200,12 @@
        "sd": 0.993
       },
       "placebo": {
-       "n": 449,
-       "win": 0.39,
-       "expR": -0.246,
+       "n": 450,
+       "win": 0.391,
+       "expR": -0.243,
        "sd": 0.977
       },
-      "z": -0.49
+      "z": -0.52
      },
      {
       "bucket": "PD_POC RESISTANCE",
@@ -3680,20 +3216,20 @@
        "sd": 0.939
       },
       "placebo": {
-       "n": 381,
-       "win": 0.428,
-       "expR": -0.187,
-       "sd": 1.016
+       "n": 383,
+       "win": 0.426,
+       "expR": -0.191,
+       "sd": 1.015
       },
-      "z": -1.89
+      "z": -1.86
      },
      {
       "bucket": "PD_VWAP SUPPORT",
       "real": {
-       "n": 111,
-       "win": 0.423,
-       "expR": -0.174,
-       "sd": 0.997
+       "n": 112,
+       "win": 0.42,
+       "expR": -0.182,
+       "sd": 0.996
       },
       "placebo": {
        "n": 425,
@@ -3701,7 +3237,7 @@
        "expR": -0.288,
        "sd": 0.974
       },
-      "z": 1.08
+      "z": 1.01
      },
      {
       "bucket": "PD_VWAP RESISTANCE",
@@ -3712,12 +3248,12 @@
        "sd": 0.951
       },
       "placebo": {
-       "n": 396,
-       "win": 0.389,
-       "expR": -0.238,
-       "sd": 0.979
+       "n": 397,
+       "win": 0.388,
+       "expR": -0.24,
+       "sd": 0.978
       },
-      "z": -1.13
+      "z": -1.11
      },
      {
       "bucket": "PWH SUPPORT",
@@ -3760,12 +3296,12 @@
        "sd": 0.931
       },
       "placebo": {
-       "n": 222,
-       "win": 0.428,
-       "expR": -0.166,
-       "sd": 0.993
+       "n": 223,
+       "win": 0.426,
+       "expR": -0.169,
+       "sd": 0.992
       },
-      "z": -1.87
+      "z": -1.85
      },
      {
       "bucket": "PWL RESISTANCE",
@@ -3802,10 +3338,10 @@
      {
       "bucket": "P_RTH_H RESISTANCE",
       "real": {
-       "n": 136,
-       "win": 0.375,
-       "expR": -0.28,
-       "sd": 1.004
+       "n": 137,
+       "win": 0.372,
+       "expR": -0.285,
+       "sd": 1.003
       },
       "placebo": {
        "n": 413,
@@ -3813,7 +3349,7 @@
        "expR": -0.326,
        "sd": 0.987
       },
-      "z": 0.47
+      "z": 0.42
      },
      {
       "bucket": "P_RTH_L SUPPORT",
@@ -3824,12 +3360,12 @@
        "sd": 0.975
       },
       "placebo": {
-       "n": 460,
-       "win": 0.448,
-       "expR": -0.13,
-       "sd": 0.999
+       "n": 462,
+       "win": 0.446,
+       "expR": -0.134,
+       "sd": 0.998
       },
-      "z": -1.43
+      "z": -1.39
      },
      {
       "bucket": "P_RTH_L RESISTANCE",
@@ -3850,81 +3386,81 @@
      {
       "bucket": "ROUND SUPPORT",
       "real": {
-       "n": 513,
-       "win": 0.394,
-       "expR": -0.24,
-       "sd": 0.979
+       "n": 516,
+       "win": 0.393,
+       "expR": -0.238,
+       "sd": 0.98
       },
       "placebo": {
-       "n": 1597,
+       "n": 1598,
        "win": 0.4,
        "expR": -0.225,
        "sd": 0.986
       },
-      "z": -0.3
+      "z": -0.26
      },
      {
       "bucket": "ROUND RESISTANCE",
       "real": {
-       "n": 454,
+       "n": 455,
        "win": 0.352,
-       "expR": -0.324,
-       "sd": 0.962
+       "expR": -0.325,
+       "sd": 0.961
       },
       "placebo": {
-       "n": 1575,
+       "n": 1576,
        "win": 0.357,
-       "expR": -0.314,
+       "expR": -0.315,
        "sd": 0.969
       },
-      "z": -0.19
+      "z": -0.2
      },
      {
       "bucket": "SWING SUPPORT",
       "real": {
-       "n": 667,
+       "n": 668,
        "win": 0.403,
-       "expR": -0.222,
+       "expR": -0.223,
        "sd": 1.014
       },
       "placebo": {
-       "n": 2872,
+       "n": 2873,
        "win": 0.423,
        "expR": -0.189,
        "sd": 1.011
       },
-      "z": -0.76
+      "z": -0.78
      },
      {
       "bucket": "SWING RESISTANCE",
       "real": {
-       "n": 631,
-       "win": 0.374,
-       "expR": -0.282,
-       "sd": 0.985
+       "n": 633,
+       "win": 0.373,
+       "expR": -0.284,
+       "sd": 0.984
       },
       "placebo": {
-       "n": 2320,
-       "win": 0.383,
-       "expR": -0.261,
+       "n": 2330,
+       "win": 0.382,
+       "expR": -0.264,
        "sd": 0.979
       },
-      "z": -0.48
+      "z": -0.45
      }
     ],
     "by_feature": [
      {
       "bucket": "all",
       "real": {
-       "n": 3749,
-       "win": 0.382,
-       "expR": -0.266,
+       "n": 3759,
+       "win": 0.381,
+       "expR": -0.267,
        "sd": 0.992
       },
       "placebo": {
-       "n": 14871,
+       "n": 14898,
        "win": 0.395,
-       "expR": -0.239,
+       "expR": -0.24,
        "sd": 0.991
       },
       "z": -1.49
@@ -3932,25 +3468,25 @@
      {
       "bucket": "first_touch",
       "real": {
-       "n": 2180,
+       "n": 2185,
        "win": 0.383,
-       "expR": -0.265,
-       "sd": 1.006
+       "expR": -0.266,
+       "sd": 1.005
       },
       "placebo": {
-       "n": 13086,
+       "n": 13113,
        "win": 0.393,
-       "expR": -0.242,
-       "sd": 0.99
+       "expR": -0.243,
+       "sd": 0.989
       },
       "z": -0.99
      },
      {
       "bucket": "retest(2+)",
       "real": {
-       "n": 1569,
+       "n": 1574,
        "win": 0.379,
-       "expR": -0.267,
+       "expR": -0.268,
        "sd": 0.974
       },
       "placebo": {
@@ -3959,52 +3495,52 @@
        "expR": -0.214,
        "sd": 1.0
       },
-      "z": -1.55
+      "z": -1.58
      },
      {
       "bucket": "confluence>=2",
       "real": {
-       "n": 1654,
-       "win": 0.391,
-       "expR": -0.241,
-       "sd": 0.988
+       "n": 1660,
+       "win": 0.389,
+       "expR": -0.243,
+       "sd": 0.987
       },
       "placebo": {
-       "n": 3258,
+       "n": 3259,
        "win": 0.406,
        "expR": -0.211,
        "sd": 0.984
       },
-      "z": -1.01
+      "z": -1.08
      },
      {
       "bucket": "confluence=0",
       "real": {
-       "n": 998,
-       "win": 0.376,
-       "expR": -0.278,
+       "n": 999,
+       "win": 0.375,
+       "expR": -0.277,
        "sd": 0.973
       },
       "placebo": {
-       "n": 6484,
-       "win": 0.387,
-       "expR": -0.258,
-       "sd": 0.988
+       "n": 6500,
+       "win": 0.386,
+       "expR": -0.26,
+       "sd": 0.987
       },
-      "z": -0.6
+      "z": -0.51
      },
      {
       "bucket": "with_trend",
       "real": {
-       "n": 1722,
-       "win": 0.377,
-       "expR": -0.268,
+       "n": 1726,
+       "win": 0.376,
+       "expR": -0.269,
        "sd": 0.973
       },
       "placebo": {
-       "n": 6175,
+       "n": 6181,
        "win": 0.388,
-       "expR": -0.244,
+       "expR": -0.245,
        "sd": 0.982
       },
       "z": -0.9
@@ -4012,15 +3548,15 @@
      {
       "bucket": "counter_trend",
       "real": {
-       "n": 2027,
-       "win": 0.386,
-       "expR": -0.264,
-       "sd": 1.009
+       "n": 2033,
+       "win": 0.385,
+       "expR": -0.265,
+       "sd": 1.008
       },
       "placebo": {
-       "n": 8696,
-       "win": 0.4,
-       "expR": -0.235,
+       "n": 8717,
+       "win": 0.399,
+       "expR": -0.236,
        "sd": 0.997
       },
       "z": -1.17
@@ -4034,73 +3570,73 @@
        "sd": 1.023
       },
       "placebo": {
-       "n": 6426,
+       "n": 6433,
        "win": 0.402,
-       "expR": -0.224,
+       "expR": -0.225,
        "sd": 1.0
       },
-      "z": -0.77
+      "z": -0.74
      },
      {
       "bucket": "overnight",
       "real": {
-       "n": 2327,
-       "win": 0.375,
-       "expR": -0.277,
+       "n": 2337,
+       "win": 0.374,
+       "expR": -0.279,
        "sd": 0.973
       },
       "placebo": {
-       "n": 8445,
-       "win": 0.39,
-       "expR": -0.25,
-       "sd": 0.984
+       "n": 8465,
+       "win": 0.389,
+       "expR": -0.251,
+       "sd": 0.983
       },
-      "z": -1.18
+      "z": -1.23
      },
      {
       "bucket": "slow_approach",
       "real": {
-       "n": 3041,
-       "win": 0.376,
-       "expR": -0.278,
+       "n": 3050,
+       "win": 0.375,
+       "expR": -0.28,
        "sd": 0.994
       },
       "placebo": {
-       "n": 10802,
+       "n": 10815,
        "win": 0.393,
-       "expR": -0.246,
+       "expR": -0.247,
        "sd": 0.996
       },
-      "z": -1.57
+      "z": -1.62
      },
      {
       "bucket": "fast_approach",
       "real": {
-       "n": 708,
-       "win": 0.405,
-       "expR": -0.212,
+       "n": 709,
+       "win": 0.406,
+       "expR": -0.21,
        "sd": 0.985
       },
       "placebo": {
-       "n": 4069,
-       "win": 0.4,
-       "expR": -0.22,
+       "n": 4083,
+       "win": 0.399,
+       "expR": -0.222,
        "sd": 0.977
       },
-      "z": 0.2
+      "z": 0.3
      },
      {
       "bucket": "low_vol",
       "real": {
-       "n": 2198,
-       "win": 0.388,
-       "expR": -0.249,
+       "n": 2208,
+       "win": 0.387,
+       "expR": -0.251,
        "sd": 0.981
       },
       "placebo": {
-       "n": 8647,
-       "win": 0.388,
-       "expR": -0.254,
+       "n": 8673,
+       "win": 0.387,
+       "expR": -0.256,
        "sd": 0.983
       },
       "z": 0.21
@@ -4114,7 +3650,7 @@
        "sd": 1.008
       },
       "placebo": {
-       "n": 6224,
+       "n": 6225,
        "win": 0.405,
        "expR": -0.217,
        "sd": 1.001
@@ -4124,13 +3660,13 @@
      {
       "bucket": "support",
       "real": {
-       "n": 1937,
+       "n": 1942,
        "win": 0.385,
        "expR": -0.259,
        "sd": 0.999
       },
       "placebo": {
-       "n": 7960,
+       "n": 7968,
        "win": 0.414,
        "expR": -0.202,
        "sd": 1.001
@@ -4140,15 +3676,15 @@
      {
       "bucket": "resistance",
       "real": {
-       "n": 1812,
-       "win": 0.378,
-       "expR": -0.273,
-       "sd": 0.986
+       "n": 1817,
+       "win": 0.377,
+       "expR": -0.275,
+       "sd": 0.985
       },
       "placebo": {
-       "n": 6911,
-       "win": 0.373,
-       "expR": -0.281,
+       "n": 6930,
+       "win": 0.372,
+       "expR": -0.283,
        "sd": 0.977
       },
       "z": 0.31
@@ -4157,56 +3693,55 @@
    }
   },
   "current": {
-   "asof": "2026-10-26T20:00:00-04:00",
-   "close": 29541.25,
-   "atr": 127.125,
-   "ema50": 29334.083,
+   "asof": "2026-10-27T20:00:00-04:00",
+   "close": 29861.75,
+   "atr": 101.946,
+   "ema50": 29528.766,
    "levels": [
     {
      "level": "PDH",
      "type": "PDH",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 0.24,
+     "dist_atr": 0.19,
      "confluence": [
       "P_RTH_H",
-      "ROUND2",
-      "SWING_H@29589.75",
-      "SWING_H@29571.75"
+      "ROUND1",
+      "SWING_H@29881.50"
      ],
      "aligned": false,
      "history": {
       "touch": {
        "bucket": "PDH RESISTANCE",
        "real": {
-        "n": 211,
-        "win": 0.417,
-        "expR": -0.184,
-        "sd": 0.99
+        "n": 212,
+        "win": 0.415,
+        "expR": -0.188,
+        "sd": 0.989
        },
        "placebo": {
-        "n": 628,
-        "win": 0.42,
-        "expR": -0.176,
-        "sd": 0.988
+        "n": 631,
+        "win": 0.422,
+        "expR": -0.173,
+        "sd": 0.989
        },
-       "z": -0.1
+       "z": -0.19
       },
       "reclaim": {
        "bucket": "PDH RESISTANCE",
        "real": {
-        "n": 132,
-        "win": 0.424,
-        "expR": -0.169,
-        "sd": 0.995
+        "n": 133,
+        "win": 0.421,
+        "expR": -0.175,
+        "sd": 0.994
        },
        "placebo": {
-        "n": 392,
-        "win": 0.352,
-        "expR": -0.32,
-        "sd": 0.963
+        "n": 394,
+        "win": 0.35,
+        "expR": -0.324,
+        "sd": 0.962
        },
-       "z": 1.52
+       "z": 1.51
       }
      },
      "feature_history": {
@@ -4214,65 +3749,65 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 2571,
+         "n": 2577,
          "win": 0.427,
          "expR": -0.162,
          "sd": 0.991
         },
         "placebo": {
-         "n": 5363,
+         "n": 5368,
          "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
+         "expR": -0.133,
+         "sd": 0.997
         },
-        "z": -1.18
+        "z": -1.22
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
          "sd": 0.993
         },
         "placebo": {
-         "n": 15220,
+         "n": 15262,
          "win": 0.424,
          "expR": -0.171,
-         "sd": 0.995
+         "sd": 0.994
         },
-        "z": -0.67
+        "z": -0.72
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
         },
         "placebo": {
-         "n": 3258,
+         "n": 3259,
          "win": 0.406,
          "expR": -0.211,
          "sd": 0.984
         },
-        "z": -1.01
+        "z": -1.08
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
         },
         "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
          "sd": 0.997
         },
         "z": -1.17
@@ -4280,47 +3815,46 @@
       }
      },
      "reasons": [
-      "confluence with P_RTH_H, ROUND2, SWING_H@29589.75, SWING_H@29571.75",
+      "confluence with P_RTH_H, ROUND1, SWING_H@29881.50",
       "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
      "level": "P_RTH_H",
      "type": "P_RTH_H",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 0.24,
+     "dist_atr": 0.19,
      "confluence": [
       "PDH",
-      "ROUND2",
-      "SWING_H@29589.75",
-      "SWING_H@29571.75"
+      "ROUND1",
+      "SWING_H@29881.50"
      ],
      "aligned": false,
      "history": {
       "touch": {
        "bucket": "P_RTH_H RESISTANCE",
        "real": {
-        "n": 218,
-        "win": 0.394,
-        "expR": -0.232,
-        "sd": 0.984
+        "n": 219,
+        "win": 0.393,
+        "expR": -0.236,
+        "sd": 0.983
        },
        "placebo": {
-        "n": 650,
-        "win": 0.425,
-        "expR": -0.168,
-        "sd": 0.99
+        "n": 651,
+        "win": 0.427,
+        "expR": -0.165,
+        "sd": 0.992
        },
-       "z": -0.83
+       "z": -0.92
       },
       "reclaim": {
        "bucket": "P_RTH_H RESISTANCE",
        "real": {
-        "n": 136,
-        "win": 0.375,
-        "expR": -0.28,
-        "sd": 1.004
+        "n": 137,
+        "win": 0.372,
+        "expR": -0.285,
+        "sd": 1.003
        },
        "placebo": {
         "n": 413,
@@ -4328,7 +3862,7 @@
         "expR": -0.326,
         "sd": 0.987
        },
-       "z": 0.47
+       "z": 0.42
       }
      },
      "feature_history": {
@@ -4336,65 +3870,65 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 2571,
+         "n": 2577,
          "win": 0.427,
          "expR": -0.162,
          "sd": 0.991
         },
         "placebo": {
-         "n": 5363,
+         "n": 5368,
          "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
+         "expR": -0.133,
+         "sd": 0.997
         },
-        "z": -1.18
+        "z": -1.22
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
          "sd": 0.993
         },
         "placebo": {
-         "n": 15220,
+         "n": 15262,
          "win": 0.424,
          "expR": -0.171,
-         "sd": 0.995
+         "sd": 0.994
         },
-        "z": -0.67
+        "z": -0.72
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
         },
         "placebo": {
-         "n": 3258,
+         "n": 3259,
          "win": 0.406,
          "expR": -0.211,
          "sd": 0.984
         },
-        "z": -1.01
+        "z": -1.08
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
         },
         "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
          "sd": 0.997
         },
         "z": -1.17
@@ -4402,55 +3936,54 @@
       }
      },
      "reasons": [
-      "confluence with PDH, ROUND2, SWING_H@29589.75, SWING_H@29571.75",
+      "confluence with PDH, ROUND1, SWING_H@29881.50",
       "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
-     "level": "SWING_H@29571.75",
+     "level": "SWING_H@29881.50",
      "type": "SWING",
-     "price": 29571.75,
+     "price": 29881.5,
      "side": "RESISTANCE",
-     "dist_atr": 0.24,
+     "dist_atr": 0.19,
      "confluence": [
       "PDH",
       "P_RTH_H",
-      "ROUND2",
-      "SWING_H@29589.75"
+      "ROUND1"
      ],
      "aligned": false,
      "history": {
       "touch": {
        "bucket": "SWING RESISTANCE",
        "real": {
-        "n": 995,
-        "win": 0.417,
-        "expR": -0.184,
+        "n": 997,
+        "win": 0.416,
+        "expR": -0.185,
         "sd": 0.988
        },
        "placebo": {
-        "n": 5154,
+        "n": 5175,
         "win": 0.425,
-        "expR": -0.17,
+        "expR": -0.169,
         "sd": 0.993
        },
-       "z": -0.41
+       "z": -0.47
       },
       "reclaim": {
        "bucket": "SWING RESISTANCE",
        "real": {
-        "n": 631,
-        "win": 0.374,
-        "expR": -0.282,
-        "sd": 0.985
+        "n": 633,
+        "win": 0.373,
+        "expR": -0.284,
+        "sd": 0.984
        },
        "placebo": {
-        "n": 2320,
-        "win": 0.383,
-        "expR": -0.261,
+        "n": 2330,
+        "win": 0.382,
+        "expR": -0.264,
         "sd": 0.979
        },
-       "z": -0.48
+       "z": -0.45
       }
      },
      "feature_history": {
@@ -4458,65 +3991,65 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 2571,
+         "n": 2577,
          "win": 0.427,
          "expR": -0.162,
          "sd": 0.991
         },
         "placebo": {
-         "n": 5363,
+         "n": 5368,
          "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
+         "expR": -0.133,
+         "sd": 0.997
         },
-        "z": -1.18
+        "z": -1.22
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
          "sd": 0.993
         },
         "placebo": {
-         "n": 15220,
+         "n": 15262,
          "win": 0.424,
          "expR": -0.171,
-         "sd": 0.995
+         "sd": 0.994
         },
-        "z": -0.67
+        "z": -0.72
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
         },
         "placebo": {
-         "n": 3258,
+         "n": 3259,
          "win": 0.406,
          "expR": -0.211,
          "sd": 0.984
         },
-        "z": -1.01
+        "z": -1.08
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
         },
         "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
          "sd": 0.997
         },
         "z": -1.17
@@ -4524,293 +4057,54 @@
       }
      },
      "reasons": [
-      "confluence with PDH, P_RTH_H, ROUND2, SWING_H@29589.75",
+      "confluence with PDH, P_RTH_H, ROUND1",
       "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
      "level": "ROUND1",
      "type": "ROUND",
-     "price": 29500.0,
-     "side": "SUPPORT",
-     "dist_atr": 0.32,
-     "confluence": [],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 840,
-        "win": 0.445,
-        "expR": -0.125,
-        "sd": 0.995
-       },
-       "placebo": {
-        "n": 2502,
-        "win": 0.41,
-        "expR": -0.199,
-        "sd": 0.988
-       },
-       "z": 1.87
-      },
-      "reclaim": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 513,
-        "win": 0.394,
-        "expR": -0.24,
-        "sd": 0.979
-       },
-       "placebo": {
-        "n": 1597,
-        "win": 0.4,
-        "expR": -0.225,
-        "sd": 0.986
-       },
-       "z": -0.3
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 1624,
-         "win": 0.407,
-         "expR": -0.207,
-         "sd": 0.99
-        },
-        "placebo": {
-         "n": 11684,
-         "win": 0.397,
-         "expR": -0.225,
-         "sd": 0.984
-        },
-        "z": 0.69
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 998,
-         "win": 0.376,
-         "expR": -0.278,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6484,
-         "win": 0.387,
-         "expR": -0.258,
-         "sd": 0.988
-        },
-        "z": -0.6
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29589.75",
-     "type": "SWING",
-     "price": 29589.75,
+     "price": 29900.0,
      "side": "RESISTANCE",
      "dist_atr": 0.38,
      "confluence": [
       "PDH",
       "P_RTH_H",
-      "ROUND2",
-      "SWING_H@29571.75"
-     ],
-     "aligned": false,
-     "history": {
-      "touch": {
-       "bucket": "SWING RESISTANCE",
-       "real": {
-        "n": 995,
-        "win": 0.417,
-        "expR": -0.184,
-        "sd": 0.988
-       },
-       "placebo": {
-        "n": 5154,
-        "win": 0.425,
-        "expR": -0.17,
-        "sd": 0.993
-       },
-       "z": -0.41
-      },
-      "reclaim": {
-       "bucket": "SWING RESISTANCE",
-       "real": {
-        "n": 631,
-        "win": 0.374,
-        "expR": -0.282,
-        "sd": 0.985
-       },
-       "placebo": {
-        "n": 2320,
-        "win": 0.383,
-        "expR": -0.261,
-        "sd": 0.979
-       },
-       "z": -0.48
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
-         "sd": 0.993
-        },
-        "placebo": {
-         "n": 15220,
-         "win": 0.424,
-         "expR": -0.171,
-         "sd": 0.995
-        },
-        "z": -0.67
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "counter_trend": {
-        "bucket": "counter_trend",
-        "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
-        },
-        "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
-         "sd": 0.997
-        },
-        "z": -1.17
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PDH, P_RTH_H, ROUND2, SWING_H@29571.75",
-      "COUNTER-trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "ROUND2",
-     "type": "ROUND",
-     "price": 29600.0,
-     "side": "RESISTANCE",
-     "dist_atr": 0.46,
-     "confluence": [
-      "PDH",
-      "P_RTH_H",
-      "SWING_H@29589.75",
-      "SWING_H@29571.75"
+      "SWING_H@29881.50"
      ],
      "aligned": false,
      "history": {
       "touch": {
        "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 783,
-        "win": 0.43,
-        "expR": -0.154,
-        "sd": 0.993
+        "n": 785,
+        "win": 0.429,
+        "expR": -0.156,
+        "sd": 0.992
        },
        "placebo": {
-        "n": 2422,
-        "win": 0.413,
-        "expR": -0.192,
+        "n": 2430,
+        "win": 0.412,
+        "expR": -0.193,
         "sd": 0.987
        },
-       "z": 0.93
+       "z": 0.91
       },
       "reclaim": {
        "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 454,
+        "n": 455,
         "win": 0.352,
-        "expR": -0.324,
-        "sd": 0.962
+        "expR": -0.325,
+        "sd": 0.961
        },
        "placebo": {
-        "n": 1575,
+        "n": 1576,
         "win": 0.357,
-        "expR": -0.314,
+        "expR": -0.315,
         "sd": 0.969
        },
-       "z": -0.19
+       "z": -0.2
       }
      },
      "feature_history": {
@@ -4818,65 +4112,65 @@
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 2571,
+         "n": 2577,
          "win": 0.427,
          "expR": -0.162,
          "sd": 0.991
         },
         "placebo": {
-         "n": 5363,
+         "n": 5368,
          "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
+         "expR": -0.133,
+         "sd": 0.997
         },
-        "z": -1.18
+        "z": -1.22
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
          "sd": 0.993
         },
         "placebo": {
-         "n": 15220,
+         "n": 15262,
          "win": 0.424,
          "expR": -0.171,
-         "sd": 0.995
+         "sd": 0.994
         },
-        "z": -0.67
+        "z": -0.72
        }
       },
       "reclaim": {
        "confluence>=2": {
         "bucket": "confluence>=2",
         "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
         },
         "placebo": {
-         "n": 3258,
+         "n": 3259,
          "win": 0.406,
          "expR": -0.211,
          "sd": 0.984
         },
-        "z": -1.01
+        "z": -1.08
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
         },
         "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
          "sd": 0.997
         },
         "z": -1.17
@@ -4884,17 +4178,19 @@
       }
      },
      "reasons": [
-      "confluence with PDH, P_RTH_H, SWING_H@29589.75, SWING_H@29571.75",
+      "confluence with PDH, P_RTH_H, SWING_H@29881.50",
       "COUNTER-trend (price vs EMA50)"
      ]
     },
     {
      "level": "PDC",
      "type": "PDC",
-     "price": 29466.75,
+     "price": 29804.0,
      "side": "SUPPORT",
-     "dist_atr": 0.59,
-     "confluence": [],
+     "dist_atr": 0.57,
+     "confluence": [
+      "ROUND0"
+     ],
      "aligned": true,
      "history": {
       "touch": {
@@ -4932,138 +4228,20 @@
      },
      "feature_history": {
       "touch": {
-       "confluence=0": {
-        "bucket": "confluence=0",
+       "with_trend": {
+        "bucket": "with_trend",
         "real": {
-         "n": 1624,
-         "win": 0.407,
-         "expR": -0.207,
-         "sd": 0.99
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
         },
         "placebo": {
-         "n": 11684,
+         "n": 10608,
          "win": 0.397,
          "expR": -0.225,
-         "sd": 0.984
-        },
-        "z": 0.69
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence=0": {
-        "bucket": "confluence=0",
-        "real": {
-         "n": 998,
-         "win": 0.376,
-         "expR": -0.278,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6484,
-         "win": 0.387,
-         "expR": -0.258,
-         "sd": 0.988
-        },
-        "z": -0.6
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
          "sd": 0.982
         },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PD_POC",
-     "type": "PD_POC",
-     "price": 29414.25,
-     "side": "SUPPORT",
-     "dist_atr": 1.0,
-     "confluence": [
-      "ROUND0"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "PD_POC SUPPORT",
-       "real": {
-        "n": 168,
-        "win": 0.399,
-        "expR": -0.236,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 657,
-        "win": 0.405,
-        "expR": -0.207,
-        "sd": 0.983
-       },
-       "z": -0.33
-      },
-      "reclaim": {
-       "bucket": "PD_POC SUPPORT",
-       "real": {
-        "n": 113,
-        "win": 0.372,
-        "expR": -0.297,
-        "sd": 0.993
-       },
-       "placebo": {
-        "n": 449,
-        "win": 0.39,
-        "expR": -0.246,
-        "sd": 0.977
-       },
-       "z": -0.49
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
         "z": 1.81
        }
       },
@@ -5071,15 +4249,15 @@
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6175,
+         "n": 6181,
          "win": 0.388,
-         "expR": -0.244,
+         "expR": -0.245,
          "sd": 0.982
         },
         "z": -0.9
@@ -5094,45 +4272,45 @@
     {
      "level": "ROUND0",
      "type": "ROUND",
-     "price": 29400.0,
+     "price": 29800.0,
      "side": "SUPPORT",
-     "dist_atr": 1.11,
+     "dist_atr": 0.61,
      "confluence": [
-      "PD_POC"
+      "PDC"
      ],
      "aligned": true,
      "history": {
       "touch": {
        "bucket": "ROUND SUPPORT",
        "real": {
-        "n": 840,
-        "win": 0.445,
-        "expR": -0.125,
-        "sd": 0.995
+        "n": 843,
+        "win": 0.446,
+        "expR": -0.123,
+        "sd": 0.996
        },
        "placebo": {
-        "n": 2502,
+        "n": 2503,
         "win": 0.41,
         "expR": -0.199,
         "sd": 0.988
        },
-       "z": 1.87
+       "z": 1.92
       },
       "reclaim": {
        "bucket": "ROUND SUPPORT",
        "real": {
-        "n": 513,
-        "win": 0.394,
-        "expR": -0.24,
-        "sd": 0.979
+        "n": 516,
+        "win": 0.393,
+        "expR": -0.238,
+        "sd": 0.98
        },
        "placebo": {
-        "n": 1597,
+        "n": 1598,
         "win": 0.4,
         "expR": -0.225,
         "sd": 0.986
        },
-       "z": -0.3
+       "z": -0.26
       }
      },
      "feature_history": {
@@ -5140,16 +4318,16 @@
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 2774,
+         "n": 2778,
          "win": 0.415,
-         "expR": -0.188,
+         "expR": -0.187,
          "sd": 0.987
         },
         "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
         },
         "z": 1.81
        }
@@ -5158,15 +4336,15 @@
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6175,
+         "n": 6181,
          "win": 0.388,
-         "expR": -0.244,
+         "expR": -0.245,
          "sd": 0.982
         },
         "z": -0.9
@@ -5174,794 +4352,50 @@
       }
      },
      "reasons": [
-      "confluence with PD_POC",
+      "confluence with PDC",
       "with the trend (price vs EMA50)"
      ]
     },
     {
-     "level": "SWING_H@29345.25",
-     "type": "SWING",
-     "price": 29345.25,
-     "side": "SUPPORT",
-     "dist_atr": 1.54,
-     "confluence": [
-      "PD_VWAP",
-      "SWING_H@29325.75"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PD_VWAP, SWING_H@29325.75",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29325.75",
-     "type": "SWING",
-     "price": 29325.75,
-     "side": "SUPPORT",
-     "dist_atr": 1.7,
-     "confluence": [
-      "PD_VWAP",
-      "ROUND-1",
-      "SWING_H@29345.25"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PD_VWAP, ROUND-1, SWING_H@29345.25",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PD_VWAP",
-     "type": "PD_VWAP",
-     "price": 29322.25,
-     "side": "SUPPORT",
-     "dist_atr": 1.72,
-     "confluence": [
-      "ROUND-1",
-      "SWING_H@29325.75",
-      "SWING_H@29345.25"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "PD_VWAP SUPPORT",
-       "real": {
-        "n": 173,
-        "win": 0.434,
-        "expR": -0.152,
-        "sd": 0.994
-       },
-       "placebo": {
-        "n": 654,
-        "win": 0.398,
-        "expR": -0.224,
-        "sd": 0.982
-       },
-       "z": 0.85
-      },
-      "reclaim": {
-       "bucket": "PD_VWAP SUPPORT",
-       "real": {
-        "n": 111,
-        "win": 0.423,
-        "expR": -0.174,
-        "sd": 0.997
-       },
-       "placebo": {
-        "n": 425,
-        "win": 0.367,
-        "expR": -0.288,
-        "sd": 0.974
-       },
-       "z": 1.08
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with ROUND-1, SWING_H@29325.75, SWING_H@29345.25",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "ROUND-1",
+     "level": "ROUND2",
      "type": "ROUND",
-     "price": 29300.0,
-     "side": "SUPPORT",
-     "dist_atr": 1.9,
-     "confluence": [
-      "PD_VWAP",
-      "SWING_H@29276.25",
-      "SWING_H@29325.75"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 840,
-        "win": 0.445,
-        "expR": -0.125,
-        "sd": 0.995
-       },
-       "placebo": {
-        "n": 2502,
-        "win": 0.41,
-        "expR": -0.199,
-        "sd": 0.988
-       },
-       "z": 1.87
-      },
-      "reclaim": {
-       "bucket": "ROUND SUPPORT",
-       "real": {
-        "n": 513,
-        "win": 0.394,
-        "expR": -0.24,
-        "sd": 0.979
-       },
-       "placebo": {
-        "n": 1597,
-        "win": 0.4,
-        "expR": -0.225,
-        "sd": 0.986
-       },
-       "z": -0.3
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PD_VWAP, SWING_H@29276.25, SWING_H@29325.75",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29276.25",
-     "type": "SWING",
-     "price": 29276.25,
-     "side": "SUPPORT",
-     "dist_atr": 2.08,
-     "confluence": [
-      "ROUND-1"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with ROUND-1",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29212.25",
-     "type": "SWING",
-     "price": 29212.25,
-     "side": "SUPPORT",
-     "dist_atr": 2.59,
-     "confluence": [
-      "SWING_H@29209.00"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with SWING_H@29209.00",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_H@29209.00",
-     "type": "SWING",
-     "price": 29209.0,
-     "side": "SUPPORT",
-     "dist_atr": 2.61,
-     "confluence": [
-      "SWING_H@29212.25"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with SWING_H@29212.25",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "P_RTH_L",
-     "type": "P_RTH_L",
-     "price": 29172.0,
-     "side": "SUPPORT",
-     "dist_atr": 2.9,
+     "price": 30000.0,
+     "side": "RESISTANCE",
+     "dist_atr": 1.36,
      "confluence": [],
-     "aligned": true,
+     "aligned": false,
      "history": {
       "touch": {
-       "bucket": "P_RTH_L SUPPORT",
+       "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 219,
-        "win": 0.402,
-        "expR": -0.213,
-        "sd": 0.984
+        "n": 785,
+        "win": 0.429,
+        "expR": -0.156,
+        "sd": 0.992
        },
        "placebo": {
-        "n": 701,
-        "win": 0.394,
-        "expR": -0.233,
-        "sd": 0.988
+        "n": 2430,
+        "win": 0.412,
+        "expR": -0.193,
+        "sd": 0.987
        },
-       "z": 0.26
+       "z": 0.91
       },
       "reclaim": {
-       "bucket": "P_RTH_L SUPPORT",
+       "bucket": "ROUND RESISTANCE",
        "real": {
-        "n": 146,
-        "win": 0.377,
-        "expR": -0.263,
-        "sd": 0.975
+        "n": 455,
+        "win": 0.352,
+        "expR": -0.325,
+        "sd": 0.961
        },
        "placebo": {
-        "n": 460,
-        "win": 0.448,
-        "expR": -0.13,
-        "sd": 0.999
+        "n": 1576,
+        "win": 0.357,
+        "expR": -0.315,
+        "sd": 0.969
        },
-       "z": -1.43
+       "z": -0.2
       }
      },
      "feature_history": {
@@ -5969,15 +4403,131 @@
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1624,
-         "win": 0.407,
-         "expR": -0.207,
+         "n": 1627,
+         "win": 0.406,
+         "expR": -0.208,
          "sd": 0.99
         },
         "placebo": {
-         "n": 11684,
+         "n": 11710,
          "win": 0.397,
-         "expR": -0.225,
+         "expR": -0.226,
+         "sd": 0.984
+        },
+        "z": 0.69
+       },
+       "counter_trend": {
+        "bucket": "counter_trend",
+        "real": {
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
+         "sd": 0.993
+        },
+        "placebo": {
+         "n": 15262,
+         "win": 0.424,
+         "expR": -0.171,
+         "sd": 0.994
+        },
+        "z": -0.72
+       }
+      },
+      "reclaim": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 999,
+         "win": 0.375,
+         "expR": -0.277,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6500,
+         "win": 0.386,
+         "expR": -0.26,
+         "sd": 0.987
+        },
+        "z": -0.51
+       },
+       "counter_trend": {
+        "bucket": "counter_trend",
+        "real": {
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
+        },
+        "placebo": {
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
+         "sd": 0.997
+        },
+        "z": -1.17
+       }
+      }
+     },
+     "reasons": [
+      "COUNTER-trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "ROUND-1",
+     "type": "ROUND",
+     "price": 29700.0,
+     "side": "SUPPORT",
+     "dist_atr": 1.59,
+     "confluence": [],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "ROUND SUPPORT",
+       "real": {
+        "n": 843,
+        "win": 0.446,
+        "expR": -0.123,
+        "sd": 0.996
+       },
+       "placebo": {
+        "n": 2503,
+        "win": 0.41,
+        "expR": -0.199,
+        "sd": 0.988
+       },
+       "z": 1.92
+      },
+      "reclaim": {
+       "bucket": "ROUND SUPPORT",
+       "real": {
+        "n": 516,
+        "win": 0.393,
+        "expR": -0.238,
+        "sd": 0.98
+       },
+       "placebo": {
+        "n": 1598,
+        "win": 0.4,
+        "expR": -0.225,
+        "sd": 0.986
+       },
+       "z": -0.26
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 1627,
+         "win": 0.406,
+         "expR": -0.208,
+         "sd": 0.99
+        },
+        "placebo": {
+         "n": 11710,
+         "win": 0.397,
+         "expR": -0.226,
          "sd": 0.984
         },
         "z": 0.69
@@ -5985,16 +4535,16 @@
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 2774,
+         "n": 2778,
          "win": 0.415,
-         "expR": -0.188,
+         "expR": -0.187,
          "sd": 0.987
         },
         "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
         },
         "z": 1.81
        }
@@ -6003,31 +4553,31 @@
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 998,
+         "n": 999,
+         "win": 0.375,
+         "expR": -0.277,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6500,
+         "win": 0.386,
+         "expR": -0.26,
+         "sd": 0.987
+        },
+        "z": -0.51
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
          "win": 0.376,
-         "expR": -0.278,
+         "expR": -0.269,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6484,
-         "win": 0.387,
-         "expR": -0.258,
-         "sd": 0.988
-        },
-        "z": -0.6
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
+         "n": 6181,
          "win": 0.388,
-         "expR": -0.244,
+         "expR": -0.245,
          "sd": 0.982
         },
         "z": -0.9
@@ -6039,360 +4589,111 @@
      ]
     },
     {
-     "level": "SWING_L@29033.25",
-     "type": "SWING",
-     "price": 29033.25,
+     "level": "PD_VWAP",
+     "type": "PD_VWAP",
+     "price": 29627.5,
      "side": "SUPPORT",
-     "dist_atr": 4.0,
-     "confluence": [
-      "PDL",
-      "SWING_L@29021.00",
-      "SWING_L@29027.25",
-      "SWING_L@29024.00"
-     ],
+     "dist_atr": 2.3,
+     "confluence": [],
      "aligned": true,
      "history": {
       "touch": {
-       "bucket": "SWING SUPPORT",
+       "bucket": "PD_VWAP SUPPORT",
        "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
+        "n": 174,
+        "win": 0.437,
+        "expR": -0.146,
+        "sd": 0.995
        },
        "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
+        "n": 654,
+        "win": 0.398,
+        "expR": -0.224,
+        "sd": 0.982
        },
-       "z": -1.06
+       "z": 0.92
       },
       "reclaim": {
-       "bucket": "SWING SUPPORT",
+       "bucket": "PD_VWAP SUPPORT",
        "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
+        "n": 112,
+        "win": 0.42,
+        "expR": -0.182,
+        "sd": 0.996
        },
        "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
+        "n": 425,
+        "win": 0.367,
+        "expR": -0.288,
+        "sd": 0.974
        },
-       "z": -0.76
+       "z": 1.01
       }
      },
      "feature_history": {
       "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
+       "confluence=0": {
+        "bucket": "confluence=0",
         "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
+         "n": 1627,
          "win": 0.406,
-         "expR": -0.211,
+         "expR": -0.208,
+         "sd": 0.99
+        },
+        "placebo": {
+         "n": 11710,
+         "win": 0.397,
+         "expR": -0.226,
          "sd": 0.984
         },
-        "z": -1.01
+        "z": 0.69
        },
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PDL, SWING_L@29021.00, SWING_L@29027.25, SWING_L@29024.00",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_L@29027.25",
-     "type": "SWING",
-     "price": 29027.25,
-     "side": "SUPPORT",
-     "dist_atr": 4.04,
-     "confluence": [
-      "PDL",
-      "SWING_L@29033.25",
-      "SWING_L@29021.00",
-      "SWING_L@29024.00"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
+         "n": 2778,
          "win": 0.415,
-         "expR": -0.188,
+         "expR": -0.187,
          "sd": 0.987
         },
         "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
         },
         "z": 1.81
        }
       },
       "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
+       "confluence=0": {
+        "bucket": "confluence=0",
         "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
+         "n": 999,
+         "win": 0.375,
+         "expR": -0.277,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PDL, SWING_L@29033.25, SWING_L@29021.00, SWING_L@29024.00",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PDL",
-     "type": "PDL",
-     "price": 29024.0,
-     "side": "SUPPORT",
-     "dist_atr": 4.07,
-     "confluence": [
-      "SWING_L@29033.25",
-      "SWING_L@29021.00",
-      "SWING_L@29027.25",
-      "SWING_L@29024.00"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "PDL SUPPORT",
-       "real": {
-        "n": 181,
-        "win": 0.359,
-        "expR": -0.298,
-        "sd": 0.963
-       },
-       "placebo": {
-        "n": 694,
-        "win": 0.406,
-        "expR": -0.205,
-        "sd": 0.987
-       },
-       "z": -1.15
-      },
-      "reclaim": {
-       "bucket": "PDL SUPPORT",
-       "real": {
-        "n": 117,
-        "win": 0.359,
-        "expR": -0.292,
-        "sd": 0.964
-       },
-       "placebo": {
-        "n": 447,
-        "win": 0.407,
-        "expR": -0.214,
-        "sd": 0.984
-       },
-       "z": -0.78
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
+         "n": 6500,
+         "win": 0.386,
+         "expR": -0.26,
          "sd": 0.987
         },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
+        "z": -0.51
        },
        "with_trend": {
         "bucket": "with_trend",
         "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6175,
+         "n": 6181,
          "win": 0.388,
-         "expR": -0.244,
+         "expR": -0.245,
          "sd": 0.982
         },
         "z": -0.9
@@ -6400,425 +4701,6 @@
       }
      },
      "reasons": [
-      "confluence with SWING_L@29033.25, SWING_L@29021.00, SWING_L@29027.25, SWING_L@29024.00",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_L@29024.00",
-     "type": "SWING",
-     "price": 29024.0,
-     "side": "SUPPORT",
-     "dist_atr": 4.07,
-     "confluence": [
-      "PDL",
-      "SWING_L@29033.25",
-      "SWING_L@29021.00",
-      "SWING_L@29027.25"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PDL, SWING_L@29033.25, SWING_L@29021.00, SWING_L@29027.25",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_L@29021.00",
-     "type": "SWING",
-     "price": 29021.0,
-     "side": "SUPPORT",
-     "dist_atr": 4.09,
-     "confluence": [
-      "PDL",
-      "SWING_L@29033.25",
-      "SWING_L@29027.25",
-      "SWING_L@29024.00"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 2571,
-         "win": 0.427,
-         "expR": -0.162,
-         "sd": 0.991
-        },
-        "placebo": {
-         "n": 5363,
-         "win": 0.441,
-         "expR": -0.134,
-         "sd": 0.996
-        },
-        "z": -1.18
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "confluence>=2": {
-        "bucket": "confluence>=2",
-        "real": {
-         "n": 1654,
-         "win": 0.391,
-         "expR": -0.241,
-         "sd": 0.988
-        },
-        "placebo": {
-         "n": 3258,
-         "win": 0.406,
-         "expR": -0.211,
-         "sd": 0.984
-        },
-        "z": -1.01
-       },
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PDL, SWING_L@29033.25, SWING_L@29027.25, SWING_L@29024.00",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "PWL",
-     "type": "PWL",
-     "price": 28986.25,
-     "side": "SUPPORT",
-     "dist_atr": 4.37,
-     "confluence": [
-      "SWING_L@28986.25"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "PWL SUPPORT",
-       "real": {
-        "n": 71,
-        "win": 0.296,
-        "expR": -0.453,
-        "sd": 0.979
-       },
-       "placebo": {
-        "n": 324,
-        "win": 0.435,
-        "expR": -0.142,
-        "sd": 0.994
-       },
-       "z": -2.42
-      },
-      "reclaim": {
-       "bucket": "PWL SUPPORT",
-       "real": {
-        "n": 42,
-        "win": 0.286,
-        "expR": -0.462,
-        "sd": 0.931
-       },
-       "placebo": {
-        "n": 222,
-        "win": 0.428,
-        "expR": -0.166,
-        "sd": 0.993
-       },
-       "z": -1.87
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with SWING_L@28986.25",
-      "with the trend (price vs EMA50)"
-     ]
-    },
-    {
-     "level": "SWING_L@28986.25",
-     "type": "SWING",
-     "price": 28986.25,
-     "side": "SUPPORT",
-     "dist_atr": 4.37,
-     "confluence": [
-      "PWL"
-     ],
-     "aligned": true,
-     "history": {
-      "touch": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 1054,
-        "win": 0.392,
-        "expR": -0.235,
-        "sd": 0.98
-       },
-       "placebo": {
-        "n": 5643,
-        "win": 0.41,
-        "expR": -0.2,
-        "sd": 0.992
-       },
-       "z": -1.06
-      },
-      "reclaim": {
-       "bucket": "SWING SUPPORT",
-       "real": {
-        "n": 667,
-        "win": 0.403,
-        "expR": -0.222,
-        "sd": 1.014
-       },
-       "placebo": {
-        "n": 2872,
-        "win": 0.423,
-        "expR": -0.189,
-        "sd": 1.011
-       },
-       "z": -0.76
-      }
-     },
-     "feature_history": {
-      "touch": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 2774,
-         "win": 0.415,
-         "expR": -0.188,
-         "sd": 0.987
-        },
-        "placebo": {
-         "n": 10600,
-         "win": 0.396,
-         "expR": -0.226,
-         "sd": 0.981
-        },
-        "z": 1.81
-       }
-      },
-      "reclaim": {
-       "with_trend": {
-        "bucket": "with_trend",
-        "real": {
-         "n": 1722,
-         "win": 0.377,
-         "expR": -0.268,
-         "sd": 0.973
-        },
-        "placebo": {
-         "n": 6175,
-         "win": 0.388,
-         "expR": -0.244,
-         "sd": 0.982
-        },
-        "z": -0.9
-       }
-      }
-     },
-     "reasons": [
-      "confluence with PWL",
       "with the trend (price vs EMA50)"
      ]
     },
@@ -6827,7 +4709,7 @@
      "type": "PWH",
      "price": 30114.0,
      "side": "RESISTANCE",
-     "dist_atr": 4.51,
+     "dist_atr": 2.47,
      "confluence": [],
      "aligned": false,
      "history": {
@@ -6869,15 +4751,15 @@
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 1624,
-         "win": 0.407,
-         "expR": -0.207,
+         "n": 1627,
+         "win": 0.406,
+         "expR": -0.208,
          "sd": 0.99
         },
         "placebo": {
-         "n": 11684,
+         "n": 11710,
          "win": 0.397,
-         "expR": -0.225,
+         "expR": -0.226,
          "sd": 0.984
         },
         "z": 0.69
@@ -6885,49 +4767,49 @@
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 3173,
-         "win": 0.418,
-         "expR": -0.184,
+         "n": 3181,
+         "win": 0.417,
+         "expR": -0.185,
          "sd": 0.993
         },
         "placebo": {
-         "n": 15220,
+         "n": 15262,
          "win": 0.424,
          "expR": -0.171,
-         "sd": 0.995
+         "sd": 0.994
         },
-        "z": -0.67
+        "z": -0.72
        }
       },
       "reclaim": {
        "confluence=0": {
         "bucket": "confluence=0",
         "real": {
-         "n": 998,
-         "win": 0.376,
-         "expR": -0.278,
+         "n": 999,
+         "win": 0.375,
+         "expR": -0.277,
          "sd": 0.973
         },
         "placebo": {
-         "n": 6484,
-         "win": 0.387,
-         "expR": -0.258,
-         "sd": 0.988
+         "n": 6500,
+         "win": 0.386,
+         "expR": -0.26,
+         "sd": 0.987
         },
-        "z": -0.6
+        "z": -0.51
        },
        "counter_trend": {
         "bucket": "counter_trend",
         "real": {
-         "n": 2027,
-         "win": 0.386,
-         "expR": -0.264,
-         "sd": 1.009
+         "n": 2033,
+         "win": 0.385,
+         "expR": -0.265,
+         "sd": 1.008
         },
         "placebo": {
-         "n": 8696,
-         "win": 0.4,
-         "expR": -0.235,
+         "n": 8717,
+         "win": 0.399,
+         "expR": -0.236,
          "sd": 0.997
         },
         "z": -1.17
@@ -6936,6 +4818,1004 @@
      },
      "reasons": [
       "COUNTER-trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "PD_POC",
+     "type": "PD_POC",
+     "price": 29592.5,
+     "side": "SUPPORT",
+     "dist_atr": 2.64,
+     "confluence": [
+      "SWING_H@29571.75",
+      "SWING_H@29586.75"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "PD_POC SUPPORT",
+       "real": {
+        "n": 168,
+        "win": 0.399,
+        "expR": -0.236,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 658,
+        "win": 0.406,
+        "expR": -0.205,
+        "sd": 0.984
+       },
+       "z": -0.36
+      },
+      "reclaim": {
+       "bucket": "PD_POC SUPPORT",
+       "real": {
+        "n": 113,
+        "win": 0.372,
+        "expR": -0.297,
+        "sd": 0.993
+       },
+       "placebo": {
+        "n": 450,
+        "win": 0.391,
+        "expR": -0.243,
+        "sd": 0.977
+       },
+       "z": -0.52
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 2577,
+         "win": 0.427,
+         "expR": -0.162,
+         "sd": 0.991
+        },
+        "placebo": {
+         "n": 5368,
+         "win": 0.441,
+         "expR": -0.133,
+         "sd": 0.997
+        },
+        "z": -1.22
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 3259,
+         "win": 0.406,
+         "expR": -0.211,
+         "sd": 0.984
+        },
+        "z": -1.08
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with SWING_H@29571.75, SWING_H@29586.75",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_H@29586.75",
+     "type": "SWING",
+     "price": 29586.75,
+     "side": "SUPPORT",
+     "dist_atr": 2.7,
+     "confluence": [
+      "PD_POC",
+      "SWING_H@29571.75"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 2577,
+         "win": 0.427,
+         "expR": -0.162,
+         "sd": 0.991
+        },
+        "placebo": {
+         "n": 5368,
+         "win": 0.441,
+         "expR": -0.133,
+         "sd": 0.997
+        },
+        "z": -1.22
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 3259,
+         "win": 0.406,
+         "expR": -0.211,
+         "sd": 0.984
+        },
+        "z": -1.08
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with PD_POC, SWING_H@29571.75",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_H@29571.75",
+     "type": "SWING",
+     "price": 29571.75,
+     "side": "SUPPORT",
+     "dist_atr": 2.84,
+     "confluence": [
+      "PD_POC",
+      "SWING_H@29586.75"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 2577,
+         "win": 0.427,
+         "expR": -0.162,
+         "sd": 0.991
+        },
+        "placebo": {
+         "n": 5368,
+         "win": 0.441,
+         "expR": -0.133,
+         "sd": 0.997
+        },
+        "z": -1.22
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "confluence>=2": {
+        "bucket": "confluence>=2",
+        "real": {
+         "n": 1660,
+         "win": 0.389,
+         "expR": -0.243,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 3259,
+         "win": 0.406,
+         "expR": -0.211,
+         "sd": 0.984
+        },
+        "z": -1.08
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with PD_POC, SWING_H@29586.75",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "P_RTH_L",
+     "type": "P_RTH_L",
+     "price": 29494.0,
+     "side": "SUPPORT",
+     "dist_atr": 3.61,
+     "confluence": [
+      "SWING_L@29494.00"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "P_RTH_L SUPPORT",
+       "real": {
+        "n": 219,
+        "win": 0.402,
+        "expR": -0.213,
+        "sd": 0.984
+       },
+       "placebo": {
+        "n": 703,
+        "win": 0.395,
+        "expR": -0.23,
+        "sd": 0.988
+       },
+       "z": 0.22
+      },
+      "reclaim": {
+       "bucket": "P_RTH_L SUPPORT",
+       "real": {
+        "n": 146,
+        "win": 0.377,
+        "expR": -0.263,
+        "sd": 0.975
+       },
+       "placebo": {
+        "n": 462,
+        "win": 0.446,
+        "expR": -0.134,
+        "sd": 0.998
+       },
+       "z": -1.39
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with SWING_L@29494.00",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_L@29494.00",
+     "type": "SWING",
+     "price": 29494.0,
+     "side": "SUPPORT",
+     "dist_atr": 3.61,
+     "confluence": [
+      "P_RTH_L"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with P_RTH_L",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_L@29411.50",
+     "type": "SWING",
+     "price": 29411.5,
+     "side": "SUPPORT",
+     "dist_atr": 4.42,
+     "confluence": [],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 1627,
+         "win": 0.406,
+         "expR": -0.208,
+         "sd": 0.99
+        },
+        "placebo": {
+         "n": 11710,
+         "win": 0.397,
+         "expR": -0.226,
+         "sd": 0.984
+        },
+        "z": 0.69
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "confluence=0": {
+        "bucket": "confluence=0",
+        "real": {
+         "n": 999,
+         "win": 0.375,
+         "expR": -0.277,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6500,
+         "win": 0.386,
+         "expR": -0.26,
+         "sd": 0.987
+        },
+        "z": -0.51
+       },
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_H@29345.25",
+     "type": "SWING",
+     "price": 29345.25,
+     "side": "SUPPORT",
+     "dist_atr": 5.07,
+     "confluence": [
+      "SWING_H@29325.75"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with SWING_H@29325.75",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_H@29325.75",
+     "type": "SWING",
+     "price": 29325.75,
+     "side": "SUPPORT",
+     "dist_atr": 5.26,
+     "confluence": [
+      "SWING_H@29345.25"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with SWING_H@29345.25",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "PDL",
+     "type": "PDL",
+     "price": 29288.75,
+     "side": "SUPPORT",
+     "dist_atr": 5.62,
+     "confluence": [
+      "SWING_L@29288.75"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "PDL SUPPORT",
+       "real": {
+        "n": 181,
+        "win": 0.359,
+        "expR": -0.298,
+        "sd": 0.963
+       },
+       "placebo": {
+        "n": 695,
+        "win": 0.407,
+        "expR": -0.203,
+        "sd": 0.988
+       },
+       "z": -1.18
+      },
+      "reclaim": {
+       "bucket": "PDL SUPPORT",
+       "real": {
+        "n": 117,
+        "win": 0.359,
+        "expR": -0.292,
+        "sd": 0.964
+       },
+       "placebo": {
+        "n": 448,
+        "win": 0.406,
+        "expR": -0.216,
+        "sd": 0.984
+       },
+       "z": -0.76
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with SWING_L@29288.75",
+      "with the trend (price vs EMA50)"
+     ]
+    },
+    {
+     "level": "SWING_L@29288.75",
+     "type": "SWING",
+     "price": 29288.75,
+     "side": "SUPPORT",
+     "dist_atr": 5.62,
+     "confluence": [
+      "PDL"
+     ],
+     "aligned": true,
+     "history": {
+      "touch": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 1055,
+        "win": 0.392,
+        "expR": -0.234,
+        "sd": 0.981
+       },
+       "placebo": {
+        "n": 5645,
+        "win": 0.409,
+        "expR": -0.2,
+        "sd": 0.992
+       },
+       "z": -1.03
+      },
+      "reclaim": {
+       "bucket": "SWING SUPPORT",
+       "real": {
+        "n": 668,
+        "win": 0.403,
+        "expR": -0.223,
+        "sd": 1.014
+       },
+       "placebo": {
+        "n": 2873,
+        "win": 0.423,
+        "expR": -0.189,
+        "sd": 1.011
+       },
+       "z": -0.78
+      }
+     },
+     "feature_history": {
+      "touch": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 2778,
+         "win": 0.415,
+         "expR": -0.187,
+         "sd": 0.987
+        },
+        "placebo": {
+         "n": 10608,
+         "win": 0.397,
+         "expR": -0.225,
+         "sd": 0.982
+        },
+        "z": 1.81
+       }
+      },
+      "reclaim": {
+       "with_trend": {
+        "bucket": "with_trend",
+        "real": {
+         "n": 1726,
+         "win": 0.376,
+         "expR": -0.269,
+         "sd": 0.973
+        },
+        "placebo": {
+         "n": 6181,
+         "win": 0.388,
+         "expR": -0.245,
+         "sd": 0.982
+        },
+        "z": -0.9
+       }
+      }
+     },
+     "reasons": [
+      "confluence with PDL",
+      "with the trend (price vs EMA50)"
      ]
     }
    ]

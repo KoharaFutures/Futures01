@@ -7,120 +7,120 @@
    "tf": 5,
    "days": 1,
    "first": "2026-07-29",
-   "last": "2026-11-12T21:30",
+   "last": "2026-11-15T21:00",
    "by_kind": {
     "LVN": {
      "real": {
-      "n": 94,
-      "cont": 0.511,
-      "bounce": 0.468,
+      "n": 95,
+      "cont": 0.505,
+      "bounce": 0.474,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": -0.027,
-      "fade_R": -0.112,
-      "z_cont_vs_random": -0.08,
-      "z_bounce_vs_random": -0.06
+      "go_with_R": -0.012,
+      "fade_R": -0.075,
+      "z_cont_vs_random": -0.19,
+      "z_bounce_vs_random": 0.06
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "coin-flip"
     },
     "HVN": {
      "real": {
-      "n": 696,
-      "cont": 0.517,
-      "bounce": 0.473,
+      "n": 723,
+      "cont": 0.519,
+      "bounce": 0.472,
       "ambig": 0.01,
       "stall": -0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.103,
-      "z_cont_vs_random": 0.1,
-      "z_bounce_vs_random": 0.1
+      "go_with_R": 0.015,
+      "fade_R": -0.079,
+      "z_cont_vs_random": 0.21,
+      "z_bounce_vs_random": 0.05
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "coin-flip"
     },
     "POC": {
      "real": {
-      "n": 224,
+      "n": 226,
       "cont": 0.504,
       "bounce": 0.473,
       "ambig": 0.022,
-      "stall": 0.0,
-      "go_with_R": -0.039,
-      "fade_R": -0.102,
-      "z_cont_vs_random": -0.32,
+      "stall": -0.0,
+      "go_with_R": -0.014,
+      "fade_R": -0.075,
+      "z_cont_vs_random": -0.33,
       "z_bounce_vs_random": 0.06
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "coin-flip"
     },
     "VAH": {
      "real": {
-      "n": 166,
-      "cont": 0.572,
-      "bounce": 0.428,
+      "n": 167,
+      "cont": 0.569,
+      "bounce": 0.431,
       "ambig": 0.0,
-      "stall": 0.0,
-      "go_with_R": 0.096,
-      "fade_R": -0.193,
-      "z_cont_vs_random": 1.45,
-      "z_bounce_vs_random": -1.1
+      "stall": -0.0,
+      "go_with_R": 0.115,
+      "fade_R": -0.16,
+      "z_cont_vs_random": 1.38,
+      "z_bounce_vs_random": -1.02
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "VAL": {
      "real": {
-      "n": 165,
-      "cont": 0.491,
-      "bounce": 0.473,
-      "ambig": 0.036,
-      "stall": -0.0,
-      "go_with_R": -0.066,
-      "fade_R": -0.103,
-      "z_cont_vs_random": -0.61,
-      "z_bounce_vs_random": 0.05
+      "n": 172,
+      "cont": 0.488,
+      "bounce": 0.477,
+      "ambig": 0.035,
+      "stall": 0.0,
+      "go_with_R": -0.046,
+      "fade_R": -0.069,
+      "z_cont_vs_random": -0.7,
+      "z_bounce_vs_random": 0.16
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "coin-flip"
     }
@@ -128,24 +128,24 @@
    "lvn_by_condition": {
     "all": {
      "real": {
-      "n": 94,
-      "cont": 0.511,
-      "bounce": 0.468,
+      "n": 95,
+      "cont": 0.505,
+      "bounce": 0.474,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": -0.027,
-      "fade_R": -0.112,
-      "z_cont_vs_random": -0.08,
-      "z_bounce_vs_random": -0.06
+      "go_with_R": -0.012,
+      "fade_R": -0.075,
+      "z_cont_vs_random": -0.19,
+      "z_bounce_vs_random": 0.06
      },
      "placebo": {
-      "n": 7416,
+      "n": 7570,
       "cont": 0.515,
       "bounce": 0.471,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.106
+      "go_with_R": 0.008,
+      "fade_R": -0.081
      },
      "lean": "coin-flip"
     },
@@ -156,42 +156,42 @@
       "bounce": 0.514,
       "ambig": 0.027,
       "stall": 0.0,
-      "go_with_R": -0.129,
-      "fade_R": -0.021,
-      "z_cont_vs_random": -0.78,
-      "z_bounce_vs_random": 0.63
+      "go_with_R": -0.103,
+      "fade_R": 0.005,
+      "z_cont_vs_random": -0.81,
+      "z_bounce_vs_random": 0.67
      },
      "placebo": {
-      "n": 4032,
-      "cont": 0.523,
-      "bounce": 0.462,
-      "ambig": 0.015,
-      "stall": -0.0,
-      "go_with_R": -0.002,
-      "fade_R": -0.124
+      "n": 4075,
+      "cont": 0.526,
+      "bounce": 0.459,
+      "ambig": 0.014,
+      "stall": 0.0,
+      "go_with_R": 0.03,
+      "fade_R": -0.104
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
     "range is TRENDING": {
      "real": {
-      "n": 57,
-      "cont": 0.544,
-      "bounce": 0.439,
-      "ambig": 0.018,
+      "n": 58,
+      "cont": 0.534,
+      "bounce": 0.448,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": 0.04,
-      "fade_R": -0.171,
-      "z_cont_vs_random": 0.58,
-      "z_bounce_vs_random": -0.63
+      "go_with_R": 0.047,
+      "fade_R": -0.126,
+      "z_cont_vs_random": 0.48,
+      "z_bounce_vs_random": -0.54
      },
      "placebo": {
-      "n": 3384,
-      "cont": 0.505,
-      "bounce": 0.481,
+      "n": 3495,
+      "cont": 0.502,
+      "bounce": 0.484,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.038,
-      "fade_R": -0.085
+      "go_with_R": -0.018,
+      "fade_R": -0.053
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -202,65 +202,65 @@
       "bounce": 0.333,
       "ambig": 0.056,
       "stall": -0.0,
-      "go_with_R": 0.174,
-      "fade_R": -0.382,
-      "z_cont_vs_random": 1.0,
-      "z_bounce_vs_random": -1.34
+      "go_with_R": 0.2,
+      "fade_R": -0.356,
+      "z_cont_vs_random": 1.01,
+      "z_bounce_vs_random": -1.35
      },
      "placebo": {
-      "n": 1373,
-      "cont": 0.492,
-      "bounce": 0.492,
-      "ambig": 0.015,
-      "stall": -0.0,
-      "go_with_R": -0.063,
-      "fade_R": -0.063
+      "n": 1432,
+      "cont": 0.491,
+      "bounce": 0.493,
+      "ambig": 0.016,
+      "stall": 0.0,
+      "go_with_R": -0.041,
+      "fade_R": -0.036
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived AGAINST the range's trend": {
      "real": {
-      "n": 39,
-      "cont": 0.513,
-      "bounce": 0.487,
+      "n": 40,
+      "cont": 0.5,
+      "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.023,
-      "fade_R": -0.074,
-      "z_cont_vs_random": 0.0,
-      "z_bounce_vs_random": 0.17
+      "go_with_R": -0.022,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.11,
+      "z_bounce_vs_random": 0.28
      },
      "placebo": {
-      "n": 2011,
-      "cont": 0.513,
-      "bounce": 0.473,
+      "n": 2063,
+      "cont": 0.509,
+      "bounce": 0.478,
       "ambig": 0.012,
       "stall": 0.001,
-      "go_with_R": -0.02,
-      "fade_R": -0.1
+      "go_with_R": -0.003,
+      "fade_R": -0.065
      },
      "lean": "coin-flip"
     },
     "arrived from INSIDE value": {
      "real": {
-      "n": 77,
-      "cont": 0.494,
-      "bounce": 0.481,
+      "n": 78,
+      "cont": 0.487,
+      "bounce": 0.487,
       "ambig": 0.026,
-      "stall": 0.0,
-      "go_with_R": -0.061,
-      "fade_R": -0.087,
-      "z_cont_vs_random": -0.66,
-      "z_bounce_vs_random": 0.47
+      "stall": -0.0,
+      "go_with_R": -0.048,
+      "fade_R": -0.048,
+      "z_cont_vs_random": -0.79,
+      "z_bounce_vs_random": 0.58
      },
      "placebo": {
-      "n": 4811,
+      "n": 4930,
       "cont": 0.532,
       "bounce": 0.454,
       "ambig": 0.014,
       "stall": 0.001,
-      "go_with_R": 0.016,
-      "fade_R": -0.14
+      "go_with_R": 0.041,
+      "fade_R": -0.115
      },
      "lean": "coin-flip"
     },
@@ -271,19 +271,19 @@
       "bounce": 0.412,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.128,
-      "fade_R": -0.225,
+      "go_with_R": 0.154,
+      "fade_R": -0.199,
       "z_cont_vs_random": 0.86,
-      "z_bounce_vs_random": -0.74
+      "z_bounce_vs_random": -0.75
      },
      "placebo": {
-      "n": 2605,
+      "n": 2640,
       "cont": 0.484,
-      "bounce": 0.502,
+      "bounce": 0.503,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.081,
-      "fade_R": -0.043
+      "go_with_R": -0.055,
+      "fade_R": -0.017
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -294,42 +294,42 @@
       "bounce": 0.404,
       "ambig": 0.021,
       "stall": -0.0,
-      "go_with_R": 0.101,
-      "fade_R": -0.24,
-      "z_cont_vs_random": 0.25,
-      "z_bounce_vs_random": -0.28
+      "go_with_R": 0.127,
+      "fade_R": -0.214,
+      "z_cont_vs_random": 0.22,
+      "z_bounce_vs_random": -0.26
      },
      "placebo": {
-      "n": 4172,
-      "cont": 0.556,
-      "bounce": 0.424,
+      "n": 4255,
+      "cont": 0.558,
+      "bounce": 0.423,
       "ambig": 0.019,
       "stall": 0.001,
-      "go_with_R": 0.065,
-      "fade_R": -0.199
+      "go_with_R": 0.094,
+      "fade_R": -0.177
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "normal volume": {
      "real": {
-      "n": 47,
-      "cont": 0.447,
-      "bounce": 0.532,
+      "n": 48,
+      "cont": 0.438,
+      "bounce": 0.542,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": -0.155,
-      "fade_R": 0.016,
-      "z_cont_vs_random": -0.19,
-      "z_bounce_vs_random": 0.01
+      "go_with_R": -0.147,
+      "fade_R": 0.061,
+      "z_cont_vs_random": -0.3,
+      "z_bounce_vs_random": 0.14
      },
      "placebo": {
-      "n": 3244,
-      "cont": 0.461,
-      "bounce": 0.531,
+      "n": 3315,
+      "cont": 0.46,
+      "bounce": 0.532,
       "ambig": 0.008,
       "stall": 0.0,
-      "go_with_R": -0.125,
-      "fade_R": 0.013
+      "go_with_R": -0.103,
+      "fade_R": 0.042
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -340,44 +340,44 @@
       "bounce": 0.36,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.232,
-      "fade_R": -0.328,
-      "z_cont_vs_random": 1.25,
-      "z_bounce_vs_random": -1.06
+      "go_with_R": 0.258,
+      "fade_R": -0.302,
+      "z_cont_vs_random": 1.27,
+      "z_bounce_vs_random": -1.08
      },
      "placebo": {
-      "n": 1750,
-      "cont": 0.514,
-      "bounce": 0.467,
+      "n": 1783,
+      "cont": 0.512,
+      "bounce": 0.469,
       "ambig": 0.017,
       "stall": 0.002,
-      "go_with_R": -0.018,
-      "fade_R": -0.113
+      "go_with_R": 0.003,
+      "fade_R": -0.082
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "overnight": {
      "real": {
-      "n": 69,
-      "cont": 0.464,
-      "bounce": 0.507,
+      "n": 70,
+      "cont": 0.457,
+      "bounce": 0.514,
       "ambig": 0.029,
-      "stall": -0.0,
-      "go_with_R": -0.121,
-      "fade_R": -0.034,
-      "z_cont_vs_random": -0.84,
-      "z_bounce_vs_random": 0.58
+      "stall": 0.0,
+      "go_with_R": -0.108,
+      "fade_R": 0.006,
+      "z_cont_vs_random": -0.98,
+      "z_bounce_vs_random": 0.72
      },
      "placebo": {
-      "n": 5666,
-      "cont": 0.515,
-      "bounce": 0.472,
+      "n": 5787,
+      "cont": 0.516,
+      "bounce": 0.471,
       "ambig": 0.013,
       "stall": 0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.104
+      "go_with_R": 0.009,
+      "fade_R": -0.08
      },
-     "lean": "coin-flip"
+     "lean": "leans BOUNCE, but random prices do the same"
     },
     "falling into it (support test)": {
      "real": {
@@ -386,42 +386,42 @@
       "bounce": 0.444,
       "ambig": 0.022,
       "stall": 0.0,
-      "go_with_R": 0.018,
-      "fade_R": -0.159,
-      "z_cont_vs_random": 0.27,
-      "z_bounce_vs_random": -0.4
+      "go_with_R": 0.044,
+      "fade_R": -0.134,
+      "z_cont_vs_random": 0.24,
+      "z_bounce_vs_random": -0.37
      },
      "placebo": {
-      "n": 3624,
-      "cont": 0.513,
-      "bounce": 0.474,
+      "n": 3709,
+      "cont": 0.515,
+      "bounce": 0.472,
       "ambig": 0.013,
       "stall": -0.0,
-      "go_with_R": -0.022,
-      "fade_R": -0.101
+      "go_with_R": 0.008,
+      "fade_R": -0.079
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "rising into it (resistance test)": {
      "real": {
-      "n": 49,
-      "cont": 0.49,
-      "bounce": 0.49,
+      "n": 50,
+      "cont": 0.48,
+      "bounce": 0.5,
       "ambig": 0.02,
       "stall": 0.0,
-      "go_with_R": -0.069,
-      "fade_R": -0.069,
-      "z_cont_vs_random": -0.38,
-      "z_bounce_vs_random": 0.31
+      "go_with_R": -0.062,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.49,
+      "z_bounce_vs_random": 0.42
      },
      "placebo": {
-      "n": 3792,
-      "cont": 0.517,
-      "bounce": 0.468,
+      "n": 3861,
+      "cont": 0.515,
+      "bounce": 0.47,
       "ambig": 0.015,
       "stall": 0.001,
-      "go_with_R": -0.014,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "coin-flip"
     }
@@ -432,74 +432,74 @@
    "tf": 5,
    "days": 3,
    "first": "2026-07-29",
-   "last": "2026-11-12T21:30",
+   "last": "2026-11-15T21:00",
    "by_kind": {
     "LVN": {
      "real": {
-      "n": 79,
-      "cont": 0.582,
-      "bounce": 0.405,
-      "ambig": 0.013,
+      "n": 81,
+      "cont": 0.58,
+      "bounce": 0.407,
+      "ambig": 0.012,
       "stall": 0.0,
-      "go_with_R": 0.116,
-      "fade_R": -0.238,
-      "z_cont_vs_random": 1.22,
-      "z_bounce_vs_random": -1.18
+      "go_with_R": 0.138,
+      "fade_R": -0.208,
+      "z_cont_vs_random": 1.23,
+      "z_bounce_vs_random": -1.2
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "HVN": {
      "real": {
-      "n": 473,
-      "cont": 0.501,
-      "bounce": 0.48,
+      "n": 478,
+      "cont": 0.5,
+      "bounce": 0.481,
       "ambig": 0.019,
-      "stall": -0.0,
-      "go_with_R": -0.046,
-      "fade_R": -0.088,
-      "z_cont_vs_random": -0.5,
-      "z_bounce_vs_random": 0.33
+      "stall": 0.0,
+      "go_with_R": -0.022,
+      "fade_R": -0.06,
+      "z_cont_vs_random": -0.46,
+      "z_bounce_vs_random": 0.29
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "coin-flip"
     },
     "POC": {
      "real": {
-      "n": 125,
-      "cont": 0.488,
-      "bounce": 0.504,
+      "n": 126,
+      "cont": 0.492,
+      "bounce": 0.5,
       "ambig": 0.008,
-      "stall": 0.0,
-      "go_with_R": -0.072,
-      "fade_R": -0.04,
-      "z_cont_vs_random": -0.55,
-      "z_bounce_vs_random": 0.71
+      "stall": -0.0,
+      "go_with_R": -0.038,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.42,
+      "z_bounce_vs_random": 0.58
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "coin-flip"
     },
@@ -510,42 +510,42 @@
       "bounce": 0.433,
       "ambig": 0.044,
       "stall": -0.0,
-      "go_with_R": -0.004,
-      "fade_R": -0.182,
-      "z_cont_vs_random": 0.17,
-      "z_bounce_vs_random": -0.73
+      "go_with_R": 0.022,
+      "fade_R": -0.156,
+      "z_cont_vs_random": 0.21,
+      "z_bounce_vs_random": -0.77
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "VAL": {
      "real": {
-      "n": 115,
-      "cont": 0.461,
-      "bounce": 0.53,
-      "ambig": 0.009,
-      "stall": -0.0,
-      "go_with_R": -0.126,
-      "fade_R": 0.013,
-      "z_cont_vs_random": -1.1,
-      "z_bounce_vs_random": 1.23
+      "n": 119,
+      "cont": 0.454,
+      "bounce": 0.538,
+      "ambig": 0.008,
+      "stall": 0.0,
+      "go_with_R": -0.115,
+      "fade_R": 0.053,
+      "z_cont_vs_random": -1.23,
+      "z_bounce_vs_random": 1.38
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "leans BOUNCE, but random prices do the same"
     }
@@ -553,24 +553,24 @@
    "lvn_by_condition": {
     "all": {
      "real": {
-      "n": 79,
-      "cont": 0.582,
-      "bounce": 0.405,
-      "ambig": 0.013,
+      "n": 81,
+      "cont": 0.58,
+      "bounce": 0.407,
+      "ambig": 0.012,
       "stall": 0.0,
-      "go_with_R": 0.116,
-      "fade_R": -0.238,
-      "z_cont_vs_random": 1.22,
-      "z_bounce_vs_random": -1.18
+      "go_with_R": 0.138,
+      "fade_R": -0.208,
+      "z_cont_vs_random": 1.23,
+      "z_bounce_vs_random": -1.2
      },
      "placebo": {
-      "n": 4855,
-      "cont": 0.513,
-      "bounce": 0.472,
+      "n": 4947,
+      "cont": 0.511,
+      "bounce": 0.474,
       "ambig": 0.013,
       "stall": 0.001,
-      "go_with_R": -0.021,
-      "fade_R": -0.103
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -581,8 +581,8 @@
       "bounce": 0.474,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.004,
-      "fade_R": -0.101,
+      "go_with_R": 0.03,
+      "fade_R": -0.075,
       "z_cont_vs_random": 0.38,
       "z_bounce_vs_random": -0.11
      },
@@ -592,31 +592,31 @@
       "bounce": 0.483,
       "ambig": 0.019,
       "stall": 0.002,
-      "go_with_R": -0.056,
-      "fade_R": -0.079
+      "go_with_R": -0.03,
+      "fade_R": -0.054
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "range is TRENDING": {
      "real": {
-      "n": 41,
-      "cont": 0.634,
-      "bounce": 0.341,
-      "ambig": 0.024,
+      "n": 43,
+      "cont": 0.628,
+      "bounce": 0.349,
+      "ambig": 0.023,
       "stall": -0.0,
-      "go_with_R": 0.22,
-      "fade_R": -0.365,
-      "z_cont_vs_random": 1.31,
+      "go_with_R": 0.233,
+      "fade_R": -0.325,
+      "z_cont_vs_random": 1.32,
       "z_bounce_vs_random": -1.53
      },
      "placebo": {
-      "n": 2414,
-      "cont": 0.531,
-      "bounce": 0.461,
-      "ambig": 0.007,
-      "stall": -0.0,
-      "go_with_R": 0.015,
-      "fade_R": -0.126
+      "n": 2506,
+      "cont": 0.527,
+      "bounce": 0.466,
+      "ambig": 0.008,
+      "stall": 0.0,
+      "go_with_R": 0.031,
+      "fade_R": -0.091
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -627,65 +627,65 @@
       "bounce": 0.353,
       "ambig": 0.0,
       "stall": -0.0,
-      "go_with_R": 0.246,
-      "fade_R": -0.342,
-      "z_cont_vs_random": 1.02,
-      "z_bounce_vs_random": -0.96
+      "go_with_R": 0.272,
+      "fade_R": -0.317,
+      "z_cont_vs_random": 1.05,
+      "z_bounce_vs_random": -0.98
      },
      "placebo": {
-      "n": 1005,
-      "cont": 0.522,
-      "bounce": 0.47,
+      "n": 1062,
+      "cont": 0.519,
+      "bounce": 0.473,
       "ambig": 0.008,
       "stall": 0.0,
-      "go_with_R": -0.003,
-      "fade_R": -0.109
+      "go_with_R": 0.015,
+      "fade_R": -0.077
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived AGAINST the range's trend": {
      "real": {
-      "n": 24,
-      "cont": 0.625,
-      "bounce": 0.333,
-      "ambig": 0.042,
-      "stall": 0.0,
-      "go_with_R": 0.202,
-      "fade_R": -0.382,
-      "z_cont_vs_random": 0.85,
-      "z_bounce_vs_random": -1.19
+      "n": 26,
+      "cont": 0.615,
+      "bounce": 0.346,
+      "ambig": 0.038,
+      "stall": -0.0,
+      "go_with_R": 0.208,
+      "fade_R": -0.33,
+      "z_cont_vs_random": 0.83,
+      "z_bounce_vs_random": -1.17
      },
      "placebo": {
-      "n": 1409,
-      "cont": 0.538,
-      "bounce": 0.455,
+      "n": 1444,
+      "cont": 0.533,
+      "bounce": 0.461,
       "ambig": 0.007,
-      "stall": -0.0,
-      "go_with_R": 0.028,
-      "fade_R": -0.138
+      "stall": 0.0,
+      "go_with_R": 0.043,
+      "fade_R": -0.101
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived from INSIDE value": {
      "real": {
-      "n": 48,
-      "cont": 0.521,
-      "bounce": 0.458,
-      "ambig": 0.021,
+      "n": 50,
+      "cont": 0.52,
+      "bounce": 0.46,
+      "ambig": 0.02,
       "stall": -0.0,
-      "go_with_R": -0.007,
-      "fade_R": -0.132,
-      "z_cont_vs_random": 0.12,
-      "z_bounce_vs_random": -0.15
+      "go_with_R": 0.018,
+      "fade_R": -0.102,
+      "z_cont_vs_random": 0.11,
+      "z_bounce_vs_random": -0.14
      },
      "placebo": {
-      "n": 2479,
+      "n": 2509,
       "cont": 0.512,
-      "bounce": 0.469,
+      "bounce": 0.47,
       "ambig": 0.017,
       "stall": 0.002,
-      "go_with_R": -0.022,
-      "fade_R": -0.109
+      "go_with_R": 0.003,
+      "fade_R": -0.082
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -696,19 +696,19 @@
       "bounce": 0.323,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.307,
-      "fade_R": -0.403,
-      "z_cont_vs_random": 1.8,
-      "z_bounce_vs_random": -1.7
+      "go_with_R": 0.332,
+      "fade_R": -0.377,
+      "z_cont_vs_random": 1.84,
+      "z_bounce_vs_random": -1.73
      },
      "placebo": {
-      "n": 2376,
-      "cont": 0.514,
-      "bounce": 0.476,
+      "n": 2438,
+      "cont": 0.511,
+      "bounce": 0.479,
       "ambig": 0.009,
       "stall": 0.0,
-      "go_with_R": -0.019,
-      "fade_R": -0.096
+      "go_with_R": -0.001,
+      "fade_R": -0.063
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -719,42 +719,42 @@
       "bounce": 0.354,
       "ambig": 0.021,
       "stall": -0.0,
-      "go_with_R": 0.202,
-      "fade_R": -0.34,
-      "z_cont_vs_random": 0.86,
-      "z_bounce_vs_random": -0.85
+      "go_with_R": 0.228,
+      "fade_R": -0.314,
+      "z_cont_vs_random": 0.89,
+      "z_bounce_vs_random": -0.88
      },
      "placebo": {
-      "n": 2812,
-      "cont": 0.563,
-      "bounce": 0.415,
+      "n": 2858,
+      "cont": 0.561,
+      "bounce": 0.417,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.078,
-      "fade_R": -0.217
+      "go_with_R": 0.1,
+      "fade_R": -0.188
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "normal volume": {
      "real": {
-      "n": 31,
-      "cont": 0.516,
-      "bounce": 0.484,
+      "n": 33,
+      "cont": 0.515,
+      "bounce": 0.485,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.016,
-      "fade_R": -0.08,
-      "z_cont_vs_random": 0.79,
-      "z_bounce_vs_random": -0.76
+      "go_with_R": 0.008,
+      "fade_R": -0.053,
+      "z_cont_vs_random": 0.81,
+      "z_bounce_vs_random": -0.78
      },
      "placebo": {
-      "n": 2043,
-      "cont": 0.445,
-      "bounce": 0.552,
+      "n": 2089,
+      "cont": 0.444,
+      "bounce": 0.553,
       "ambig": 0.002,
       "stall": 0.0,
-      "go_with_R": -0.157,
-      "fade_R": 0.056
+      "go_with_R": -0.134,
+      "fade_R": 0.085
      },
      "lean": "coin-flip"
     },
@@ -765,42 +765,42 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.048,
-      "fade_R": -0.048,
-      "z_cont_vs_random": -0.08,
-      "z_bounce_vs_random": 0.29
+      "go_with_R": -0.022,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.05,
+      "z_bounce_vs_random": 0.26
      },
      "placebo": {
-      "n": 1170,
-      "cont": 0.508,
-      "bounce": 0.472,
+      "n": 1199,
+      "cont": 0.505,
+      "bounce": 0.475,
       "ambig": 0.016,
       "stall": 0.004,
-      "go_with_R": -0.029,
-      "fade_R": -0.1
+      "go_with_R": -0.009,
+      "fade_R": -0.067
      },
      "lean": "coin-flip"
     },
     "overnight": {
      "real": {
-      "n": 51,
-      "cont": 0.627,
-      "bounce": 0.353,
-      "ambig": 0.02,
-      "stall": -0.0,
-      "go_with_R": 0.207,
-      "fade_R": -0.342,
+      "n": 53,
+      "cont": 0.623,
+      "bounce": 0.358,
+      "ambig": 0.019,
+      "stall": 0.0,
+      "go_with_R": 0.223,
+      "fade_R": -0.305,
       "z_cont_vs_random": 1.59,
-      "z_bounce_vs_random": -1.69
+      "z_bounce_vs_random": -1.68
      },
      "placebo": {
-      "n": 3685,
-      "cont": 0.515,
-      "bounce": 0.472,
-      "ambig": 0.012,
+      "n": 3748,
+      "cont": 0.513,
+      "bounce": 0.474,
+      "ambig": 0.013,
       "stall": -0.0,
-      "go_with_R": -0.018,
-      "fade_R": -0.103
+      "go_with_R": 0.004,
+      "fade_R": -0.074
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -811,42 +811,42 @@
       "bounce": 0.467,
       "ambig": 0.022,
       "stall": 0.0,
-      "go_with_R": -0.026,
-      "fade_R": -0.115,
-      "z_cont_vs_random": -0.07,
-      "z_bounce_vs_random": -0.03
+      "go_with_R": -0.0,
+      "fade_R": -0.089,
+      "z_cont_vs_random": -0.04,
+      "z_bounce_vs_random": -0.04
      },
      "placebo": {
-      "n": 2363,
-      "cont": 0.516,
-      "bounce": 0.469,
+      "n": 2420,
+      "cont": 0.514,
+      "bounce": 0.47,
       "ambig": 0.013,
       "stall": 0.002,
-      "go_with_R": -0.014,
-      "fade_R": -0.108
+      "go_with_R": 0.009,
+      "fade_R": -0.08
      },
      "lean": "coin-flip"
     },
     "rising into it (resistance test)": {
      "real": {
-      "n": 34,
-      "cont": 0.676,
-      "bounce": 0.324,
+      "n": 36,
+      "cont": 0.667,
+      "bounce": 0.333,
       "ambig": 0.0,
-      "stall": -0.0,
-      "go_with_R": 0.305,
-      "fade_R": -0.401,
-      "z_cont_vs_random": 1.91,
-      "z_bounce_vs_random": -1.76
+      "stall": 0.0,
+      "go_with_R": 0.311,
+      "fade_R": -0.356,
+      "z_cont_vs_random": 1.89,
+      "z_bounce_vs_random": -1.73
      },
      "placebo": {
-      "n": 2492,
-      "cont": 0.511,
-      "bounce": 0.476,
-      "ambig": 0.014,
+      "n": 2527,
+      "cont": 0.508,
+      "bounce": 0.478,
+      "ambig": 0.013,
       "stall": 0.0,
-      "go_with_R": -0.027,
-      "fade_R": -0.097
+      "go_with_R": -0.006,
+      "fade_R": -0.066
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     }
@@ -857,76 +857,76 @@
    "tf": 5,
    "days": 5,
    "first": "2026-07-29",
-   "last": "2026-11-12T21:30",
+   "last": "2026-11-15T21:00",
    "by_kind": {
     "LVN": {
      "real": {
-      "n": 82,
-      "cont": 0.585,
-      "bounce": 0.402,
+      "n": 84,
+      "cont": 0.571,
+      "bounce": 0.417,
       "ambig": 0.012,
       "stall": 0.0,
-      "go_with_R": 0.123,
-      "fade_R": -0.243,
-      "z_cont_vs_random": 1.22,
-      "z_bounce_vs_random": -1.19
+      "go_with_R": 0.12,
+      "fade_R": -0.189,
+      "z_cont_vs_random": 1.02,
+      "z_bounce_vs_random": -0.96
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "HVN": {
      "real": {
-      "n": 442,
-      "cont": 0.495,
-      "bounce": 0.489,
+      "n": 448,
+      "cont": 0.493,
+      "bounce": 0.491,
       "ambig": 0.016,
       "stall": 0.0,
-      "go_with_R": -0.057,
-      "fade_R": -0.071,
-      "z_cont_vs_random": -0.88,
-      "z_bounce_vs_random": 0.84
+      "go_with_R": -0.036,
+      "fade_R": -0.04,
+      "z_cont_vs_random": -0.89,
+      "z_bounce_vs_random": 0.85
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "coin-flip"
     },
     "POC": {
      "real": {
-      "n": 91,
-      "cont": 0.473,
-      "bounce": 0.527,
+      "n": 92,
+      "cont": 0.478,
+      "bounce": 0.522,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.103,
-      "fade_R": 0.007,
-      "z_cont_vs_random": -0.83,
-      "z_bounce_vs_random": 1.12
+      "go_with_R": -0.066,
+      "fade_R": 0.021,
+      "z_cont_vs_random": -0.7,
+      "z_bounce_vs_random": 0.99
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
-     "lean": "leans BOUNCE, but random prices do the same"
+     "lean": "coin-flip"
     },
     "VAH": {
      "real": {
@@ -935,19 +935,19 @@
       "bounce": 0.412,
       "ambig": 0.078,
       "stall": 0.0,
-      "go_with_R": -0.029,
-      "fade_R": -0.225,
-      "z_cont_vs_random": -0.1,
-      "z_bounce_vs_random": -0.8
+      "go_with_R": -0.003,
+      "fade_R": -0.199,
+      "z_cont_vs_random": -0.07,
+      "z_bounce_vs_random": -0.83
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -958,19 +958,19 @@
       "bounce": 0.468,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": -0.027,
-      "fade_R": -0.112,
-      "z_cont_vs_random": -0.12,
-      "z_bounce_vs_random": 0.0
+      "go_with_R": -0.001,
+      "fade_R": -0.086,
+      "z_cont_vs_random": -0.08,
+      "z_bounce_vs_random": -0.04
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "coin-flip"
     }
@@ -978,24 +978,24 @@
    "lvn_by_condition": {
     "all": {
      "real": {
-      "n": 82,
-      "cont": 0.585,
-      "bounce": 0.402,
+      "n": 84,
+      "cont": 0.571,
+      "bounce": 0.417,
       "ambig": 0.012,
       "stall": 0.0,
-      "go_with_R": 0.123,
-      "fade_R": -0.243,
-      "z_cont_vs_random": 1.22,
-      "z_bounce_vs_random": -1.19
+      "go_with_R": 0.12,
+      "fade_R": -0.189,
+      "z_cont_vs_random": 1.02,
+      "z_bounce_vs_random": -0.96
      },
      "placebo": {
-      "n": 4179,
-      "cont": 0.517,
-      "bounce": 0.468,
-      "ambig": 0.015,
+      "n": 4238,
+      "cont": 0.515,
+      "bounce": 0.47,
+      "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.013,
-      "fade_R": -0.112
+      "go_with_R": 0.008,
+      "fade_R": -0.082
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1006,8 +1006,8 @@
       "bounce": 0.458,
       "ambig": 0.017,
       "stall": -0.0,
-      "go_with_R": 0.003,
-      "fade_R": -0.133,
+      "go_with_R": 0.028,
+      "fade_R": -0.107,
       "z_cont_vs_random": 0.15,
       "z_bounce_vs_random": -0.17
      },
@@ -1017,33 +1017,33 @@
       "bounce": 0.469,
       "ambig": 0.014,
       "stall": 0.001,
-      "go_with_R": -0.016,
-      "fade_R": -0.109
+      "go_with_R": 0.009,
+      "fade_R": -0.083
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "range is TRENDING": {
      "real": {
-      "n": 23,
-      "cont": 0.739,
-      "bounce": 0.261,
+      "n": 25,
+      "cont": 0.68,
+      "bounce": 0.32,
       "ambig": 0.0,
-      "stall": 0.0,
-      "go_with_R": 0.43,
-      "fade_R": -0.526,
-      "z_cont_vs_random": 2.09,
-      "z_bounce_vs_random": -1.95
+      "stall": -0.0,
+      "go_with_R": 0.338,
+      "fade_R": -0.382,
+      "z_cont_vs_random": 1.65,
+      "z_bounce_vs_random": -1.5
      },
      "placebo": {
-      "n": 1469,
-      "cont": 0.52,
-      "bounce": 0.465,
-      "ambig": 0.015,
+      "n": 1528,
+      "cont": 0.514,
+      "bounce": 0.471,
+      "ambig": 0.014,
       "stall": -0.0,
-      "go_with_R": -0.008,
-      "fade_R": -0.118
+      "go_with_R": 0.006,
+      "fade_R": -0.08
      },
-     "lean": "leans CONTINUATION (hint only: z 2.09 < luck bar 3.33)"
+     "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived WITH the range's trend": {
      "real": {
@@ -1052,44 +1052,44 @@
       "bounce": 0.111,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.73,
-      "fade_R": -0.826,
-      "z_cont_vs_random": 2.24,
-      "z_bounce_vs_random": -2.16
+      "go_with_R": 0.755,
+      "fade_R": -0.8,
+      "z_cont_vs_random": 2.29,
+      "z_bounce_vs_random": -2.21
      },
      "placebo": {
-      "n": 622,
-      "cont": 0.513,
-      "bounce": 0.473,
+      "n": 665,
+      "cont": 0.505,
+      "bounce": 0.481,
       "ambig": 0.014,
       "stall": 0.0,
-      "go_with_R": -0.022,
-      "fade_R": -0.103
+      "go_with_R": -0.012,
+      "fade_R": -0.06
      },
      "lean": "too few touches"
     },
     "arrived AGAINST the range's trend": {
      "real": {
-      "n": 14,
-      "cont": 0.643,
-      "bounce": 0.357,
+      "n": 16,
+      "cont": 0.562,
+      "bounce": 0.438,
       "ambig": 0.0,
-      "stall": -0.0,
-      "go_with_R": 0.238,
-      "fade_R": -0.334,
-      "z_cont_vs_random": 0.88,
-      "z_bounce_vs_random": -0.76
+      "stall": 0.0,
+      "go_with_R": 0.103,
+      "fade_R": -0.147,
+      "z_cont_vs_random": 0.33,
+      "z_bounce_vs_random": -0.2
      },
      "placebo": {
-      "n": 847,
-      "cont": 0.525,
-      "bounce": 0.459,
+      "n": 863,
+      "cont": 0.521,
+      "bounce": 0.463,
       "ambig": 0.015,
-      "stall": 0.0,
-      "go_with_R": 0.003,
-      "fade_R": -0.13
+      "stall": -0.0,
+      "go_with_R": 0.02,
+      "fade_R": -0.095
      },
-     "lean": "too few touches"
+     "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived from INSIDE value": {
      "real": {
@@ -1098,42 +1098,42 @@
       "bounce": 0.383,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.186,
-      "fade_R": -0.282,
+      "go_with_R": 0.212,
+      "fade_R": -0.256,
       "z_cont_vs_random": 1.06,
       "z_bounce_vs_random": -0.83
      },
      "placebo": {
-      "n": 2307,
+      "n": 2322,
       "cont": 0.539,
       "bounce": 0.444,
       "ambig": 0.016,
       "stall": 0.001,
-      "go_with_R": 0.03,
-      "fade_R": -0.16
+      "go_with_R": 0.056,
+      "fade_R": -0.134
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived from OUTSIDE value": {
      "real": {
-      "n": 35,
-      "cont": 0.543,
-      "bounce": 0.429,
-      "ambig": 0.029,
+      "n": 37,
+      "cont": 0.514,
+      "bounce": 0.459,
+      "ambig": 0.027,
       "stall": 0.0,
-      "go_with_R": 0.038,
-      "fade_R": -0.191,
-      "z_cont_vs_random": 0.62,
-      "z_bounce_vs_random": -0.8
+      "go_with_R": 0.005,
+      "fade_R": -0.103,
+      "z_cont_vs_random": 0.34,
+      "z_bounce_vs_random": -0.52
      },
      "placebo": {
-      "n": 1872,
-      "cont": 0.49,
-      "bounce": 0.497,
+      "n": 1916,
+      "cont": 0.486,
+      "bounce": 0.502,
       "ambig": 0.012,
-      "stall": -0.0,
-      "go_with_R": -0.067,
-      "fade_R": -0.054
+      "stall": 0.0,
+      "go_with_R": -0.05,
+      "fade_R": -0.019
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1144,42 +1144,42 @@
       "bounce": 0.375,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": 0.16,
-      "fade_R": -0.298,
-      "z_cont_vs_random": 0.55,
-      "z_bounce_vs_random": -0.54
+      "go_with_R": 0.186,
+      "fade_R": -0.272,
+      "z_cont_vs_random": 0.57,
+      "z_bounce_vs_random": -0.56
      },
      "placebo": {
-      "n": 2424,
-      "cont": 0.564,
-      "bounce": 0.414,
+      "n": 2454,
+      "cont": 0.563,
+      "bounce": 0.415,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.081,
-      "fade_R": -0.219
+      "go_with_R": 0.105,
+      "fade_R": -0.191
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "normal volume": {
      "real": {
-      "n": 34,
-      "cont": 0.559,
-      "bounce": 0.441,
+      "n": 36,
+      "cont": 0.528,
+      "bounce": 0.472,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.069,
-      "fade_R": -0.166,
-      "z_cont_vs_random": 1.24,
-      "z_bounce_vs_random": -1.17
+      "go_with_R": 0.033,
+      "fade_R": -0.078,
+      "z_cont_vs_random": 0.94,
+      "z_bounce_vs_random": -0.87
      },
      "placebo": {
-      "n": 1755,
-      "cont": 0.452,
-      "bounce": 0.542,
+      "n": 1784,
+      "cont": 0.449,
+      "bounce": 0.545,
       "ambig": 0.006,
-      "stall": 0.0,
-      "go_with_R": -0.143,
-      "fade_R": 0.036
+      "stall": -0.0,
+      "go_with_R": -0.124,
+      "fade_R": 0.068
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1190,42 +1190,42 @@
       "bounce": 0.484,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.016,
-      "fade_R": -0.08,
-      "z_cont_vs_random": -0.35,
-      "z_bounce_vs_random": 0.55
+      "go_with_R": 0.01,
+      "fade_R": -0.055,
+      "z_cont_vs_random": -0.29,
+      "z_bounce_vs_random": 0.49
      },
      "placebo": {
-      "n": 1107,
-      "cont": 0.548,
-      "bounce": 0.434,
+      "n": 1129,
+      "cont": 0.542,
+      "bounce": 0.44,
       "ambig": 0.016,
       "stall": 0.002,
-      "go_with_R": 0.05,
-      "fade_R": -0.179
+      "go_with_R": 0.064,
+      "fade_R": -0.14
      },
      "lean": "coin-flip"
     },
     "overnight": {
      "real": {
-      "n": 51,
-      "cont": 0.627,
-      "bounce": 0.353,
-      "ambig": 0.02,
+      "n": 53,
+      "cont": 0.604,
+      "bounce": 0.377,
+      "ambig": 0.019,
       "stall": -0.0,
-      "go_with_R": 0.207,
-      "fade_R": -0.342,
-      "z_cont_vs_random": 1.71,
-      "z_bounce_vs_random": -1.8
+      "go_with_R": 0.185,
+      "fade_R": -0.268,
+      "z_cont_vs_random": 1.43,
+      "z_bounce_vs_random": -1.5
      },
      "placebo": {
-      "n": 3072,
-      "cont": 0.506,
-      "bounce": 0.48,
+      "n": 3109,
+      "cont": 0.505,
+      "bounce": 0.481,
       "ambig": 0.014,
-      "stall": -0.0,
-      "go_with_R": -0.036,
-      "fade_R": -0.088
+      "stall": 0.0,
+      "go_with_R": -0.012,
+      "fade_R": -0.061
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1236,42 +1236,42 @@
       "bounce": 0.306,
       "ambig": 0.028,
       "stall": 0.0,
-      "go_with_R": 0.285,
-      "fade_R": -0.437,
-      "z_cont_vs_random": 1.74,
-      "z_bounce_vs_random": -1.87
+      "go_with_R": 0.311,
+      "fade_R": -0.411,
+      "z_cont_vs_random": 1.76,
+      "z_bounce_vs_random": -1.9
      },
      "placebo": {
-      "n": 2084,
-      "cont": 0.521,
-      "bounce": 0.463,
+      "n": 2127,
+      "cont": 0.519,
+      "bounce": 0.465,
       "ambig": 0.015,
       "stall": 0.001,
-      "go_with_R": -0.005,
-      "fade_R": -0.122
+      "go_with_R": 0.016,
+      "fade_R": -0.091
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "rising into it (resistance test)": {
      "real": {
-      "n": 46,
-      "cont": 0.522,
-      "bounce": 0.478,
+      "n": 48,
+      "cont": 0.5,
+      "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.005,
-      "fade_R": -0.092,
-      "z_cont_vs_random": 0.12,
-      "z_bounce_vs_random": 0.07
+      "go_with_R": -0.022,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.16,
+      "z_bounce_vs_random": 0.34
      },
      "placebo": {
-      "n": 2095,
-      "cont": 0.513,
-      "bounce": 0.473,
+      "n": 2111,
+      "cont": 0.512,
+      "bounce": 0.475,
       "ambig": 0.014,
-      "stall": 0.0,
-      "go_with_R": -0.022,
-      "fade_R": -0.102
+      "stall": -0.0,
+      "go_with_R": 0.001,
+      "fade_R": -0.073
      },
      "lean": "coin-flip"
     }
@@ -1282,7 +1282,7 @@
    "tf": 5,
    "days": 10,
    "first": "2026-07-29",
-   "last": "2026-11-12T21:30",
+   "last": "2026-11-15T21:00",
    "by_kind": {
     "LVN": {
      "real": {
@@ -1291,42 +1291,42 @@
       "bounce": 0.545,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.139,
-      "fade_R": 0.043,
-      "z_cont_vs_random": -0.82,
-      "z_bounce_vs_random": 1.06
+      "go_with_R": -0.113,
+      "fade_R": 0.069,
+      "z_cont_vs_random": -0.78,
+      "z_bounce_vs_random": 1.0
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
     "HVN": {
      "real": {
-      "n": 366,
-      "cont": 0.497,
-      "bounce": 0.497,
+      "n": 373,
+      "cont": 0.496,
+      "bounce": 0.499,
       "ambig": 0.005,
       "stall": 0.0,
-      "go_with_R": -0.054,
-      "fade_R": -0.054,
-      "z_cont_vs_random": -0.72,
-      "z_bounce_vs_random": 1.16
+      "go_with_R": -0.03,
+      "fade_R": -0.025,
+      "z_cont_vs_random": -0.66,
+      "z_bounce_vs_random": 1.1
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "coin-flip"
     },
@@ -1337,19 +1337,19 @@
       "bounce": 0.561,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.169,
-      "fade_R": 0.073,
-      "z_cont_vs_random": -1.25,
-      "z_bounce_vs_random": 1.55
+      "go_with_R": -0.144,
+      "fade_R": 0.099,
+      "z_cont_vs_random": -1.21,
+      "z_bounce_vs_random": 1.48
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -1360,19 +1360,19 @@
       "bounce": 0.414,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.124,
-      "fade_R": -0.221,
-      "z_cont_vs_random": 0.74,
-      "z_bounce_vs_random": -0.55
+      "go_with_R": 0.15,
+      "fade_R": -0.195,
+      "z_cont_vs_random": 0.77,
+      "z_bounce_vs_random": -0.59
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1383,19 +1383,19 @@
       "bounce": 0.46,
       "ambig": 0.023,
       "stall": 0.011,
-      "go_with_R": -0.025,
-      "fade_R": -0.117,
-      "z_cont_vs_random": -0.2,
-      "z_bounce_vs_random": -0.09
+      "go_with_R": 0.001,
+      "fade_R": -0.091,
+      "z_cont_vs_random": -0.15,
+      "z_bounce_vs_random": -0.17
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "coin-flip"
     }
@@ -1408,19 +1408,19 @@
       "bounce": 0.545,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.139,
-      "fade_R": 0.043,
-      "z_cont_vs_random": -0.82,
-      "z_bounce_vs_random": 1.06
+      "go_with_R": -0.113,
+      "fade_R": 0.069,
+      "z_cont_vs_random": -0.78,
+      "z_bounce_vs_random": 1.0
      },
      "placebo": {
-      "n": 3073,
-      "cont": 0.517,
-      "bounce": 0.465,
-      "ambig": 0.018,
+      "n": 3118,
+      "cont": 0.514,
+      "bounce": 0.469,
+      "ambig": 0.017,
       "stall": 0.0,
-      "go_with_R": -0.014,
-      "fade_R": -0.117
+      "go_with_R": 0.006,
+      "fade_R": -0.085
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -1431,19 +1431,19 @@
       "bounce": 0.588,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.225,
-      "fade_R": 0.128,
-      "z_cont_vs_random": -1.16,
-      "z_bounce_vs_random": 1.35
+      "go_with_R": -0.199,
+      "fade_R": 0.154,
+      "z_cont_vs_random": -1.14,
+      "z_bounce_vs_random": 1.34
      },
      "placebo": {
-      "n": 1790,
-      "cont": 0.512,
-      "bounce": 0.471,
+      "n": 1796,
+      "cont": 0.511,
+      "bounce": 0.472,
       "ambig": 0.017,
-      "stall": 0.0,
-      "go_with_R": -0.025,
-      "fade_R": -0.106
+      "stall": -0.0,
+      "go_with_R": -0.001,
+      "fade_R": -0.078
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -1454,19 +1454,19 @@
       "bounce": 0.4,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.152,
-      "fade_R": -0.248,
-      "z_cont_vs_random": 0.48,
-      "z_bounce_vs_random": -0.37
+      "go_with_R": 0.178,
+      "fade_R": -0.222,
+      "z_cont_vs_random": 0.52,
+      "z_bounce_vs_random": -0.4
      },
      "placebo": {
-      "n": 1283,
-      "cont": 0.524,
-      "bounce": 0.458,
-      "ambig": 0.018,
+      "n": 1322,
+      "cont": 0.518,
+      "bounce": 0.464,
+      "ambig": 0.017,
       "stall": 0.001,
-      "go_with_R": 0.0,
-      "fade_R": -0.132
+      "go_with_R": 0.015,
+      "fade_R": -0.094
      },
      "lean": "too few touches"
     },
@@ -1477,19 +1477,19 @@
       "bounce": 0.25,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.452,
-      "fade_R": -0.548,
+      "go_with_R": 0.478,
+      "fade_R": -0.522,
       "z_cont_vs_random": 0.96,
-      "z_bounce_vs_random": -0.87
+      "z_bounce_vs_random": -0.88
      },
      "placebo": {
-      "n": 558,
-      "cont": 0.509,
-      "bounce": 0.468,
-      "ambig": 0.022,
+      "n": 579,
+      "cont": 0.508,
+      "bounce": 0.47,
+      "ambig": 0.021,
       "stall": 0.002,
-      "go_with_R": -0.028,
-      "fade_R": -0.111
+      "go_with_R": -0.005,
+      "fade_R": -0.081
      },
      "lean": "too few touches"
     },
@@ -1500,19 +1500,19 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.048,
-      "fade_R": -0.048,
-      "z_cont_vs_random": -0.17,
-      "z_bounce_vs_random": 0.25
+      "go_with_R": -0.022,
+      "fade_R": -0.022,
+      "z_cont_vs_random": -0.13,
+      "z_bounce_vs_random": 0.2
      },
      "placebo": {
-      "n": 725,
-      "cont": 0.535,
-      "bounce": 0.45,
+      "n": 743,
+      "cont": 0.526,
+      "bounce": 0.459,
       "ambig": 0.015,
-      "stall": 0.0,
-      "go_with_R": 0.022,
-      "fade_R": -0.149
+      "stall": -0.0,
+      "go_with_R": 0.03,
+      "fade_R": -0.104
      },
      "lean": "too few touches"
     },
@@ -1523,8 +1523,8 @@
       "bounce": 0.375,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.202,
-      "fade_R": -0.298,
+      "go_with_R": 0.228,
+      "fade_R": -0.272,
       "z_cont_vs_random": 0.77,
       "z_bounce_vs_random": -0.67
      },
@@ -1534,8 +1534,8 @@
       "bounce": 0.459,
       "ambig": 0.013,
       "stall": 0.0,
-      "go_with_R": 0.008,
-      "fade_R": -0.131
+      "go_with_R": 0.033,
+      "fade_R": -0.105
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1546,19 +1546,19 @@
       "bounce": 0.643,
       "ambig": 0.0,
       "stall": -0.0,
-      "go_with_R": -0.334,
-      "fade_R": 0.238,
-      "z_cont_vs_random": -1.51,
-      "z_bounce_vs_random": 1.76
+      "go_with_R": -0.308,
+      "fade_R": 0.263,
+      "z_cont_vs_random": -1.45,
+      "z_bounce_vs_random": 1.69
      },
      "placebo": {
-      "n": 1281,
-      "cont": 0.501,
-      "bounce": 0.475,
+      "n": 1326,
+      "cont": 0.495,
+      "bounce": 0.482,
       "ambig": 0.023,
       "stall": 0.001,
-      "go_with_R": -0.045,
-      "fade_R": -0.098
+      "go_with_R": -0.032,
+      "fade_R": -0.058
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -1569,19 +1569,19 @@
       "bounce": 0.448,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.055,
-      "fade_R": -0.152,
-      "z_cont_vs_random": -0.16,
-      "z_bounce_vs_random": 0.41
+      "go_with_R": 0.081,
+      "fade_R": -0.126,
+      "z_cont_vs_random": -0.14,
+      "z_bounce_vs_random": 0.39
      },
      "placebo": {
-      "n": 1733,
-      "cont": 0.567,
-      "bounce": 0.41,
+      "n": 1751,
+      "cont": 0.565,
+      "bounce": 0.412,
       "ambig": 0.023,
       "stall": 0.001,
-      "go_with_R": 0.086,
-      "fade_R": -0.228
+      "go_with_R": 0.108,
+      "fade_R": -0.198
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1592,19 +1592,19 @@
       "bounce": 0.733,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.515,
-      "fade_R": 0.418,
-      "z_cont_vs_random": -1.43,
-      "z_bounce_vs_random": 1.51
+      "go_with_R": -0.489,
+      "fade_R": 0.444,
+      "z_cont_vs_random": -1.4,
+      "z_bounce_vs_random": 1.48
      },
      "placebo": {
-      "n": 1340,
-      "cont": 0.452,
-      "bounce": 0.537,
+      "n": 1367,
+      "cont": 0.448,
+      "bounce": 0.541,
       "ambig": 0.01,
       "stall": 0.0,
-      "go_with_R": -0.144,
-      "fade_R": 0.026
+      "go_with_R": -0.126,
+      "fade_R": 0.06
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -1615,19 +1615,19 @@
       "bounce": 0.846,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.74,
-      "fade_R": 0.644,
-      "z_cont_vs_random": -2.51,
-      "z_bounce_vs_random": 2.69
+      "go_with_R": -0.715,
+      "fade_R": 0.67,
+      "z_cont_vs_random": -2.49,
+      "z_bounce_vs_random": 2.67
      },
      "placebo": {
-      "n": 876,
-      "cont": 0.505,
-      "bounce": 0.47,
+      "n": 893,
+      "cont": 0.502,
+      "bounce": 0.474,
       "ambig": 0.024,
       "stall": 0.001,
-      "go_with_R": -0.038,
-      "fade_R": -0.106
+      "go_with_R": -0.018,
+      "fade_R": -0.074
      },
      "lean": "too few touches"
     },
@@ -1638,19 +1638,19 @@
       "bounce": 0.419,
       "ambig": 0.0,
       "stall": -0.0,
-      "go_with_R": 0.113,
-      "fade_R": -0.209,
-      "z_cont_vs_random": 0.65,
-      "z_bounce_vs_random": -0.49
+      "go_with_R": 0.139,
+      "fade_R": -0.184,
+      "z_cont_vs_random": 0.69,
+      "z_bounce_vs_random": -0.53
      },
      "placebo": {
-      "n": 2197,
-      "cont": 0.522,
-      "bounce": 0.463,
+      "n": 2225,
+      "cont": 0.519,
+      "bounce": 0.467,
       "ambig": 0.015,
       "stall": -0.0,
-      "go_with_R": -0.005,
-      "fade_R": -0.121
+      "go_with_R": 0.015,
+      "fade_R": -0.089
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1661,19 +1661,19 @@
       "bounce": 0.435,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.082,
-      "fade_R": -0.179,
-      "z_cont_vs_random": 0.49,
-      "z_bounce_vs_random": -0.3
+      "go_with_R": 0.108,
+      "fade_R": -0.153,
+      "z_cont_vs_random": 0.5,
+      "z_bounce_vs_random": -0.31
      },
      "placebo": {
-      "n": 1511,
-      "cont": 0.514,
-      "bounce": 0.466,
+      "n": 1534,
+      "cont": 0.513,
+      "bounce": 0.467,
       "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": -0.02,
-      "fade_R": -0.116
+      "go_with_R": 0.004,
+      "fade_R": -0.088
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1684,19 +1684,19 @@
       "bounce": 0.667,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.382,
-      "fade_R": 0.285,
-      "z_cont_vs_random": -1.7,
-      "z_bounce_vs_random": 1.84
+      "go_with_R": -0.356,
+      "fade_R": 0.311,
+      "z_cont_vs_random": -1.66,
+      "z_bounce_vs_random": 1.8
      },
      "placebo": {
-      "n": 1562,
-      "cont": 0.52,
-      "bounce": 0.465,
+      "n": 1584,
+      "cont": 0.515,
+      "bounce": 0.47,
       "ambig": 0.015,
-      "stall": -0.0,
-      "go_with_R": -0.008,
-      "fade_R": -0.119
+      "stall": 0.0,
+      "go_with_R": 0.007,
+      "fade_R": -0.082
      },
      "lean": "leans BOUNCE, but random prices do the same"
     }
@@ -1707,51 +1707,51 @@
    "tf": 60,
    "days": 5,
    "first": "2024-10-06",
-   "last": "2026-11-12T20:00",
+   "last": "2026-11-15T20:00",
    "by_kind": {
     "LVN": {
      "real": {
-      "n": 92,
-      "cont": 0.533,
-      "bounce": 0.446,
+      "n": 93,
+      "cont": 0.527,
+      "bounce": 0.452,
       "ambig": 0.022,
-      "stall": -0.0,
-      "go_with_R": 0.053,
-      "fade_R": -0.12,
-      "z_cont_vs_random": 0.34,
-      "z_bounce_vs_random": -0.34
+      "stall": 0.0,
+      "go_with_R": 0.04,
+      "fade_R": -0.11,
+      "z_cont_vs_random": 0.23,
+      "z_bounce_vs_random": -0.23
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "HVN": {
      "real": {
-      "n": 617,
-      "cont": 0.533,
-      "bounce": 0.449,
+      "n": 618,
+      "cont": 0.532,
+      "bounce": 0.45,
       "ambig": 0.016,
       "stall": 0.002,
-      "go_with_R": 0.056,
+      "go_with_R": 0.053,
       "fade_R": -0.112,
-      "z_cont_vs_random": 0.85,
-      "z_bounce_vs_random": -0.71
+      "z_cont_vs_random": 0.81,
+      "z_bounce_vs_random": -0.67
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1762,19 +1762,19 @@
       "bounce": 0.44,
       "ambig": 0.04,
       "stall": -0.0,
-      "go_with_R": 0.028,
-      "fade_R": -0.132,
+      "go_with_R": 0.026,
+      "fade_R": -0.134,
       "z_cont_vs_random": 0.12,
       "z_bounce_vs_random": -0.58
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1785,19 +1785,19 @@
       "bounce": 0.48,
       "ambig": 0.013,
       "stall": 0.0,
-      "go_with_R": 0.001,
-      "fade_R": -0.051,
+      "go_with_R": -0.0,
+      "fade_R": -0.053,
       "z_cont_vs_random": -0.2,
       "z_bounce_vs_random": 0.39
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "coin-flip"
     },
@@ -1808,19 +1808,19 @@
       "bounce": 0.487,
       "ambig": 0.0,
       "stall": 0.007,
-      "go_with_R": 0.008,
-      "fade_R": -0.032,
+      "go_with_R": 0.006,
+      "fade_R": -0.033,
       "z_cont_vs_random": -0.2,
       "z_bounce_vs_random": 0.56
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "coin-flip"
     }
@@ -1828,24 +1828,24 @@
    "lvn_by_condition": {
     "all": {
      "real": {
-      "n": 92,
-      "cont": 0.533,
-      "bounce": 0.446,
+      "n": 93,
+      "cont": 0.527,
+      "bounce": 0.452,
       "ambig": 0.022,
-      "stall": -0.0,
-      "go_with_R": 0.053,
-      "fade_R": -0.12,
-      "z_cont_vs_random": 0.34,
-      "z_bounce_vs_random": -0.34
+      "stall": 0.0,
+      "go_with_R": 0.04,
+      "fade_R": -0.11,
+      "z_cont_vs_random": 0.23,
+      "z_bounce_vs_random": -0.23
      },
      "placebo": {
-      "n": 6448,
+      "n": 6458,
       "cont": 0.515,
       "bounce": 0.464,
       "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": 0.019,
-      "fade_R": -0.084
+      "go_with_R": 0.016,
+      "fade_R": -0.085
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -1856,8 +1856,8 @@
       "bounce": 0.457,
       "ambig": 0.022,
       "stall": 0.0,
-      "go_with_R": 0.032,
-      "fade_R": -0.099,
+      "go_with_R": 0.03,
+      "fade_R": -0.101,
       "z_cont_vs_random": 0.4,
       "z_bounce_vs_random": -0.35
      },
@@ -1867,30 +1867,30 @@
       "bounce": 0.483,
       "ambig": 0.025,
       "stall": 0.0,
-      "go_with_R": -0.027,
-      "fade_R": -0.046
+      "go_with_R": -0.028,
+      "fade_R": -0.048
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "range is TRENDING": {
      "real": {
-      "n": 46,
-      "cont": 0.543,
-      "bounce": 0.435,
-      "ambig": 0.022,
+      "n": 47,
+      "cont": 0.532,
+      "bounce": 0.447,
+      "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": 0.075,
-      "fade_R": -0.142,
-      "z_cont_vs_random": -0.01,
-      "z_bounce_vs_random": -0.05
+      "go_with_R": 0.05,
+      "fade_R": -0.12,
+      "z_cont_vs_random": -0.15,
+      "z_bounce_vs_random": 0.1
      },
      "placebo": {
-      "n": 2801,
-      "cont": 0.544,
-      "bounce": 0.439,
-      "ambig": 0.015,
+      "n": 2811,
+      "cont": 0.543,
+      "bounce": 0.44,
+      "ambig": 0.016,
       "stall": 0.001,
-      "go_with_R": 0.079,
+      "go_with_R": 0.074,
       "fade_R": -0.133
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -1902,41 +1902,41 @@
       "bounce": 1.0,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -1.012,
-      "fade_R": 0.988,
-      "z_cont_vs_random": -1.73,
-      "z_bounce_vs_random": 1.81
+      "go_with_R": -1.014,
+      "fade_R": 0.986,
+      "z_cont_vs_random": -1.72,
+      "z_bounce_vs_random": 1.8
      },
      "placebo": {
-      "n": 710,
-      "cont": 0.5,
-      "bounce": 0.477,
-      "ambig": 0.023,
-      "stall": 0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.057
+      "n": 714,
+      "cont": 0.497,
+      "bounce": 0.479,
+      "ambig": 0.024,
+      "stall": -0.0,
+      "go_with_R": -0.019,
+      "fade_R": -0.056
      },
      "lean": "too few touches"
     },
     "arrived AGAINST the range's trend": {
      "real": {
-      "n": 43,
-      "cont": 0.581,
-      "bounce": 0.395,
+      "n": 44,
+      "cont": 0.568,
+      "bounce": 0.409,
       "ambig": 0.023,
       "stall": -0.0,
-      "go_with_R": 0.151,
-      "fade_R": -0.221,
-      "z_cont_vs_random": 0.27,
-      "z_bounce_vs_random": -0.41
+      "go_with_R": 0.123,
+      "fade_R": -0.195,
+      "z_cont_vs_random": 0.12,
+      "z_bounce_vs_random": -0.23
      },
      "placebo": {
-      "n": 2091,
-      "cont": 0.56,
+      "n": 2097,
+      "cont": 0.559,
       "bounce": 0.426,
       "ambig": 0.013,
       "stall": 0.002,
-      "go_with_R": 0.109,
+      "go_with_R": 0.106,
       "fade_R": -0.159
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -1948,8 +1948,8 @@
       "bounce": 0.408,
       "ambig": 0.041,
       "stall": 0.0,
-      "go_with_R": 0.09,
-      "fade_R": -0.195,
+      "go_with_R": 0.088,
+      "fade_R": -0.197,
       "z_cont_vs_random": 0.56,
       "z_bounce_vs_random": -0.86
      },
@@ -1959,31 +1959,31 @@
       "bounce": 0.47,
       "ambig": 0.018,
       "stall": 0.001,
-      "go_with_R": 0.011,
-      "fade_R": -0.071
+      "go_with_R": 0.009,
+      "fade_R": -0.073
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "arrived from OUTSIDE value": {
      "real": {
-      "n": 43,
-      "cont": 0.512,
-      "bounce": 0.488,
+      "n": 44,
+      "cont": 0.5,
+      "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.011,
-      "fade_R": -0.035,
-      "z_cont_vs_random": -0.12,
-      "z_bounce_vs_random": 0.43
+      "go_with_R": -0.014,
+      "fade_R": -0.014,
+      "z_cont_vs_random": -0.26,
+      "z_bounce_vs_random": 0.58
      },
      "placebo": {
-      "n": 2709,
-      "cont": 0.521,
-      "bounce": 0.455,
+      "n": 2719,
+      "cont": 0.52,
+      "bounce": 0.456,
       "ambig": 0.024,
       "stall": 0.001,
-      "go_with_R": 0.031,
-      "fade_R": -0.101
+      "go_with_R": 0.026,
+      "fade_R": -0.102
      },
      "lean": "coin-flip"
     },
@@ -1994,42 +1994,42 @@
       "bounce": 0.42,
       "ambig": 0.04,
       "stall": -0.0,
-      "go_with_R": 0.068,
-      "fade_R": -0.172,
-      "z_cont_vs_random": -0.37,
-      "z_bounce_vs_random": 0.13
+      "go_with_R": 0.066,
+      "fade_R": -0.174,
+      "z_cont_vs_random": -0.35,
+      "z_bounce_vs_random": 0.11
      },
      "placebo": {
-      "n": 3712,
-      "cont": 0.566,
-      "bounce": 0.411,
+      "n": 3714,
+      "cont": 0.565,
+      "bounce": 0.412,
       "ambig": 0.023,
-      "stall": 0.0,
-      "go_with_R": 0.12,
-      "fade_R": -0.189
+      "stall": -0.0,
+      "go_with_R": 0.117,
+      "fade_R": -0.19
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "normal volume": {
      "real": {
-      "n": 42,
-      "cont": 0.524,
-      "bounce": 0.476,
+      "n": 43,
+      "cont": 0.512,
+      "bounce": 0.488,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.036,
-      "fade_R": -0.059,
-      "z_cont_vs_random": 1.01,
-      "z_bounce_vs_random": -0.75
+      "go_with_R": 0.01,
+      "fade_R": -0.037,
+      "z_cont_vs_random": 0.86,
+      "z_bounce_vs_random": -0.61
      },
      "placebo": {
-      "n": 2736,
+      "n": 2744,
       "cont": 0.446,
-      "bounce": 0.534,
+      "bounce": 0.535,
       "ambig": 0.018,
       "stall": 0.002,
-      "go_with_R": -0.117,
-      "fade_R": 0.059
+      "go_with_R": -0.12,
+      "fade_R": 0.057
      },
      "lean": "coin-flip"
     },
@@ -2040,44 +2040,44 @@
       "bounce": 0.423,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.142,
-      "fade_R": -0.166,
-      "z_cont_vs_random": 0.75,
+      "go_with_R": 0.14,
+      "fade_R": -0.167,
+      "z_cont_vs_random": 0.76,
       "z_bounce_vs_random": -0.6
      },
      "placebo": {
-      "n": 1789,
-      "cont": 0.503,
+      "n": 1790,
+      "cont": 0.502,
       "bounce": 0.482,
       "ambig": 0.014,
       "stall": 0.002,
-      "go_with_R": -0.005,
-      "fade_R": -0.046
+      "go_with_R": -0.008,
+      "fade_R": -0.048
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "overnight": {
      "real": {
-      "n": 66,
-      "cont": 0.515,
-      "bounce": 0.455,
+      "n": 67,
+      "cont": 0.507,
+      "bounce": 0.463,
       "ambig": 0.03,
-      "stall": 0.0,
-      "go_with_R": 0.019,
-      "fade_R": -0.103,
-      "z_cont_vs_random": -0.08,
-      "z_bounce_vs_random": -0.03
+      "stall": -0.0,
+      "go_with_R": 0.001,
+      "fade_R": -0.088,
+      "z_cont_vs_random": -0.2,
+      "z_bounce_vs_random": 0.1
      },
      "placebo": {
-      "n": 4659,
-      "cont": 0.52,
+      "n": 4668,
+      "cont": 0.519,
       "bounce": 0.457,
       "ambig": 0.023,
       "stall": 0.0,
-      "go_with_R": 0.028,
-      "fade_R": -0.098
+      "go_with_R": 0.025,
+      "fade_R": -0.099
      },
-     "lean": "leans CONTINUATION, but random prices do the same"
+     "lean": "coin-flip"
     },
     "falling into it (support test)": {
      "real": {
@@ -2086,42 +2086,42 @@
       "bounce": 0.367,
       "ambig": 0.033,
       "stall": 0.0,
-      "go_with_R": 0.188,
-      "fade_R": -0.278,
-      "z_cont_vs_random": 1.6,
+      "go_with_R": 0.186,
+      "fade_R": -0.28,
+      "z_cont_vs_random": 1.61,
       "z_bounce_vs_random": -1.71
      },
      "placebo": {
-      "n": 3632,
-      "cont": 0.496,
+      "n": 3636,
+      "cont": 0.495,
       "bounce": 0.478,
-      "ambig": 0.025,
+      "ambig": 0.026,
       "stall": 0.001,
-      "go_with_R": -0.019,
-      "fade_R": -0.055
+      "go_with_R": -0.022,
+      "fade_R": -0.056
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
     "rising into it (resistance test)": {
      "real": {
-      "n": 32,
-      "cont": 0.406,
-      "bounce": 0.594,
+      "n": 33,
+      "cont": 0.394,
+      "bounce": 0.606,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.199,
-      "fade_R": 0.176,
-      "z_cont_vs_random": -1.51,
-      "z_bounce_vs_random": 1.69
+      "go_with_R": -0.226,
+      "fade_R": 0.198,
+      "z_cont_vs_random": -1.66,
+      "z_bounce_vs_random": 1.85
      },
      "placebo": {
-      "n": 2816,
-      "cont": 0.54,
+      "n": 2822,
+      "cont": 0.539,
       "bounce": 0.445,
       "ambig": 0.015,
       "stall": 0.001,
-      "go_with_R": 0.068,
-      "fade_R": -0.121
+      "go_with_R": 0.066,
+      "fade_R": -0.122
      },
      "lean": "leans BOUNCE, but random prices do the same"
     }
@@ -2132,7 +2132,7 @@
    "tf": 60,
    "days": 20,
    "first": "2024-10-06",
-   "last": "2026-11-12T20:00",
+   "last": "2026-11-15T20:00",
    "by_kind": {
     "LVN": {
      "real": {
@@ -2141,42 +2141,42 @@
       "bounce": 0.525,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.062,
-      "fade_R": 0.038,
-      "z_cont_vs_random": -0.28,
-      "z_bounce_vs_random": 0.67
+      "go_with_R": -0.064,
+      "fade_R": 0.036,
+      "z_cont_vs_random": -0.27,
+      "z_bounce_vs_random": 0.65
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
     "HVN": {
      "real": {
-      "n": 351,
-      "cont": 0.519,
-      "bounce": 0.47,
+      "n": 352,
+      "cont": 0.517,
+      "bounce": 0.472,
       "ambig": 0.009,
       "stall": 0.003,
-      "go_with_R": 0.028,
-      "fade_R": -0.069,
-      "z_cont_vs_random": 1.0,
-      "z_bounce_vs_random": -0.61
+      "go_with_R": 0.023,
+      "fade_R": -0.068,
+      "z_cont_vs_random": 0.97,
+      "z_bounce_vs_random": -0.57
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "coin-flip"
     },
@@ -2187,19 +2187,19 @@
       "bounce": 0.519,
       "ambig": 0.038,
       "stall": -0.0,
-      "go_with_R": -0.125,
-      "fade_R": 0.026,
-      "z_cont_vs_random": -0.97,
-      "z_bounce_vs_random": 0.65
+      "go_with_R": -0.127,
+      "fade_R": 0.024,
+      "z_cont_vs_random": -0.95,
+      "z_bounce_vs_random": 0.63
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2210,19 +2210,19 @@
       "bounce": 0.506,
       "ambig": 0.022,
       "stall": -0.0,
-      "go_with_R": -0.068,
-      "fade_R": -0.001,
-      "z_cont_vs_random": -0.35,
-      "z_bounce_vs_random": 0.35
+      "go_with_R": -0.07,
+      "fade_R": -0.002,
+      "z_cont_vs_random": -0.34,
+      "z_bounce_vs_random": 0.34
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "coin-flip"
     },
@@ -2233,19 +2233,19 @@
       "bounce": 0.435,
       "ambig": 0.043,
       "stall": 0.014,
-      "go_with_R": 0.017,
-      "fade_R": -0.128,
-      "z_cont_vs_random": 0.26,
-      "z_bounce_vs_random": -0.86
+      "go_with_R": 0.015,
+      "fade_R": -0.13,
+      "z_cont_vs_random": 0.28,
+      "z_bounce_vs_random": -0.87
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     }
@@ -2258,19 +2258,19 @@
       "bounce": 0.525,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.062,
-      "fade_R": 0.038,
-      "z_cont_vs_random": -0.28,
-      "z_bounce_vs_random": 0.67
+      "go_with_R": -0.064,
+      "fade_R": 0.036,
+      "z_cont_vs_random": -0.27,
+      "z_bounce_vs_random": 0.65
      },
      "placebo": {
-      "n": 3575,
-      "cont": 0.491,
-      "bounce": 0.487,
-      "ambig": 0.02,
+      "n": 3583,
+      "cont": 0.49,
+      "bounce": 0.488,
+      "ambig": 0.021,
       "stall": 0.001,
-      "go_with_R": -0.028,
-      "fade_R": -0.036
+      "go_with_R": -0.032,
+      "fade_R": -0.037
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2281,8 +2281,8 @@
       "bounce": 0.532,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.076,
-      "fade_R": 0.052,
+      "go_with_R": -0.077,
+      "fade_R": 0.05,
       "z_cont_vs_random": -0.56,
       "z_bounce_vs_random": 0.83
      },
@@ -2292,8 +2292,8 @@
       "bounce": 0.471,
       "ambig": 0.019,
       "stall": 0.002,
-      "go_with_R": 0.008,
-      "fade_R": -0.068
+      "go_with_R": 0.006,
+      "fade_R": -0.07
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2304,19 +2304,19 @@
       "bounce": 0.515,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.042,
-      "fade_R": 0.019,
-      "z_cont_vs_random": 0.22,
-      "z_bounce_vs_random": 0.05
+      "go_with_R": -0.044,
+      "fade_R": 0.017,
+      "z_cont_vs_random": 0.23,
+      "z_bounce_vs_random": 0.03
      },
      "placebo": {
-      "n": 1471,
-      "cont": 0.466,
-      "bounce": 0.511,
-      "ambig": 0.023,
+      "n": 1479,
+      "cont": 0.465,
+      "bounce": 0.512,
+      "ambig": 0.024,
       "stall": -0.0,
-      "go_with_R": -0.079,
-      "fade_R": 0.009
+      "go_with_R": -0.085,
+      "fade_R": 0.01
      },
      "lean": "coin-flip"
     },
@@ -2327,19 +2327,19 @@
       "bounce": 0.667,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.345,
-      "fade_R": 0.322,
-      "z_cont_vs_random": -0.53,
+      "go_with_R": -0.347,
+      "fade_R": 0.32,
+      "z_cont_vs_random": -0.52,
       "z_bounce_vs_random": 0.62
      },
      "placebo": {
-      "n": 542,
-      "cont": 0.487,
-      "bounce": 0.487,
-      "ambig": 0.026,
+      "n": 546,
+      "cont": 0.484,
+      "bounce": 0.489,
+      "ambig": 0.027,
       "stall": -0.0,
-      "go_with_R": -0.038,
-      "fade_R": -0.038
+      "go_with_R": -0.047,
+      "fade_R": -0.036
      },
      "lean": "too few touches"
     },
@@ -2350,18 +2350,18 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.012,
-      "z_cont_vs_random": 0.5,
-      "z_bounce_vs_random": -0.26
+      "go_with_R": -0.014,
+      "fade_R": -0.014,
+      "z_cont_vs_random": 0.51,
+      "z_bounce_vs_random": -0.27
      },
      "placebo": {
-      "n": 929,
-      "cont": 0.454,
-      "bounce": 0.524,
-      "ambig": 0.022,
+      "n": 933,
+      "cont": 0.453,
+      "bounce": 0.525,
+      "ambig": 0.021,
       "stall": -0.0,
-      "go_with_R": -0.103,
+      "go_with_R": -0.107,
       "fade_R": 0.037
      },
      "lean": "coin-flip"
@@ -2373,8 +2373,8 @@
       "bounce": 0.56,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.132,
-      "fade_R": 0.108,
+      "go_with_R": -0.134,
+      "fade_R": 0.106,
       "z_cont_vs_random": -0.73,
       "z_bounce_vs_random": 1.12
      },
@@ -2384,8 +2384,8 @@
       "bounce": 0.48,
       "ambig": 0.026,
       "stall": 0.002,
-      "go_with_R": -0.026,
-      "fade_R": -0.048
+      "go_with_R": -0.028,
+      "fade_R": -0.05
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2396,19 +2396,19 @@
       "bounce": 0.467,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.055,
-      "fade_R": -0.078,
-      "z_cont_vs_random": 0.46,
-      "z_bounce_vs_random": -0.33
+      "go_with_R": 0.053,
+      "fade_R": -0.08,
+      "z_cont_vs_random": 0.48,
+      "z_bounce_vs_random": -0.35
      },
      "placebo": {
-      "n": 1396,
-      "cont": 0.491,
-      "bounce": 0.497,
-      "ambig": 0.012,
+      "n": 1404,
+      "cont": 0.489,
+      "bounce": 0.499,
+      "ambig": 0.013,
       "stall": 0.0,
-      "go_with_R": -0.03,
-      "fade_R": -0.018
+      "go_with_R": -0.036,
+      "fade_R": -0.017
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -2419,19 +2419,19 @@
       "bounce": 0.452,
       "ambig": 0.0,
       "stall": -0.0,
-      "go_with_R": 0.083,
-      "fade_R": -0.107,
-      "z_cont_vs_random": 0.3,
+      "go_with_R": 0.082,
+      "fade_R": -0.109,
+      "z_cont_vs_random": 0.31,
       "z_bounce_vs_random": 0.03
      },
      "placebo": {
-      "n": 2044,
-      "cont": 0.525,
+      "n": 2046,
+      "cont": 0.524,
       "bounce": 0.45,
       "ambig": 0.024,
       "stall": 0.001,
-      "go_with_R": 0.04,
-      "fade_R": -0.111
+      "go_with_R": 0.037,
+      "fade_R": -0.112
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -2442,19 +2442,19 @@
       "bounce": 0.605,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.222,
-      "fade_R": 0.199,
-      "z_cont_vs_random": -0.62,
+      "go_with_R": -0.224,
+      "fade_R": 0.197,
+      "z_cont_vs_random": -0.61,
       "z_bounce_vs_random": 0.83
      },
      "placebo": {
-      "n": 1531,
-      "cont": 0.446,
+      "n": 1537,
+      "cont": 0.445,
       "bounce": 0.537,
       "ambig": 0.016,
       "stall": 0.001,
-      "go_with_R": -0.118,
-      "fade_R": 0.063
+      "go_with_R": -0.122,
+      "fade_R": 0.062
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2465,8 +2465,8 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.012,
+      "go_with_R": -0.014,
+      "fade_R": -0.014,
       "z_cont_vs_random": 0.08,
       "z_bounce_vs_random": 0.07
      },
@@ -2476,8 +2476,8 @@
       "bounce": 0.493,
       "ambig": 0.013,
       "stall": 0.002,
-      "go_with_R": -0.026,
-      "fade_R": -0.024
+      "go_with_R": -0.027,
+      "fade_R": -0.025
      },
      "lean": "coin-flip"
     },
@@ -2488,18 +2488,18 @@
       "bounce": 0.538,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.089,
-      "fade_R": 0.065,
-      "z_cont_vs_random": -0.41,
+      "go_with_R": -0.091,
+      "fade_R": 0.063,
+      "z_cont_vs_random": -0.4,
       "z_bounce_vs_random": 0.76
      },
      "placebo": {
-      "n": 2557,
-      "cont": 0.491,
+      "n": 2565,
+      "cont": 0.49,
       "bounce": 0.485,
-      "ambig": 0.023,
+      "ambig": 0.024,
       "stall": 0.001,
-      "go_with_R": -0.029,
+      "go_with_R": -0.033,
       "fade_R": -0.042
      },
      "lean": "leans BOUNCE, but random prices do the same"
@@ -2511,18 +2511,18 @@
       "bounce": 0.473,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.043,
-      "fade_R": -0.066,
-      "z_cont_vs_random": 0.59,
+      "go_with_R": 0.041,
+      "fade_R": -0.068,
+      "z_cont_vs_random": 0.6,
       "z_bounce_vs_random": -0.25
      },
      "placebo": {
-      "n": 2076,
-      "cont": 0.487,
+      "n": 2080,
+      "cont": 0.486,
       "bounce": 0.49,
       "ambig": 0.021,
       "stall": 0.002,
-      "go_with_R": -0.035,
+      "go_with_R": -0.039,
       "fade_R": -0.03
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -2534,18 +2534,18 @@
       "bounce": 0.64,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.292,
-      "fade_R": 0.268,
-      "z_cont_vs_random": -1.36,
-      "z_bounce_vs_random": 1.56
+      "go_with_R": -0.294,
+      "fade_R": 0.266,
+      "z_cont_vs_random": -1.35,
+      "z_bounce_vs_random": 1.55
      },
      "placebo": {
-      "n": 1499,
-      "cont": 0.497,
-      "bounce": 0.483,
+      "n": 1503,
+      "cont": 0.496,
+      "bounce": 0.484,
       "ambig": 0.02,
       "stall": -0.0,
-      "go_with_R": -0.018,
+      "go_with_R": -0.021,
       "fade_R": -0.046
      },
      "lean": "leans BOUNCE, but random prices do the same"
@@ -2557,7 +2557,7 @@
    "tf": 60,
    "days": 60,
    "first": "2024-10-06",
-   "last": "2026-11-12T20:00",
+   "last": "2026-11-15T20:00",
    "by_kind": {
     "LVN": {
      "real": {
@@ -2566,18 +2566,18 @@
       "bounce": 0.488,
       "ambig": 0.047,
       "stall": 0.0,
-      "go_with_R": -0.082,
-      "fade_R": -0.035,
-      "z_cont_vs_random": -0.62,
-      "z_bounce_vs_random": 0.3
+      "go_with_R": -0.083,
+      "fade_R": -0.037,
+      "z_cont_vs_random": -0.61,
+      "z_bounce_vs_random": 0.29
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "coin-flip"
@@ -2589,18 +2589,18 @@
       "bounce": 0.456,
       "ambig": 0.018,
       "stall": -0.0,
-      "go_with_R": 0.041,
-      "fade_R": -0.1,
-      "z_cont_vs_random": 0.4,
-      "z_bounce_vs_random": -0.26
+      "go_with_R": 0.039,
+      "fade_R": -0.102,
+      "z_cont_vs_random": 0.43,
+      "z_bounce_vs_random": -0.29
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -2612,18 +2612,18 @@
       "bounce": 0.383,
       "ambig": 0.021,
       "stall": 0.0,
-      "go_with_R": 0.18,
-      "fade_R": -0.246,
-      "z_cont_vs_random": 1.13,
-      "z_bounce_vs_random": -1.12
+      "go_with_R": 0.178,
+      "fade_R": -0.248,
+      "z_cont_vs_random": 1.14,
+      "z_bounce_vs_random": -1.13
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -2635,18 +2635,18 @@
       "bounce": 0.386,
       "ambig": 0.018,
       "stall": 0.0,
-      "go_with_R": 0.181,
-      "fade_R": -0.24,
-      "z_cont_vs_random": 1.24,
-      "z_bounce_vs_random": -1.18
+      "go_with_R": 0.179,
+      "fade_R": -0.242,
+      "z_cont_vs_random": 1.25,
+      "z_bounce_vs_random": -1.2
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "leans CONTINUATION, but random prices do the same"
@@ -2658,18 +2658,18 @@
       "bounce": 0.552,
       "ambig": 0.034,
       "stall": 0.0,
-      "go_with_R": -0.184,
-      "fade_R": 0.092,
-      "z_cont_vs_random": -1.06,
-      "z_bounce_vs_random": 0.93
+      "go_with_R": -0.186,
+      "fade_R": 0.09,
+      "z_cont_vs_random": -1.05,
+      "z_bounce_vs_random": 0.92
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "leans BOUNCE, but random prices do the same"
@@ -2683,18 +2683,18 @@
       "bounce": 0.488,
       "ambig": 0.047,
       "stall": 0.0,
-      "go_with_R": -0.082,
-      "fade_R": -0.035,
-      "z_cont_vs_random": -0.62,
-      "z_bounce_vs_random": 0.3
+      "go_with_R": -0.083,
+      "fade_R": -0.037,
+      "z_cont_vs_random": -0.61,
+      "z_bounce_vs_random": 0.29
      },
      "placebo": {
-      "n": 2288,
-      "cont": 0.513,
-      "bounce": 0.465,
-      "ambig": 0.021,
+      "n": 2293,
+      "cont": 0.512,
+      "bounce": 0.466,
+      "ambig": 0.02,
       "stall": 0.001,
-      "go_with_R": 0.015,
+      "go_with_R": 0.012,
       "fade_R": -0.08
      },
      "lean": "coin-flip"
@@ -2706,8 +2706,8 @@
       "bounce": 0.45,
       "ambig": 0.05,
       "stall": -0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.112,
+      "go_with_R": -0.014,
+      "fade_R": -0.114,
       "z_cont_vs_random": -0.21,
       "z_bounce_vs_random": -0.04
      },
@@ -2717,8 +2717,8 @@
       "bounce": 0.454,
       "ambig": 0.022,
       "stall": -0.0,
-      "go_with_R": 0.035,
-      "fade_R": -0.103
+      "go_with_R": 0.034,
+      "fade_R": -0.105
      },
      "lean": "coin-flip"
     },
@@ -2729,19 +2729,19 @@
       "bounce": 0.522,
       "ambig": 0.043,
       "stall": 0.0,
-      "go_with_R": -0.142,
-      "fade_R": 0.032,
-      "z_cont_vs_random": -0.67,
-      "z_bounce_vs_random": 0.47
+      "go_with_R": -0.144,
+      "fade_R": 0.03,
+      "z_cont_vs_random": -0.66,
+      "z_bounce_vs_random": 0.45
      },
      "placebo": {
-      "n": 1335,
-      "cont": 0.505,
-      "bounce": 0.473,
+      "n": 1340,
+      "cont": 0.504,
+      "bounce": 0.475,
       "ambig": 0.019,
       "stall": 0.002,
-      "go_with_R": 0.0,
-      "fade_R": -0.063
+      "go_with_R": -0.004,
+      "fade_R": -0.062
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2752,18 +2752,18 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.012,
+      "go_with_R": -0.014,
+      "fade_R": -0.014,
       "z_cont_vs_random": 0.03,
       "z_bounce_vs_random": 0.02
      },
      "placebo": {
-      "n": 519,
+      "n": 522,
       "cont": 0.489,
-      "bounce": 0.493,
+      "bounce": 0.494,
       "ambig": 0.015,
       "stall": 0.002,
-      "go_with_R": -0.031,
+      "go_with_R": -0.035,
       "fade_R": -0.023
      },
      "lean": "too few touches"
@@ -2775,19 +2775,19 @@
       "bounce": 0.524,
       "ambig": 0.048,
       "stall": -0.0,
-      "go_with_R": -0.155,
-      "fade_R": 0.036,
-      "z_cont_vs_random": -0.78,
-      "z_bounce_vs_random": 0.57
+      "go_with_R": -0.157,
+      "fade_R": 0.034,
+      "z_cont_vs_random": -0.76,
+      "z_bounce_vs_random": 0.56
      },
      "placebo": {
-      "n": 816,
-      "cont": 0.515,
-      "bounce": 0.461,
+      "n": 818,
+      "cont": 0.513,
+      "bounce": 0.462,
       "ambig": 0.022,
       "stall": 0.002,
-      "go_with_R": 0.02,
-      "fade_R": -0.088
+      "go_with_R": 0.016,
+      "fade_R": -0.087
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2798,19 +2798,19 @@
       "bounce": 0.55,
       "ambig": 0.05,
       "stall": -0.0,
-      "go_with_R": -0.212,
-      "fade_R": 0.088,
-      "z_cont_vs_random": -0.78,
-      "z_bounce_vs_random": 0.55
+      "go_with_R": -0.214,
+      "fade_R": 0.086,
+      "z_cont_vs_random": -0.76,
+      "z_bounce_vs_random": 0.53
      },
      "placebo": {
-      "n": 1126,
-      "cont": 0.488,
-      "bounce": 0.488,
+      "n": 1131,
+      "cont": 0.486,
+      "bounce": 0.49,
       "ambig": 0.023,
       "stall": 0.001,
-      "go_with_R": -0.036,
-      "fade_R": -0.034
+      "go_with_R": -0.04,
+      "fade_R": -0.033
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2821,8 +2821,8 @@
       "bounce": 0.435,
       "ambig": 0.043,
       "stall": 0.0,
-      "go_with_R": 0.032,
-      "fade_R": -0.142,
+      "go_with_R": 0.03,
+      "fade_R": -0.144,
       "z_cont_vs_random": -0.14,
       "z_bounce_vs_random": -0.08
      },
@@ -2832,8 +2832,8 @@
       "bounce": 0.443,
       "ambig": 0.018,
       "stall": 0.002,
-      "go_with_R": 0.064,
-      "fade_R": -0.124
+      "go_with_R": 0.062,
+      "fade_R": -0.126
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -2844,19 +2844,19 @@
       "bounce": 0.385,
       "ambig": 0.038,
       "stall": 0.0,
-      "go_with_R": 0.142,
-      "fade_R": -0.243,
+      "go_with_R": 0.14,
+      "fade_R": -0.244,
       "z_cont_vs_random": 0.1,
-      "z_bounce_vs_random": -0.21
+      "z_bounce_vs_random": -0.22
      },
      "placebo": {
-      "n": 1322,
+      "n": 1323,
       "cont": 0.567,
-      "bounce": 0.405,
+      "bounce": 0.406,
       "ambig": 0.027,
       "stall": -0.0,
-      "go_with_R": 0.123,
-      "fade_R": -0.201
+      "go_with_R": 0.12,
+      "fade_R": -0.202
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     },
@@ -2867,19 +2867,19 @@
       "bounce": 0.647,
       "ambig": 0.059,
       "stall": -0.0,
-      "go_with_R": -0.424,
-      "fade_R": 0.282,
-      "z_cont_vs_random": -1.19,
+      "go_with_R": -0.425,
+      "fade_R": 0.28,
+      "z_cont_vs_random": -1.18,
       "z_bounce_vs_random": 0.81
      },
      "placebo": {
-      "n": 966,
-      "cont": 0.438,
+      "n": 970,
+      "cont": 0.437,
       "bounce": 0.548,
       "ambig": 0.011,
       "stall": 0.003,
-      "go_with_R": -0.133,
-      "fade_R": 0.087
+      "go_with_R": -0.136,
+      "fade_R": 0.086
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2890,18 +2890,18 @@
       "bounce": 0.5,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.012,
-      "fade_R": -0.012,
-      "z_cont_vs_random": 0.28,
-      "z_bounce_vs_random": -0.15
+      "go_with_R": -0.014,
+      "fade_R": -0.014,
+      "z_cont_vs_random": 0.29,
+      "z_bounce_vs_random": -0.16
      },
      "placebo": {
-      "n": 636,
-      "cont": 0.459,
-      "bounce": 0.522,
+      "n": 637,
+      "cont": 0.458,
+      "bounce": 0.523,
       "ambig": 0.019,
-      "stall": -0.0,
-      "go_with_R": -0.094,
+      "stall": 0.0,
+      "go_with_R": -0.097,
       "fade_R": 0.032
      },
      "lean": "too few touches"
@@ -2913,18 +2913,18 @@
       "bounce": 0.484,
       "ambig": 0.065,
       "stall": -0.0,
-      "go_with_R": -0.109,
-      "fade_R": -0.044,
+      "go_with_R": -0.11,
+      "fade_R": -0.046,
       "z_cont_vs_random": -0.9,
       "z_bounce_vs_random": 0.44
      },
      "placebo": {
-      "n": 1652,
+      "n": 1656,
       "cont": 0.533,
       "bounce": 0.444,
       "ambig": 0.021,
       "stall": 0.002,
-      "go_with_R": 0.057,
+      "go_with_R": 0.053,
       "fade_R": -0.123
      },
      "lean": "coin-flip"
@@ -2936,19 +2936,19 @@
       "bounce": 0.5,
       "ambig": 0.062,
       "stall": 0.0,
-      "go_with_R": -0.137,
-      "fade_R": -0.012,
+      "go_with_R": -0.139,
+      "fade_R": -0.014,
       "z_cont_vs_random": -0.64,
       "z_bounce_vs_random": 0.22
      },
      "placebo": {
-      "n": 1280,
+      "n": 1283,
       "cont": 0.495,
       "bounce": 0.48,
       "ambig": 0.025,
       "stall": -0.0,
-      "go_with_R": -0.021,
-      "fade_R": -0.052
+      "go_with_R": -0.024,
+      "fade_R": -0.053
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
@@ -2959,18 +2959,18 @@
       "bounce": 0.455,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": 0.079,
-      "fade_R": -0.103,
+      "go_with_R": 0.077,
+      "fade_R": -0.105,
       "z_cont_vs_random": 0.07,
-      "z_bounce_vs_random": 0.05
+      "z_bounce_vs_random": 0.04
      },
      "placebo": {
-      "n": 1008,
-      "cont": 0.535,
-      "bounce": 0.447,
+      "n": 1010,
+      "cont": 0.534,
+      "bounce": 0.449,
       "ambig": 0.015,
       "stall": 0.003,
-      "go_with_R": 0.061,
+      "go_with_R": 0.057,
       "fade_R": -0.114
      },
      "lean": "too few touches"
@@ -2982,144 +2982,103 @@
   {
    "window": "1-day",
    "tf": 5,
-   "asof": "2026-11-12T21:30:00-05:00",
-   "close": 3913.0,
-   "atr": 5.064,
+   "asof": "2026-11-15T21:00:00-05:00",
+   "close": 3880.8,
+   "atr": 10.893,
    "range": [
-    3879.4,
-    3920.4
+    3862.0,
+    3904.6
    ],
-   "poc": 3913.0,
-   "vah": 3920.4,
-   "val": 3890.2,
-   "shape": "TREND_UP",
-   "net": 0.727,
+   "poc": 3875.6,
+   "vah": 3892.9,
+   "val": 3870.0,
+   "shape": "BALANCED",
+   "net": -0.178,
    "hvn": [
-    3881.2,
-    3890.4,
-    3913.0
+    3875.6,
+    3885.7,
+    3887.8,
+    3893.2,
+    3895.8,
+    3899.0,
+    3903.3
    ],
-   "legs": [
-    {
-     "dir": "UP",
-     "start": 3883.1,
-     "end": 3920.4,
-     "from_": "2026-11-12T18:00",
-     "to": "2026-11-12T20:20"
-    },
-    {
-     "dir": "DOWN",
-     "start": 3920.4,
-     "end": 3903.1,
-     "from_": "2026-11-12T20:20",
-     "to": "2026-11-12T20:20"
-    },
-    {
-     "dir": "UP",
-     "start": 3903.1,
-     "end": 3920.2,
-     "from_": "2026-11-12T20:20",
-     "to": "2026-11-12T20:30"
-    }
-   ],
-   "lvn": [
-    {
-     "price": 3897.6,
-     "side": "support",
-     "dist_atr": 3.04,
-     "condition": "arrived AGAINST the range's trend",
-     "history": {
-      "n": 39,
-      "cont": 0.513,
-      "bounce": 0.487,
-      "ambig": 0.0,
-      "stall": 0.0,
-      "go_with_R": -0.023,
-      "fade_R": -0.074,
-      "z_cont_vs_random": 0.0,
-      "z_bounce_vs_random": 0.17
-     },
-     "lean": "coin-flip"
-    }
-   ]
+   "legs": [],
+   "lvn": []
   },
   {
    "window": "3-day",
    "tf": 5,
-   "asof": "2026-11-12T21:30:00-05:00",
-   "close": 3913.0,
-   "atr": 5.064,
+   "asof": "2026-11-15T21:00:00-05:00",
+   "close": 3880.8,
+   "atr": 10.893,
    "range": [
     3856.2,
-    4074.8
+    4005.9
    ],
-   "poc": 3884.9,
-   "vah": 4006.5,
-   "val": 3856.2,
+   "poc": 3885.2,
+   "vah": 3923.6,
+   "val": 3865.6,
    "shape": "TREND_DOWN",
-   "net": -0.597,
+   "net": -0.76,
    "hvn": [
-    3884.9,
-    3912.2,
-    3950.5,
-    3969.6,
-    3991.5,
-    4010.6,
-    4021.5,
-    4043.4,
-    4054.3,
-    4065.2
+    3885.2,
+    3913.3,
+    3986.3
    ],
    "legs": [
     {
      "dir": "DOWN",
-     "start": 4041.9,
+     "start": 3996.6,
      "end": 3856.2,
-     "from_": "2026-11-10T18:00",
+     "from_": "2026-11-11T18:00",
      "to": "2026-11-12T10:20"
     },
     {
      "dir": "UP",
      "start": 3856.2,
-     "end": 3920.4,
+     "end": 3927.2,
      "from_": "2026-11-12T10:20",
-     "to": "2026-11-12T20:20"
+     "to": "2026-11-12T22:40"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3927.2,
+     "end": 3870.8,
+     "from_": "2026-11-12T22:40",
+     "to": "2026-11-13T11:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3870.8,
+     "end": 3904.6,
+     "from_": "2026-11-13T11:00",
+     "to": "2026-11-15T18:50"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3904.6,
+     "end": 3862.0,
+     "from_": "2026-11-15T18:50",
+     "to": "2026-11-15T20:00"
     }
    ],
    "lvn": [
     {
-     "price": 3925.9,
+     "price": 3928.2,
      "side": "resistance",
-     "dist_atr": 2.54,
+     "dist_atr": 4.36,
      "condition": "arrived AGAINST the range's trend",
      "history": {
-      "n": 24,
-      "cont": 0.625,
-      "bounce": 0.333,
-      "ambig": 0.042,
-      "stall": 0.0,
-      "go_with_R": 0.202,
-      "fade_R": -0.382,
-      "z_cont_vs_random": 0.85,
-      "z_bounce_vs_random": -1.19
-     },
-     "lean": "leans CONTINUATION, but random prices do the same"
-    },
-    {
-     "price": 4032.4,
-     "side": "resistance",
-     "dist_atr": 23.59,
-     "condition": "arrived AGAINST the range's trend",
-     "history": {
-      "n": 24,
-      "cont": 0.625,
-      "bounce": 0.333,
-      "ambig": 0.042,
-      "stall": 0.0,
-      "go_with_R": 0.202,
-      "fade_R": -0.382,
-      "z_cont_vs_random": 0.85,
-      "z_bounce_vs_random": -1.19
+      "n": 26,
+      "cont": 0.615,
+      "bounce": 0.346,
+      "ambig": 0.038,
+      "stall": -0.0,
+      "go_with_R": 0.208,
+      "fade_R": -0.33,
+      "z_cont_vs_random": 0.83,
+      "z_bounce_vs_random": -1.17
      },
      "lean": "leans CONTINUATION, but random prices do the same"
     }
@@ -3128,120 +3087,123 @@
   {
    "window": "1-week",
    "tf": 5,
-   "asof": "2026-11-12T21:30:00-05:00",
-   "close": 3913.0,
-   "atr": 5.064,
+   "asof": "2026-11-15T21:00:00-05:00",
+   "close": 3880.8,
+   "atr": 10.893,
    "range": [
     3856.2,
-    4158.7
+    4156.4
    ],
-   "poc": 4130.3,
-   "vah": 4154.9,
-   "val": 3984.8,
+   "poc": 3884.3,
+   "vah": 4040.1,
+   "val": 3856.2,
    "shape": "TREND_DOWN",
-   "net": -0.549,
+   "net": -0.892,
    "hvn": [
-    3884.6,
-    3990.4,
-    4054.7,
-    4085.0,
-    4130.3
+    3884.3,
+    3989.4,
+    4053.2,
+    4128.3
    ],
    "legs": [
     {
-     "dir": "UP",
-     "start": 4074.8,
-     "end": 4143.3,
-     "from_": "2026-11-08T18:10",
-     "to": "2026-11-08T21:05"
-    },
-    {
      "dir": "DOWN",
-     "start": 4143.3,
-     "end": 4074.9,
-     "from_": "2026-11-08T21:05",
-     "to": "2026-11-09T09:25"
-    },
-    {
-     "dir": "UP",
-     "start": 4074.9,
-     "end": 4158.7,
-     "from_": "2026-11-09T09:25",
-     "to": "2026-11-09T15:20"
-    },
-    {
-     "dir": "DOWN",
-     "start": 4158.7,
+     "start": 4145.9,
      "end": 3856.2,
-     "from_": "2026-11-09T15:20",
+     "from_": "2026-11-09T18:00",
      "to": "2026-11-12T10:20"
     },
     {
      "dir": "UP",
      "start": 3856.2,
-     "end": 3920.4,
+     "end": 3927.2,
      "from_": "2026-11-12T10:20",
-     "to": "2026-11-12T20:20"
+     "to": "2026-11-12T22:40"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3927.2,
+     "end": 3862.0,
+     "from_": "2026-11-12T22:40",
+     "to": "2026-11-15T20:00"
     }
    ],
    "lvn": [
     {
-     "price": 3926.2,
+     "price": 3963.1,
      "side": "resistance",
-     "dist_atr": 2.6,
+     "dist_atr": 7.56,
      "condition": "arrived AGAINST the range's trend",
      "history": {
-      "n": 14,
-      "cont": 0.643,
-      "bounce": 0.357,
+      "n": 16,
+      "cont": 0.562,
+      "bounce": 0.438,
       "ambig": 0.0,
-      "stall": -0.0,
-      "go_with_R": 0.238,
-      "fade_R": -0.334,
-      "z_cont_vs_random": 0.88,
-      "z_bounce_vs_random": -0.76
+      "stall": 0.0,
+      "go_with_R": 0.103,
+      "fade_R": -0.147,
+      "z_cont_vs_random": 0.33,
+      "z_bounce_vs_random": -0.2
      },
-     "lean": "too few touches"
+     "lean": "leans CONTINUATION, but random prices do the same"
     },
     {
-     "price": 4016.9,
+     "price": 4015.7,
      "side": "resistance",
-     "dist_atr": 20.52,
+     "dist_atr": 12.38,
      "condition": "arrived AGAINST the range's trend",
      "history": {
-      "n": 14,
-      "cont": 0.643,
-      "bounce": 0.357,
+      "n": 16,
+      "cont": 0.562,
+      "bounce": 0.438,
       "ambig": 0.0,
-      "stall": -0.0,
-      "go_with_R": 0.238,
-      "fade_R": -0.334,
-      "z_cont_vs_random": 0.88,
-      "z_bounce_vs_random": -0.76
+      "stall": 0.0,
+      "go_with_R": 0.103,
+      "fade_R": -0.147,
+      "z_cont_vs_random": 0.33,
+      "z_bounce_vs_random": -0.2
      },
-     "lean": "too few touches"
+     "lean": "leans CONTINUATION, but random prices do the same"
+    },
+    {
+     "price": 4113.2,
+     "side": "resistance",
+     "dist_atr": 21.34,
+     "condition": "arrived AGAINST the range's trend",
+     "history": {
+      "n": 16,
+      "cont": 0.562,
+      "bounce": 0.438,
+      "ambig": 0.0,
+      "stall": 0.0,
+      "go_with_R": 0.103,
+      "fade_R": -0.147,
+      "z_cont_vs_random": 0.33,
+      "z_bounce_vs_random": -0.2
+     },
+     "lean": "leans CONTINUATION, but random prices do the same"
     }
    ]
   },
   {
    "window": "2-week",
    "tf": 5,
-   "asof": "2026-11-12T21:30:00-05:00",
-   "close": 3913.0,
-   "atr": 5.064,
+   "asof": "2026-11-15T21:00:00-05:00",
+   "close": 3880.8,
+   "atr": 10.893,
    "range": [
     3856.2,
     4158.7
    ],
    "poc": 4130.3,
    "vah": 4154.9,
-   "val": 3962.1,
+   "val": 3958.3,
    "shape": "BALANCED",
-   "net": 0.032,
+   "net": -0.26,
    "hvn": [
     3884.6,
-    3911.0,
-    3952.6,
+    3914.8,
+    3941.3,
     3990.4,
     4054.7,
     4073.6,
@@ -3250,23 +3212,9 @@
    "legs": [
     {
      "dir": "UP",
-     "start": 3902.8,
-     "end": 3980.9,
-     "from_": "2026-11-01T18:10",
-     "to": "2026-11-02T11:40"
-    },
-    {
-     "dir": "DOWN",
-     "start": 3980.9,
-     "end": 3904.1,
-     "from_": "2026-11-02T11:40",
-     "to": "2026-11-03T04:00"
-    },
-    {
-     "dir": "UP",
-     "start": 3904.1,
+     "start": 3957.1,
      "end": 4156.0,
-     "from_": "2026-11-03T04:00",
+     "from_": "2026-11-02T18:00",
      "to": "2026-11-04T22:55"
     },
     {
@@ -3307,34 +3255,23 @@
     {
      "dir": "UP",
      "start": 3856.2,
-     "end": 3920.4,
+     "end": 3927.2,
      "from_": "2026-11-12T10:20",
-     "to": "2026-11-12T20:20"
+     "to": "2026-11-12T22:40"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3927.2,
+     "end": 3862.0,
+     "from_": "2026-11-12T22:40",
+     "to": "2026-11-15T20:00"
     }
    ],
    "lvn": [
     {
-     "price": 3926.2,
-     "side": "resistance",
-     "dist_atr": 2.6,
-     "condition": "range is BALANCED",
-     "history": {
-      "n": 34,
-      "cont": 0.412,
-      "bounce": 0.588,
-      "ambig": 0.0,
-      "stall": 0.0,
-      "go_with_R": -0.225,
-      "fade_R": 0.128,
-      "z_cont_vs_random": -1.16,
-      "z_bounce_vs_random": 1.35
-     },
-     "lean": "leans BOUNCE, but random prices do the same"
-    },
-    {
      "price": 4092.5,
      "side": "resistance",
-     "dist_atr": 35.45,
+     "dist_atr": 19.44,
      "condition": "range is BALANCED",
      "history": {
       "n": 34,
@@ -3342,10 +3279,10 @@
       "bounce": 0.588,
       "ambig": 0.0,
       "stall": 0.0,
-      "go_with_R": -0.225,
-      "fade_R": 0.128,
-      "z_cont_vs_random": -1.16,
-      "z_bounce_vs_random": 1.35
+      "go_with_R": -0.199,
+      "fade_R": 0.154,
+      "z_cont_vs_random": -1.14,
+      "z_bounce_vs_random": 1.34
      },
      "lean": "leans BOUNCE, but random prices do the same"
     }
@@ -3354,31 +3291,211 @@
   {
    "window": "1-week(60m)",
    "tf": 60,
-   "asof": "2026-11-12T20:00:00-05:00",
-   "close": 3911.8,
-   "atr": 20.714,
+   "asof": "2026-11-15T20:00:00-05:00",
+   "close": 3871.8,
+   "atr": 17.871,
    "range": [
     3856.2,
-    4158.7
+    4156.4
    ],
-   "poc": 4130.3,
-   "vah": 4151.1,
-   "val": 3984.8,
+   "poc": 3888.1,
+   "vah": 4040.1,
+   "val": 3856.2,
    "shape": "TREND_DOWN",
-   "net": -0.553,
+   "net": -0.922,
    "hvn": [
-    3884.6,
-    3990.4,
-    4050.9,
-    4092.5,
-    4130.3
+    3888.1,
+    3989.4,
+    4053.2,
+    4132.0
    ],
    "legs": [
     {
+     "dir": "DOWN",
+     "start": 4148.4,
+     "end": 3889.8,
+     "from_": "2026-11-09T18:00",
+     "to": "2026-11-12T08:00"
+    },
+    {
      "dir": "UP",
-     "start": 4064.0,
+     "start": 3889.8,
+     "end": 3955.0,
+     "from_": "2026-11-12T08:00",
+     "to": "2026-11-12T08:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3955.0,
+     "end": 3856.2,
+     "from_": "2026-11-12T08:00",
+     "to": "2026-11-12T10:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3856.2,
+     "end": 3927.2,
+     "from_": "2026-11-12T10:00",
+     "to": "2026-11-12T22:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3927.2,
+     "end": 3862.0,
+     "from_": "2026-11-12T22:00",
+     "to": "2026-11-15T20:00"
+    }
+   ],
+   "lvn": [
+    {
+     "price": 3966.9,
+     "side": "resistance",
+     "dist_atr": 5.32,
+     "condition": "arrived AGAINST the range's trend",
+     "history": {
+      "n": 44,
+      "cont": 0.568,
+      "bounce": 0.409,
+      "ambig": 0.023,
+      "stall": -0.0,
+      "go_with_R": 0.123,
+      "fade_R": -0.195,
+      "z_cont_vs_random": 0.12,
+      "z_bounce_vs_random": -0.23
+     },
+     "lean": "leans CONTINUATION, but random prices do the same"
+    },
+    {
+     "price": 4015.7,
+     "side": "resistance",
+     "dist_atr": 8.05,
+     "condition": "arrived AGAINST the range's trend",
+     "history": {
+      "n": 44,
+      "cont": 0.568,
+      "bounce": 0.409,
+      "ambig": 0.023,
+      "stall": -0.0,
+      "go_with_R": 0.123,
+      "fade_R": -0.195,
+      "z_cont_vs_random": 0.12,
+      "z_bounce_vs_random": -0.23
+     },
+     "lean": "leans CONTINUATION, but random prices do the same"
+    },
+    {
+     "price": 4105.7,
+     "side": "resistance",
+     "dist_atr": 13.09,
+     "condition": "arrived AGAINST the range's trend",
+     "history": {
+      "n": 44,
+      "cont": 0.568,
+      "bounce": 0.409,
+      "ambig": 0.023,
+      "stall": -0.0,
+      "go_with_R": 0.123,
+      "fade_R": -0.195,
+      "z_cont_vs_random": 0.12,
+      "z_bounce_vs_random": -0.23
+     },
+     "lean": "leans CONTINUATION, but random prices do the same"
+    }
+   ]
+  },
+  {
+   "window": "1-month",
+   "tf": 60,
+   "asof": "2026-11-15T20:00:00-05:00",
+   "close": 3871.8,
+   "atr": 17.871,
+   "range": [
+    3856.2,
+    4174.9
+   ],
+   "poc": 4037.5,
+   "vah": 4159.0,
+   "val": 3991.6,
+   "shape": "TREND_DOWN",
+   "net": -0.906,
+   "hvn": [
+    3890.1,
+    3906.0,
+    3957.8,
+    4037.5,
+    4053.4,
+    4105.2,
+    4137.1
+   ],
+   "legs": [
+    {
+     "dir": "DOWN",
+     "start": 4155.6,
+     "end": 3989.0,
+     "from_": "2026-10-19T18:00",
+     "to": "2026-10-23T10:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3989.0,
+     "end": 4097.3,
+     "from_": "2026-10-23T10:00",
+     "to": "2026-10-28T16:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 4097.3,
+     "end": 3879.3,
+     "from_": "2026-10-28T16:00",
+     "to": "2026-10-30T15:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3879.3,
+     "end": 3980.9,
+     "from_": "2026-10-30T15:00",
+     "to": "2026-11-02T11:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 3980.9,
+     "end": 3904.1,
+     "from_": "2026-11-02T11:00",
+     "to": "2026-11-03T04:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3904.1,
+     "end": 4020.5,
+     "from_": "2026-11-03T04:00",
+     "to": "2026-11-04T00:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 4020.5,
+     "end": 3956.3,
+     "from_": "2026-11-04T00:00",
+     "to": "2026-11-04T00:00"
+    },
+    {
+     "dir": "UP",
+     "start": 3956.3,
+     "end": 4156.0,
+     "from_": "2026-11-04T00:00",
+     "to": "2026-11-04T22:00"
+    },
+    {
+     "dir": "DOWN",
+     "start": 4156.0,
+     "end": 4032.0,
+     "from_": "2026-11-04T22:00",
+     "to": "2026-11-06T08:00"
+    },
+    {
+     "dir": "UP",
+     "start": 4032.0,
      "end": 4143.3,
-     "from_": "2026-11-08T18:00",
+     "from_": "2026-11-06T08:00",
      "to": "2026-11-08T21:00"
     },
     {
@@ -3419,135 +3536,16 @@
     {
      "dir": "UP",
      "start": 3856.2,
-     "end": 3920.4,
+     "end": 3927.2,
      "from_": "2026-11-12T10:00",
-     "to": "2026-11-12T20:00"
-    }
-   ],
-   "lvn": [
-    {
-     "price": 3926.2,
-     "side": "resistance",
-     "dist_atr": 0.69,
-     "condition": "arrived AGAINST the range's trend",
-     "history": {
-      "n": 43,
-      "cont": 0.581,
-      "bounce": 0.395,
-      "ambig": 0.023,
-      "stall": -0.0,
-      "go_with_R": 0.151,
-      "fade_R": -0.221,
-      "z_cont_vs_random": 0.27,
-      "z_bounce_vs_random": -0.41
-     },
-     "lean": "leans CONTINUATION, but random prices do the same"
-    },
-    {
-     "price": 4009.3,
-     "side": "resistance",
-     "dist_atr": 4.71,
-     "condition": "arrived AGAINST the range's trend",
-     "history": {
-      "n": 43,
-      "cont": 0.581,
-      "bounce": 0.395,
-      "ambig": 0.023,
-      "stall": -0.0,
-      "go_with_R": 0.151,
-      "fade_R": -0.221,
-      "z_cont_vs_random": 0.27,
-      "z_bounce_vs_random": -0.41
-     },
-     "lean": "leans CONTINUATION, but random prices do the same"
-    }
-   ]
-  },
-  {
-   "window": "1-month",
-   "tf": 60,
-   "asof": "2026-11-12T20:00:00-05:00",
-   "close": 3911.8,
-   "atr": 20.714,
-   "range": [
-    3856.2,
-    4211.2
-   ],
-   "poc": 4040.4,
-   "vah": 4162.4,
-   "val": 3998.2,
-   "shape": "TREND_DOWN",
-   "net": -0.787,
-   "hvn": [
-    3911.7,
-    3956.0,
-    4040.4,
-    4111.4,
-    4138.0
-   ],
-   "legs": [
-    {
-     "dir": "DOWN",
-     "start": 4196.3,
-     "end": 3989.0,
-     "from_": "2026-10-18T18:00",
-     "to": "2026-10-23T10:00"
-    },
-    {
-     "dir": "UP",
-     "start": 3989.0,
-     "end": 4097.3,
-     "from_": "2026-10-23T10:00",
-     "to": "2026-10-28T16:00"
+     "to": "2026-11-12T22:00"
     },
     {
      "dir": "DOWN",
-     "start": 4097.3,
-     "end": 3879.3,
-     "from_": "2026-10-28T16:00",
-     "to": "2026-10-30T15:00"
-    },
-    {
-     "dir": "UP",
-     "start": 3879.3,
-     "end": 3980.9,
-     "from_": "2026-10-30T15:00",
-     "to": "2026-11-02T11:00"
-    },
-    {
-     "dir": "DOWN",
-     "start": 3980.9,
-     "end": 3904.1,
-     "from_": "2026-11-02T11:00",
-     "to": "2026-11-03T04:00"
-    },
-    {
-     "dir": "UP",
-     "start": 3904.1,
-     "end": 4156.0,
-     "from_": "2026-11-03T04:00",
-     "to": "2026-11-04T22:00"
-    },
-    {
-     "dir": "DOWN",
-     "start": 4156.0,
-     "end": 4032.0,
-     "from_": "2026-11-04T22:00",
-     "to": "2026-11-06T08:00"
-    },
-    {
-     "dir": "UP",
-     "start": 4032.0,
-     "end": 4158.7,
-     "from_": "2026-11-06T08:00",
-     "to": "2026-11-09T15:00"
-    },
-    {
-     "dir": "DOWN",
-     "start": 4158.7,
-     "end": 3856.2,
-     "from_": "2026-11-09T15:00",
-     "to": "2026-11-12T10:00"
+     "start": 3927.2,
+     "end": 3862.0,
+     "from_": "2026-11-12T22:00",
+     "to": "2026-11-15T20:00"
     }
    ],
    "lvn": []
@@ -3555,31 +3553,32 @@
   {
    "window": "3-month",
    "tf": 60,
-   "asof": "2026-11-12T20:00:00-05:00",
-   "close": 3911.8,
-   "atr": 20.714,
+   "asof": "2026-11-15T20:00:00-05:00",
+   "close": 3871.8,
+   "atr": 17.871,
    "range": [
     3856.2,
     4755.0
    ],
    "poc": 4187.6,
-   "vah": 4395.5,
+   "vah": 4384.2,
    "val": 3856.2,
    "shape": "TREND_DOWN",
-   "net": -0.739,
+   "net": -0.894,
    "hvn": [
+    3906.8,
     4052.8,
     4187.6,
     4322.5,
     4389.9,
-    4670.7
+    4682.0
    ],
    "legs": [
     {
      "dir": "DOWN",
-     "start": 4579.9,
+     "start": 4663.1,
      "end": 4329.3,
-     "from_": "2026-08-20T18:00",
+     "from_": "2026-08-23T18:00",
      "to": "2026-09-01T23:00"
     },
     {
@@ -3615,7 +3614,7 @@
     {
      "price": 4266.3,
      "side": "resistance",
-     "dist_atr": 17.11,
+     "dist_atr": 22.07,
      "condition": "arrived AGAINST the range's trend",
      "history": {
       "n": 21,
@@ -3623,17 +3622,17 @@
       "bounce": 0.524,
       "ambig": 0.048,
       "stall": -0.0,
-      "go_with_R": -0.155,
-      "fade_R": 0.036,
-      "z_cont_vs_random": -0.78,
-      "z_bounce_vs_random": 0.57
+      "go_with_R": -0.157,
+      "fade_R": 0.034,
+      "z_cont_vs_random": -0.76,
+      "z_bounce_vs_random": 0.56
      },
      "lean": "leans BOUNCE, but random prices do the same"
     },
     {
-     "price": 4558.4,
+     "price": 4580.9,
      "side": "resistance",
-     "dist_atr": 31.21,
+     "dist_atr": 39.68,
      "condition": "arrived AGAINST the range's trend",
      "history": {
       "n": 21,
@@ -3641,10 +3640,10 @@
       "bounce": 0.524,
       "ambig": 0.048,
       "stall": -0.0,
-      "go_with_R": -0.155,
-      "fade_R": 0.036,
-      "z_cont_vs_random": -0.78,
-      "z_bounce_vs_random": 0.57
+      "go_with_R": -0.157,
+      "fade_R": 0.034,
+      "z_cont_vs_random": -0.76,
+      "z_bounce_vs_random": 0.56
      },
      "lean": "leans BOUNCE, but random prices do the same"
     }

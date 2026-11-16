@@ -11,93 +11,93 @@ Runs combined: MCL 5m, MCL 60m, MES 5m, MES 60m, MGC 5m, MGC 60m, MNQ 5m, MNQ 60
 
 | condition | plain English | beats fake | combined z | avg R real | avg R fake | trades |
 |---|---|---|---|---|---|---|
-| PDC RESISTANCE | prior day's close as resistance | 6/8 | +2.00 | -0.112 | -0.185 | 1018 |
-| ONL RESISTANCE | overnight low as resistance | 3/4 | +1.48 | +0.115 | -0.097 | 56 |
-| PD_VWAP RESISTANCE | prior day's VWAP as resistance | 6/8 | +1.48 | -0.107 | -0.164 | 852 |
-| ONH RESISTANCE | overnight high as resistance | 6/8 | +1.04 | -0.109 | -0.176 | 382 |
-| ROUND RESISTANCE | round number as resistance | 5/8 | +1.01 | -0.132 | -0.148 | 4058 |
-| PD_POC RESISTANCE | prior day's busiest price (volume POC) as resistance | 5/8 | +0.89 | -0.139 | -0.173 | 938 |
+| PDC RESISTANCE | prior day's close as resistance | 6/8 | +1.82 | -0.115 | -0.180 | 1029 |
+| ONL RESISTANCE | overnight low as resistance | 3/4 | +1.42 | +0.115 | -0.085 | 56 |
+| PD_VWAP RESISTANCE | prior day's VWAP as resistance | 6/8 | +1.32 | -0.108 | -0.160 | 859 |
+| ONH RESISTANCE | overnight high as resistance | 6/8 | +1.02 | -0.109 | -0.175 | 382 |
+| ROUND RESISTANCE | round number as resistance | 5/8 | +1.00 | -0.131 | -0.147 | 4086 |
 | PWH SUPPORT | prior week's high as support | 7/8 | +0.86 | -0.090 | -0.145 | 276 |
-| PD_POC SUPPORT | prior day's busiest price (volume POC) as support | 4/8 | +0.64 | -0.147 | -0.176 | 1099 |
-| P_RTH_H RESISTANCE | prior regular-session high as resistance | 5/8 | +0.60 | -0.158 | -0.169 | 1277 |
-| PD_VWAP SUPPORT | prior day's VWAP as support | 5/8 | +0.35 | -0.162 | -0.169 | 993 |
-| ROUND SUPPORT | round number as support | 4/8 | +0.31 | -0.134 | -0.145 | 4367 |
-| resistance | all resistances | 6/8 | +0.13 | -0.147 | -0.145 | 17237 |
-| confluence=0 | level on its own | 5/8 | +0.00 | -0.152 | -0.153 | 13214 |
-| PDL RESISTANCE | prior day's low as resistance | 4/8 | -0.13 | -0.119 | -0.103 | 296 |
-| P_RTH_L RESISTANCE | prior regular-session low as resistance | 5/8 | -0.15 | -0.163 | -0.152 | 410 |
-| RTH | during regular hours 9:30-16:00 ET | 4/8 | -0.31 | -0.133 | -0.128 | 11530 |
-| with_trend | bounce in the direction of the trend | 4/8 | -0.46 | -0.166 | -0.162 | 14421 |
-| PDH RESISTANCE | prior day's high as resistance | 4/8 | -0.53 | -0.170 | -0.154 | 1113 |
-| PWH RESISTANCE | prior week's high as resistance | 3/8 | -0.62 | -0.201 | -0.160 | 461 |
-| PWL RESISTANCE | prior week's low as resistance | 3/8 | -0.64 | -0.152 | -0.109 | 243 |
-| fast_approach | price raced into the level | 3/8 | -0.79 | -0.151 | -0.139 | 7675 |
-| retest(2+) | level already tested before | 5/8 | -0.81 | -0.139 | -0.133 | 20256 |
-| P_RTH_L SUPPORT | prior regular-session low as support | 3/8 | -0.90 | -0.166 | -0.131 | 1236 |
+| P_RTH_H RESISTANCE | prior regular-session high as resistance | 4/8 | +0.75 | -0.151 | -0.167 | 1287 |
+| PD_POC RESISTANCE | prior day's busiest price (volume POC) as resistance | 4/8 | +0.71 | -0.144 | -0.171 | 945 |
+| PD_POC SUPPORT | prior day's busiest price (volume POC) as support | 4/8 | +0.70 | -0.148 | -0.178 | 1106 |
+| ROUND SUPPORT | round number as support | 4/8 | +0.31 | -0.135 | -0.146 | 4398 |
+| PD_VWAP SUPPORT | prior day's VWAP as support | 5/8 | +0.28 | -0.166 | -0.171 | 1002 |
+| resistance | all resistances | 6/8 | +0.12 | -0.145 | -0.144 | 17357 |
+| confluence=0 | level on its own | 5/8 | -0.06 | -0.152 | -0.152 | 13314 |
+| PDL RESISTANCE | prior day's low as resistance | 4/8 | -0.10 | -0.126 | -0.110 | 300 |
+| P_RTH_L RESISTANCE | prior regular-session low as resistance | 5/8 | -0.21 | -0.165 | -0.149 | 415 |
+| RTH | during regular hours 9:30-16:00 ET | 4/8 | -0.27 | -0.133 | -0.128 | 11603 |
+| PDH RESISTANCE | prior day's high as resistance | 4/8 | -0.42 | -0.166 | -0.153 | 1119 |
+| PWL RESISTANCE | prior week's low as resistance | 3/8 | -0.58 | -0.146 | -0.109 | 246 |
+| PWH RESISTANCE | prior week's high as resistance | 3/8 | -0.64 | -0.201 | -0.159 | 461 |
+| with_trend | bounce in the direction of the trend | 3/8 | -0.65 | -0.167 | -0.162 | 14519 |
+| fast_approach | price raced into the level | 3/8 | -0.78 | -0.150 | -0.139 | 7736 |
+| retest(2+) | level already tested before | 4/8 | -0.79 | -0.139 | -0.133 | 20452 |
+| ONL SUPPORT | overnight low as support | 4/8 | -0.88 | -0.178 | -0.134 | 445 |
+| P_RTH_L SUPPORT | prior regular-session low as support | 2/8 | -0.88 | -0.167 | -0.132 | 1244 |
+| P_RTH_H SUPPORT | prior regular-session high as support | 2/8 | -0.91 | -0.210 | -0.169 | 490 |
 | ONH SUPPORT | overnight high as support | 1/3 | -0.94 | -0.173 | -0.138 | 49 |
-| P_RTH_H SUPPORT | prior regular-session high as support | 3/8 | -0.94 | -0.209 | -0.165 | 487 |
-| ONL SUPPORT | overnight low as support | 3/8 | -1.04 | -0.186 | -0.136 | 440 |
-| PDC SUPPORT | prior day's close as support | 3/8 | -1.26 | -0.190 | -0.146 | 1065 |
-| low_vol | quiet market | 3/8 | -1.38 | -0.198 | -0.185 | 19731 |
-| high_vol | volatile market | 2/8 | -1.39 | -0.108 | -0.095 | 15929 |
-| PDL SUPPORT | prior day's low as support | 3/8 | -1.55 | -0.206 | -0.143 | 1043 |
-| PDH SUPPORT | prior day's high as support | 1/8 | -1.69 | -0.261 | -0.163 | 346 |
-| SWING RESISTANCE | recent 60m swing high/low as resistance | 2/8 | -1.86 | -0.165 | -0.135 | 6114 |
-| PWL SUPPORT | prior week's low as support | 2/8 | -2.29 | -0.257 | -0.148 | 439 |
-| slow_approach | price drifted into the level | 2/8 | -2.43 | -0.160 | -0.142 | 27985 |
-| all | every touch | 3/8 | -2.45 | -0.158 | -0.142 | 35660 |
-| counter_trend | bounce against the trend | 2/8 | -2.47 | -0.152 | -0.132 | 21239 |
-| overnight | outside regular hours | 4/8 | -2.73 | -0.169 | -0.148 | 24130 |
-| SWING SUPPORT | recent 60m swing high/low as support | 2/8 | -3.31 | -0.175 | -0.127 | 6562 |
-| support | all supports | 1/8 | -3.62 | -0.168 | -0.138 | 18423 |
-| first_touch | first time the level is tested | 1/8 | -3.98 | -0.183 | -0.146 | 15404 |
-| confluence>=2 | 2+ other levels stacked within 1/4 ATR | 1/8 | -4.23 | -0.165 | -0.113 | 12461 |
+| PDC SUPPORT | prior day's close as support | 3/8 | -1.35 | -0.198 | -0.151 | 1084 |
+| low_vol | quiet market | 4/8 | -1.37 | -0.197 | -0.184 | 19863 |
+| high_vol | volatile market | 2/8 | -1.53 | -0.110 | -0.096 | 16065 |
+| PDH SUPPORT | prior day's high as support | 1/8 | -1.61 | -0.258 | -0.164 | 347 |
+| PDL SUPPORT | prior day's low as support | 3/8 | -1.64 | -0.210 | -0.144 | 1048 |
+| SWING RESISTANCE | recent 60m swing high/low as resistance | 2/8 | -1.79 | -0.164 | -0.134 | 6151 |
+| PWL SUPPORT | prior week's low as support | 2/8 | -2.43 | -0.261 | -0.146 | 441 |
+| counter_trend | bounce against the trend | 2/8 | -2.51 | -0.152 | -0.132 | 21409 |
+| all | every touch | 3/8 | -2.63 | -0.158 | -0.141 | 35928 |
+| slow_approach | price drifted into the level | 2/8 | -2.68 | -0.160 | -0.142 | 28192 |
+| overnight | outside regular hours | 2/8 | -2.94 | -0.170 | -0.148 | 24325 |
+| SWING SUPPORT | recent 60m swing high/low as support | 2/8 | -3.56 | -0.177 | -0.127 | 6620 |
+| support | all supports | 1/8 | -3.86 | -0.170 | -0.138 | 18571 |
+| confluence>=2 | 2+ other levels stacked within 1/4 ATR | 1/8 | -4.14 | -0.164 | -0.113 | 12524 |
+| first_touch | first time the level is tested | 1/8 | -4.17 | -0.183 | -0.145 | 15476 |
 
 ## Sweep & reclaim (poke through, close back, enter)
 
 | condition | plain English | beats fake | combined z | avg R real | avg R fake | trades |
 |---|---|---|---|---|---|---|
-| ONL RESISTANCE | overnight low as resistance | 2/2 | +2.60 | +0.416 | -0.126 | 23 |
-| PD_VWAP SUPPORT | prior day's VWAP as support | 7/8 | +1.77 | -0.164 | -0.254 | 571 |
-| PDC RESISTANCE | prior day's close as resistance | 6/8 | +1.41 | -0.169 | -0.239 | 550 |
+| ONL RESISTANCE | overnight low as resistance | 2/2 | +2.57 | +0.416 | -0.115 | 23 |
+| PD_VWAP SUPPORT | prior day's VWAP as support | 7/8 | +1.88 | -0.164 | -0.257 | 575 |
+| PDC RESISTANCE | prior day's close as resistance | 6/8 | +1.45 | -0.163 | -0.236 | 556 |
 | ONH SUPPORT | overnight high as support | 1/1 | +1.25 | +0.031 | -0.321 | 16 |
-| PWL RESISTANCE | prior week's low as resistance | 4/7 | +1.11 | -0.112 | -0.168 | 138 |
-| ONH RESISTANCE | overnight high as resistance | 7/8 | +0.98 | -0.200 | -0.285 | 261 |
-| ONL SUPPORT | overnight low as support | 6/8 | +0.93 | -0.189 | -0.239 | 283 |
-| ROUND RESISTANCE | round number as resistance | 5/8 | +0.90 | -0.223 | -0.245 | 2242 |
-| P_RTH_H RESISTANCE | prior regular-session high as resistance | 5/8 | +0.82 | -0.226 | -0.268 | 737 |
-| PD_POC SUPPORT | prior day's busiest price (volume POC) as support | 4/8 | +0.71 | -0.192 | -0.231 | 648 |
-| RTH | during regular hours 9:30-16:00 ET | 5/8 | +0.53 | -0.212 | -0.218 | 7148 |
-| PDH RESISTANCE | prior day's high as resistance | 4/8 | +0.29 | -0.214 | -0.224 | 684 |
-| confluence=0 | level on its own | 4/8 | +0.18 | -0.213 | -0.216 | 7177 |
-| PD_POC RESISTANCE | prior day's busiest price (volume POC) as resistance | 5/8 | -0.05 | -0.231 | -0.214 | 534 |
-| fast_approach | price raced into the level | 3/8 | -0.07 | -0.196 | -0.197 | 4405 |
-| resistance | all resistances | 4/8 | -0.11 | -0.238 | -0.233 | 9844 |
-| PWH RESISTANCE | prior week's high as resistance | 4/7 | -0.15 | -0.310 | -0.282 | 261 |
-| ROUND SUPPORT | round number as support | 3/8 | -0.17 | -0.205 | -0.204 | 2540 |
-| PDL RESISTANCE | prior day's low as resistance | 4/8 | -0.20 | -0.223 | -0.204 | 169 |
-| PD_VWAP RESISTANCE | prior day's VWAP as resistance | 3/8 | -0.27 | -0.232 | -0.211 | 502 |
+| ONL SUPPORT | overnight low as support | 6/8 | +1.04 | -0.184 | -0.239 | 286 |
+| ROUND RESISTANCE | round number as resistance | 5/8 | +1.03 | -0.217 | -0.242 | 2260 |
+| ONH RESISTANCE | overnight high as resistance | 7/8 | +0.99 | -0.200 | -0.286 | 261 |
+| PWL RESISTANCE | prior week's low as resistance | 4/7 | +0.91 | -0.112 | -0.151 | 140 |
+| P_RTH_H RESISTANCE | prior regular-session high as resistance | 5/8 | +0.73 | -0.224 | -0.261 | 745 |
+| PD_POC SUPPORT | prior day's busiest price (volume POC) as support | 4/8 | +0.65 | -0.195 | -0.231 | 654 |
+| RTH | during regular hours 9:30-16:00 ET | 5/8 | +0.54 | -0.212 | -0.217 | 7186 |
+| confluence=0 | level on its own | 5/8 | +0.20 | -0.211 | -0.215 | 7228 |
+| PDH RESISTANCE | prior day's high as resistance | 4/8 | +0.16 | -0.216 | -0.219 | 690 |
+| PD_POC RESISTANCE | prior day's busiest price (volume POC) as resistance | 5/8 | -0.04 | -0.229 | -0.212 | 539 |
+| ROUND SUPPORT | round number as support | 3/8 | -0.07 | -0.204 | -0.204 | 2557 |
+| fast_approach | price raced into the level | 3/8 | -0.07 | -0.199 | -0.200 | 4438 |
+| PWH RESISTANCE | prior week's high as resistance | 4/7 | -0.18 | -0.310 | -0.279 | 261 |
+| PD_VWAP RESISTANCE | prior day's VWAP as resistance | 3/8 | -0.24 | -0.227 | -0.207 | 506 |
+| resistance | all resistances | 4/8 | -0.29 | -0.236 | -0.229 | 9924 |
 | PWH SUPPORT | prior week's high as support | 2/5 | -0.31 | -0.199 | -0.166 | 135 |
-| P_RTH_L RESISTANCE | prior regular-session low as resistance | 3/8 | -0.40 | -0.301 | -0.279 | 224 |
-| PDC SUPPORT | prior day's close as support | 3/8 | -0.73 | -0.232 | -0.197 | 577 |
-| confluence>=2 | 2+ other levels stacked within 1/4 ATR | 3/8 | -0.92 | -0.241 | -0.226 | 7657 |
-| PDH SUPPORT | prior day's high as support | 2/8 | -1.16 | -0.269 | -0.206 | 183 |
-| retest(2+) | level already tested before | 3/8 | -1.17 | -0.227 | -0.213 | 11250 |
-| counter_trend | bounce against the trend | 3/8 | -1.23 | -0.225 | -0.211 | 12370 |
-| with_trend | bounce in the direction of the trend | 3/8 | -1.26 | -0.241 | -0.218 | 8133 |
-| low_vol | quiet market | 4/8 | -1.35 | -0.244 | -0.230 | 10839 |
-| first_touch | first time the level is tested | 2/8 | -1.41 | -0.236 | -0.217 | 9253 |
-| high_vol | volatile market | 3/8 | -1.53 | -0.217 | -0.196 | 9664 |
-| PDL SUPPORT | prior day's low as support | 3/8 | -1.58 | -0.276 | -0.208 | 626 |
-| PWL SUPPORT | prior week's low as support | 1/7 | -1.82 | -0.334 | -0.203 | 250 |
-| P_RTH_H SUPPORT | prior regular-session high as support | 1/8 | -1.89 | -0.279 | -0.192 | 258 |
-| slow_approach | price drifted into the level | 4/8 | -1.90 | -0.241 | -0.219 | 16098 |
-| all | every touch | 3/8 | -1.96 | -0.231 | -0.214 | 20503 |
-| P_RTH_L SUPPORT | prior regular-session low as support | 2/8 | -2.08 | -0.276 | -0.187 | 753 |
-| SWING SUPPORT | recent 60m swing high/low as support | 2/8 | -2.19 | -0.220 | -0.180 | 3766 |
-| SWING RESISTANCE | recent 60m swing high/low as resistance | 1/8 | -2.32 | -0.273 | -0.222 | 3481 |
-| support | all supports | 2/8 | -2.52 | -0.224 | -0.197 | 10659 |
-| overnight | outside regular hours | 2/8 | -2.80 | -0.241 | -0.212 | 13355 |
+| PDL RESISTANCE | prior day's low as resistance | 4/8 | -0.33 | -0.233 | -0.201 | 171 |
+| P_RTH_L RESISTANCE | prior regular-session low as resistance | 3/8 | -0.40 | -0.290 | -0.269 | 226 |
+| PDC SUPPORT | prior day's close as support | 3/8 | -0.75 | -0.234 | -0.199 | 588 |
+| confluence>=2 | 2+ other levels stacked within 1/4 ATR | 3/8 | -1.03 | -0.241 | -0.223 | 7698 |
+| with_trend | bounce in the direction of the trend | 3/8 | -1.17 | -0.238 | -0.218 | 8181 |
+| retest(2+) | level already tested before | 4/8 | -1.18 | -0.225 | -0.212 | 11368 |
+| PDH SUPPORT | prior day's high as support | 2/8 | -1.24 | -0.273 | -0.205 | 184 |
+| low_vol | quiet market | 4/8 | -1.33 | -0.242 | -0.228 | 10924 |
+| counter_trend | bounce against the trend | 4/8 | -1.35 | -0.224 | -0.210 | 12482 |
+| first_touch | first time the level is tested | 3/8 | -1.37 | -0.235 | -0.216 | 9295 |
+| PDL SUPPORT | prior day's low as support | 3/8 | -1.50 | -0.275 | -0.210 | 627 |
+| high_vol | volatile market | 2/8 | -1.57 | -0.216 | -0.196 | 9739 |
+| PWL SUPPORT | prior week's low as support | 2/7 | -1.75 | -0.329 | -0.200 | 251 |
+| P_RTH_H SUPPORT | prior regular-session high as support | 1/8 | -2.00 | -0.288 | -0.194 | 261 |
+| slow_approach | price drifted into the level | 3/8 | -2.01 | -0.239 | -0.216 | 16225 |
+| all | every touch | 3/8 | -2.02 | -0.230 | -0.212 | 20663 |
+| P_RTH_L SUPPORT | prior regular-session low as support | 1/8 | -2.06 | -0.278 | -0.189 | 756 |
+| SWING SUPPORT | recent 60m swing high/low as support | 2/8 | -2.17 | -0.221 | -0.182 | 3796 |
+| support | all supports | 2/8 | -2.47 | -0.224 | -0.197 | 10739 |
+| SWING RESISTANCE | recent 60m swing high/low as resistance | 1/8 | -2.51 | -0.272 | -0.218 | 3507 |
+| overnight | outside regular hours | 2/8 | -2.87 | -0.240 | -0.210 | 13477 |
 
 ## Volume profile: at a low-volume node (LVN), continuation or bounce?
 
@@ -105,98 +105,98 @@ Runs combined: MCL 5m, MCL 60m, MES 5m, MES 60m, MGC 5m, MGC 60m, MNQ 5m, MNQ 60
 
 | profile range | condition at the LVN | touches | extra continuation (avg) | symbols agreeing | per symbol |
 |---|---|---|---|---|---|
-| 1-day | LVN (all) | 354 | +2 pts | 2/4 | MCL -1, MES +9, MGC -0, MNQ +2 |
-| 1-day | all | 354 | +2 pts | 2/4 | MCL -1, MES +9, MGC -0, MNQ +2 |
-| 1-day | range is BALANCED | 183 | -1 pts | 3/4 | MCL -3, MES +23, MGC -12, MNQ -1 |
-| 1-day | range is TRENDING | 171 | +6 pts | 4/4 | MCL +7, MES +2, MGC +8, MNQ +6 |
+| 1-day | LVN (all) | 362 | +1 pts | 2/4 | MCL -2, MES +11, MGC -1, MNQ +1 |
+| 1-day | all | 362 | +1 pts | 2/4 | MCL -2, MES +11, MGC -1, MNQ +1 |
+| 1-day | range is BALANCED | 189 | -1 pts | 3/4 | MCL -3, MES +26, MGC -12, MNQ -2 |
+| 1-day | range is TRENDING | 173 | +5 pts | 4/4 | MCL +3, MES +2, MGC +7, MNQ +6 |
 | 1-day | arrived WITH the range's trend | 52 | +10 pts | 2/3 | MES -2, MGC +28, MNQ +4 |
-| 1-day | arrived AGAINST the range's trend | 111 | +0 pts | 2/4 | MCL -10, MES +5, MGC -1, MNQ +7 |
-| 1-day | arrived from INSIDE value | 235 | -1 pts | 2/4 | MCL +1, MES +14, MGC -6, MNQ -6 |
-| 1-day | arrived from OUTSIDE value | 119 | +6 pts | 2/4 | MCL -3, MES -1, MGC +19, MNQ +16 |
-| 1-day | high relative volume (>1.5x) | 210 | -1 pts | 2/4 | MCL -3, MES -9, MGC +4, MNQ +3 |
-| 1-day | normal volume | 144 | +4 pts | 1/4 | MCL -2, MES +36, MGC -2, MNQ -0 |
-| 1-day | regular hours | 108 | +11 pts | 4/4 | MCL +2, MES +7, MGC +23, MNQ +13 |
-| 1-day | overnight | 246 | -2 pts | 3/4 | MCL -2, MES +10, MGC -9, MNQ -3 |
-| 1-day | falling into it (support test) | 190 | -2 pts | 2/4 | MCL -11, MES +2, MGC +5, MNQ -1 |
-| 1-day | rising into it (resistance test) | 164 | +6 pts | 3/4 | MCL +10, MES +16, MGC -5, MNQ +7 |
-| 3-day | LVN (all) | 387 | -4 pts | 3/4 | MCL -6, MES -10, MGC +14, MNQ -10 |
-| 3-day | all | 387 | -4 pts | 3/4 | MCL -6, MES -10, MGC +14, MNQ -10 |
-| 3-day | range is BALANCED | 211 | -4 pts | 2/4 | MCL +4, MES -8, MGC +4, MNQ -8 |
-| 3-day | range is TRENDING | 176 | -6 pts | 3/4 | MCL -13, MES -12, MGC +22, MNQ -19 |
-| 3-day | arrived WITH the range's trend | 67 | +6 pts | 2/4 | MCL +41, MES -16, MGC +24, MNQ -16 |
-| 3-day | arrived AGAINST the range's trend | 109 | -13 pts | 3/4 | MCL -34, MES -11, MGC +21, MNQ -21 |
-| 3-day | arrived from INSIDE value | 249 | -7 pts | 2/4 | MCL +4, MES -16, MGC +2, MNQ -8 |
-| 3-day | arrived from OUTSIDE value | 138 | -0 pts | 2/4 | MCL -14, MES +4, MGC +32, MNQ -14 |
-| 3-day | high relative volume (>1.5x) | 202 | -1 pts | 3/4 | MCL -7, MES -8, MGC +12, MNQ -2 |
-| 3-day | normal volume | 185 | -6 pts | 3/4 | MCL -6, MES -8, MGC +14, MNQ -14 |
-| 3-day | regular hours | 128 | -1 pts | 2/4 | MCL +1, MES -21, MGC -4, MNQ +15 |
-| 3-day | overnight | 259 | -6 pts | 3/4 | MCL -9, MES -4, MGC +23, MNQ -24 |
-| 3-day | falling into it (support test) | 210 | -18 pts | 4/4 | MCL -22, MES -23, MGC -0, MNQ -24 |
-| 3-day | rising into it (resistance test) | 177 | +12 pts | 4/4 | MCL +11, MES +5, MGC +32, MNQ +7 |
-| 1-week | LVN (all) | 362 | -2 pts | 3/4 | MCL -4, MES -7, MGC +13, MNQ -9 |
-| 1-week | all | 362 | -2 pts | 3/4 | MCL -4, MES -7, MGC +13, MNQ -9 |
-| 1-week | range is BALANCED | 221 | -5 pts | 3/4 | MCL -2, MES -7, MGC +2, MNQ -12 |
-| 1-week | range is TRENDING | 141 | +3 pts | 1/4 | MCL -6, MES -7, MGC +42, MNQ -3 |
-| 1-week | arrived WITH the range's trend | 46 | -1 pts | 2/3 | MCL -3, MES -24, MNQ +21 |
-| 1-week | arrived AGAINST the range's trend | 86 | -4 pts | 2/4 | MCL -7, MES +3, MGC +22, MNQ -18 |
-| 1-week | arrived from INSIDE value | 215 | +1 pts | 3/4 | MCL -13, MES +0, MGC +14, MNQ +1 |
-| 1-week | arrived from OUTSIDE value | 147 | -6 pts | 2/4 | MCL +11, MES -16, MGC +12, MNQ -26 |
-| 1-week | high relative volume (>1.5x) | 185 | +4 pts | 3/4 | MCL +15, MES -12, MGC +8, MNQ +8 |
-| 1-week | normal volume | 177 | -7 pts | 2/4 | MCL -24, MES +1, MGC +21, MNQ -23 |
-| 1-week | regular hours | 133 | -13 pts | 4/4 | MCL -5, MES -9, MGC -8, MNQ -25 |
-| 1-week | overnight | 229 | +4 pts | 2/4 | MCL -3, MES -5, MGC +25, MNQ +1 |
-| 1-week | falling into it (support test) | 177 | -10 pts | 3/4 | MCL -6, MES -25, MGC +30, MNQ -24 |
-| 1-week | rising into it (resistance test) | 185 | +5 pts | 3/4 | MCL -2, MES +11, MGC +0, MNQ +9 |
-| 2-week | LVN (all) | 211 | -4 pts | 2/4 | MCL +0, MES +1, MGC -14, MNQ -6 |
-| 2-week | all | 211 | -4 pts | 2/4 | MCL +0, MES +1, MGC -14, MNQ -6 |
+| 1-day | arrived AGAINST the range's trend | 113 | -1 pts | 2/4 | MCL -14, MES +5, MGC -3, MNQ +7 |
+| 1-day | arrived from INSIDE value | 242 | -1 pts | 2/4 | MCL +1, MES +16, MGC -8, MNQ -7 |
+| 1-day | arrived from OUTSIDE value | 120 | +5 pts | 2/4 | MCL -4, MES -1, MGC +20, MNQ +16 |
+| 1-day | high relative volume (>1.5x) | 215 | -1 pts | 2/4 | MCL -4, MES -3, MGC +3, MNQ +0 |
+| 1-day | normal volume | 147 | +4 pts | 2/4 | MCL -3, MES +31, MGC -3, MNQ +2 |
+| 1-day | regular hours | 110 | +13 pts | 4/4 | MCL +2, MES +12, MGC +24, MNQ +12 |
+| 1-day | overnight | 252 | -4 pts | 3/4 | MCL -3, MES +9, MGC -10, MNQ -4 |
+| 1-day | falling into it (support test) | 195 | -3 pts | 2/4 | MCL -13, MES +4, MGC +5, MNQ -4 |
+| 1-day | rising into it (resistance test) | 167 | +7 pts | 3/4 | MCL +11, MES +19, MGC -7, MNQ +10 |
+| 3-day | LVN (all) | 402 | -3 pts | 3/4 | MCL -7, MES -6, MGC +14, MNQ -10 |
+| 3-day | all | 402 | -3 pts | 3/4 | MCL -7, MES -6, MGC +14, MNQ -10 |
+| 3-day | range is BALANCED | 224 | -3 pts | 2/4 | MCL +1, MES -1, MGC +4, MNQ -9 |
+| 3-day | range is TRENDING | 178 | -6 pts | 3/4 | MCL -13, MES -12, MGC +22, MNQ -19 |
+| 3-day | arrived WITH the range's trend | 67 | +6 pts | 2/4 | MCL +41, MES -16, MGC +25, MNQ -16 |
+| 3-day | arrived AGAINST the range's trend | 111 | -13 pts | 3/4 | MCL -34, MES -11, MGC +20, MNQ -21 |
+| 3-day | arrived from INSIDE value | 263 | -5 pts | 2/4 | MCL +4, MES -10, MGC +2, MNQ -9 |
+| 3-day | arrived from OUTSIDE value | 139 | -0 pts | 2/4 | MCL -15, MES +4, MGC +32, MNQ -14 |
+| 3-day | high relative volume (>1.5x) | 211 | -1 pts | 3/4 | MCL -9, MES -2, MGC +13, MNQ -5 |
+| 3-day | normal volume | 191 | -5 pts | 3/4 | MCL -6, MES -5, MGC +14, MNQ -13 |
+| 3-day | regular hours | 131 | +0 pts | 2/4 | MCL +1, MES -13, MGC -3, MNQ +14 |
+| 3-day | overnight | 271 | -5 pts | 3/4 | MCL -10, MES -2, MGC +23, MNQ -23 |
+| 3-day | falling into it (support test) | 216 | -17 pts | 4/4 | MCL -23, MES -18, MGC -0, MNQ -25 |
+| 3-day | rising into it (resistance test) | 186 | +13 pts | 4/4 | MCL +12, MES +8, MGC +30, MNQ +7 |
+| 1-week | LVN (all) | 370 | -2 pts | 3/4 | MCL -5, MES -7, MGC +11, MNQ -6 |
+| 1-week | all | 370 | -2 pts | 3/4 | MCL -5, MES -7, MGC +11, MNQ -6 |
+| 1-week | range is BALANCED | 226 | -4 pts | 3/4 | MCL -4, MES -7, MGC +2, MNQ -8 |
+| 1-week | range is TRENDING | 144 | +1 pts | 1/4 | MCL -6, MES -9, MGC +32, MNQ -1 |
+| 1-week | arrived WITH the range's trend | 46 | -2 pts | 2/3 | MCL -3, MES -25, MNQ +20 |
+| 1-week | arrived AGAINST the range's trend | 89 | -5 pts | 2/4 | MCL -7, MES +2, MGC +7, MNQ -15 |
+| 1-week | arrived from INSIDE value | 218 | +2 pts | 2/4 | MCL -13, MES -1, MGC +14, MNQ +4 |
+| 1-week | arrived from OUTSIDE value | 152 | -8 pts | 2/4 | MCL +6, MES -16, MGC +7, MNQ -26 |
+| 1-week | high relative volume (>1.5x) | 187 | +5 pts | 3/4 | MCL +17, MES -12, MGC +8, MNQ +9 |
+| 1-week | normal volume | 183 | -8 pts | 2/4 | MCL -28, MES +1, MGC +15, MNQ -19 |
+| 1-week | regular hours | 135 | -13 pts | 4/4 | MCL -9, MES -10, MGC -7, MNQ -23 |
+| 1-week | overnight | 235 | +3 pts | 2/4 | MCL -3, MES -6, MGC +20, MNQ +3 |
+| 1-week | falling into it (support test) | 179 | -9 pts | 3/4 | MCL -6, MES -25, MGC +31, MNQ -21 |
+| 1-week | rising into it (resistance test) | 191 | +4 pts | 2/4 | MCL -4, MES +11, MGC -4, MNQ +11 |
+| 2-week | LVN (all) | 217 | -4 pts | 3/4 | MCL -3, MES +1, MGC -14, MNQ -6 |
+| 2-week | all | 217 | -4 pts | 3/4 | MCL -3, MES +1, MGC -14, MNQ -6 |
 | 2-week | range is BALANCED | 139 | -7 pts | 3/4 | MCL +24, MES -4, MGC -22, MNQ -17 |
-| 2-week | range is TRENDING | 72 | +3 pts | 3/4 | MCL -31, MES +11, MGC +13, MNQ +16 |
-| 2-week | arrived WITH the range's trend | 14 | -6 pts | 1/1 | MES -6 |
-| 2-week | arrived AGAINST the range's trend | 25 | +18 pts | 2/2 | MES +29, MNQ +4 |
-| 2-week | arrived from INSIDE value | 86 | +2 pts | 3/4 | MCL +13, MES +8, MGC +18, MNQ -21 |
-| 2-week | arrived from OUTSIDE value | 125 | -7 pts | 3/4 | MCL -16, MES -1, MGC -31, MNQ +12 |
-| 2-week | high relative volume (>1.5x) | 120 | +7 pts | 3/4 | MCL +5, MES +18, MGC -5, MNQ +8 |
-| 2-week | normal volume | 91 | -19 pts | 4/4 | MCL -10, MES -13, MGC -38, MNQ -21 |
-| 2-week | regular hours | 75 | -4 pts | 2/4 | MCL +25, MES +20, MGC -73, MNQ -11 |
-| 2-week | overnight | 136 | -4 pts | 3/4 | MCL -18, MES -8, MGC +10, MNQ -1 |
-| 2-week | falling into it (support test) | 98 | +4 pts | 3/4 | MCL +14, MES +6, MGC +8, MNQ -9 |
-| 2-week | rising into it (resistance test) | 113 | -10 pts | 4/4 | MCL -8, MES -2, MGC -39, MNQ -2 |
-| 1-week(60m) | LVN (all) | 425 | -2 pts | 3/4 | MCL -1, MES -4, MGC +4, MNQ -5 |
-| 1-week(60m) | all | 425 | -2 pts | 3/4 | MCL -1, MES -4, MGC +4, MNQ -5 |
-| 1-week(60m) | range is BALANCED | 225 | -5 pts | 3/4 | MCL -7, MES -5, MGC +6, MNQ -11 |
-| 1-week(60m) | range is TRENDING | 200 | +2 pts | 3/4 | MCL +8, MES -3, MGC +0, MNQ +3 |
-| 1-week(60m) | arrived AGAINST the range's trend | 174 | +2 pts | 3/4 | MCL +6, MES -11, MGC +5, MNQ +6 |
-| 1-week(60m) | arrived from INSIDE value | 228 | -4 pts | 3/4 | MCL -16, MES -4, MGC +10, MNQ -3 |
-| 1-week(60m) | arrived from OUTSIDE value | 197 | +0 pts | 1/4 | MCL +24, MES -5, MGC -4, MNQ -7 |
-| 1-week(60m) | high relative volume (>1.5x) | 263 | -3 pts | 3/4 | MCL -7, MES -7, MGC -3, MNQ +3 |
-| 1-week(60m) | normal volume | 162 | +0 pts | 3/4 | MCL +7, MES +0, MGC +14, MNQ -21 |
-| 1-week(60m) | regular hours | 177 | +1 pts | 2/4 | MCL -3, MES -5, MGC +13, MNQ +4 |
-| 1-week(60m) | overnight | 248 | -3 pts | 3/4 | MCL +1, MES -3, MGC -0, MNQ -11 |
-| 1-week(60m) | falling into it (support test) | 228 | +7 pts | 3/4 | MCL +8, MES +5, MGC +21, MNQ -5 |
-| 1-week(60m) | rising into it (resistance test) | 197 | -12 pts | 4/4 | MCL -8, MES -14, MGC -28, MNQ -4 |
+| 2-week | range is TRENDING | 78 | +2 pts | 3/4 | MCL -29, MES +11, MGC +15, MNQ +16 |
+| 2-week | arrived WITH the range's trend | 24 | -24 pts | 2/2 | MCL -48, MES -6 |
+| 2-week | arrived AGAINST the range's trend | 37 | +8 pts | 2/3 | MCL -13, MES +29, MNQ +4 |
+| 2-week | arrived from INSIDE value | 92 | -0 pts | 1/4 | MCL +5, MES +8, MGC +18, MNQ -22 |
+| 2-week | arrived from OUTSIDE value | 125 | -7 pts | 3/4 | MCL -16, MES -1, MGC -30, MNQ +12 |
+| 2-week | high relative volume (>1.5x) | 125 | +4 pts | 2/4 | MCL -5, MES +17, MGC -5, MNQ +7 |
+| 2-week | normal volume | 92 | -17 pts | 4/4 | MCL -1, MES -13, MGC -37, MNQ -21 |
+| 2-week | regular hours | 76 | -6 pts | 2/4 | MCL +17, MES +19, MGC -72, MNQ -12 |
+| 2-week | overnight | 141 | -4 pts | 3/4 | MCL -15, MES -8, MGC +11, MNQ -1 |
+| 2-week | falling into it (support test) | 100 | +3 pts | 3/4 | MCL +12, MES +5, MGC +8, MNQ -10 |
+| 2-week | rising into it (resistance test) | 117 | -11 pts | 4/4 | MCL -11, MES -2, MGC -38, MNQ -2 |
+| 1-week(60m) | LVN (all) | 427 | -2 pts | 3/4 | MCL -2, MES -4, MGC +2, MNQ -4 |
+| 1-week(60m) | all | 427 | -2 pts | 3/4 | MCL -2, MES -4, MGC +2, MNQ -4 |
+| 1-week(60m) | range is BALANCED | 225 | -5 pts | 3/4 | MCL -9, MES -5, MGC +6, MNQ -11 |
+| 1-week(60m) | range is TRENDING | 202 | +2 pts | 2/4 | MCL +8, MES -3, MGC -2, MNQ +5 |
+| 1-week(60m) | arrived AGAINST the range's trend | 176 | +1 pts | 3/4 | MCL +6, MES -11, MGC +3, MNQ +8 |
+| 1-week(60m) | arrived from INSIDE value | 229 | -4 pts | 3/4 | MCL -18, MES -4, MGC +10, MNQ -1 |
+| 1-week(60m) | arrived from OUTSIDE value | 198 | -0 pts | 3/4 | MCL +24, MES -5, MGC -6, MNQ -7 |
+| 1-week(60m) | high relative volume (>1.5x) | 264 | -3 pts | 3/4 | MCL -7, MES -7, MGC -3, MNQ +4 |
+| 1-week(60m) | normal volume | 163 | -1 pts | 1/4 | MCL +5, MES +0, MGC +11, MNQ -21 |
+| 1-week(60m) | regular hours | 177 | +0 pts | 2/4 | MCL -6, MES -5, MGC +13, MNQ +4 |
+| 1-week(60m) | overnight | 250 | -3 pts | 3/4 | MCL +1, MES -3, MGC -2, MNQ -10 |
+| 1-week(60m) | falling into it (support test) | 229 | +7 pts | 3/4 | MCL +8, MES +5, MGC +22, MNQ -4 |
+| 1-week(60m) | rising into it (resistance test) | 198 | -13 pts | 4/4 | MCL -10, MES -13, MGC -31, MNQ -4 |
 | 1-month | LVN (all) | 283 | -3 pts | 3/4 | MCL +3, MES -9, MGC -5, MNQ +0 |
 | 1-month | all | 283 | -3 pts | 3/4 | MCL +3, MES -9, MGC -5, MNQ +0 |
 | 1-month | range is BALANCED | 162 | +6 pts | 3/4 | MCL +24, MES +5, MGC -10, MNQ +15 |
-| 1-month | range is TRENDING | 121 | -15 pts | 3/4 | MCL -14, MES -40, MGC +1, MNQ -18 |
+| 1-month | range is TRENDING | 121 | -15 pts | 3/4 | MCL -14, MES -40, MGC +2, MNQ -18 |
 | 1-month | arrived AGAINST the range's trend | 106 | -12 pts | 3/4 | MCL -6, MES -46, MGC +7, MNQ -14 |
 | 1-month | arrived from INSIDE value | 173 | -2 pts | 2/4 | MCL +6, MES -4, MGC -13, MNQ +5 |
-| 1-month | arrived from OUTSIDE value | 110 | -5 pts | 3/4 | MCL -8, MES -13, MGC +7, MNQ -7 |
-| 1-month | high relative volume (>1.5x) | 175 | -16 pts | 3/4 | MCL -28, MES -33, MGC +2, MNQ -7 |
-| 1-month | normal volume | 108 | +19 pts | 3/4 | MCL +47, MES +45, MGC -12, MNQ +13 |
+| 1-month | arrived from OUTSIDE value | 110 | -5 pts | 3/4 | MCL -8, MES -12, MGC +8, MNQ -7 |
+| 1-month | high relative volume (>1.5x) | 175 | -16 pts | 3/4 | MCL -28, MES -34, MGC +2, MNQ -7 |
+| 1-month | normal volume | 108 | +19 pts | 3/4 | MCL +47, MES +45, MGC -12, MNQ +14 |
 | 1-month | regular hours | 117 | -14 pts | 3/4 | MCL -9, MES -33, MGC +0, MNQ -6 |
 | 1-month | overnight | 166 | +5 pts | 3/4 | MCL +10, MES +21, MGC -8, MNQ +4 |
 | 1-month | falling into it (support test) | 186 | -3 pts | 3/4 | MCL -9, MES -6, MGC +6, MNQ -7 |
-| 1-month | rising into it (resistance test) | 97 | -2 pts | 2/4 | MCL +23, MES -14, MGC -29, MNQ +12 |
+| 1-month | rising into it (resistance test) | 97 | -2 pts | 2/4 | MCL +23, MES -14, MGC -29, MNQ +13 |
 | 3-month | LVN (all) | 175 | -7 pts | 3/4 | MCL -15, MES -3, MGC -7, MNQ +2 |
 | 3-month | all | 175 | -7 pts | 3/4 | MCL -15, MES -3, MGC -7, MNQ +2 |
 | 3-month | range is BALANCED | 99 | -8 pts | 2/4 | MCL -21, MES +0, MGC -2, MNQ +10 |
 | 3-month | range is TRENDING | 76 | -7 pts | 4/4 | MCL -1, MES -7, MGC -12, MNQ -7 |
 | 3-month | arrived AGAINST the range's trend | 58 | -11 pts | 4/4 | MCL -0, MES -0, MGC -15, MNQ -27 |
-| 3-month | arrived from INSIDE value | 104 | -17 pts | 4/4 | MCL -36, MES -2, MGC -15, MNQ -8 |
+| 3-month | arrived from INSIDE value | 104 | -16 pts | 4/4 | MCL -36, MES -2, MGC -15, MNQ -7 |
 | 3-month | arrived from OUTSIDE value | 62 | +4 pts | 1/3 | MCL +13, MES -6, MGC -1 |
 | 3-month | high relative volume (>1.5x) | 109 | -4 pts | 2/4 | MCL -19, MES -6, MGC +3, MNQ +19 |
 | 3-month | normal volume | 58 | -9 pts | 2/3 | MCL -8, MES +3, MGC -24 |
 | 3-month | regular hours | 75 | +1 pts | 2/4 | MCL -6, MES -10, MGC +6, MNQ +28 |
 | 3-month | overnight | 100 | -13 pts | 3/4 | MCL -19, MES +6, MGC -12, MNQ -27 |
-| 3-month | falling into it (support test) | 104 | -8 pts | 3/4 | MCL -15, MES +3, MGC -8, MNQ -16 |
-| 3-month | rising into it (resistance test) | 71 | -5 pts | 2/4 | MCL -14, MES -14, MGC +0, MNQ +30 |
+| 3-month | falling into it (support test) | 104 | -8 pts | 3/4 | MCL -15, MES +2, MGC -8, MNQ -16 |
+| 3-month | rising into it (resistance test) | 71 | -5 pts | 2/4 | MCL -14, MES -14, MGC +1, MNQ +31 |
